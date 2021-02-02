@@ -44,7 +44,7 @@
 #' @details
 #' Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
 #'
-#' The function computes percentages of respondents which reach or surpass certain cut-off scores (benchmarks/performance levels). These percentages are computed using a set of PVs, specified in the \code{PV.root.bench}. Only one set of PVs can be added to \code{PV.root.bench} at a time. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per construct (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.avg} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.bench} as "PV#CIV".
+#' The function computes percentages of respondents which reach or surpass certain cut-off scores (benchmarks/performance levels). These percentages are computed using a set of PVs, specified in the \code{PV.root.bench}. Only one set of PVs can be added to \code{PV.root.bench} at a time. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per content domain (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.) and cognitive domain (i.e. knowing, applying and reasoning). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.avg} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.bench} as "PV#CIV".
 #'
 #' Multiple splitting variables can be added to the \code{split.vars}, the function will compute the percentages of respondents reaching or surpassing the cut-off scores for all formed groups and their means on the continuous variables. If no splitting variables are added, the results will be only by country.
 #'
@@ -54,7 +54,7 @@
 #'
 #' The \code{bench.type} argument has two different options: \code{"discrete"} (default) and \code{"cumulative"}. Using the former will compute the percentages of respondents within the boundaries specified by the cut-off scores in \code{bench.vals}. Using the latter, the function will compute the percentages of respondents at or above the cut-off points in the \code{bench.vals}.
 #'
-#' If the \code{pcts.within} if \code{FALSE} (default), the function will compute the percentages of respondents reaching or surpassing each of the cut-off scores defined by \code{bench.vals}. In this case the percentages of all respondents across the performance levels will add to 100 in each group defined by the splitting variables. On the contrary, if \code{pcts.within = TRUE}, the function will compute the percentages of respondents with given characteristic at each of the performance levels. For example, if we want to know what percentages of respondents who have or do not have a computer at home at each of the performance levels. The argument is ignored if \code{bench.type = "cumulative"}.
+#' If the \code{pcts.within} if \code{FALSE} (default), the function will compute the percentages of respondents reaching or surpassing each of the cut-off scores defined by \code{bench.vals}. In this case the percentages of all respondents across the performance levels will add to 100 in each group defined by the splitting variables. On the contrary, if \code{pcts.within = TRUE}, the function will compute the percentages of respondents at each of the performance levels across groups defined by the splitting variables. Then the sum of percentages within a specific performance level will sum up to 100 across the groups defined by the splitting variables. For example, we can compute what is the ratio (i.e. percentages) of female and male students performing between 475 and 550 points in PIRLS -- say 55 of all students performing at this level are female and 45 are male. If no split variables are provided, the percentages will be 100 for each performance level within a country. The argument is ignored if \code{bench.type = "cumulative"}.
 #'
 #' If no variables are specified for \code{bckg.vars}, the output will contain only percentages of cases in groups specified by the splitting variables and the cut-off scores.
 #'
@@ -91,11 +91,11 @@
 #'   \item WEIGHT - which weight variable was used.
 #'   \item DESIGN - which resampling technique was used (JRR or BRR).
 #'   \item SHORTCUT - logical, whether the shortcut method was used.
-#'   \item NREPS - how many replication weigths were used.
+#'   \item NREPS - how many replication weights were used.
 #'   \item ANALYSIS_DATE - on which date the analysis was performed.
 #'   \item START_TIME - at what time the analysis started.
 #'   \item END_TIME - at what time the analysis finished.
-#'   \item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+#'   \item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 #' }
 #'
 #' The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
@@ -151,42 +151,40 @@
 #' @export
 
 
-
 lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
-
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-
-
+  
   warnings.collector <- list()
-
+  
   if(missing(PV.root.bench)) {
     stop('No PV root has been provided for the "PV.root.bench" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(!missing(PV.root.bench) & length(PV.root.bench) > 1) {
     stop('Only one PV root can been provided for the "PV.root.bench" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(!missing(bckg.var) && length(bckg.var) > 1) {
     stop('Only one background variable can been provided for the "bckg.var" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(missing(bench.type)) {
     bench.type <- "discrete"
   } else {
     bench.type <- bench.type
   }
-
+  
   if(bench.type == "cumulative" && pcts.within == TRUE) {
     warnings.collector[["cumulative.pcts.within"]] <- TRUE
     pcts.within <- FALSE
   }
-
+  
   if(bench.type == "cumulative" && !missing(bckg.var)) {
     warnings.collector[["cumulative.bckg.var"]] <- TRUE
   }
-
+  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
@@ -196,30 +194,30 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
-
+    
       message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-
-
+    
+    
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     data <- copy(data.object)
-
+    
     used.data <- deparse(substitute(data.object))
     message('\nUsing data from object "', used.data, '".')
   }
-
+  
   if(!"lsa.data" %in% class(data)) {
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   vars.list <- get.analysis.and.design.vars(data)
-
+  
   action.args.list <- get.action.arguments()
-
+  
   file.attributes <- get.file.attributes(imported.object = data)
-
+  
   if(missing(bench.vals)) {
     if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "ICCS") {
       tmp.benchmarks <- default.benchmarks[["ICCS"]]
@@ -243,9 +241,9 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "TiPi") {
       bench.vals <- default.benchmarks[["TiPi"]]
     } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "PISA") {
-
+      
       tmp.PV.root.name <- gsub(pattern = "[[:digit:]]+", replacement = "#", x = vars.list[["PV.root.bench"]], fixed = TRUE)
-
+      
       tmp.benchmarks <- default.benchmarks[["PISA"]]
       tmp.benchmarks.PVs <- grep(pattern = "root.PVs$", x = names(tmp.benchmarks), value = TRUE)
       tmp.benchmarks.PVs <- names(unlist(sapply(X = tmp.benchmarks.PVs, FUN = function(i) {
@@ -254,68 +252,80 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
       tmp.benchmarks.PVs <- gsub(pattern = ".root.PVs", replacement = "", x = tmp.benchmarks.PVs)
       tmp.benchmarks <- default.benchmarks[["PISA"]][[tmp.benchmarks.PVs]]
       bench.vals <- tmp.benchmarks[[as.character(file.attributes[["lsa.cycle"]])]]
+      
+      } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "PISA for Development") {
+        
+        tmp.PV.root.name <- gsub(pattern = "[[:digit:]]+", replacement = "#", x = vars.list[["PV.root.bench"]], fixed = TRUE)
+        
+        tmp.benchmarks <- default.benchmarks[["PISA for Development"]]
+        tmp.benchmarks.PVs <- grep(pattern = "root.PVs$", x = names(tmp.benchmarks), value = TRUE)
+        tmp.benchmarks.PVs <- names(unlist(sapply(X = tmp.benchmarks.PVs, FUN = function(i) {
+          intersect(tmp.benchmarks[[i]], tmp.PV.root.name)
+        })))
+        tmp.benchmarks.PVs <- gsub(pattern = ".root.PVs", replacement = "", x = tmp.benchmarks.PVs)
+        tmp.benchmarks <- default.benchmarks[["PISA for Development"]][[tmp.benchmarks.PVs]]
+        bench.vals <- tmp.benchmarks[[as.character(file.attributes[["lsa.cycle"]])]]
+        
     }
   }
-
-
+  
+  
   if(bench.type == "discrete") {
-
+    
     bench.vals <- c(0, rep(sort(bench.vals), times = 2), 2000)
     bench.vals <- split(x = bench.vals, f = rep_len(1:(length(bench.vals)/2), length(bench.vals)))
     names.bench.vals <- lapply(X = bench.vals, FUN = function(i) {
       paste0("From ", i[1], " to below ", i[2])
     })
-
+    
     names.bench.vals[1] <- paste0("Below ", bench.vals[[1]][2])
     names.bench.vals[length(bench.vals)] <- paste0("At or above ", bench.vals[[length(bench.vals)]][1])
     names.bench.vals <- paste0(1:length(bench.vals), ". ", unlist(names.bench.vals))
     names(bench.vals) <- names.bench.vals
-
+    
   } else if(bench.type == "cumulative") {
-
+    
     bench.vals <- as.list(sort(bench.vals))
     names.bench.vals <- paste0(1:length(bench.vals), ". At or above ", unlist(bench.vals))
     names(bench.vals) <- names.bench.vals
-
+    
   }
-
-
-
+  
   tryCatch({
-
+    
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
-
+    
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
-
+    
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
-
+    
     analysis.info <- list()
-
+    
     number.of.countries <- length(names(data))
-
+    
     if(number.of.countries == 1) {
       message("\nValid data from one country have been found. Some computations can be rather intensive. Please be patient.\n")
     } else if(number.of.countries > 1) {
       message("\nValid data from ", number.of.countries, " countries have been found. Some computations can be rather intensive. Please be patient.\n")
     }
-
+    
     counter <- 0
-
+    
     compute.all.stats <- function(data) {
-
+      
       rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
         unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
       }))), collapse = "|")
-
+      
       rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
-
+      
       all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
-
+      
       cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
-
+      
       if(include.missing == FALSE) {
         if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
           bckg.var.all.NA <- names(Filter(function(i) {all(is.na(i))}, data))
@@ -330,9 +340,9 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           data1 <- copy(data)
           data1 <- na.omit(data1, cols = key.vars)
         }
-
+        
       } else if (include.missing == TRUE) {
-
+        
         if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
           bckg.avg.vars.all.NA <- names(Filter(function(i) {all(is.na(i))}, data))
           if(length(bckg.avg.vars.all.NA) > 0) {
@@ -345,9 +355,9 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         } else if(bench.type == "discrete" && is.null(vars.list[["bckg.var"]]) || bench.type == "cumulative") {
           data1 <- copy(data)
         }
-
+        
       }
-
+      
       number.of.cases <- lapply(X = vars.list[["PV.names"]], function(i) {
         tmp.n.cases <- data1[get(vars.list[["weight.var"]]) > 0 , lapply(.SD, function(j) {
           sapply(X = bench.vals, FUN = function(k) {
@@ -365,66 +375,65 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         tmp.n.cases[ , (i) := NULL]
         setkeyv(x = tmp.n.cases, cols = c(key.vars, "Performance_Group"))
       })
-
+      
       sum.of.weights <- lapply(X = vars.list[["PV.names"]], function(i) {
         lapply(X = i, FUN = function(j) {
           tmp.sum.of.weights <- cbind(data1[ , mget(key.vars)], data1[ , j, with = FALSE], data1[ , mget(all.weights)])
           tmp.sum.of.weights <- lapply(X = bench.vals, FUN = function(k) {
-
-
+            
+            
             if(bench.type == "discrete") {
-
-
-
+              
+              
+              
               if(pcts.within == FALSE) {
-
-
+                
+                
                 tmp.sum.of.weights <- tmp.sum.of.weights[between(x = tmp.sum.of.weights[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(tmp.sum.of.weights), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                 tmp.sum.of.weights <- na.omit(tmp.sum.of.weights[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
-
+                
               } else if (pcts.within == TRUE) {
-
+                
                 if(length(key.vars) > 2) {
-
+                  
                   tmp.sum.of.weights <- split(x = tmp.sum.of.weights, by = key.vars)
-
+                  
                   tmp.sum.of.weights <- Filter(function(l) {nrow(l) > 0}, tmp.sum.of.weights)
-
+                  
                   tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                     l[between(x = l[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(l), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                   })
-
+                  
                   tmp.sum.of.weights <- lapply(tmp.sum.of.weights, function(l) {
                     na.omit(l[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
                   })
-
+                  
                 } else if(length(key.vars) <= 2) {
                   tmp.sum.of.weights <- tmp.sum.of.weights[between(x = tmp.sum.of.weights[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(tmp.sum.of.weights), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                   tmp.sum.of.weights <- na.omit(tmp.sum.of.weights[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
                 }
-
+                
               }
-
-
+              
             } else if(bench.type == "cumulative") {
-
+              
               tmp.sum.of.weights <- split(x = tmp.sum.of.weights, by = key.vars, drop = TRUE)
-
+              
               tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                 l[between(x = l[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(l), value = TRUE))], lower = k[1], upper = 2000)]
               })
-
+              
               tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                 na.omit(l[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
               })
-
+              
               tmp.sum.of.weights <- rbindlist(tmp.sum.of.weights)
             }
           })
-
-
+          
+          
           if(bench.type == "discrete" && pcts.within == FALSE || bench.type == "discrete" && pcts.within == TRUE && length(key.vars) <= 2 || bench.type == "cumulative") {
-
+            
             tmp.sum.of.weights <- rbindlist(l = lapply(X = seq_along(tmp.sum.of.weights), FUN = function(k) {
               lapply(X = tmp.sum.of.weights[k], FUN = function(l) {
                 tmp <- cbind(data.table("Performance_Group" = names.bench.vals[k]), l)
@@ -434,13 +443,13 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               })[[1]]
             }))
             tmp.sum.of.weights <- na.omit(object = tmp.sum.of.weights, cols = key.vars[1])
-
+            
           } else if(bench.type == "discrete" && pcts.within == TRUE && length(key.vars) > 2) {
-
+            
             tmp.leading.cols <- copy(number.of.cases[[1]])
             tmp.leading.cols <- tmp.leading.cols[ , n_cases := NULL]
-
-
+            
+            
             tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(k) {
               tmp.table <- lapply(X = k, FUN = function(l) {
                 tmp.key.cols <- cbind(l[ , mget(key.vars[1:(length(key.vars) - 1)])][1])
@@ -449,45 +458,45 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               })
               rbindlist(l = tmp.table)
             })
-
+            
             last.key.var.table <- unique(number.of.cases[[1]][ , key.vars[length(key.vars)], with = FALSE])
-
+            
             tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(k) {
               tmp <- suppressWarnings(cbind(last.key.var.table, k))
               setcolorder(x = tmp, neworder = c(key.vars, all.weights))
               setkeyv(x = tmp, cols = key.vars)
             })
-
+            
             tmp.names <- lapply(X = as.list(names(tmp.sum.of.weights)), FUN = function(k) {
               data.table(Performance_Group = k)
             })
-
+            
             tmp.sum.of.weights <- Map(f = cbind, tmp.names, tmp.sum.of.weights)
-
+            
             tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(k) {
               setcolorder(x = k, neworder = c(key.vars, "Performance_Group", all.weights))
             })
-
+            
             tmp.sum.of.weights <- rbindlist(l = tmp.sum.of.weights)
-
+            
             setkeyv(x = tmp.sum.of.weights, cols = c(key.vars, "Performance_Group"))
-
+            
             tmp.sum.of.weights <- na.omit(tmp.sum.of.weights)
-
+            
             tmp.sum.of.weights <- merge(x = tmp.leading.cols, y = tmp.sum.of.weights, all = TRUE)
-
+            
             setnames(x = tmp.sum.of.weights, old = all.weights, new = paste0("V", 1:length(all.weights)))
-
+            
             setkeyv(x = tmp.sum.of.weights, cols = c(key.vars, "Performance_Group"))
           }
-
+          
         })
       })
-
+      
       number.of.cases.1 <- copy(number.of.cases[[1]])
-
+      
       missing.rows <- number.of.cases.1[ , n_cases := NULL]
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
         lapply(X = i, function(j) {
           tmp <- merge(x = missing.rows, y = j, all = TRUE)
@@ -496,7 +505,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           }), .SDcols = grep(pattern = "^V[[:digit:]]+", x = colnames(j), value = TRUE)]
         })
       })
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
         lapply(X = i, function(j) {
           tmp <- merge(x = missing.rows, y = j, all = TRUE)
@@ -505,25 +514,23 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           }), .SDcols = grep(pattern = "^V[[:digit:]]+", x = colnames(j), value = TRUE)]
         })
       })
-
-
+      
       sum.of.weights.1 <- copy(sum.of.weights)
-
+      
       if(pcts.within == FALSE) {
-
+        
         PV.bench.percentages <- lapply(X = sum.of.weights.1, function(i) {
-
+          
           sum.of.all.weights <- data1[ , lapply(.SD, function(j) {
             sum(j)
           }), .SDcols = all.weights, by = key.vars]
-
+          
           lapply(X = i, FUN = function(j) {
-
+            
             tmp.key.cols <- j[ , mget(key.vars)]
             sum.of.all.weights <- merge(x = sum.of.all.weights, y = tmp.key.cols)
-
+            
             sum.of.all.weights[ , (key.vars) := NULL]
-
             setnames(x = sum.of.all.weights, paste0("V", 1:length(all.weights)))
             tmp.key.cols <- j[ , mget(c(key.vars, "Performance_Group"))]
             j[ , (colnames(tmp.key.cols)) := NULL]
@@ -532,11 +539,11 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             setkeyv(x = j, c(key.vars, "Performance_Group"))
           })
         })
-
+        
       } else if(pcts.within == TRUE) {
-
+        
         if(bench.type == "discrete" && length(key.vars) <= 2) {
-
+          
           sum.of.all.weights <- lapply(X = bench.vals, FUN = function(i) {
             tmp.sum.of.all.weights <- lapply(X = vars.list[["PV.names"]], FUN = function(j) {
               summary.per.benchmark <- lapply(X = j, FUN = function(k) {
@@ -547,7 +554,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               summary.per.benchmark <- cbind(data.table(g = 1:length(summary.per.benchmark)), rbindlist(l = summary.per.benchmark))
             })[[1]]
           })
-
+          
           sum.of.all.weights <- rbindlist(l = sum.of.all.weights)
           setkeyv(x = sum.of.all.weights, cols = "g")
           sum.of.all.weights <- split(x = sum.of.all.weights, by = "g")
@@ -555,26 +562,26 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             i <- i[ , g := NULL]
             setnames(x = i, old = all.weights, new = paste0("V", 1:length(all.weights)))
           }))
-
+          
           tmp.key.cols <- lapply(X = sum.of.weights.1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
               j <- j[ , mget(key.vars)]
               setkeyv(x = j, cols = key.vars)
             })
           })
-
+          
           sum.of.all.weights <- Map(f = function(input1, input2) {
             suppressWarnings(Map(f = cbind, input1, input2))
           }, input1 = tmp.key.cols, input2 = sum.of.all.weights)
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
               j[ , (key.vars) := NULL]
             })
           })
-
+          
         } else if(bench.type == "discrete" && length(key.vars) > 2) {
-
+          
           sum.of.all.weights <- lapply(X = bench.vals, FUN = function(i) {
             tmp.sum.of.all.weights <- lapply(X = vars.list[["PV.names"]], FUN = function(j) {
               summary.per.benchmark <- lapply(X = j, FUN = function(k) {
@@ -584,18 +591,18 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
                 tmp <- lapply(X = tmp, FUN = function(l) {
                   l[between(x = l[ , get(k)], lower = i[1], upper = (i[2] - 0.000000001))]
                 })
-
+                
                 tmp.leading.colnames <- lapply(X = tmp, FUN = function(l) {
                   unique(l[ , 1:(length(key.vars) - 1)])
                 })
-
+                
                 tmp <- lapply(X = tmp, FUN = function(l) {
                   cbind(data.table(pv = k), l[ , lapply(.SD, sum), .SDcols = all.weights])
                 })
-
+                
                 tmp <- Map(f = cbind, tmp.leading.colnames, tmp)
                 tmp <- rbindlist(l = tmp)
-
+                
                 if(any(is.na(tmp[ , mget(key.vars[1:(length(key.vars) - 1)])]))) {
                   missing.rows.1 <- unique(missing.rows[ , mget(key.vars[1:(length(key.vars) - 1)])])
                   tmp[ , (key.vars[1:(length(key.vars) - 1)]) := NULL]
@@ -604,58 +611,59 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
                   tmp
                 }
               })
-
+              
               summary.per.benchmark <- rbindlist(l = summary.per.benchmark)
             })[[1]]
           })
-
+          
           bench.vals.tables <- lapply(X = names(bench.vals), FUN = function(i) {
             data.table(Performance_Group = i)
           })
-
+          
           sum.of.all.weights <- Map(f = cbind, bench.vals.tables, sum.of.all.weights)
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             setcolorder(x = i, neworder = c(key.vars[1:(length(key.vars) - 1)], "Performance_Group", "pv"))
             setkeyv(x = i, cols = c(key.vars[1:(length(key.vars) - 1)], "Performance_Group", "pv"))
           })
-
+          
           sum.of.all.weights <- rbindlist(l = sum.of.all.weights)
-
+          
           sum.of.all.weights <- split(x = sum.of.all.weights, by = "pv")
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             split(x = i, by = c(key.vars[1:(length(key.vars) - 1)]), drop = TRUE)
           })
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
               do.call("rbind", replicate(n = length(unique(number.of.cases.1[ , get(key.vars[length(key.vars)])])), expr = j, simplify = FALSE))
             })
           })
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             rbindlist(l = i)
           })
-
+          
           last.key.var.col.table <- data.table(rep(unique(data1[ , get(key.vars[length(key.vars)])]), each = length(bench.vals)))
           setnames(x = last.key.var.col.table, key.vars[length(key.vars)])
-
+          
           tmp.leading.cols <- lapply(X = sum.of.all.weights, FUN = function(i) {
             tmp <- cbind(i[ , mget(c(key.vars[1:(length(key.vars) - 1)]))], last.key.var.col.table, data.table(Performance_Group = names(bench.vals)))
             setkeyv(x = tmp, cols = c(key.vars, "Performance_Group"))
           })
-
+          
           sum.of.all.weights <- lapply(X = sum.of.all.weights, FUN = function(i) {
             i[ , (c(key.vars[1:(length(key.vars) - 1)], "Performance_Group", "pv")) := NULL]
           })
-
+          
           sum.of.all.weights <- list(lapply(X = sum.of.all.weights, FUN = function(i) {
             setnames(x = i, old = all.weights, new = paste0("V", 1:length(all.weights)))
           }))
-
+          
         }
-
+        
+        
         if(length(key.vars) <= 2) {
           tmp.key.cols <- lapply(X = sum.of.weights.1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
@@ -664,24 +672,23 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           })
         } else if(length(key.vars) > 2) {
           tmp.key.cols <- list(tmp.leading.cols)
-
+          
           sum.of.weights.1 <- Map(f = function(input1, input2) {
             Map(f = merge, input1, input2, all = TRUE)
           }, input1 = tmp.key.cols, input2 = sum.of.weights.1)
-
+          
         }
-
-
+        
         sum.of.weights.1 <- lapply(X = sum.of.weights.1, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             j[ , (c(key.vars, "Performance_Group")) := NULL]
           })
         })
-
+        
         PV.bench.percentages <- Map(f = function(input1, input2) {
           Map(f = `/`, input1, input2)
         }, input1 = sum.of.weights.1, input2 = sum.of.all.weights)
-
+        
         PV.bench.percentages <- lapply(X = PV.bench.percentages, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             j <- data.table(j)
@@ -690,16 +697,15 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             })]
           })
         })
-
-
+        
         PV.bench.percentages <- Map(f = function(input1, input2) {
           Map(f = cbind, input1, input2)
         }, input1 = tmp.key.cols, input2 = PV.bench.percentages)
-
+        
       }
-
+      
       sum.of.weights.1 <- NULL
-
+      
       lapply(X = PV.bench.percentages, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           j[ , (grep(pattern = "^V[[:digit:]]+", x = colnames(j), value = TRUE)) := lapply(.SD, function(k) {
@@ -707,7 +713,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           }), .SDcols = grep(pattern = "^V[[:digit:]]+", x = colnames(j), value = TRUE)]
         })
       })
-
+      
       if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
         bckg.means <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           tmp.data.split.obj <- lapply(X = i, function(j) {
@@ -720,7 +726,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             bench.names <- lapply(X = bench.names, FUN = function(k) {
               data.table(Performance_Group = k)
             })
-
+            
             tmp <- Map(f = cbind, bench.names, tmp)
             lapply(X = tmp, FUN = function(k) {
               setcolorder(x = k, neworder = c(key.vars, "Performance_Group", grep(pattern = paste(c(key.vars, "Performance_Group"), collapse = "|"), x = colnames(k), value = TRUE, invert = TRUE)))
@@ -741,7 +747,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               tmp <- suppressWarnings(split(x = tmp, f = key.vars))
               bench.names <- list(data.table(Performance_Group = names(bench.vals)))
               tmp <- suppressWarnings(rbindlist(l = Map(f = cbind, tmp, bench.names)))
-
+              
               tmp1 <- setDT(as.list(paste(paste0("V", 1:length(all.weights)))))
               tmp1[ , colnames(tmp1) := lapply(.SD, function(k) {
                 k <- NA
@@ -752,7 +758,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             }
           })
         })
-
+        
         bckg.variances <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           tmp.data.split.obj <- lapply(X = i, function(j) {
             if(bckg.var %in% colnames(data1)) {
@@ -784,7 +790,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               tmp <- suppressWarnings(split(x = tmp, f = key.vars))
               bench.names <- list(data.table(Performance_Group = names(bench.vals)))
               tmp <- suppressWarnings(rbindlist(l = Map(f = cbind, tmp, bench.names)))
-
+              
               tmp1 <- setDT(as.list(paste(paste0("V", 1:length(all.weights)))))
               tmp1[ , colnames(tmp1) := lapply(.SD, function(k) {
                 k <- NA
@@ -795,7 +801,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             }
           })
         })
-
+        
         bckg.SDs <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           tmp.data.split.obj <- lapply(X = i, function(j) {
             if(bckg.var %in% colnames(data1)) {
@@ -827,7 +833,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               tmp <- suppressWarnings(split(x = tmp, f = key.vars))
               bench.names <- list(data.table(Performance_Group = names(bench.vals)))
               tmp <- suppressWarnings(rbindlist(l = Map(f = cbind, tmp, bench.names)))
-
+              
               tmp1 <- setDT(as.list(paste(paste0("V", 1:length(all.weights)))))
               tmp1[ , colnames(tmp1) := lapply(.SD, function(k) {
                 k <- NA
@@ -838,7 +844,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             }
           })
         })
-
+        
         bckg.var.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           tmp.data.split.obj <- lapply(X = i, function(j) {
             tmp <- cbind(data[ , mget(key.vars)], data[ , j, with = FALSE], data[ , mget(bckg.var)], data[ , mget(all.weights)])
@@ -858,7 +864,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             setkeyv(x = tmp, cols = c(key.vars, "Performance_Group"))
           })
         })
-
+        
         if(include.missing == FALSE) {
           bckg.var.pct.miss <- lapply(X = bckg.var.pct.miss, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
@@ -868,51 +874,51 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         } else {
           bckg.var.pct.miss <- bckg.var.pct.miss
         }
-
+        
       }
-
+      
       reshape.list.statistics.PV(estimate.object = sum.of.weights, estimate.name = "Sum_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+      
       reshape.list.statistics.PV(estimate.object = PV.bench.percentages, estimate.name = "Percentages_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+      
       if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
-
+        
         reshape.list.statistics.PV(estimate.object = bckg.means, estimate.name = "Mean_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         bckg.means <- lapply(X = bckg.means, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             merge(x = number.of.cases.1, y = j, all = TRUE)
           })
         })
-
+        
         reshape.list.statistics.PV(estimate.object = bckg.variances, estimate.name = "Variance_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         bckg.variances <- lapply(X = bckg.variances, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             merge(x = number.of.cases.1, y = j, all = TRUE)
           })
         })
-
+        
         reshape.list.statistics.PV(estimate.object = bckg.SDs, estimate.name = "SD_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         bckg.SDs <- lapply(X = bckg.SDs, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             merge(x = number.of.cases.1, y = j, all = TRUE)
           })
         })
-
+        
         bckg.var.pct.miss <- lapply(X = bckg.var.pct.miss, FUN = function(i) {
           tmp.key <- key(i[[1]])
           tmp <- rbindlist(l = i)
           setkeyv(x = tmp, cols = tmp.key)
         })
-
+        
         bckg.var.pct.miss <- lapply(X = bckg.var.pct.miss, FUN = function(i) {
           pct.missing.colname <- grep(pattern = "Percent_Missing_", x = colnames(i), value = TRUE)
           tmp <- i[ , mean(get(pct.missing.colname)), by = key(i)]
           setnames(x = tmp, old = "V1", new = pct.missing.colname)
         })
-
+        
         bckg.means <- lapply(X = bckg.means, FUN = function(i) {
           Reduce(function(...) merge(...), i)
         })
@@ -923,64 +929,63 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           Reduce(function(...) merge(...), i)
         })
       }
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           unique(x = j, by = c(key.vars, "Performance_Group"))
         })
       })
-
+      
       PV.bench.percentages <- lapply(X = PV.bench.percentages, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           unique(x = j, by = c(key.vars, "Performance_Group"))
         })
       })
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
         Reduce(function(...) merge(...), i)
       })
-
+      
       PV.bench.percentages <- lapply(X = PV.bench.percentages, FUN = function(i) {
         Reduce(function(...) merge(...), i)
       })
-
-
+      
       aggregate.PV.estimates(estimate.object = sum.of.weights, estimate.name = "Sum_", root.PV = vars.list[["PV.root.bench"]], PV.vars.vector = vars.list[["PV.names"]], data.key.variables = key.vars, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+      
       aggregate.PV.estimates(estimate.object = PV.bench.percentages, estimate.name = "Percentages_", root.PV = vars.list[["PV.root.bench"]], PV.vars.vector = vars.list[["PV.names"]], data.key.variables = key.vars, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
         i[ , grep(pattern = "_SVR|_MVR", x = colnames(i)) := NULL]
       })
-
+      
       sum.of.weights <- lapply(X = sum.of.weights, FUN = function(i) {
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
           tmp.PV.root <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = vars.list[["PV.root.bench"]], fixed = TRUE)
           setnames(x = i, old = grep(pattern = tmp.PV.root, x = colnames(i), value = TRUE), new = c(paste0("Sum_", vars.list[["weight.var"]]), paste0("Sum_", vars.list[["weight.var"]], "_SE")))
         } else {
           setnames(x = i, old = grep(pattern = vars.list[["PV.root.bench"]], x = colnames(i), value = TRUE), new = c(paste0("Sum_", vars.list[["weight.var"]]), paste0("Sum_", vars.list[["weight.var"]], "_SE")))
         }
       })
-
+      
       PV.bench.percentages <- lapply(X = PV.bench.percentages, FUN = function(i) {
         i[ , grep(pattern = "_SVR|_MVR", x = colnames(i)) := NULL]
       })
-
+      
       PV.bench.percentages <- lapply(X = PV.bench.percentages, FUN = function(i) {
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
           i
         } else {
           setnames(x = i, old = grep(pattern = vars.list[["PV.root.bench"]], x = colnames(i), value = TRUE), new = c(paste0("Percentages_", vars.list[["PV.root.bench"]]), paste0("Percentages_", vars.list[["PV.root.bench"]], "_SE")))
         }
       })
-
+      
       number.of.cases <- number.of.cases[[1]]
       sum.of.weights <- sum.of.weights[[1]]
       PV.bench.percentages <- PV.bench.percentages[[1]]
-
+      
       setkeyv(x = sum.of.weights, cols = c(key.vars, "Performance_Group"))
       setkeyv(x = PV.bench.percentages, cols = c(key.vars, "Performance_Group"))
-
+      
       if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
         aggregate.PV.estimates(estimate.object = bckg.means, estimate.name = "Mean_", root.PV = vars.list[["PV.root.bench"]], PV.vars.vector = vars.list[["PV.names"]], data.key.variables = c(key.vars), study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         aggregate.PV.estimates(estimate.object = bckg.variances, estimate.name = "Variance_", root.PV = vars.list[["PV.root.bench"]], PV.vars.vector = vars.list[["PV.names"]], data.key.variables = c(key.vars), study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
@@ -989,7 +994,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         replace.PV.names.with.bckg <- function(estimate) {
           lapply(X = seq_along(vars.list[["bckg.var"]]), FUN = function(i) {
             estimate[[i]][ , grep(pattern = "_SVR$|_MVR$", x = colnames(estimate[[i]]), value = TRUE) := NULL]
-            if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+            if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
               PV.root.cols <- grep(pattern = gsub(pattern = "[[:digit:]]+", x = vars.list[["PV.root.bench"]], replacement = "N", fixed = TRUE), x = colnames(estimate[[i]]), value = TRUE)
               bckg.col.name <- gsub(pattern = gsub(pattern = "[[:digit:]]+", x = vars.list[["PV.root.bench"]], replacement = "N", fixed = TRUE), replacement = vars.list[["bckg.var"]][i], x = PV.root.cols)
             } else {
@@ -1000,56 +1005,56 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             setkeyv(x = estimate[[i]], cols = c(key.vars, "Performance_Group"))
           })
         }
-
+        
         bckg.means <- replace.PV.names.with.bckg(estimate = bckg.means)
         bckg.variances <- replace.PV.names.with.bckg(estimate = bckg.variances)
         bckg.SDs <- replace.PV.names.with.bckg(estimate = bckg.SDs)
-
+        
         bckg.means <- bckg.means[[1]]
         bckg.variances <- bckg.variances[[1]]
         bckg.SDs <- bckg.SDs[[1]]
         bckg.var.pct.miss <- bckg.var.pct.miss[[1]]
       }
-
+      
       country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
-
+      
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
-
+      
       if(is.null(vars.list[["bckg.var"]])) {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, PV.bench.percentages))
       } else if(!is.null(vars.list[["bckg.var"]]) && bench.type == "discrete") {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, PV.bench.percentages, bckg.means, bckg.variances, bckg.SDs, bckg.var.pct.miss))
         merged.outputs <- unique(merged.outputs)
-
-          merged.outputs[ , (grep(pattern = "^Mean_|^Variance_|^SD_|^Percent_Missing_", x = colnames(merged.outputs), value = TRUE)) := lapply(.SD, function(i) {
-            ifelse(test = is.na(i), yes = NaN, no = i)
-          }), .SDcols = grep(pattern = "^Mean_|^Variance_|^SD_|^Percent_Missing_", x = colnames(merged.outputs), value = TRUE)]
-
+        
+        merged.outputs[ , (grep(pattern = "^Mean_|^Variance_|^SD_|^Percent_Missing_", x = colnames(merged.outputs), value = TRUE)) := lapply(.SD, function(i) {
+          ifelse(test = is.na(i), yes = NaN, no = i)
+        }), .SDcols = grep(pattern = "^Mean_|^Variance_|^SD_|^Percent_Missing_", x = colnames(merged.outputs), value = TRUE)]
+        merged.outputs <- merged.outputs[!is.na(get(key.vars[1])), ]
+        
       } else if(!is.null(vars.list[["bckg.var"]]) && bench.type == "cumulative") {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, PV.bench.percentages))
       }
-
+      
       counter <<- counter + 1
-
+      
       message("     ",
-
-          if(nchar(counter) == 1) {
-            paste0("( ", counter, "/", number.of.countries, ")   ")
-          } else if(nchar(counter) == 2) {
+              
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
             paste0("(", counter, "/", number.of.countries, ")   ")
           },
-
+          
           paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), "processed in ", country.analysis.info[ , DURATION]))
-
+      
       return(merged.outputs)
     }
-
+    
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
-
-
+    
     estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
     setkeyv(x = estimates, cols = key.vars)
-
+    
     total.exec.time <- rbindlist(analysis.info)[ , DURATION]
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
@@ -1058,42 +1063,42 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     } else {
       message("\n")
     }
-
+    
     ptm.add.table.average <- proc.time()
-
+    
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Performance_Group"), data.properties = file.attributes)
-
+    
       message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-
+    
     export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-
+    
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
     }
-
+    
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-
+  
   if(length(warnings.collector) > 0) {
-
+    
     if(!is.null(warnings.collector[["cumulative.pcts.within"]])) {
       warning('The argument "bench.type" was set to "cumulative" and the argument "pcts.within" was set to "TRUE". Statistics with these two arguments is not possible to compute. The value of "pcts.within" was ignored.', call. = FALSE)
       message("\n\n")
     }
-
+    
     if(!is.null(warnings.collector[["cumulative.bckg.var"]])) {
       warning('The argument "bench.type" was set to "cumulative" and a background variable name was passed to "bckg.var". Statistics with these two arguments is not possible to compute. The value of "bckg.var" was ignored.', call. = FALSE)
     }
-
+    
   }
-
+  
   vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.var", x = names(vars.list), value = TRUE)
   vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
   vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-
+  
   if(length(vars.list.analysis.vars) > 0) {
     warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
   }
-
+  
 }

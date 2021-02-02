@@ -53,7 +53,7 @@ used as predictors in the model to compute contrasts for (see
 specifying the type of contrasts to compute in case \code{bckg.indep.cat.vars}
 are provided. See details.}
 
-\item{bckg.ref.cats}{String vector with the same length as the length of \code{bckg.indep.cat.vars}
+\item{bckg.ref.cats}{Vector of integers with the same length as the length of \code{bckg.indep.cat.vars}
 and \code{bckg.cat.contrasts} specifying the reference categories for the
 contrasts to compute in case \code{bckg.indep.cat.vars} are provided. See details.}
 
@@ -110,7 +110,7 @@ The second sheet contains the model statistics:
 \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
 \item Statistic - a column containing the R-Squared, adjusted R-Squared, F-Statistic and degrees of freedom estimates.
 \item Estimate - the numerical estimates for each of the above.
-\item Estimate_SE - the standard errors of the estimaes from above.
+\item Estimate_SE - the standard errors of the estimates from above.
 \item Estimate_SVR - the sampling variance component if PVs were included in the model.
 \item Estimate_MVR - the measurement variance component if PVs were included in the model.
 \item t_value - the \emph{t}-test value for the regression coefficients, value only for the F-Statistic is provided.
@@ -124,11 +124,11 @@ The third sheet contains some additional information related to the analysis per
 \item WEIGHT - which weight variable was used.
 \item DESIGN - which resampling technique was used (JRR or BRR).
 \item SHORTCUT - logical, whether the shortcut method was used.
-\item NREPS - how many replication weigths were used.
+\item NREPS - how many replication weights were used.
 \item ANALYSIS_DATE - on which date the analysis was performed.
 \item START_TIME - at what time the analysis started.
 \item END_TIME - at what time the analysis finished.
-\item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+\item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
 The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.

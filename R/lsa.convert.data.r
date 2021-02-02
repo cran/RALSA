@@ -71,129 +71,129 @@
 
 
 lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA = FALSE, out.folder) {
-
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-
+  
   tryCatch({
-
+    
     if(missing(x = inp.folder)) {
-
+      
       inp.folder = getwd()
-
+      
     } else {
-
+      
       inp.folder <- paste(inp.folder)
     }
-
+    
     if(missing(x = out.folder)) {
-
+      
       out.folder <- paste(inp.folder)
-
+      
     } else {
-
+      
       out.folder <- paste(out.folder)
     }
-
+    
     if(PISApre15 == FALSE) {
-
+      
       if(missing(x = ISO)) {
-
+        
         ISO <- paste(list.files(path = inp.folder, pattern = ".sav", ignore.case = TRUE), sep = "")
-
+        
         if(length(ISO) == 0) {
-
+          
           if(dir.exists(paths = inp.folder) == TRUE) {
             message("\nError:\nThe input folder contains no \".sav\" files to read. Check your input.\n\n")
           } else {
             message("\nError:\nThe input folder does not exist. Check your input.\n\n")
           }
-
+          
         }
-
+        
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
-
+          
           full.inp.file.path <- file.path(inp.folder, ISO)
-
+          
           study.and.cycle <- unique(x = substr(x = ISO, start = 7, stop = 8))
-
+          
           if(length(x = study.and.cycle) > 1) {
-
+            
             message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
             stop()
           }
-
+          
         } else if(any(sapply(X = ISO, FUN = nchar) > 12 )) {
-
+          
           full.inp.file.path <- file.path(inp.folder, ISO)
-
+          
           first.four.char <- unique(x = substr(x = tolower(ISO), start = 1, stop = 4))
-
+          
           if(grepl(pattern = "0", x = first.four.char)[1]) {
             study.and.cycle <- unique(x = substr(x = tolower(ISO), start = 1, stop = 4))
           } else {
             study.and.cycle <- unique(x = substr(x = tolower(ISO), start = 1, stop = 3))
           }
-
+          
           if(length(x = study.and.cycle) > 1) {
-
+            
             message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
-
+            
             stop()
-
+            
           }
         }
-
+        
       } else {
-
+        
         files <- list.files(path = inp.folder, pattern = ".sav")
-
+        
         cnt.ISOs <- unique(x = substr(x = files, start = 4, stop = 6))
-
+        
         if(length(files) > 0 & length(intersect(x = ISO, cnt.ISOs)) == 0) {
-
+          
           message("\nError:\nNo country codes matching the data files in the input folder were entered in \"ISO = ...\". \nCheck your input and the files in the input folder.\n\n")
-
+          
         }
-
+        
         if(length(files) == 0) {
-
+          
           if(dir.exists(paths = inp.folder) == TRUE) {
             message("\nError:\nThe input folder contains no \".sav\" files to read. Check your input.\n\n")
           } else {
             message("\nError:\nThe input folder does not exist. Check your input.\n\n")
           }
-
+          
         }
-
+        
         study.and.cycle <- unique(x = substr(x = files, start = 7, stop = 8))
-
+        
         if(length(x = study.and.cycle) > 1) {
-
+          
           message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
           stop()
         }
-
+        
         available.ISOs <- unique(substring(text = files, first = 4, last = 8))
-
+        
         if(any(paste0(ISO, study.and.cycle) %in% available.ISOs == "FALSE")) {
-
+          
           warning("Data files for one or more countries in \"ISO = ...\"", " do not exist in the specified folder.", "\nCheck your input.\n", call. = FALSE)
-
+          
         }
-
+        
         ISO <- files[grep(pattern = paste0(ISO, study.and.cycle, collapse = "|"), x = files)]
-
+        
         full.inp.file.path <- file.path(inp.folder, ISO)
-
+        
       }
-
+      
       root.file.names <- sapply(X = strsplit(x = ISO, split = "\\."), FUN = "[", 1)
-
+      
       full.out.file.path <- paste(file.path(out.folder, tolower(x = root.file.names)), "RData", sep = ".")
-
+      
       if(length(ISO) > 0) {
-
+        
         if(dir.exists(paths = out.folder) == TRUE) {
           if(length(ISO) == 1) {
             message("\n", "One dataset found for conversion. Some datasets can be rather large. Please be patient.\n")
@@ -208,243 +208,277 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           message("\nError:\nThe output folder does not exist. Check your input.\n\n")
         }
       }
-
+      
       counter <- 0
-
+      
       convert.IEA <- function(inp.file, out.file, new.file) {
-
+        
         ptm <- proc.time()
-
+        
         if(missing.to.NA == TRUE) {
-
+          
           tmp <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = TRUE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+          
           tmp1 <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+          
           value.labels <- lapply(X = tmp1, FUN = levels)
-
+          
           tmp1 <- NULL
-
+          
           value.labels <- lapply(X = value.labels, FUN = function(i) {
-
             gsub(pattern = "'", replacement = "\\\\'", x = i)
-
           })
-
+          
           index.missings.only <- function(missing.values, labels.list) {
             which(setNames(labels.list %in% missing.values, names(labels.list)))
           }
-
+          
           num.vars.with.labels <- index.missings.only(missing.values = all.missing.values.combinations, labels.list = value.labels)
-
+          
           if(length(num.vars.with.labels) > 0) {
-
+            
             tmp2 <- suppressMessages(read.spss(file = inp.file, use.value.labels = FALSE, use.missings = TRUE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+            
             tmp[num.vars.with.labels] <- tmp2[num.vars.with.labels]
-
+            
             tmp2 <- NULL
-
+            
           }
-
+          
           factor.vars <- names(Filter(is.factor, tmp))
-
+          
+          tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u0022]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00e2]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u20ac]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201c]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201d]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u2122]", replacement = "'", x = levels(i)))
+            
+            if(length(grep(pattern = "-$", x = levels(i))) == 0) {
+              i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "--|---|----", replacement = "-", x = levels(i)))
+            }
+            
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00c2]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00b4]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "\\'\\'", replacement = "'", x = levels(i)))
+            
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "-+\\'", replacement = "'", x = levels(i)))
+          })
+          
           factors.to.be.numeric <- names(
             Filter(Negate(is.null), lapply(X = tmp[factor.vars], FUN = function(i) {
-
+              
               factor.vars.missings.levels <- which(levels(i) %in% names(fac.to.num.missing.codes))
-
+              
               factor.vars.num.values.levels <- which(grepl(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i)) == TRUE)
-
+              
               if(length(factor.vars.missings.levels) + length(factor.vars.num.values.levels) == length(levels(i))) {
                 TRUE
               }
-
+              
             })))
-
+          
           if(length(factors.to.be.numeric) > 0) {
             tmp[factors.to.be.numeric] <- lapply(X = tmp[factors.to.be.numeric], FUN = function(i) {
               as.numeric(as.character(i))
             })
           }
-
+          
           factor.vars <- names(Filter(is.factor, tmp))
-
+          
           tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
             i <- factor(x = i, levels = levels(i)[!levels(i) %in% unique(unlist(all.missing.values.combinations))])
           })
-
+          
           rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
-
+          
           if(length(rep.indicator) > 0 && is.factor(tmp[[rep.indicator]])) {
             tmp[[rep.indicator]] <- as.numeric(tmp[[rep.indicator]]) - 1
           }
-
+          
           numeric.vars <- names(Filter(is.numeric, tmp))
-
+          
         } else if(missing.to.NA == FALSE) {
-
+          
           tmp <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+          
           value.labels <- lapply(X = tmp, FUN = levels)
-
+          
           value.labels <- lapply(X = value.labels, FUN = function(i) {
-
             gsub(pattern = "'", replacement = "\\\\'", x = i)
-
           })
-
+          
           index.missings.only <- function(missing.values, labels.list) {
-
+            
             which(setNames(labels.list %in% missing.values, names(labels.list)))
-
+            
           }
-
+          
           num.vars.with.labels <- index.missings.only(missing.values = all.missing.values.combinations, labels.list = value.labels)
-
+          
           if(length(x = num.vars.with.labels) > 0) {
-
+            
             tmp1 <- suppressMessages(read.spss(file = inp.file, use.value.labels = FALSE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+            
             tmp[num.vars.with.labels] <- tmp1[num.vars.with.labels]
-
+            
             tmp1 <- NULL
-
+            
           }
-
+          
           tmp2 <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", to.data.frame = TRUE, stringsAsFactors = TRUE, reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
-
+          
           factor.vars <- names(Filter(is.factor, tmp))
-
+          
+          tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u0022]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00e2]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u20ac]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201c]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201d]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u2122]", replacement = "'", x = levels(i)))
+            
+            if(length(grep(pattern = "-$", x = levels(i))) == 0) {
+              i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "--|---|----", replacement = "-", x = levels(i)))
+            }
+            
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00c2]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00b4]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "\\'\\'", replacement = "'", x = levels(i)))
+            
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "-+\\'", replacement = "'", x = levels(i)))
+          })
+          
           numeric.vars <- names(Filter(is.numeric, tmp))
-
+          
           full.labels.factor.vars <- lapply(X = tmp[factor.vars], FUN = function(i) {
-
+            
             levels(i)
-
+            
           })
-
+          
           full.labels.numeric.vars <- lapply(X = tmp[numeric.vars], FUN = function(i) {
-
+            
             as.numeric(attr(i, "value.labels"))
-
+            
           })
-
+          
           full.labels <- c(full.labels.factor.vars, full.labels.numeric.vars)
-
+          
           incomplete.labels.factor.vars <- lapply(X = tmp2[factor.vars], FUN = function(i) {
-
+            
             levels(i)
-
+            
           })
-
+          
           missing.factor.labels <- mapply(FUN = setdiff, full.labels.factor.vars, incomplete.labels.factor.vars)
-
+          
           missing.labels <- c(missing.factor.labels, full.labels.numeric.vars)
-
+          
           missing.labels <- missing.labels[lapply(X = missing.labels, FUN = length) > 0]
-
+          
           missing.labels <- lapply(X = missing.labels, FUN = function(i) {
-
+            
             gsub(pattern = "'", replacement = "\\\\'", x = i)
-
+            
           })
-
+          
           if(length(x = missing.labels) > 0) {
             miss.statements.left <- paste0("attr(tmp[['", names(missing.labels), "']], 'missings') <- ")
-
+            
             miss.statements.right <- lapply(X = missing.labels, FUN = function(i) {
-
+              
               if(class(i) == "character" && length(i) == 1) {
-
+                
                 paste0("'", i, "'")
-
+                
               } else if(class(i) == "character" && length(i) > 1) {
-
+                
                 paste0("c('", paste(i, collapse = "', '"), "')")
-
+                
               } else if(class(i) == "numeric" && length(i) == 1) {
-
+                
                 paste(i)
-
+                
               } else if(class(i) == "numeric" && length(i) > 1) {
-
+                
                 paste0("c(", paste(i, collapse = ", "), ")")
-
+                
               }
-
+              
             })
-
+            
             miss.statements <- paste0(miss.statements.left, miss.statements.right)
-
+            
             eval(parse(text = miss.statements))
-
+            
           }
-
+          
           names.num.miss.labels <- lapply(X = tmp[numeric.vars], FUN = function(i) {
-
+            
             names(attr(i, "value.labels"))
-
+            
           })
-
+          
           names.num.miss.labels <- Filter(Negate(is.null), names.num.miss.labels)
-
+          
           if(length(names.num.miss.labels) > 0) {
-
+            
             names.num.miss.labels <- names.num.miss.labels[which(unlist(lapply(X = names.num.miss.labels, FUN = function(i) {length(i) > 0})))]
-
+            
             naming.statement.left <- paste0("names(attr(tmp[['", names(names.num.miss.labels), "']], 'missings')) <- ")
-
+            
             naming.statements.right <- lapply(X = names.num.miss.labels, FUN = function(i) {
-
+              
               paste0("c('", paste0(i, collapse = "', '"), "')")
-
+              
             })
-
+            
             naming.statements <- paste0(naming.statement.left, naming.statements.right)
-
+            
           }
-
+          
           num.vars.miss.attr <- lapply(X = tmp[numeric.vars], FUN = attr, "missings")
-
+          
           num.vars.wo.miss.attr <- names(num.vars.miss.attr[unlist(lapply(num.vars.miss.attr, is.null))])
-
+          
           full.num.unique.values <- lapply(X = tmp[num.vars.wo.miss.attr], unique)
-
+          
           incomplete.num.unique.values <- lapply(X = tmp2[num.vars.wo.miss.attr], unique)
-
+          
           miss.values.num <- mapply(FUN = setdiff, full.num.unique.values, incomplete.num.unique.values)
-
+          
           miss.values.num <- Filter(length, miss.values.num)
-
+          
           if(length(x = miss.values.num) > 0) {
             eval(parse(text = paste0("attr(tmp[['", names(miss.values.num), "']], 'missings') <- ", miss.values.num)))
           }
-
+          
           tmp2 <- NULL
-
+          
           factor.vars <- names(Filter(is.factor, tmp))
-
+          
           all.levels.factor.vars <- lapply(X = tmp[factor.vars], FUN = levels)
-
+          
           levels.match.all.missing.combinations <- Filter(length, lapply(X = all.levels.factor.vars, FUN = function(i) {
             i[i %in% unlist(all.missing.values.combinations)]
           }))
-
+          
           names.levels.match.all.missing.combinations <- names(lapply(X = levels.match.all.missing.combinations, FUN = names))
-
+          
           if(length(x = levels.match.all.missing.combinations) > 0) {
-
+            
             produce.statements.left <- function(data.obj, var.names) {
               paste0("attr(tmp[['", var.names, "']], 'missings') <- ")
             }
-
+            
             missing.statements.left <- as.list(mapply(FUN = produce.statements.left, data.obj = tmp[unlist(names.levels.match.all.missing.combinations)], var.names = names.levels.match.all.missing.combinations))
-
+            
             levels.match.all.missing.combinations <- lapply(X = levels.match.all.missing.combinations, FUN = function(i) {
               gsub(pattern = "'", replacement = "\\\\'", x = i)
             })
-
+            
             missing.statements.right <- lapply(X = levels.match.all.missing.combinations, FUN = function(i) {
               if(length(i) == 1) {
                 paste0("'", i, "'")
@@ -453,46 +487,47 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
                 i <- paste0("c('", i, "')")
               }
             })
-
+            
             missing.statements <- mapply(FUN = paste0, missing.statements.left, missing.statements.right)
-
+            
             eval(parse(text = missing.statements))
+            
           }
-
+          
           num.vars.miss.attr <- names(Filter(Negate(is.null), lapply(X = tmp[numeric.vars], FUN = function(i) {
             attr(i, "missings")
           })))
-
+          
           if(length(num.vars.miss.attr) > 0) {
             to.numeric.statements <- lapply(num.vars.miss.attr, function(i) {
               paste0("attr(tmp[['", i, "']], 'missings') <- as.numeric(attr(tmp[['", i, "']], 'missings'))")
             })
             eval(parse(text = to.numeric.statements))
-
+            
           }
-
+          
           if(length(names.num.miss.labels) > 0) {
             eval(parse(text = naming.statements))
           }
-
+          
           factor.vars <- names(Filter(is.factor, tmp))
-
+          
           factors.to.be.numeric <- names(Filter(Negate(is.null), lapply(X = tmp[factor.vars], FUN = function(i) {
-
+            
             factor.vars.missings <- which(attributes(i)[["missings"]] %in% levels(i))
-
+            
             factor.vars.num.values.levels <- which(grepl(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i)) == TRUE)
-
+            
             if(length(factor.vars.missings) + length(factor.vars.num.values.levels) == length(levels(i))) {
               TRUE
             }
-
+            
           })))
-
+          
           missing.codes <- lapply(X = tmp[factors.to.be.numeric], FUN = function(i) {
             attr(i, "missings")
           })
-
+          
           missing.codes <- lapply(X = missing.codes, FUN = function(i) {
             sapply(X = i, FUN = function(j) {
               if(j %in% names(fac.to.num.missing.codes)) {
@@ -501,102 +536,112 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               }
             })
           })
-
+          
           missing.codes <- Filter(length, missing.codes)
-
+          
           if(length(missing.codes) > 0) {
             overwrite.numeric.miss.attr.statements.left <- paste0("attr(tmp[['", names(missing.codes), "']], 'missings') <- ")
             overwrite.numeric.miss.attr.statements.right <- paste0(missing.codes)
             overwrite.numeric.miss.attr.statements <- paste0(overwrite.numeric.miss.attr.statements.left, overwrite.numeric.miss.attr.statements.right)
-
+            
             eval(parse(text = overwrite.numeric.miss.attr.statements))
-
+            
             tmp[names(missing.codes)] <- lapply(X = tmp[names(missing.codes)], FUN = function(i) {
-
+              
               levels.and.missing.dictionary <- setNames(c(as.character(attributes(i)[["missings"]]), grep(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)), c(as.character(names(attributes(i)[["missings"]])), grep(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)))
-
+              
               variable.as.character <- as.character(i)
-
+              
               if(any(names(attributes(i)[["missings"]]) %in% variable.as.character) == TRUE) {
                 replacement.values <- as.numeric(levels.and.missing.dictionary[variable.as.character])
               } else {
                 replacement.values <- as.numeric(variable.as.character)
               }
-
+              
               missings.attribute <- attributes(i)[["missings"]]
-
+              
               attr(replacement.values, "missings") <- missings.attribute
-
+              
               return(replacement.values)
-
             })
+            
+            Filter(Negate(is.na), lapply(X = tmp, FUN = function(i) {
+              
+              if(length(levels(i)) > 0) {
+                if(!is.null(attr(i, "missings")) && !is.na(attr(i, "missings")[levels(i)[1] == attr(i, "missings")][1])) {
+                  miss.to.remove <- attr(i, "missings")[levels(i)[1] %in% attr(i, "missings")][1]
+                  setattr(x = i, name = "missings", value = attr(i, "missings")[!attr(i, "missings") %in% miss.to.remove])
+                }
+              }
+              
+            }))
           }
-
+          
           rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
-
+          
           if(length(rep.indicator) > 0 && is.factor(tmp[[rep.indicator]])) {
             tmp[[rep.indicator]] <- as.numeric(tmp[[rep.indicator]]) - 1
           }
-
+          
         }
-
+        
         factor.vars <- names(Filter(is.factor, tmp))
-
+        
         doubled.num.levels.with.space <- names(
           Filter(length, lapply(X = tmp[factor.vars], FUN = function(i) {
             grep(pattern = "^[[:digit:]]+[[:space:]]+[[:digit:]]+$|^[[:digit:]]+\\.[[:digit:]]+[[:space:]]+[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)
           })
           ))
-
+        
         if(length(doubled.num.levels.with.space) > 0) {
           tmp[doubled.num.levels.with.space] <- lapply(X = tmp[doubled.num.levels.with.space], FUN = function(i) {
             as.numeric(as.character(droplevels(i)))
           })
         }
-
+        
         factor.vars <- names(Filter(is.factor, tmp))
-
+        
         factors.with.whitespace <- names(Filter(function(i) {length(i) > 0}, lapply(X = tmp[factor.vars], FUN = function(j) {
           grep(pattern = "^.+[[:space:]]+$|^[[:digit:]]+\\.[[:digit:]]+[[:space:]]*$", x = levels(j))
         })
         ))
-
+        
         if(length(factors.with.whitespace) > 0) {
           tmp[factors.with.whitespace] <- lapply(X = tmp[factors.with.whitespace], FUN = function(i) {
-            factor(x = str_trim(i), levels = str_trim(levels(i)))
+            factor(x = str_trim(i), levels = make.unique(str_trim(levels(i))))
           })
         }
-
+        
         factor.vars <- names(Filter(is.factor, tmp))
-
+        
         factor.vars.all.num.levels <- names(which(sapply(X = tmp[factor.vars], FUN = function(i) {
           all(grepl(pattern = "^\\-*[[:digit:]]+[[:space:]]*$|^\\-*[[:digit:]]+\\.[[:digit:]]+[[:space:]]*$", x = levels(i)) == TRUE)
         }) == TRUE))
-
+        
         tmp[factor.vars.all.num.levels] <- lapply(X = tmp[factor.vars.all.num.levels], FUN = function(i) {
           as.numeric(as.character(i))
         })
-
+        
         numeric.val.lab.to.null <- paste0("attr(tmp[['", numeric.vars, "']], 'value.labels') <- NULL")
-
+        
         eval(parse(text = numeric.val.lab.to.null))
-
+        
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
-
+          
           inp.file.first.char <- substr(x = basename(inp.file), start = 1, stop = 1)
-
+          
         } else if (any(sapply(X = ISO, FUN = nchar) > 12 )) {
-
+          
           first.four.char <- unique(x = substr(x = tolower(ISO), start = 1, stop = 4))
-
+          
           if(grepl(pattern = "0", x = first.four.char)[1]) {
             inp.file.first.char <- substr(x = basename(inp.file), start = 1, stop = 4)
           } else {
             inp.file.first.char <- substr(x = basename(inp.file), start = 1, stop = 3)
           }
-
+          
         }
-
+        
         if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m1") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "1995"
@@ -619,6 +664,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           study.attribute <- "TIMSS"
           cycle.attribute <- "2015"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m7") {
+          study.attribute <- "TIMSS"
+          cycle.attribute <- "2019"
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b7") { # Note it is "b4" for the bridge booklets
           study.attribute <- "TIMSS"
           cycle.attribute <- "2019"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m8") {
@@ -717,8 +765,11 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("CY07", "cy07", "Cy07")) {
           study.attribute <- "PISA"
           cycle.attribute <- "2018"
+        } else if(inp.file.first.char %in% c("CY1", "cy1", "Cy1")) {
+          study.attribute <- "PISA for Development"
+          cycle.attribute <- "2019"
         }
-
+        
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
           inp.file.abbrev <- substr(x = basename(inp.file), start = 1, stop = 3)
         } else if (any(sapply(X = ISO, FUN = nchar) > 12 )) {
@@ -726,10 +777,17 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             inp.file.abbrev <- substr(x = basename(inp.file), start = 12, stop = 18)
           } else if(study.and.cycle %in% c("CY07", "cy07", "Cy07")) {
             inp.file.abbrev <- substr(x = basename(inp.file), start = 10, stop = 16)
+          } else if(study.and.cycle %in% c("CY1", "cy1", "Cy1")) {
+            if(nchar(basename(inp.file)) == 19) {
+              inp.file.abbrev <- substr(x = basename(inp.file), start = 9, stop = 15)
+            } else if(nchar(basename(inp.file)) == 15) {
+              inp.file.abbrev <- substr(x = basename(inp.file), start = 9, stop = 11)
+            }
           }
-
+          
         }
-
+        
+        
         if(inp.file.abbrev %in% c("alg", "ALG", "blg", "BLG")) {
           file.type.attribute <- "leader.bckg"
         } else if(study.attribute != "TALIS 3S" && inp.file.abbrev %in% c("asg", "bsg", "ASG", "BSG", "asc", "bs_", "cs_", "isg", "ISG", "jsg", "JSG")) {
@@ -818,394 +876,399 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "std.qtm"
         } else if(inp.file.abbrev %in% c("STU_PVS", "stu_pvs")) {
           file.type.attribute <- "std.bckg"
+        } else if(inp.file.abbrev %in% c("COG", "cog")) {
+          file.type.attribute <- "out.of.school.ach"
+        } else if(inp.file.abbrev %in% c("QQQ", "qqq")) {
+          file.type.attribute <- "out.of.school.bckg"
+        } else if(inp.file.abbrev %in% c("TIM", "tim")) {
+          file.type.attribute <- "out.of.school.qtm"
         }
-
+        
         attr(x = tmp, which = "study") <- study.attribute
-
+        
         attr(x = tmp, which = "cycle") <- cycle.attribute
-
+        
         attr(x = tmp, which = "file.type") <- file.type.attribute
-
+        
         if(attr(x = tmp, which = "study") %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "CivED", "ICCS")) {
           cnt.identifier <- which(names(tmp) %in% c("IDCNTRY", "idcntry"))
         } else if(attr(tmp, "study") %in% c("IALS", "ALLS", "PIAAC")) {
           cnt.identifier <- which(names(tmp) %in% c("CNTRYID", "CNTRID"))
         }
-
+        
         if(attr(x = tmp, which = "study") %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "CivED", "ICCS", "IALS", "ALLS", "PIAAC")) {
-
+          
           tmp[[cnt.identifier]] <- factor(x = tmp[[cnt.identifier]], levels = c(8, 12, 31, 32, 36, 40, 48, 51, 56, 70, 72, 76, 84, 100, 124, 152, 158, 170, 188, 191, 196, 200, 203, 208, 214, 218, 222, 233, 246, 250, 268, 275, 276, 288, 300, 320, 340, 344, 348, 352, 360, 364, 372, 376, 380, 392, 398, 400, 410, 411, 414, 422, 428, 438, 440, 442, 446, 458, 470, 484, 496, 498, 499, 504, 512, 528, 554, 558, 578, 586, 600, 604, 608, 616, 620, 634, 642, 643, 682, 688, 702, 703, 704, 705, 710, 724, 752, 756, 760, 764, 780, 784, 788, 792, 804, 807, 818, 826, 840, 858, 887, 891, 926, 927, 928, 956, 957, 3724, 3752, 4710, 5784, 5788, 6162, 6431, 6504, 6887, 7105, 7241, 7246, 7554, 7702, 7841, 7842, 8261, 9132, 9133, 9134, 9135, 9136, 9137, 9352, 9470, 9528, 9578, 9642, 10400, 10800, 10900, 11100, 11200, 11800, 12500, 12700, 13700, 32001, 48401, 48402, 48411, 48412, 48415, 48416, 48417, 48418, 48420, 48421, 48422, 48425, 48426, 48427, 48428, 48499, 57891, 57892, 57893, 57894, 72401, 72404, 156001, 208001, 276001, 643001, 643002, 710003, 710004, 724004, 724005), labels = c("Albania", "Algeria", "Azerbaijan, Republic of", "Argentina", "Australia", "Austria", "Bahrain", "Armenia", "Belgium", "Bosnia and Herzegovina", "Botswana", "Brazil", "Belize", "Bulgaria", "Canada", "Chile", "Chinese Taipei", "Colombia", "Costa Rica", "Croatia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Dominican Republic", "Ecuador", "El Salvador", "Estonia", "Finland", "France", "Georgia", "Palestinian National Authority", "Germany", "Ghana", "Greece", "Guatemala", "Honduras, Republic of", "Hong Kong, SAR", "Hungary", "Iceland", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Kazakhstan", "Jordan", "Korea, Republic of", "Kosovo", "Kuwait", "Lebanon", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg", "Macao SAR", "Malaysia", "Malta", "Mexico", "Mongolia", "Moldova", "Montenegro", "Morocco", "Oman", "Netherlands", "New Zealand", "Nicaragua", "Norway", "Pakistan", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Saudi Arabia", "Serbia", "Singapore", "Slovak Republic", "Vietnam", "Slovenia", "South Africa", "Spain", "Sweden", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "United Arab Emirates", "Tunisia", "Turkey", "Ukraine", "Macedonia", "Egypt", "United Kingdom", "United States", "Uruguay", "Yemen", "Serbia", "England", "Scotland", "Northern Ireland", "Belgium (Flemish)", "Belgium (French)", "Spain (Basque Country)", "Sweden (Grade 3)", "South Africa (Grade 4)", "Norway (4)", "Norway (8)", "Poland (Second-Cycle Programs)", "Russian Federation (Moscow)", "Morocco (Grade 6)", "Yemen (Grade 6)", "South Africa (Eng/Afr)", "Spain (Catalonia)", "Finland (Grade 7)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "United Arab Emirates (Dubai)", "United Arab Emirates (Abu Dhabi)", "England and Northern Ireland (UK)", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Canada (Newfoundland and Labrador)", "Iceland (Grade 5)", "Malta (Maltese)", "The Netherlands (50 additional schools)", "Norway (Grade 5)", "Romania", "United States (Alabama)", "United States (Colorado)", "United States (Connecticut)", "United States (California)", "United States (Florida)", "United States (Indiana)", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Argentina, Buenos Aires", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Distrito Federal)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (International Telesecundaria)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Mexico (Talis-Nacional)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "Spain (Andalucia)", "Spain (Canary Islands)", "China (Shanghai)", "Denmark (Grade 3)", "Germany, North-Rhine Westphalia", "Russian Federation, Moscow", "Russia (8+ sample)", "South Africa (Gauteng)", "South Africa (Western Cape Province)", "Spain, Madrid, Bilingual", "Spain, Madrid"))
-
+          
           tmp[[cnt.identifier]] <- droplevels(tmp[[cnt.identifier]])
         }
-
+        
         if(attr(x = tmp, which = "study") %in% c("ICILS", "SITES", "TEDS-M", "TALIS")) {
           tmp[["IDCNTRY"]] <- droplevels(tmp[["IDCNTRY"]])
         }
-
+        
         names(tmp) <- toupper(names(tmp))
-
-        if(study.attribute == "PISA") {
+        
+        if(study.attribute %in% c("PISA", "PISA for Development")) {
           setDT(x = tmp, key = "CNT")
         } else {
           setDT(x = tmp, key = "IDCNTRY")
         }
-
+        
         var.labels <- attr(tmp, "variable.labels")
-
+        
         var.labels <- gsub(pattern = "\\\\", replacement = "/", x = var.labels)
-
+        
         var.labels <- gsub(pattern = "'", replacement = "\\\\'", x = var.labels)
-
+        
         var.labels <- paste("attr(tmp[['", toupper(names(var.labels)), "']], 'variable.label') <- '", var.labels, "'", sep = "")
-
+        
         eval(parse(text = var.labels))
-
+        
         attr(x = tmp, which = "variable.labels") <- NULL
-
+        
         attr(x = tmp, which = "class") <- c("lsa.data", attr(x = tmp, which = "class"))
-
+        
         assign(x = tolower(new.file), value = tmp)
-
+        
         tmp <- NULL
-
+        
         save(list = tolower(new.file), file = out.file, compress = FALSE)
-
+        
         counter <<- counter + 1
-
+        
         message("     ",
-
-                if(nchar(counter) == 1) {
-                  paste0("(  ", counter, "/", length(ISO), ")   ")
-                } else if(nchar(counter) == 2) {
-                  paste0("( ", counter, "/", length(ISO), ")   ")
-                } else if(nchar(counter) > 2) {
-                  paste0("(", counter, "/", length(ISO), ")   ")
-                },
-
-                basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
-
+            
+            if(nchar(counter) == 1) {
+              paste0("(  ", counter, "/", length(ISO), ")   ")
+            } else if(nchar(counter) == 2) {
+              paste0("( ", counter, "/", length(ISO), ")   ")
+            } else if(nchar(counter) > 2) {
+              paste0("(", counter, "/", length(ISO), ")   ")
+            },
+            
+            basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
+        
       }
-
+      
       ptm <- proc.time()
-
+      
       suppressWarnings(
-
+        
         invisible(mapply(FUN = convert.IEA, inp.file = full.inp.file.path, out.file = full.out.file.path, new.file = root.file.names))
-
+        
       )
-
+      
       if(length(ISO) == 1) {
-
+        
         message("\n", " The selected file successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"), "\n\n")
-
+        
       } else {
-
+        
         message("\n All ", length(ISO), " found files successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"), "\n\n")
-
+        
       }
-
+      
     } else if(PISApre15 == TRUE) {
-
+      
       sps.files <- list.files(path = inp.folder, pattern = "\\.sps")
-
+      
       PISA.cycle <- unique(str_extract(string = sps.files, pattern = "^[[:alpha:]]+[[:digit:]]+"))
-
+      
       if(length(PISA.cycle) > 1) {
         message("\nError:\nThe input folder contains data files from more than one PISA pre 2015 cycle. The input folder must contain files from single study and cycle only.\n\n")
         stop()
       }
-
+      
       txt.files <- list.files(path = inp.folder, pattern = "\\.txt")
-
+      
       if(dir.exists(paths = inp.folder) == FALSE) {
         message("\nError:\nThe input folder does not exist. Check your input.\n\n")
       } else {
         if(length(sps.files) == 0) {
           message("\nError:\nThe input folder contains no control (\".sps\") files to read. Check your input.\n\n")
         }
-
+        
         if(length(txt.files) == 0) {
           message("\nError:\nThe input folder contains no data (\".txt\") files to read. Check your input.\n\n")
         }
       }
-
+      
       full.inp.file.path <- file.path(inp.folder, sps.files)
-
+      
       root.file.names <- sapply(X = strsplit(x = sps.files, split = "\\."), FUN = "[", 1)
-
+      
       full.out.file.path <- paste(file.path(out.folder, tolower(x = root.file.names)), "RData", sep = ".")
-
+      
       if(length(sps.files) > 0 & length(txt.files) > 0) {
         message("\n", paste(length(txt.files), " datasets selected for conversion. Some datasets can be rather large. Please be patient.\n"))
       }
-
+      
       count.success <- 0
-
+      
       convert.PISApre15 <- function(inp.file, out.file, new.file) {
-
+        
         tryCatch({
-
+          
           ptm <- proc.time()
-
+          
           syntax.path <- inp.file
-
+          
           raw.spss.syntax <- readLines(con = syntax.path)
-
+          
           line.encodings <- sapply(X = stri_enc_detect(raw.spss.syntax), FUN = function(i) {
             i[[1]][[1]][1]
           })
-
+          
           most.freq.encoding <- names(sort(table(line.encodings), decreasing = TRUE)[1])
-
+          
           spss.syntax <- str_trim(string = gsub(pattern = "^\t+|\\\"|\'", replacement = "", x = readLines(con <- file(syntax.path, encoding = most.freq.encoding))))
           close(con)
-
+          
           spss.syntax <- stri_enc_toutf8(spss.syntax)
-
+          
           spss.syntax <- gsub(pattern = "\t+", replacement = " ", x = spss.syntax)
-
+          
           spss.syntax <- gsub(pattern = "/\\s+", replacement = "/", x = spss.syntax)
-
+          
           spss.syntax <- gsub(pattern = "[[:space:]]{2, }", x = spss.syntax, replacement = " ")
-
-
+          
           spss.syntax <- spss.syntax[spss.syntax != ""]
-
+          
           comments <- grep(pattern = "^.{3}\\*|^\\*", x = spss.syntax)
-
+          
           if(length(x = comments) != 0) {
             spss.syntax <- spss.syntax[-comments]
           }
-
+          
           variables <- grep(pattern = "^/*[[:alpha:]]+(\\_)*([[:alnum:]]+)*\\s\\d+\\s*-\\s*\\d+\\s*", x = spss.syntax, value = TRUE)
-
+          
           variables <- gsub(pattern = "/", replacement = "", x = variables)
-
+          
           variables <- gsub(pattern = "\\)\\s+\\.", replacement = ").", x = variables)
-
+          
           var.names <- toupper(word(string = variables, start = 1, end = 1))
-
+          
           ranges <- str_extract(string = variables, pattern = "[[:digit:]]+\\s*-\\s*[[:digit:]]+")
-
+          
           ranges.start <- as.numeric(gsub(pattern = "\\s*-", replacement = "", x = str_extract(string = variables, pattern = "[[:digit:]]+\\s*-")))
-
+          
           ranges.end <- as.numeric(gsub(pattern = "-\\s*", replacement = "", x = str_extract(string = variables, pattern = "-\\s*[[:digit:]]+")))
-
+          
           no.formats <- grep(pattern = "\\)\\.?$", x = variables, invert = TRUE)
-
+          
           if(length(x = no.formats) != 0) {
-
+            
             variables[no.formats] <- paste(variables[no.formats], "(F,0)")
-
+            
           }
-
+          
           var.formats <- toupper(x = grep(pattern = "[[:alpha:]]", x = gsub(pattern = "[^[:alpha:]]|[[:space:]]", replacement = "", x = word(string = variables, start = str_count(variables, "\\S+"), end = str_count(variables, "\\S+"))), value = TRUE))
-
+          
           var.dec <- grepl(pattern = "[1-9]+", x = word(string = variables, start = str_count(variables, "\\S+"), end = str_count(variables, "\\S+")))
-
+          
           var.classes <- ifelse(var.formats == "F" & var.dec == FALSE, "factor", ifelse(var.formats == "F" & var.dec == TRUE, "numeric", ifelse(var.formats == "A", "character", "undefined")))
-
+          
           file.name.string <- gsub(pattern = "\\\\", replacement = "/", x = grep(pattern = "data list file", x = spss.syntax, ignore.case = TRUE, value = TRUE))
-
+          
           txt.file.name <- basename(gsub(pattern = "data list file *=*|\\.txt\\s*/*$", replacement = "", x = file.name.string, ignore.case = TRUE))
-
+          
           txt.file.name <- gsub(pattern = "PAQ09", replacement = "PAR09", x = txt.file.name)
           txt.file.name <- gsub(pattern = "SCQ09_DEC11", replacement = "SCQ09_Dec11", x = txt.file.name)
           txt.file.name <- gsub(pattern = "cogn_2003", replacement = "cogn_2003_v2", x = txt.file.name)
-
+          
           txt.file.path <- paste0(dirname(syntax.path), "/", txt.file.name, ".txt")
-
+          
           if(file.exists(txt.file.path) == TRUE) {
-
+            
             count.success <<- count.success + 1
-
+            
           }
-
+          
           tmp <- suppressMessages(data.frame(read_fwf(file = txt.file.path, fwf_positions(start = ranges.start, end = ranges.end, col_names = var.names), progress = FALSE)))
-
+          
           assign.class <- function(data, classes) do.call(paste("as", classes, sep = "."), list(data))
-
+          
           tmp <- replace(tmp,, Map(f = assign.class, data = tmp, classes = var.classes))
-
+          
           character.vars <- names(Filter(is.character, tmp))
-
+          
           tmp[character.vars] <- lapply(X = tmp[character.vars], FUN = function(i) {
             i <- sub(pattern = "^0+([1-9])", "\\1", x = i)
             i <- gsub(pattern = "^0+$", replacement = "0", x = i)
           })
-
+          
           value.labels.first <- grep(pattern = "val[[:alpha:]]* lab[[:alpha:]]*", x = spss.syntax, ignore.case = TRUE)[1]
-
+          
           value.labels.part <- spss.syntax[value.labels.first:length(spss.syntax)]
-
+          
           clean.unwanted.statements <- function(text, expression) {
-
+            
             statements <- grep(pattern = expression, x = text, ignore.case = TRUE)
-
+            
             if(length(statements) != 0) {
-
+              
               periods.after.statements <- grep(pattern = "\\.$", x = text)
-
+              
               periods.after.first.statement <- periods.after.statements[which(periods.after.statements >= statements[1])]
-
+              
               periods.terminating.statements <- head(periods.after.first.statement, n = length(statements))
-
+              
               ranges.statements <- mapply(c, statements, periods.terminating.statements, SIMPLIFY = FALSE)
-
+              
               indx.statements <- lapply(ranges.statements, function(i) {
                 seq(from = i[1], to = i[2])
               })
-
+              
               cleaned <- text[-unlist(indx.statements)]
-
+              
             } else {
-
+              
               cleaned <- text
-
+              
             }
-
+            
             exe.cache.recode.statements <- grep(pattern = "^exe[[:alpha:]]*\\.|^cache\\.|^recode", x = cleaned, ignore.case = TRUE)
-
+            
             if(length(exe.cache.recode.statements) > 0) {
               cleaned <- cleaned[-exe.cache.recode.statements]
             }
-
+            
             save.statements <- grep(pattern = "sav[[:alpha:]]*\\s+out[[:alpha:]]*", x = cleaned, ignore.case = TRUE)
-
+            
             if(length(save.statements) > 0) {
               cleaned <- cleaned[-save.statements]
             }
-
+            
             return(cleaned)
           }
-
+          
           tmp.value.labels <- clean.unwanted.statements(text = value.labels.part, expression = "mis[[:alpha:]]*\\s+val[[:alpha:]]*")
-
+          
           tmp.value.labels <- clean.unwanted.statements(text = tmp.value.labels, expression = "formats*\\s+[[:alnum:]]+")
-
+          
           tmp.value.labels <- clean.unwanted.statements(text = tmp.value.labels, expression = "var[[:alpha:]]*\\s+lev[[:alpha:]]*")
-
+          
           single.periods <- which(tmp.value.labels == ".")
-
+          
           if(length(tmp.value.labels[single.periods]) != 0) {
             tmp.value.labels <- tmp.value.labels[-single.periods]
           }
-
+          
           indx.ending.slashes <- grep(pattern = "/$", x = tmp.value.labels)
-
+          
           if(length(indx.ending.slashes) > 0) {
-
+            
             indx.move.end.slash <- indx.ending.slashes + 1
-
+            
             tmp.value.labels[indx.move.end.slash] <- paste("/", tmp.value.labels[indx.move.end.slash], sep = "")
-
+            
             tmp.value.labels[indx.ending.slashes] <- gsub(pattern = "/$", replacement = "", x = tmp.value.labels[indx.ending.slashes])
           }
-
+          
           lab.statements.to.split <- grep(pattern = "Missing /", x = tmp.value.labels)
-
+          
           if(length(lab.statements.to.split) > 0){
-
+            
             add.split <- gsub(pattern = " /", replacement = " split /", x = tmp.value.labels[lab.statements.to.split])
-
+            
             splitted.statements <- strsplit(x = add.split, split = " split ")
-
+            
             tmp.value.labels[lab.statements.to.split] <- splitted.statements
-
+            
             tmp.value.labels <- unlist(tmp.value.labels)
           }
-
+          
           tmp.value.labels <- gsub(pattern = "xxxn", replacement = "", x = tmp.value.labels, ignore.case = TRUE)
-
+          
           mixed.val.lab.var.names <- grep(pattern = "val[[:alpha:]]* lab[[:alpha:]]* [[:alnum:]]+", x = tmp.value.labels, ignore.case = TRUE)
-
+          
           if(length(mixed.val.lab.var.names) != 0) {
-
+            
             mixed.val.lab.var.names.pos <- lapply(tmp.value.labels[mixed.val.lab.var.names], function(i) {
               gregexpr(pattern = "\\s", text = i)[[1]][2]
             })
-
+            
             max.char.mixed.lab.var.names <- lapply(X = tmp.value.labels[mixed.val.lab.var.names], nchar)
-
+            
             val.lab.keywords <- str_trim(substring(text = tmp.value.labels[mixed.val.lab.var.names], first = 1, last = mixed.val.lab.var.names.pos), side = "both")
-
+            
             var.names.and.labels <- str_trim(substring(text = tmp.value.labels[mixed.val.lab.var.names], first = mixed.val.lab.var.names.pos, last = max.char.mixed.lab.var.names), side = "both")
-
+            
             split.statements <- Map(c, val.lab.keywords, var.names.and.labels)
-
+            
             tmp.value.labels[mixed.val.lab.var.names] <- split.statements
-
+            
             tmp.value.labels <- unlist(tmp.value.labels)
-
+            
           }
-
+          
           value.labels.next.pos <- grep(pattern = "val[[:alpha:]]* lab[[:alpha:]]*", x = tmp.value.labels, ignore.case = TRUE) + 1
-
+          
           no.slash <- value.labels.next.pos[grep(pattern = "^/", x = tmp.value.labels[value.labels.next.pos], invert = TRUE)]
-
+          
           tmp.value.labels[no.slash] <- paste("/", tmp.value.labels[no.slash], sep = "")
-
+          
           tmp.value.labels <- tmp.value.labels[-grep(pattern = "val[[:alpha:]]* lab[[:alpha:]]*", x = tmp.value.labels, ignore.case = TRUE)]
-
+          
           last.labels <- grep(pattern = "^/[[:alnum:]]+", x = tmp.value.labels) - 1
-
+          
           tmp.value.labels[last.labels] <- gsub(pattern = "\\.$", replacement = "", x = tmp.value.labels[last.labels], ignore.case = TRUE)
-
+          
           tmp.value.labels <- paste(tmp.value.labels, " split ", sep = "")
-
+          
           tmp.value.labels[length(tmp.value.labels)] <- gsub(pattern = " split ", replacement = "", x = tmp.value.labels[length(tmp.value.labels)])
-
+          
           indx.var.labels.lines <- grep(pattern = "^/|^[[:upper:]]{4, }|^[[:alpha:]]+[[:digit:]]+[[:alpha:]]", x = tmp.value.labels)
-
+          
           indx.var.names <- split(indx.var.labels.lines, cumsum(c(TRUE, diff(indx.var.labels.lines) != 1)))
-
+          
           indx.sequences <- indx.var.names[which(sapply(indx.var.names, length) > 1)]
-
+          
           if(length(indx.sequences) == 0) {
-
+            
             tmp.value.labels <- gsub(pattern = " split ", replacement = "", x = tmp.value.labels)
-
+            
             tmp.value.labels <- str_trim(string = tmp.value.labels, side = "both")
-
+            
           } else {
-
+            
             indx.starting.slash <- grep(pattern = "^/", x = tmp.value.labels)
-
+            
             tmp.value.labels[indx.starting.slash] <- paste("split1", tmp.value.labels[indx.starting.slash], sep = "")
-
+            
             indx.remove.split <- unlist(lapply(X = indx.sequences, FUN = function(i) {
               head(i, n = length(i) - 1)
             }))
-
+            
             tmp.value.labels[indx.remove.split] <- gsub(pattern = " split ", replacement = "", x = tmp.value.labels[indx.remove.split])
-
+            
             pasted.value.labels <- paste(tmp.value.labels, sep = "", collapse = " ")
-
+            
             tmp.value.labels <- unlist(str_split(string = pasted.value.labels, pattern = " split "))
-
+            
             tmp.value.labels <- unlist(str_split(string = tmp.value.labels, pattern = "split1"))
-
+            
             tmp.value.labels <- str_trim(string = tmp.value.labels, side = "both")
-
+            
             tmp.value.labels <- tmp.value.labels[tmp.value.labels != ""]
           }
-
+          
           mixed.statements <- grep(pattern = "^/(\\w+\\s)+([[:upper:]]\\s|[[:digit:]]+\\s)", x = tmp.value.labels)
-
+          
           extract.and.split.labels <- function(vec, lst1, lst2) {
             substring(lapply(vec, function(i) i), first = lapply(lst1, function(i) i), last = lapply(lst2, function(i) i))
           }
-
+          
           if(length(mixed.statements) != 0) {
             mixed.statements.pos.and.lengt <- gregexpr(pattern = "\\s[[:upper:]]\\s|\\s[[:digit:]]+\\s([^000]|[0-9]+\\%|[1-9]+[[:alpha:]]|[0-9]+\\-[0-9]+)", text = tmp.value.labels[mixed.statements])
-
+            
             mixed.statements.pos <- lapply(mixed.statements.pos.and.lengt, function(i) {
               as.vector(i)
             })
-
+            
             extract.var.names <- str_trim(substring(text = tmp.value.labels[mixed.statements], first = 1, last = sapply(mixed.statements.pos, function(i) i[1])), side = "both")
-
+            
             split.end.pos <- lapply(X = mixed.statements.pos, FUN = function(i) {
               if(length(i) > 1) {
                 i[2:length(i)] - 1
@@ -1213,27 +1276,27 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
                 NULL
               }
             })
-
+            
             split.last.pos <- lapply(X = tmp.value.labels[mixed.statements], FUN = function(i) {
               nchar(i)
             })
-
+            
             split.end.pos <- mapply(c, split.end.pos, split.last.pos, SIMPLIFY = FALSE)
-
+            
             extract.val.labels <- Map(extract.and.split.labels, tmp.value.labels[mixed.statements], mixed.statements.pos, split.end.pos)
-
+            
             join.names.and.labels <- Map(c, as.list(extract.var.names), as.list(extract.val.labels))
-
+            
             tmp.value.labels[mixed.statements] <- join.names.and.labels
-
+            
           }
-
+          
           tmp.value.labels <- str_trim(string = unlist(tmp.value.labels), side = "both")
-
+          
           tmp.value.labels <- gsub(pattern = "\\s*/*\\.$", replacement = "", x = tmp.value.labels)
-
+          
           mixed.labels <- grep(pattern = "^[[:digit:]]+\\s([[:alpha:]]+/*)+\\s[[:digit:]]+\\s[[:alpha:]]", x = tmp.value.labels)
-
+          
           statements.to.escape <- c("1 pwk & 1 pmn",
                                     "[[:digit:]]+\\s*(hours|minutes)* and [[:digit:]]+\\s*(hours|minutes)",
                                     "times a year",
@@ -1262,70 +1325,72 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
                                     "YTL 24000 or more - less than YTL 48000",
                                     "YTL 48000 or more - less than YTL 72000",
                                     "YTL 72000 or more")
-
+          
           unwanted.pattern <- grep(pattern = paste(statements.to.escape, collapse = "|"), x = tmp.value.labels)
-
+          
           mixed.labels <- setdiff(mixed.labels, unwanted.pattern)
-
+          
           if(length(mixed.labels) != 0) {
             mixed.labels.pos <- gregexpr(pattern = "\\s[[:digit:]]", text = tmp.value.labels[mixed.labels])
-
+            
             mixed.labels.pos <- lapply(mixed.labels.pos, function(i) {
               as.vector(i)
             })
-
+            
             length.mixed.labels <- lapply(tmp.value.labels[mixed.labels], nchar)
-
+            
             all.split.points <- Map(c, 1, mixed.labels.pos, length.mixed.labels)
-
+            
             mix.lab.start.positions <- lapply(X = all.split.points, FUN = function(i) {
               sort(c(i[seq(1, length(i), 2)], i[seq(2, length(i) - 1, 2)]))
             })
-
+            
             mix.lab.end.positions <- lapply(X = all.split.points, FUN = function(i) {
               tail(i, n = length(i) - 1)
             })
-
+            
             split.labels <- Map(extract.and.split.labels, tmp.value.labels[mixed.labels], mix.lab.start.positions, mix.lab.end.positions)
-
+            
             tmp.value.labels[mixed.labels] <- split.labels
-
+            
             tmp.value.labels <- str_trim(unlist(tmp.value.labels), side = "both")
           }
-
+          
+          
           value.labels.var.names.pos <- grep(pattern = "^/", x = tmp.value.labels)
-
+          
           value.labels.start.pos <- value.labels.var.names.pos + 1
-
+          
           value.labels.end.pos <- (value.labels.var.names.pos - 1)
           value.labels.end.pos[length(value.labels.end.pos) + 1] <- length(tmp.value.labels)
           value.labels.end.pos <- value.labels.end.pos[-1]
-
+          
           form.statements <- function(string.object) {
+            
             if(length(grep(pattern = "^/", x = string.object)) == 0) {
               obj.var.names <- string.object
             } else {
               obj.var.names <- toupper(sub(pattern = "^/", x = grep(pattern = "^/", x = string.object, value = TRUE), replacement = ""))
             }
-
+            
             indx.elem.list <- lapply(gregexpr(" TO ", obj.var.names), function(component){
               attributes(component) <- NULL
               ifelse(component == -1, component <- 0, component)
               component
             })
-
+            
             all.spaces <- gregexpr("\\s+", obj.var.names)
-
+            
             matched.space.pos <- mapply(match, indx.elem.list, all.spaces)
-
+            
             previous.string.pos <- lapply(matched.space.pos, function(x) x - 1)
-
+            
             next.string.pos <- lapply(matched.space.pos, function(x) x + 1)
-
+            
             previous.string <- lapply(seq_along(all.spaces), function(i) all.spaces[[i]][previous.string.pos[[i]]])
-
+            
             next.string <- lapply(seq_along(all.spaces), function(i) all.spaces[[i]][next.string.pos[[i]]])
-
+            
             ranges.var.list <- lapply(1:length(previous.string), function(i){
               xx <- strsplit(x = obj.var.names, split = "")[[i]]
               xx[next.string[[i]]] <- " which(names(tmp)=='"
@@ -1341,72 +1406,72 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               })
               xx <- unlist(xx)
             })
-
+            
             number.of.single.quotes <- lapply(ranges.var.list, FUN = function(i) {
               x <- str_count(string = i, pattern = "'")
               return(x)
             })
-
+            
             indx.four.quotes <- which(number.of.single.quotes == 4)
-
+            
             indx.colons <- lapply(ranges.var.list, function(i) {
               grep(pattern = ":", i)
             })
-
+            
             indx.single.colon <- which(indx.colons == 1)
-
+            
             single.colon <- intersect(indx.four.quotes, indx.single.colon)
-
+            
             if(length(single.colon) > 0) {
               ranges.var.list[single.colon] <- gsub(pattern = "names(tmp[", replacement = "names(tmp[which(names(tmp)==", x = ranges.var.list[single.colon], fixed = TRUE)
-
+              
               ranges.var.list[single.colon] <- gsub(pattern = "'])", replacement = "')])", x = ranges.var.list[single.colon], fixed = TRUE)
-
+              
               ranges.and.prev.string <- list(ranges.var.list = ranges.var.list, previous.string = previous.string, obj.var.names = obj.var.names)
             } else {
               ranges.and.prev.string <- list(ranges.var.list = ranges.var.list, previous.string = previous.string, obj.var.names = obj.var.names)
             }
             return(ranges.and.prev.string)
           }
-
+          
           ranges.and.prev.pos <- form.statements(tmp.value.labels)
-
+          
           value.labels.ranges.var.list <- ranges.and.prev.pos[["ranges.var.list"]]
-
+          
           previous.string <- ranges.and.prev.pos[["previous.string"]]
-
+          
           value.labels.var.names <- ranges.and.prev.pos[["obj.var.names"]]
-
+          
           value.labels.full.var.list <- lapply(value.labels.ranges.var.list, function(i) {eval(parse(text = i))})
-
+          
           value.labels.block.ranges <- paste(value.labels.start.pos, value.labels.end.pos, sep = ":", collapse = " ")
-
+          
           value.labels.ranges.expr <- unlist(lapply(X = 1:str_count(string = value.labels.block.ranges, pattern = "\\S+"), FUN = function(i) {
             paste("value.labels.block", i, " <- tmp.value.labels[", word(string = value.labels.block.ranges, start = i, end = i), "]", sep = "")
           }))
-
+          
           eval(parse(text = value.labels.ranges.expr))
-
+          
           list.value.labels.blocks <- paste(ls(pattern = "value.labels.block[[:digit:]]+"), collapse = ", ")
-
+          
           list.value.labels.blocks.names <- paste(ls(pattern = "value.labels.block[[:digit:]]+"))
-
+          
           eval(parse(text = paste("value.labels.blocks <- list(", list.value.labels.blocks, ")", sep = "")))
-
+          
           names(value.labels.blocks) <- list.value.labels.blocks.names
-
+          
           value.labels.blocks <- value.labels.blocks[order(nchar(names(value.labels.blocks)), names(value.labels.blocks))]
-
+          
           value.labels.blocks <- lapply(X = value.labels.blocks, gsub, pattern = paste("^00+\\s+", collapse = "|"), replacement = "0 ")
-
+          
           value.labels.blocks <- lapply(X = value.labels.blocks, FUN = function(i) {
             sub("^0+([1-9])", "\\1", x = i)
           })
-
+          
           concat.value.labels.blocks <- lapply(value.labels.blocks, function(i) {
             paste(i, collapse = " ")
           })
-
+          
           blocks.with.just.miss <- c("^7 N/A 8 Invalid 9 Missing r Not reached$",
                                      "^7 N/A 8 Invalid r Not reached$",
                                      "^7 N/A 8 M/R 9 Mis",
@@ -1438,15 +1503,15 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
                                      "^996 N/A - <ISCED level> not available in this school 9997 N/A 9998 Invalid 9999 Miss$",
                                      "^996 N/A 9997 N/A 9998 Invalid 9999 Missing$",
                                      "^997 Missing$")
-
+          
           indx.numeric <- unique(grep(paste(blocks.with.just.miss, collapse = "|"), concat.value.labels.blocks))
-
+          
           if(length(indx.numeric) != 0) {
             tmp[ , unlist(unique(value.labels.full.var.list[indx.numeric]))] <- lapply(X = unlist(unique(value.labels.full.var.list[indx.numeric])), FUN = function(x) {
               as.numeric(as.character(tmp[ , x]))
             })
           }
-
+          
           get.orig.data.values <- function(data, var.list) {
             component.names <- unlist(var.list)
             unique.values <- lapply(data[component.names], unique)
@@ -1454,39 +1519,39 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             unique.values <- lapply(unique.values, as.character)
             return(unique.values)
           }
-
+          
           orig.data.values <- get.orig.data.values(data = tmp, var.list = value.labels.full.var.list)
-
+          
           character.columns <- names(Filter(is.character, tmp))
-
+          
           components.to.clean <- character.columns[is.element(character.columns, names(orig.data.values))]
-
+          
           orig.data.values[components.to.clean] <- lapply(X = orig.data.values[components.to.clean], FUN = function(i) {
             sub("^0+([1-9])", "\\1", x = i)
           })
-
+          
           orig.data.values.in.blocks <- lapply(X = value.labels.full.var.list, FUN = function(i) {
             values <- sort(unique(unlist(orig.data.values[i], use.names = FALSE)))
             duplicated.values <- paste(values, values)
             return(duplicated.values)
           })
-
+          
           duplicated.data.values.in.blocks <- mapply(FUN = c, value.labels.blocks, orig.data.values.in.blocks, SIMPLIFY = FALSE)
-
+          
           value.labels.blocks <- lapply(X = duplicated.data.values.in.blocks, FUN = function(i) {
             i[!duplicated(word(string = i, start = 1, end = 1))]
           })
-
+          
           value.labels.blocks <- lapply(X = value.labels.blocks, FUN = sort)
-
+          
           list.value.LEVELS <- lapply(X = value.labels.blocks, FUN = function(element) {
             word(string = element, start = 1, end = 1)
           })
-
+          
           list.value.LABELS <- lapply(X = value.labels.blocks, FUN = function(element) {
             make.unique(gsub(pattern = "^\\w*[[:punct:]]*\\w*\\s*|^\\w*\\s*", replacement = "", x = element))
           })
-
+          
           if(length(indx.numeric) != 0) {
             value.labels.blocks <- value.labels.blocks[-indx.numeric]
             value.labels.full.var.list <- value.labels.full.var.list[-indx.numeric]
@@ -1495,7 +1560,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             list.value.LEVELS <- list.value.LEVELS[-indx.numeric]
             list.value.LABELS <- list.value.LABELS[-indx.numeric]
           }
-
+          
           value.lab.statement.left <- lapply(1:length(previous.string), function(i){
             if(str_count(string = value.labels.var.names[[i]], pattern = "\\S+") == 1) {
               xx <- strsplit(value.labels.var.names, "")[[i]]
@@ -1505,7 +1570,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               xx <- paste("tmp[ , c('", paste(value.labels.full.var.list[[i]], sep = "", collapse = "', '"), "')]", sep = "")
             }
           })
-
+          
           value.lab.statement.right <- lapply(1:length(previous.string), function(i){
             if(str_count(string = value.labels.var.names[[i]], pattern = "\\S+") == 1) {
               xx <- strsplit(value.labels.var.names, "")[[i]]
@@ -1515,34 +1580,34 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               xx <- paste("lapply(tmp[ , c('" , paste(value.labels.full.var.list[[i]], sep = "", collapse = "', '"), "')], factor, levels = c('", paste(list.value.LEVELS[[i]], sep = "", collapse = "', '"), "')", ", labels = c('", paste(list.value.LABELS[[i]], sep = "'", collapse = "', '"), "'))", sep = "")
             }
           })
-
+          
           value.labels.statements <- paste(value.lab.statement.left, "<-", value.lab.statement.right)
-
+          
           if(txt.file.name == "INT_stui_2003_v2") {
-
+            
             val.lab.statements.to.remove <- c("\\'ST17Q14\\'], levels = c\\(\\'1\\', \\'20301\\', \\'27601\\',",
                                               "\\'ST17Q15\\'], levels = c\\(\\'1', \\'20301\\', \\'2\\', \\'30001\\',",
                                               "\\'ST17Q16\\'], levels = c\\(\\'1\\', \\'2\\', \\'30001\\', \\'30002\\',")
-
+            
             indx.statements.to.remove <- grep(pattern = paste(val.lab.statements.to.remove, collapse = "|"), x = value.labels.statements)
-
+            
             value.labels.statements <- value.labels.statements[-indx.statements.to.remove]
-
+            
           }
-
+          
           eval(parse(text = value.labels.statements))
-
+          
           indx.char.cols.to.numeric <- function(data) {
             indx.character.columns <- sapply(X = data, FUN = function(x) {
               grepl(pattern = "character", x = class(x))
             })
-
+            
             indx.uppercase.columns <- sapply(X = data, FUN = function(x) {
               all(grepl(pattern = "[[:upper:]]{3}", x = x))
             })
-
+            
             indx.character.columns <- indx.character.columns[-which(indx.uppercase.columns == TRUE)]
-
+            
             indx.mixed.columns <- sapply(X = data[indx.character.columns], FUN = function(x){
               any(grepl(pattern = "[a-zA-Z]+[0-9]+|[0-9]+[a-zA-Z]+", x = x) == TRUE)
             })
@@ -1552,13 +1617,13 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             indx.cols.with.levels <- sapply(data, function(i) {
               indx.not.NULL <- length(attr(i, "levels"))
             })
-
+            
             indx.cols.with.levels <- names(indx.cols.with.levels[indx.cols.with.levels > 0])
-
+            
             indx.all.levels.num.values <- sapply(data[indx.cols.with.levels], function(i) {
               any(grep(pattern = "[[:alpha:]]", x = attr(x = i, which = "levels")), na.rm = TRUE)
             })
-
+            
             character.columns <- names(indx.character.columns[indx.character.columns == TRUE])
             mixed.columns <- names(indx.mixed.columns[indx.mixed.columns == TRUE])
             sentences.columns <- names(indx.sentences.columns[indx.sentences.columns == TRUE])
@@ -1566,15 +1631,15 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             preserved.columns <- c(mixed.columns, sentences.columns)
             c(setdiff(character.columns, preserved.columns), numeric.columns)
           }
-
+          
           indx.convert.to.num <- indx.char.cols.to.numeric(tmp)
-
+          
           tmp[ , indx.convert.to.num] <- lapply(X = indx.convert.to.num, FUN = function(x) {
             as.numeric(as.character(tmp[ , x]))
           })
-
+          
           character.columns <- names(which(sapply(tmp, function(i) {class(i) == "character"})))
-
+          
           tmp[character.columns] <- lapply(tmp[character.columns], function(i) {
             if(all(grepl(pattern = "^[[:upper:]]{3}$", x = i)) == TRUE) {
               as.factor(i)
@@ -1582,7 +1647,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               as.character(i)
             }
           })
-
+          
           filter.factor.vars.with.missing <- function(data) {
             var.levels <- lapply(X = data, FUN = function(i) {
               var.levels <- levels(i)
@@ -1591,9 +1656,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             vars.with.missing.levels <- var.levels[length.of.0 != 0]
             return(vars.with.missing.levels)
           }
-
+          
           vars.with.missings <- names(filter.factor.vars.with.missing(tmp))
-
+          
           missing.patterns <- c("N/A",
                                 "Invalid",
                                 "Missing",
@@ -1606,12 +1671,12 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
                                 "Unreached",
                                 "Ungraded",
                                 "M/R",
-                                "99999970",
+                                "99999970",                                                 
                                 "99999990",
                                 "9999997",
                                 "9999998",
                                 "9999999")
-
+          
           fac.missing.levels.extract <- function(data, patterns) {
             missing.values.indx <- lapply(X = data, FUN = function(i) {
               grep(pattern = paste(patterns, collapse = "|"), x = levels(i))
@@ -1627,161 +1692,158 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             flatten <- lapply(X = extract, FUN = function(i) {names(unlist(i))})
             return(flatten)
           }
-
+          
           missing.levels.list.factors <- fac.missing.levels.extract(data = tmp, patterns = missing.patterns)
-
+          
           missings.part <- spss.syntax[grep(pattern = "mis[[:alpha:]]*\\sval[[:alpha:]]*\\s*", x = spss.syntax, ignore.case = TRUE)[1]:length(spss.syntax)]
-
+          
           missing.keywords <- grep(pattern = "mis[[:alpha:]]*\\sval[[:alpha:]]*\\s*", x = missings.part, ignore.case = TRUE)
-
+          
           ending.periods <- grep(pattern = "([[:digit:]]+|[[:alpha:]]+)\\s*\\)\\s*\\.$", x = missings.part)
-
+          
           if(length(missing.keywords) == 1 && length(ending.periods) == 0) {
-
+            
             ending.period <- grep(pattern = "\\.", x = missings.part)
-
+            
             missings.part <- missings.part[missing.keywords:ending.period]
-
+            
             missings.part <- missings.part[-grep(pattern = "save outfile", x = missings.part)]
-
+            
             missings.part <- gsub(pattern = "^/", replacement = "missing values ", x = missings.part)
-
+            
           } else {
-
+            
             first.period.larger.than.missing <- sapply(missing.keywords, function(i) head(ending.periods[ending.periods >= i], 1))
-
+            
             missings.part <- missings.part[unlist(Map(`:`, missing.keywords, first.period.larger.than.missing))]
-
+            
             missings.part <- gsub(pattern = "^/", replacement = "missing values ", x = missings.part)
-
+            
             missings.part <- gsub(pattern = "\\s+\\)", replacement = ")", x = missings.part)
-
+            
             missings.part <- gsub(pattern = "\\(\\s+", replacement = "(", x = missings.part)
-
+            
             missings.part <- gsub(pattern = "\\s+\\.", replacement = ".", x = missings.part)
-
+            
           }
-
+          
           closing.brackets.no.period <- grep(pattern = "\\)$", x = missings.part)
-
+          
           if(length(closing.brackets.no.period) > 0) {
-
+            
             missings.part[closing.brackets.no.period] <- paste0(missings.part[closing.brackets.no.period], ".")
-
+            
           }
-
+          
           if(all(substring(text = missings.part, first = nchar(x = missings.part), last = nchar(x = missings.part)) == ".") == FALSE) {
-
+            
             periods <- grep(pattern = "\\.", x = missings.part)
-
+            
             missing.statements.collapsed <- paste(missings.part, collapse = " ")
-
+            
             missing.values.statements <- unlist(strsplit(missing.statements.collapsed, split = ".", fixed = TRUE))
-
+            
             missing.values.statements <- toupper(gsub(pattern = "\\s*mis[[:alpha:]]* val[[:alpha:]]* ", replacement = "", x = grep(pattern = "mis[[:alpha:]]* val[[:alpha:]]*", x = missing.values.statements, ignore.case = TRUE, value = TRUE), ignore.case = TRUE))
-
+            
           } else {
-
+            
             missing.values.statements <- gsub(pattern = "\\.", replacement = "", x = missings.part)
-
+            
             missing.values.statements <- toupper(gsub(pattern = "\\s*mis[[:alpha:]]* val[[:alpha:]]* ", replacement = "", x = grep(pattern = "mis[[:alpha:]]* val[[:alpha:]]*", x = missing.values.statements, ignore.case = TRUE, value = TRUE), ignore.case = TRUE))
-
+            
           }
-
+          
           if(length(grep(pattern = " TO ", x = missing.values.statements)) > 0) {
-
+            
             statements.with.var.ranges <- grep(pattern = " TO ", missing.values.statements)
-
+            
             var.ranges <- sapply(X = str_split(string = missing.values.statements[statements.with.var.ranges], pattern = "\\s\\("), function(i) {
               i[1]
             })
-
+            
             missing.values <- sapply(X = str_split(string = missing.values.statements[statements.with.var.ranges], pattern = "\\s\\("), function(i) {
               paste("(", i[2], sep = "")
             })
-
+            
             list.of.variables <- lapply(form.statements(var.ranges)[["ranges.var.list"]], function(i) {eval(parse(text = i))})
-
+            
             formed.var.list.w.miss.values <- lapply(X = Map(c, list.of.variables, missing.values), FUN = function(i) {
               paste(i, collapse = " ")
             })
-
+            
             missing.values.statements[statements.with.var.ranges] <- formed.var.list.w.miss.values
-
+            
             missing.values.statements <- unlist(missing.values.statements)
-
+            
           }
-
+          
           missing.values.statements <- gsub(pattern = ", ", replacement = ",", x = missing.values.statements)
-
+          
           missing.values.statements <- gsub(pattern = " THRU ", replacement = "THRU", x = missing.values.statements)
-
+          
           miss.var.names <- sapply(as.list(missing.values.statements), function(i) {
             word(string = i, start = 1, end = str_count(string = i, pattern = "\\S+") - 1)
           })
-
+          
           miss.val.lists <- sapply(as.list(missing.values.statements), function(i) {
             list.miss <- word(string = i, start = str_count(string = i, pattern = "\\S+"), end = str_count(string = i, pattern = "\\S+"))
             gsub(pattern = ",", replacement = ", ", x = list.miss)
             gsub(pattern = "THRU", replacement = " THRU ", x = list.miss)
           })
-
+          
           split.var.names <- str_split(string = miss.var.names, pattern = " ")
-
+          
           indx.TO.statements <- which(lapply(X = split.var.names, FUN = function(i) {
             "TO" %in% i
           }) == TRUE)
-
+          
           split.var.names[indx.TO.statements] <- lapply(X = split.var.names[indx.TO.statements], FUN = paste, collapse = " ")
-
+          
           missing.values.statements <- unlist(mapply(FUN = paste, split.var.names, as.list(miss.val.lists)))
-
+          
           missing.values.statements <- gsub(pattern = "9997 THRU 9999", replacement = "9997, 9998, 9999", x = missing.values.statements)
-
+          
           missing.values.statements <- gsub(pattern = "9997 THRU 9999, 996", replacement = "996, 9997, 9998, 9999", x = missing.values.statements)
-
+          
           missing.values.statements <- gsub(pattern = "96 THRU 99", replacement = "96, 97, 98, 99", x = missing.values.statements)
-
+          
           missing.values.statements <- gsub(pattern = "\\s+\\)", replacement = ")", x = missing.values.statements)
-
+          
           missing.values.statements <- gsub(pattern = "\\(\\s+", replacement = "(", x = missing.values.statements)
-
-
-
+          
           indx.end.var.names <- unlist(gregexpr(pattern = " \\(", text = missing.values.statements))
-
+          
           var.names.missing.statements <- word(string = missing.values.statements, start = 1, end = indx.end.var.names, sep = "")
-
+          
           var.names.missing.statements <- unlist(strsplit(x = var.names.missing.statements, split = " "))
-
-
+          
           num.vars.with.missings.names <- var.names.missing.statements[is.na(match(var.names.missing.statements,vars.with.missings))]
-
+          
           if(length(num.vars.with.missings.names) == 0) {
-
+            
             missing.levels.list <- missing.levels.list.factors
-
+            
           } else {
-
+            
             num.vars.with.missings.indx <- is.element(el = word(string = missing.values.statements, start = 1, end = indx.end.var.names, sep = ""), set = num.vars.with.missings.names)
-
+            
             num.vars.with.missings.raw <- missing.values.statements[num.vars.with.missings.indx == TRUE]
-
+            
             indx.end.var.names.raw <- unlist(gregexpr(pattern = "\\(", text = num.vars.with.missings.raw)) + 1
-
+            
             indx.end.var.label.statements.raw <- unlist(gregexpr(pattern = "\\)", text = num.vars.with.missings.raw))
-
+            
             missing.levels.list.numeric <- lapply(X = strsplit(x = word(string = num.vars.with.missings.raw, start = indx.end.var.names.raw, end = indx.end.var.label.statements.raw, sep = ""), split = ",", fixed = TRUE), FUN = function(i) {
               x <- sort(i)
               y <- as.numeric(x)
               return(y)
             })
-
+            
             names(missing.levels.list.numeric) <- num.vars.with.missings.names
-
+            
             missing.levels.list <- c(missing.levels.list.factors, missing.levels.list.numeric)
           }
-
+          
           assign.attributes <- function(data, attr.name, attr.list, to.na = c("yes", "no", "ignore")) {
             if(attr.name == "missings" & to.na == "yes") {
               common.vars <- intersect(names(data), names(attr.list))
@@ -1834,202 +1896,201 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             }
             return(statements)
           }
-
+          
           if(missing.to.NA == TRUE) {
             eval(parse(text = assign.attributes(data = tmp, attr.name = "missings", attr.list = missing.levels.list, to.na = "yes")))
-
+            
             tmp <- droplevels(tmp)
-
+            
           } else if(missing.to.NA == FALSE) {
-
+            
             tmp <- droplevels(tmp)
-
+            
             classes.missing.levels.list <- lapply(missing.levels.list, class)
-
+            
             fac.vars.missing.levels.list <- names(classes.missing.levels.list[classes.missing.levels.list == "character"])
-
+            
             missing.strings.fac <- lapply(tmp[fac.vars.missing.levels.list], function(i) {
               grep(pattern = paste(missing.patterns, collapse = "|"), x = levels(i), value = TRUE)
             })
-
+            
             missing.strings.fac <- missing.strings.fac[lapply(missing.strings.fac, length) != 0]
-
+            
             num.vars.missing.levels.list <- names(classes.missing.levels.list[classes.missing.levels.list == "numeric"])
-
+            
             if(length(num.vars.missing.levels.list) > 0) {
-
+              
               missing.strings.num <- missing.levels.list[num.vars.missing.levels.list]
-
+              
               unique.values <- lapply(X = tmp[num.vars.missing.levels.list], FUN = function(i) (
                 unique(i)
               ))
-
+              
               which.missing.are.present <- function(list.of.missings, unique.data.values) {
                 list.of.missings[which(list.of.missings %in% unique.data.values)]
               }
-
+              
               presence.missing.strings.num <- mapply(FUN = which.missing.are.present, list.of.missings = missing.strings.num, unique.data.values = unique.values, SIMPLIFY = FALSE)
-
+              
               indx.presence <- sapply(presence.missing.strings.num, function(i) {
                 length(i) > 0
               })
-
+              
               missing.strings.num <- presence.missing.strings.num[indx.presence]
-
-
+              
               missing.levels.list.new <- c(missing.strings.fac, missing.strings.num)
-
+              
             } else {
-
+              
               missing.levels.list.new <- missing.strings.fac
-
+              
             }
-
+            
             eval(parse(text = assign.attributes(data = tmp, attr.name = "missings", attr.list = missing.levels.list.new, to.na = "no")))
-
+            
             no.missing.attr <- lapply(tmp, function(i) {
               is.null(attr(i, "missings"))
             })
-
+            
             no.missing.attr <- names(which(no.missing.attr == TRUE))
-
+            
             missing.attr.as.NA <- as.list(rep(NA, times = length(no.missing.attr)))
-
+            
             names(missing.attr.as.NA) <- no.missing.attr
-
+            
             NA.miss.assign.statements <- assign.attributes(data = tmp, attr.name = "missings", attr.list = missing.attr.as.NA, to.na = "no")
-
+            
             NA.miss.assign.statements <- gsub(pattern = "NULL", replacement = "NA", x = NA.miss.assign.statements)
-
+            
             eval(parse(text = NA.miss.assign.statements))
-
+            
           }
-
+          
           var.labels.start <- grep(pattern = "var[[:alpha:]]* lab[[:alpha:]]*", x = spss.syntax, ignore.case = TRUE) + 1
-
+          
           var.labels.end <- var.labels.start + (length(var.names) - 1)
-
+          
           tmp.var.labels <- spss.syntax[var.labels.start:var.labels.end]
-
+          
           periods.objects <- which(tmp.var.labels == ".")
-
+          
           if(length(periods.objects) > 0) {
             tmp.var.labels <- tmp.var.labels[-which(tmp.var.labels == ".")]
           }
-
+          
           tmp.var.labels.names <- toupper(word(tmp.var.labels, start = 1, end = 1))
-
+          
           tmp.var.labels.content <- gsub(pattern = "^\\w*\\s*", replacement = "", x = tmp.var.labels)
-
+          
           var.labels <- as.list(structure(.Data = tmp.var.labels.content, names = tmp.var.labels.names))
-
+          
           var.labels <- lapply(X = var.labels, function(i) {
             gsub(pattern = "[[:space:]]\\.$|\\.$", replacement = "", x = i)
           })
-
+          
           eval(parse(text = assign.attributes(data = tmp, attr.name = "var.labels", attr.list = var.labels, to.na = "ignore")))
-
+          
           attr(x = tmp, which = "study") <- "PISA"
-
+          
           if(txt.file.name %in% c("intcogn_v4", "intscho", "intstud_math_v3", "intstud_read_v3", "intstud_scie_v3")) {
-
+            
             attr(x = tmp, which = "cycle") <- 2000
-
+            
           } else if(txt.file.name %in% c("INT_cogn_2003_v2", "INT_schi_2003", "INT_stui_2003_v2")) {
-
+            
             attr(x = tmp, which = "cycle") <- 2003
-
+            
           } else if(txt.file.name %in% c("INT_Cogn06_S_Dec07", "INT_Cogn06_T_Dec07", "INT_Par06_Dec07", "INT_Sch06_Dec07", "INT_Stu06_Dec07")) {
-
+            
             attr(x = tmp, which = "cycle") <- 2006
-
+            
           } else if(txt.file.name %in% c("INT_COG09_S_DEC11", "INT_COG09_TD_DEC11", "INT_PAR09_DEC11", "INT_SCQ09_Dec11", "INT_STQ09_DEC11")) {
-
+            
             attr(x = tmp, which = "cycle") <- 2009
-
+            
           } else if(txt.file.name %in% c("INT_COG12_DEC03", "INT_COG12_S_DEC03", "INT_PAQ12_DEC03", "INT_SCQ12_DEC03", "INT_STU12_DEC03")) {
-
+            
             attr(x = tmp, which = "cycle") <- 2012
-
+            
           }
-
+          
           if(txt.file.name %in% c("INT_STU12_DEC03", "INT_STQ09_DEC11", "INT_Stu06_Dec07", "INT_Par06_Dec07", "INT_stui_2003_v2", "intstud_math_v3", "intstud_read_v3", "intstud_scie_v3")) {
-
+            
             attr(x = tmp, which = "file.type") <- "std.bckg"
-
+            
           } else if(txt.file.name %in% c("INT_COG12_DEC03", "INT_COG09_DEC10", "INT_Cogn06_T_Dec07", "intcogn_v4")){
-
+            
             attr(x = tmp, which = "file.type") <- "std.cogn"
-
+            
           } else if(txt.file.name %in% c("INT_COG12_S_DEC03", "INT_COG09_Scored_DEC10", "INT_Cogn06_S_Dec07", "INT_cogn_2003_v2")) {
-
+            
             attr(x = tmp, which = "file.type") <- "std.cogn.scr"
-
+            
           } else if(txt.file.name %in% c("INT_PAQ12_DEC03", "INT_PAQ09_DEC10")) {
-
+            
             attr(x = tmp, which = "file.type") <- "std.par.bckg"
-
+            
           } else if(txt.file.name %in% c("INT_SCQ12_DEC03", "INT_SCQ09_Dec10", "INT_Sch06_Dec07", "INT_schi_2003", "intscho")) {
-
+            
             attr(x = tmp, which = "file.type") <- "sch.bckg"
-
+            
           }
-
+          
           setDT(x = tmp, key = "CNT")
-
+          
           attr(x = tmp, which = "class") <- c("lsa.data", attr(x = tmp, which = "class"))
-
+          
           assign(x = tolower(new.file), value = tmp)
-
+          
           tmp <- NULL
-
+          
           full.out.file.path <- file.path(out.folder, paste(txt.file.name, "RData", sep = "."))
-
+          
           save(list = tolower(new.file), file = out.file, compress = FALSE)
-
+          
           message("       (", count.success, "/", length(txt.files), ")  ", str_pad(string = sub(pattern = "\\.sps", replacement = ".txt", x = basename(inp.file), ignore.case = TRUE), width = 40, side = "right"), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"))
-
+          
         },
-
+        
         error = function(e) {
           message("")
-
+          
         })
-
+        
       }
-
+      
       ptm <- proc.time()
-
+      
       suppressWarnings(
-
+        
         invisible(mapply(FUN = convert.PISApre15, inp.file = full.inp.file.path, out.file = full.out.file.path, new.file = root.file.names))
-
+        
       )
-
+      
       if(length(sps.files) > 0 & length(txt.files) > 0) {
         message("\n All ", count.success, " found files successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"), "\n\n")
       }
-
+      
       if(length(sps.files) > length(txt.files)) {
         message("\nWarning:\nSome of the control (\".sps\") files have no matching data (\".txt\") file to convert. These files are skipped.\nCheck the content of the input folder.\n\n")
       }
-
+      
       if(length(txt.files) > length(sps.files)) {
         message("\nWarning:\nSome of the data (\".txt\") files to convert have no matching control (\".sps\") files. These files were skipped.\nCheck the content of the input folder.\n\n")
       }
-
+      
     }
-
+    
   }, interrupt = function(f) {
-
+    
     message("\n\nInterrupted by the user. Not all files have been converted.")
-
+    
   },
-
+  
   error = function(e) {
-
+    
     message("")
-
+    
   })
-
+  
 }

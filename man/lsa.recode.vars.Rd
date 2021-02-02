@@ -128,7 +128,7 @@ out.file = "C:/temp/test_new.RData")
 # The data remains in the memory.
 \dontrun{
 load("/tmp/test.RData")
-# Before continuing, convert the "ASBG04" variable to numeric ("ASBG04NUM") using data.table
+test[ , ASBG04NUM := as.numeric(ASBG04)]
 table(test[ , ASBG04NUM])
 lsa.recode.vars(data.object = test, src.variables = "ASBG04NUM",
 old.new = "1=1;2=1;3=2;4=3;5=3;6=4",
@@ -139,7 +139,7 @@ missings.attr = list("Omitted or invalid" = 4))
 # "Sometimes or never").
 \dontrun{
 load("/tmp/test.RData")
-# Before continuing, convert the "ASBG03" variable to numeric ("ASBG03CHAR") using data.table
+test[ , ASBG03CHAR := as.character(ASBG03)]
 table(test[ , ASBG03CHAR])
 # Add the lines together to be able to run the following
 lsa.recode.vars(data.object = test, src.variables = "ASBG03CHAR",

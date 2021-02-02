@@ -74,7 +74,7 @@ A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program),
 \item Sum_\verb{<}Weight variable\verb{>}\verb{_}SE - the standard error of the the estimated population number of elements per group. The actual name of the weight variable will depend on the weight variable used in the analysis.
 \item Percentages_\verb{<}Last split variable\verb{>} - the percentages of respondents (population estimates) per groups defined by the splitting variables in \code{split.vars}. The percentages will be for the last splitting variable which defines the final groups.
 \item Percentages_\verb{<}Last split variable\verb{>}\verb{_}SE - the standard errors of the percentages from above.
-\item Variable - the variable names (background/contextual or PV root names) to be matched against the rows of the forllowing columns, forming the correlation matrices together.
+\item Variable - the variable names (background/contextual or PV root names) to be matched against the rows of the following columns, forming the correlation matrices together.
 \item Correlation_\verb{<}Background variable\verb{>} - the correlation coefficient of each continuous \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars} against itself and each of the variables in the column "Variable". There will be one column with correlation coefficient estimate for each variable specified in \code{bckg.corr.vars} and/or set of PVs specified in \code{PV.root.corr}.
 \item Correlation_\verb{<}Background variable\verb{>}\verb{_}SE - the standard error of the correlation of each continuous \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars}. There will be one column with the SE of the correlation coefficient estimate for each variable specified in \code{bckg.corr.vars} and/or set of PVs specified in \code{PV.root.corr}.
 \item Correlation_\verb{<}root PV\verb{>} - the correlation coefficient of each set of PVs specified as PV root name in \code{PV.root.corr} against itself and each of the variables in the column "Variable". There will be one column with correlation coefficient estimate for each set of PVs specified in \code{PV.root.corr} and each other set of PVs specified in \code{PV.root.corr} and/or each continuous background variable specified in \code{bckg.corr.vars}.
@@ -98,11 +98,11 @@ The second sheet contains some additional information related to the analysis pe
 \item WEIGHT - which weight variable was used.
 \item DESIGN - which resampling technique was used (JRR or BRR).
 \item SHORTCUT - logical, whether the shortcut method was used.
-\item NREPS - how many replication weigths were used.
+\item NREPS - how many replication weights were used.
 \item ANALYSIS_DATE - on which date the analysis was performed.
 \item START_TIME - at what time the analysis started.
 \item END_TIME - at what time the analysis finished.
-\item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+\item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
 The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.

@@ -102,7 +102,7 @@
 #' # The data remains in the memory.
 #' \dontrun{
 #' load("/tmp/test.RData")
-#' # Before continuing, convert the "ASBG04" variable to numeric ("ASBG04NUM") using data.table
+#' test[ , ASBG04NUM := as.numeric(ASBG04)]
 #' table(test[ , ASBG04NUM])
 #' lsa.recode.vars(data.object = test, src.variables = "ASBG04NUM",
 #' old.new = "1=1;2=1;3=2;4=3;5=3;6=4",
@@ -113,7 +113,7 @@
 #' # "Sometimes or never").
 #' \dontrun{
 #' load("/tmp/test.RData")
-#' # Before continuing, convert the "ASBG03" variable to numeric ("ASBG03CHAR") using data.table
+#' test[ , ASBG03CHAR := as.character(ASBG03)]
 #' table(test[ , ASBG03CHAR])
 #' # Add the lines together to be able to run the following
 #' lsa.recode.vars(data.object = test, src.variables = "ASBG03CHAR",
@@ -129,74 +129,73 @@
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.vars.dict}}
 #' @export
 
-lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables, old.new, new.labels, missings.attr, variable.labels, out.file) {
 
+lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables, old.new, new.labels, missings.attr, variable.labels, out.file) {
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-
+  
   if(!missing(new.variables) && length(new.variables) != length(src.variables)) {
     stop('The number of names provided to "src.variables" and "new.variables" differs.  All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   warnings.collector <- list()
-
+  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-
+    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-
-
+    
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-
+    
     data <- copy(data.object)
-
+    
     used.data <- deparse(substitute(data.object))
     message('\nUsing data from object "', used.data, '".')
   }
-
+  
   if(!"lsa.data" %in% class(data)) {
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   vars.classes <- unique(sapply(X = data[ , mget(src.variables)], FUN = class))
-
+  
   if(length(vars.classes) > 1) {
     stop('The variables passed to "src.variables" are not of the same class. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   vars.unique.values <- sapply(X = data[ , mget(src.variables)], FUN = function(i) {
     length(unique(i))
   })
-
+  
   if(length(unique(vars.unique.values)) > 1) {
     stop('The variables passed to "src.variables" do not have the same number of distinct values, this means they have different properties. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(vars.classes == "factor" & missing(new.labels)) {
     warnings.collector[["no.labels.for.factor"]] <- 'The variables passed to "src.variables" are factors, but no new labels are defined in "new.labels". Thus, the variable is converted to numeric. Check your input.'
   }
-
-
+  
   ptm.data.recode <- proc.time()
-
+  
   var.labels <- sapply(X = data[ , mget(src.variables)], FUN = function(i) {
     attr(x = i, which = "variable.label")
   })
-
+  
   var.labels <- data.table(V1 = names(var.labels), V2 = var.labels)
-
+  
   tmp.data <- copy(data[ , mget(src.variables)])
-
+  
   if(vars.classes == "factor") {
     vars.levels <- lapply(X = tmp.data, FUN = function(i) {
       levels(i)
@@ -206,84 +205,84 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
       unique(na.omit(i))
     })
   }
-
+  
   missings.attributes <- lapply(X = tmp.data, attr, which = "missings")
-
+  
   if(vars.classes == "factor") {
     tmp.data[ , (colnames(tmp.data)) := lapply(.SD, as.numeric)]
   }
-
+  
   tmp.colnames <- paste0(colnames(tmp.data) , "_tmp")
   if(vars.classes != "character") {
     tmp.data <- copy(tmp.data[ , (tmp.colnames) := NA_real_])
   } else {
     tmp.data <- copy(tmp.data[ , (tmp.colnames) := NA_character_])
   }
-
+  
   recoding.scheme <- as.list(unlist(str_split(string = old.new, pattern = "[[:space:]]*\\;[[:space:]]*")))
-
+  
   recoding.scheme <- lapply(X = recoding.scheme, FUN = function(i) {
     i <- unlist(str_split(string = i, pattern = "[[:space:]]*\\=[[:space:]]*"))
   })
-
+  
   recoding.statements <- lapply(X = recoding.scheme, FUN = function(i) {
     paste0("tmp.data[", src.variables, " == ", i[1], ", ", tmp.colnames, " := ", i[2], "]")
   })
-
+  
   if(vars.classes != "character") {
     values.to.recode <- as.numeric(unique(unlist(recoding.scheme)))
   } else {
     values.to.recode <- unique(unlist(recoding.scheme))
   }
-
+  
   undeclared.values <- unique(unlist(lapply(X = tmp.data[ , mget(src.variables)], FUN = function(i) {
     1:length(unique(na.omit(i)))
   })))
-
+  
   if(vars.classes != "character") {
     undeclared.values <- setdiff(x = undeclared.values, y = values.to.recode)
   } else {
     undeclared.values <- setdiff(x = undeclared.values, y = 1:length(values.to.recode))
   }
-
-
+  
+  
   if(length(undeclared.values) > 0) {
     warnings.collector[["less.recodings.than.avail"]] <- 'The number of values to recode supplied to the "old.new" argument is less than the number of unique values in the variable(s). The values not set for recoding are set to NA. This can have consequences for analysis. Check your input.'
   }
-
+  
   eval(parse(text = unlist(recoding.statements)))
-
+  
   if(!missing(new.labels)) {
-
+    
     tmp.data[ , (tmp.colnames) := lapply(.SD, function(i) {
-
+      
       if(length(unique(na.omit(i))) != length(new.labels)) {
         stop('The number of new labels in "new.labels" has a different length than the number of distinct values in the recoded variables. All operations stop here. Check your input.\n\n', call. = FALSE)
       } else {
         i <- factor(x = i, labels = new.labels)
       }
     }), .SDcols = tmp.colnames]
-
+    
   }
-
+  
   if(all(is.null(unlist(missings.attributes))) == FALSE & missing(missings.attr)) {
     warnings.collector[["no.missings.attribute"]] <- 'The variables passed to "src.variables" have a "missings" attribute, but no missing values\' labels were passed to the "missings.attr". This can have consequences for analysis. Check your input.'
   } else if(!missing(missings.attr)) {
     new.missings.attributes <- missings.attr
   }
-
+  
   src.vars.freqs <- lapply(X = data[ , mget(src.variables)], FUN = function(i) {
     data.table(table(i, useNA = "always"))
   })
-
+  
   names.src.vars.freqs <- as.list(names(src.vars.freqs))
-
+  
   src.vars.freqs <- Map(f = function(input1, input2) {
     setnames(x = input1, c(paste0("Source_", input2), "N"))
   }, input1 = src.vars.freqs, input2 = names.src.vars.freqs)
-
+  
   tmp.data[ , (src.variables) := NULL]
-
+  
   if(missing(new.variables)) {
     setnames(x = tmp.data, gsub(pattern = "_tmp$", replacement = "", x = colnames(tmp.data)))
     data[ , (src.variables) := tmp.data]
@@ -291,50 +290,50 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     setnames(x = tmp.data, new.variables)
     data[ , (new.variables) := tmp.data]
   }
-
+  
   message('\nAll recodings done in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.recode}[[3]], "%H:%M:%OS3"), "\n")
-
+  
   new.vars.freqs <- lapply(X = tmp.data, FUN = function(i) {
     data.table(table(i, useNA = "always"))
   })
-
+  
   tmp.data <- NULL
-
+  
   names.new.vars.freqs <- as.list(names(new.vars.freqs))
-
+  
   new.vars.freqs <- Map(f = function(input1, input2) {
     setnames(x = input1, c(paste0("New_", input2), "N"))
   }, input1 = new.vars.freqs, input2 = names.new.vars.freqs)
-
+  
   src.new.vars.freqs <- Map(f = function(input1, input2) {
     nrows.max <- max(nrow(input1), nrow(input2))
-
+    
     if(nrow(input1) < nrows.max) {
       input1 <- rbindlist(l = list(input1, rbindlist(rep(list(setDT(as.list(c("NaN", NaN)))), times = nrows.max - nrow(input1)))))
     }
-
+    
     if(nrow(input2) < nrows.max) {
       input2 <- rbindlist(l = list(input2, rbindlist(rep(list(setDT(as.list(c("NaN", NaN)))), times = nrows.max - nrow(input2)))), use.names = FALSE)
     }
-
+    
     divider <- data.table("|||" = rep(x = "|||", times = nrows.max))
     cbind(input1, divider, input2)
   }, input1 = src.vars.freqs, input2 = new.vars.freqs)
-
+  
   if(length(src.new.vars.freqs) == 1) {
     message("The following table contains the variable's frequencies before and after recoding it. Please check them carefully.\n")
   } else {
     message("The following tables contain the variables' frequencies before and after recoding them. Please check them carefully.\n")
   }
-
+  
   lapply(X = src.new.vars.freqs, FUN = function(i) {
     message(paste0(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""), "\n"))
     message(paste(capture.output(i), collapse = "\n"))
     message(paste0(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""), "\n"))
   })
-
+  
   message("")
-
+  
   if(missing(variable.labels) & missing(new.variables)) {
     var.labels <- paste0("setattr(x = data[['", var.labels[ , V1], "']], name = 'variable.label', value = '", var.labels[ , V2], "')")
     eval(parse(text = var.labels))
@@ -345,9 +344,9 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     var.labels <- paste0("setattr(x = data[['", new.variables, "']], name = 'variable.label', value = '", variable.labels, "')")
     eval(parse(text = var.labels))
   }
-
+  
   if(exists("new.missings.attributes")) {
-
+    
     set.new.missings <- function(input1, input2) {
       if(unique(sapply(data[ , mget(input1)], class)) != "numeric") {
         paste0("setattr(x = data[['", input1, "']], name = 'missings', value = c('", paste(input2, collapse = "', '"), "'))")
@@ -355,15 +354,15 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
         paste0("setattr(x = data[['", input1, "']], name = 'missings', value = c('", paste(input2, collapse = "', '"), "'))")
       }
     }
-
+    
     if(!missing(new.variables)) {
       missings.attr.statements <- Map(f = set.new.missings, input1 = new.variables, input2 = new.missings.attributes)
     } else {
       missings.attr.statements <- Map(f = set.new.missings, input1 = src.variables, input2 = new.missings.attributes)
     }
-
+    
     eval(parse(text = unlist(missings.attr.statements)))
-
+    
     check.missings.in.values <- function(input1, input2) {
       if(class(data[ , get(input1)]) == "factor"){
         any(input2 %in% levels(data[ , get(input1)]) == FALSE)
@@ -371,22 +370,22 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
         any(input2 %in% unique(data[ , get(input1)]) == FALSE)
       }
     }
-
+    
     if(!missing(new.variables)) {
       missings.not.in.values <- Map(f = check.missings.in.values, input1 = new.variables, input2 = new.missings.attributes)
     } else {
       missings.not.in.values <- Map(f = check.missings.in.values, input1 = src.variables, input2 = new.missings.attributes)
     }
-
+    
     names.missings.not.in.values <- names(Filter(isTRUE, missings.not.in.values))
-
+    
     if(length(names.missings.not.in.values) > 0) {
       warnings.collector[["missings.not.in.values"]] <- paste0('The following variables have been assigned user-defined missings which were not found in the actual data after the recoding took place: ', paste(names.missings.not.in.values, collapse = ", "), '. Check your input.')
     }
   }
-
+  
   ptm.data.export <- proc.time()
-
+  
   if(missing(out.file) & missing(data.object)) {
     new.mem.obj.name <- gsub(pattern = "\\.RData$", replacement = "", x = basename(data.file))
     assign(x = new.mem.obj.name, value = data, pos = parent.frame())
@@ -397,34 +396,33 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     data <- NULL
     save(list = gsub(pattern = "\\.RData", replacement = "", x = basename(out.file)), file = out.file, compress = FALSE)
   }
-
+  
   if(!missing(out.file)) {
     message('\nData file "', basename(out.file), '" exported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.export}[[3]], "%H:%M:%OS3"))
   } else {
     message('\nData object ', used.data, ' written to memory in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.export}[[3]], "%H:%M:%OS3"))
   }
-
+  
   message("")
-
+  
   if(length(warnings.collector) > 0) {
-
+    
     if(!is.null(warnings.collector[["less.recodings.than.avail"]])) {
       warning(warnings.collector[["less.recodings.than.avail"]], call. = FALSE)
     }
-
+    
     if(!is.null(warnings.collector[["no.missings.attribute"]])) {
       warning(warnings.collector[["no.missings.attribute"]], call. = FALSE)
     }
-
+    
     if(!is.null(warnings.collector[["no.labels.for.factor"]])) {
       warning(warnings.collector[["no.labels.for.factor"]], call. = FALSE)
     }
-
+    
     if(!is.null(warnings.collector[["missings.not.in.values"]])) {
       warning(warnings.collector[["missings.not.in.values"]], call. = FALSE)
     }
-
+    
   }
-
-
+  
 }

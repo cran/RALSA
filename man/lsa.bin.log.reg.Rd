@@ -50,7 +50,7 @@ as predictors in the model to compute contrasts for (see
 specifying the type of contrasts to compute in case \code{bckg.indep.cat.vars}
 are provided. See details.}
 
-\item{bckg.ref.cats}{String vector with the same length as the length of \code{bckg.indep.cat.vars}
+\item{bckg.ref.cats}{Vector of integers with the same length as the length of \code{bckg.indep.cat.vars}
 and \code{bckg.cat.contrasts} specifying the reference categories for the
 contrasts to compute in case \code{bckg.indep.cat.vars} are provided. See details.}
 
@@ -116,7 +116,7 @@ The second sheet contains the model statistics:
 \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
 \item Statistic - a column containing the Null Deviance (-2LL, no predictors in the model, just constant, also called "baseline"), Deviance (-2LL, after adding predictors, residual deviance, also called "new"), DF Null (degrees of freedom for the null deviance), DF Residual (degrees of freedom for the residual deviance), Akaike Information Criteria (AIC), Bayesian information criterion (BIC), model Chi-Square, different R-Squared statistics (Hosmer & Lemeshow - HS, Cox & Snell - CS, and Nagelkerke - N).
 \item Estimate - the numerical estimates for each of the above.
-\item Estimate_SE - the standard errors of the estimaes from above.
+\item Estimate_SE - the standard errors of the estimates from above.
 \item Estimate_SVR - the sampling variance component if PVs were included in the model.
 \item Estimate_MVR - the measurement variance component if PVs were included in the model.
 }
@@ -128,11 +128,11 @@ The third sheet contains some additional information related to the analysis per
 \item WEIGHT - which weight variable was used.
 \item DESIGN - which resampling technique was used (JRR or BRR).
 \item SHORTCUT - logical, whether the shortcut method was used.
-\item NREPS - how many replication weigths were used.
+\item NREPS - how many replication weights were used.
 \item ANALYSIS_DATE - on which date the analysis was performed.
 \item START_TIME - at what time the analysis started.
 \item END_TIME - at what time the analysis finished.
-\item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+\item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
 The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
@@ -142,7 +142,7 @@ The fourth sheet contains the call to the function with values for all parameter
 }
 \details{
 Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
-The function computes linear regression coefficients by the categories of the splitting variables. The percentages of respondents in each group are computed within the groups specified by the last splitting variable. If no splitting variables are added, the results will be computed only by country.
+The function computes binary logistic regression coefficients by the categories of the splitting variables. The percentages of respondents in each group are computed within the groups specified by the last splitting variable. If no splitting variables are added, the results will be computed only by country.
 
 If \code{standardize = TRUE}, the variables will be standardized before computing any statistics to provide beta regression coefficients.
 
@@ -176,8 +176,8 @@ The function provides two-tailed \emph{t}-test and \emph{p}-values for the regre
 # into a dichotomous (using the \code{lsa.recode.vars}).
 \dontrun{
 lsa.recode.vars(data.file = "C:/temp/test.RData", src.variables = "ASBG12D",
-old.new = "1>1;2>1;3>2;4>2;5>3", new.variables = "ASBG12Dr",
-new.levels = c("Agree", "Disagree", "Omitted or invalid"),
+old.new = "1=2;2=2;3=1;4=1;5=3", new.variables = "ASBG12Dr",
+new.labels = c("Disagree", "Agree", "Omitted or invalid"),
 missings.attr = "Omitted or invalid",
 variable.labels = "GEN/AGREE/TEACHERS ARE FAIR - RECODED",
 out.file = "C:/temp/test.RData")

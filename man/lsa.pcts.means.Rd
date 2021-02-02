@@ -82,15 +82,15 @@ A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program),
 \item Mean_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement variance component for the average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement variance component for the average estimate for each set of PVs specified in \code{PV.root.avg}.
 \item Variance_\verb{<}root PV\verb{>} - the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the total variance of each set of PVs specified in \code{PV.root.avg}.
 \item Variance_\verb{<}root PV\verb{>}\verb{_}SE - the standard error of the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the total variance of each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling compoinent of the variance of each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement compoinent of the variance of each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the variance of each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the variance of each set of PVs specified in \code{PV.root.avg}.
 \item SD_\verb{<}root PV\verb{>} - the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard deviation of each set of PVs specified in \code{PV.root.avg}.
 \item SD_\verb{<}root PV\verb{>}\verb{_}SE - the standard error of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling compoinent of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement compoinent of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
 \item Percent_Missings_\verb{<}root PV\verb{>} - the percentage of missing values for the \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the percentage of missing values for each set of PVs specified in \code{PV.root.avg}.
 }
-The second sheet contains some additional information related to the analysis per country in columns:
+The second sheet contains some additional information related to the analysis per country in the following columns:
 \itemize{
 \item DATA - used \code{data.file} or \code{data.object}.
 \item STUDY - which study the data comes from.
@@ -98,11 +98,11 @@ The second sheet contains some additional information related to the analysis pe
 \item WEIGHT - which weight variable was used.
 \item DESIGN - which resampling technique was used (JRR or BRR).
 \item SHORTCUT - logical, whether the shortcut method was used.
-\item NREPS - how many replication weigths were used.
+\item NREPS - how many replication weights were used.
 \item ANALYSIS_DATE - on which date the analysis was performed.
 \item START_TIME - at what time the analysis started.
 \item END_TIME - at what time the analysis finished.
-\item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+\item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
 The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.

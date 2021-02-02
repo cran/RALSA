@@ -52,40 +52,41 @@
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.recode.vars}}
 #' @export
 
-lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.file = FALSE) {
 
+lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.file = FALSE) {
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-
-
+  
+  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-
+    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-
-
+    
+    
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-
+    
     data <- copy(data.object)
-
+    
     used.data <- deparse(substitute(data.object))
     message('\nUsing data from object "', used.data, '".')
   }
-
+  
   if(!"lsa.data" %in% class(data)) {
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(missing(var.names)) {
     var.names <- colnames(data)
   } else {
@@ -93,21 +94,21 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       stop('\nOne or more variable names passed to the "var.names" argument do not exist in the data. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
   }
-
+  
   tryCatch({
-
+    
   cols.to.delete <- grep(pattern = paste(var.names, collapse = "|"), x = colnames(data), value = TRUE, invert = TRUE)
   if(length(cols.to.delete) > 0) {
     data[ , (grep(pattern = paste(var.names, collapse = "|"), x = colnames(data), value = TRUE, invert = TRUE)) := NULL]
   }
-
+  
   ptm.data.dictionary <- proc.time()
-
+  
   var.names <- as.list(var.names)
   names(var.names) <- unlist(var.names)
-
+  
   var.classes <- lapply(X = data, FUN = class)
-
+  
   var.labels <- lapply(X = data, FUN = function(i) {
     if(length(attr(x = i, which = "variable.label")) > 0) {
       paste0("'", attr(x = i, which = "variable.label"), "'")
@@ -115,7 +116,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       ""
     }
   })
-
+  
   var.unique.values <- lapply(X = data, FUN = function(i) {
     if(is.factor(i)) {
       if(length(levels(i)) > 2) {
@@ -131,11 +132,11 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       }
     }
   })
-
+  
   var.user.missings <- lapply(X = data, FUN = function(i) {
     miss.attr <- attr(x = i, which = "missings")
     if(is.factor(i)) {
-
+      
       if(length(miss.attr) == 0) {
         ""
       } else if(length(miss.attr) == 1) {
@@ -145,7 +146,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       } else if (length(miss.attr) > 2) {
         c(paste0("'", miss.attr[1], "'\n"), paste0("                 '", miss.attr[2:(length(miss.attr) - 1)], "\n"), paste0("                 '", miss.attr[length(miss.attr)], "'"))
       }
-
+      
     } else if(is.numeric(i)) {
       if(length(miss.attr) == 0) {
         ""
@@ -158,7 +159,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       }
     }
   })
-
+  
   vars.dict <- lapply(X = names(var.names), FUN = function(i) {
     list(var.names[[i]],
          var.classes[[i]],
@@ -166,10 +167,10 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
          var.unique.values[[i]],
          var.user.missings[[i]])
   })
-
+  
   message("")
   message("The following tables contain the dictionaries for the variables of interest.\n")
-
+  
   invisible(lapply(X = vars.dict, FUN = function(i) {
     message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
     message("Variable name:   '", i[[1]], "'")
@@ -188,20 +189,20 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
     message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
     message("\n\n")
   }))
-
+  
   var.word.count <- if(length(var.names) == 1) {
     list("Dictionary", " variable")
   } else {
     list("Dictionaries", " variables")
   }
-
+  
   message('\n', var.word.count[[1]], ' for ',  length(var.names), var.word.count[[2]], ' produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.dictionary}[[3]], "%H:%M:%OS3"))
-
+  
   if(!missing(out.file)) {
     ptm.write.dictionary <- proc.time()
-
+    
     cat("", file = out.file)
-
+    
     cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
     if(!missing(data.file)) {
       cat("\nUsed data file:", data.file, "\n", file = out.file, append = TRUE)
@@ -228,10 +229,9 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), "\n", file = out.file, append = TRUE)
       cat("\n\n\n\n", file = out.file, append = TRUE)
     }))
-
+    
     message('\nVariable dictionaries written to disk in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.write.dictionary}[[3]], "%H:%M:%OS3"), "\n\n")
-
-
+    
     if(open.out.file == TRUE) {
       if(Sys.info()["sysname"] == "Windows") {
         shell.exec(out.file)
@@ -241,14 +241,14 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
         system(paste0("open ", out.file))
       }
     }
-
+    
   }
-
+  
   }, interrupt = function(f) {
     message("\n\nInterrupted by the user. Not all requested dictionaries have been produced.")
   },
   error = function(e) {
     message("")
   })
-
+  
 }

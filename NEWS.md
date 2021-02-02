@@ -1,4 +1,33 @@
-# RALSA v.0.90.0 (2020-10-26)
+# RALSA v.0.90.2 (2021-01-02)
+
+## Bug fixes
+* `lsa.convert.data` function. Unrecognized characters in factor levels are now fixed. Such were, for example the levels of the number of books variable in PIRLS 2016 and other cycles which displayed unrecognized characters instead of instead of "-".
+
+* `GUI`. When categorical variables are added in the list of `Independent background categorical variables` in linear and logistic regression, the number of categories (`N cat.` column) and the drop-down menu for the reference categories (`Ref. cat.` column) include the missing values as well.
+
+* `lsa.convert.data` function. For some variables categories have the same labels as the missing ones in other variables and are improperly converted as missing.
+
+* When loading or switching to a tab in the `GUI`, it is scrolled to the position where the previous tab was scrolled to.
+
+## New study cycles added
+TIMSS 2019 is now fully supported.
+
+## New study added
+PISA for Development is now supported, as suggested by David Joseph Rutkowski.
+
+## Miscellaneous
+* Various improvements for the `GUI` elements location.
+
+* Improved documentation.
+
+* Links to the documentation for each functionality `RALSA` supports were added to the `Help` section of the `GUI`.
+
+* Improved messages, warnings and error messages.
+
+
+
+
+# RALSA v.0.90.1 (2020-10-26)
 
 The first version of the R Analyzer for Large-Scale Assessments (`RALSA`) is released. `RALSA` targets both the experienced R users, as well as those less technical skills. Thus, along with the traditional command-line R interface, a Graphical User Interface is featured.
 

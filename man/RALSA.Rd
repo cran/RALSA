@@ -20,12 +20,13 @@ Currently, RALSA works with data from \strong{all cycles} of the the following s
 \item IEA ICILS;
 \item IEA RLII;
 \item IEA PIRLS (including PIRLS Literacy and ePIRLS);
-\item IEA TIMSS (including TIMSS Numeracy, eTIMSS;
+\item IEA TIMSS (including TIMSS Numeracy, eTIMSS);
 \item IEA TiPi (TIMSS and PIRLS joint study);
 \item IEA TIMSS Advanced;
 \item IEA SITES;
 \item IEA TEDS-M;
 \item OECD PISA;
+\item OECD PISA for Development;
 \item OECD TALIS;
 \item OECD TALIS Starting Strong Survey (a.k.a. TALIS 3S).
 }

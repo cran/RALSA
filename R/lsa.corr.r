@@ -63,7 +63,7 @@
 #'   \item Sum_\verb{<}Weight variable\verb{>}\verb{_}SE - the standard error of the the estimated population number of elements per group. The actual name of the weight variable will depend on the weight variable used in the analysis.
 #'   \item Percentages_\verb{<}Last split variable\verb{>} - the percentages of respondents (population estimates) per groups defined by the splitting variables in \code{split.vars}. The percentages will be for the last splitting variable which defines the final groups.
 #'   \item Percentages_\verb{<}Last split variable\verb{>}\verb{_}SE - the standard errors of the percentages from above.
-#'   \item Variable - the variable names (background/contextual or PV root names) to be matched against the rows of the forllowing columns, forming the correlation matrices together.
+#'   \item Variable - the variable names (background/contextual or PV root names) to be matched against the rows of the following columns, forming the correlation matrices together.
 #'   \item Correlation_\verb{<}Background variable\verb{>} - the correlation coefficient of each continuous \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars} against itself and each of the variables in the column "Variable". There will be one column with correlation coefficient estimate for each variable specified in \code{bckg.corr.vars} and/or set of PVs specified in \code{PV.root.corr}.
 #'   \item Correlation_\verb{<}Background variable\verb{>}\verb{_}SE - the standard error of the correlation of each continuous \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars}. There will be one column with the SE of the correlation coefficient estimate for each variable specified in \code{bckg.corr.vars} and/or set of PVs specified in \code{PV.root.corr}.
 #'   \item Correlation_\verb{<}root PV\verb{>} - the correlation coefficient of each set of PVs specified as PV root name in \code{PV.root.corr} against itself and each of the variables in the column "Variable". There will be one column with correlation coefficient estimate for each set of PVs specified in \code{PV.root.corr} and each other set of PVs specified in \code{PV.root.corr} and/or each continuous background variable specified in \code{bckg.corr.vars}.
@@ -87,11 +87,11 @@
 #'   \item WEIGHT - which weight variable was used.
 #'   \item DESIGN - which resampling technique was used (JRR or BRR).
 #'   \item SHORTCUT - logical, whether the shortcut method was used.
-#'   \item NREPS - how many replication weigths were used.
+#'   \item NREPS - how many replication weights were used.
 #'   \item ANALYSIS_DATE - on which date the analysis was performed.
 #'   \item START_TIME - at what time the analysis started.
 #'   \item END_TIME - at what time the analysis finished.
-#'   \item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+#'   \item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 #' }
 #'
 #' The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
@@ -141,11 +141,10 @@
 
 
 lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
-
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-
-
+  
   if(missing(corr.type)) {
     corr.type <- "Pearson"
   } else if(corr.type == "Spearman") {
@@ -155,70 +154,71 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
   } else {
     stop('\n\nUnknown method for computting correlations specified in "corr.type" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
+    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
-
+    
     used.data <- deparse(substitute(data.file))
-
+    
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-
-
+    
+    
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     data <- copy(data.object)
-
+    
     used.data <- deparse(substitute(data.object))
     message('\nUsing data from object "', used.data, '".')
   }
-
+  
   if(!"lsa.data" %in% class(data)) {
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
+  
   vars.list <- get.analysis.and.design.vars(data)
-
+  
   if(is.null(vars.list[["PV.root.corr"]]) & length(vars.list[["bckg.corr.vars"]]) < 2 || is.null(vars.list[["bckg.corr.vars"]]) & length(vars.list[["PV.root.corr"]]) < 2) {
     message("\n\n")
     stop('Insufficient number of variable names passed to "bckg.corr.vars" and/or number of sets of PVs passed "PV.root.corr". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-
-
+  
+  
   action.args.list <- get.action.arguments()
-
+  
   file.attributes <- get.file.attributes(imported.object = data)
-
+  
   tryCatch({
-
+    
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
-
+    
     data <- data[get(vars.list[["weight.var"]]) > 0, ]
-
+    
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
-
+    
     if(length(key.vars) > 1) {
       data <- lapply(X = data, FUN = function(i) {
 
         tmp.colnames <- colnames(i)[!colnames(i) %in% c(key.vars, unlist(vars.list[c("split.vars", "bckg.corr.vars", "jk.zones", "rep.ind", "PV.names")]))]
-
+        
         if(include.missing == FALSE) {
           i <- na.omit(object = i, cols = key.vars)
         }
-
+        
         i <- na.omit(object = i, cols = vars.list[["bckg.corr.vars"]])
-
+        
         tmp.data <- Filter(nrow, split(x = i, by = key.vars[2:length(key.vars)]))
-
+        
         tmp.null.weights.idx <- Filter(isTRUE, lapply(X = tmp.data, FUN = function(j) {
           Filter(isTRUE, sapply(X = j[ , mget(tmp.colnames)], FUN = function(k) {
             all(k == 0)
@@ -234,38 +234,38 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
             }
           }), .SDcols = tmp.colnames]
         })
-
+        
         rbindlist(tmp.data)
       })
     }
-
+    
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
-
+    
     analysis.info <- list()
-
+    
     number.of.countries <- length(names(data))
-
+    
     if(number.of.countries == 1) {
       message("\nValid data from one country have been found. Some computations can be rather intensive. Please be patient.\n")
     } else if(number.of.countries > 1) {
       message("\nValid data from ", number.of.countries, " countries have been found. Some computations can be rather intensive. Please be patient.\n")
     }
-
+    
     counter <- 0
-
+    
     compute.all.stats <- function(data) {
-
+      
       rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
         unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
       }))), collapse = "|")
-
+      
       rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
-
+      
       all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
-
+      
       cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
-
+      
       if(include.missing == FALSE) {
         if(!is.null(vars.list[["bckg.corr.vars"]])) {
           bckg.corr.vars.all.NA <- names(Filter(function(i) {all(is.na(i))}, data))
@@ -280,44 +280,44 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
         } else {
           data1 <- na.omit(object = copy(data), cols = key.vars)
         }
-
-
+        
+        
         if(!is.null(vars.list[["pcts.var"]])) {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])])
-
+          
           number.of.cases <- na.omit(data1[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), by = key.vars])
-
+          
           sum.of.weights <- na.omit(data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
-
+          
         } else {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))])
           number.of.cases <- na.omit(data1[ , .(n_Cases = .N), by = key.vars])
           sum.of.weights <- na.omit(data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
         }
-
+        
       } else if (include.missing == TRUE) {
-
+        
         bckg.corr.vars.all.NA <- names(Filter(function(i) {all(is.na(i))}, data))
         if(length(bckg.corr.vars.all.NA) > 0) {
           data1 <- copy(data)
           data1[ , (bckg.corr.vars.all.NA) := NULL]
           data1 <- na.omit(object = data1, cols = vars.list[["bckg.corr.vars"]][!vars.list[["bckg.corr.vars"]] %in% bckg.corr.vars.all.NA])
-
+          
           data1[ , (bckg.corr.vars.all.NA) := NA]
         } else {
           data1 <- na.omit(object = data, cols = unlist(vars.list["bckg.corr.vars"]))
         }
-
-
+        
+        
         if(!is.null(vars.list[["pcts.var"]])) {
-
+          
           percentages <- data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])]
           number.of.cases <- data1[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), by = key.vars]
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
-
+          
         } else {
           if(!is.null(vars.list[["bckg.corr.vars"]])) {
-
+            
             percentages <- data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]
             number.of.cases <- data1[ , .(n_Cases = .N), by = key.vars]
             sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
@@ -327,65 +327,65 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
             sum.of.weights <- data[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
           }
         }
-
+        
       }
-
+      
       percentages <- list(percentages)
       sum.of.weights <- list(sum.of.weights)
-
+      
       if(!is.null(vars.list[["pcts.var"]])) {
         reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = vars.list[["pcts.var"]], weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["pcts.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
       } else {
         reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = NULL, weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = key.vars, replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
       }
-
+      
       percentages <- rbindlist(percentages)
-
+      
       if(nrow(number.of.cases) > nrow(percentages)) {
         percentages <- merge(number.of.cases[ , mget(key.vars)], percentages, all.x = TRUE)
         percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 100; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)]
         percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 0; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)]
       }
-
+      
       reshape.list.statistics.bckg(estimate.object = sum.of.weights, estimate.name = "Sum_", weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+      
       if(!is.null(vars.list[["PV.names"]])) {
-
+        
         PV.names.to.split.by <- transpose(vars.list[["PV.names"]]) # Uses "transpose" from the "data.table" package
-
+        
         PV.names.to.keep <- lapply(X = PV.names.to.split.by, FUN = function(i) {
           grep(pattern = paste(c(key.vars, i, vars.list[["bckg.corr.vars"]], all.weights, vars.list[["jk.zones"]], vars.list[["rep.ind"]]), collapse = "|"), x = colnames(data1), value = TRUE)
         })
-
+        
         data1 <- lapply(X = PV.names.to.keep, FUN = function(i) {
           data1[ , mget(i)]
         })
-
+        
       }
-
+      
       if(!is.null(vars.list[["bckg.corr.vars"]]) & is.null(vars.list[["PV.root.corr"]])) {
-
+        
         bckg.correlations <- list(compute.correlations.all.repwgt(data.object = data1, vars.vector = vars.list[["bckg.corr.vars"]], weight.var = all.weights, keys = key.vars, method = corr.type))
-
+        
         bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.corr.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
         bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-
+        
       } else if(is.null(vars.list[["bckg.corr.vars"]]) & !is.null(vars.list[["PV.root.corr"]])) {
-
+        
         PV.correlations <- list(lapply(X = data1, FUN = function(i) {
           compute.correlations.all.repwgt(data.object = i, vars.vector = grep(pattern = paste(vars.list[["PV.root.corr"]], collapse = "|"), x = colnames(i), value = TRUE), weight.var = all.weights, keys = key.vars, method = corr.type)
         }))
-
+        
         PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
         })
-
+        
       } else if(!is.null(vars.list[["bckg.corr.vars"]]) & !is.null(vars.list[["PV.root.corr"]])) {
-
+        
         PV.correlations <- list(lapply(X = data1, FUN = function(i) {
             compute.correlations.all.repwgt(data.object = i, vars.vector = grep(pattern = paste(c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]), collapse = "|"), x = colnames(i), value = TRUE), weight.var = all.weights, keys = key.vars, method = corr.type)
         }))
-
+        
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             j[ , c("V1", "V2") := lapply(.SD, function(j) {
@@ -393,34 +393,34 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
             }), .SDcols = c("V1", "V2")]
           })
         })
-
+        
         lapply(X = PV.correlations, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             setkeyv(x = j, cols = c(key.vars, "V1", "V2"))
           })
         })
-
+        
         PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
           compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
         })
-
+        
         bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.corr.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
         bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-
+        
       }
-
+      
       if(!is.null(vars.list[["bckg.corr.vars"]]) & is.null(vars.list[["PV.root.corr"]])) {
         reshape.list.statistics.bckg(estimate.object = bckg.correlations, estimate.name = "Correlation_", data.key.variables = key.vars, new.names.vector = vars.list[["bckg.corr.vars"]], bckg.vars.vector = vars.list[["bckg.corr.vars"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         bckg.correlations <- bckg.correlations[[1]]
-
+        
         bckg.correlations <- bckg.correlations[ , c("V1", "V2") := lapply(.SD, function(i) {
           factor(x = i, levels = vars.list[["bckg.corr.vars"]])
         }), .SDcols = c("V1", "V2")]
         setkeyv(x = bckg.correlations, cols = c(key.vars, "V1", "V2"))
-
+        
         bckg.correlations <- split(x = bckg.correlations, by = key.vars, drop = TRUE)
-
+        
         bckg.correlations <- rbindlist(l = lapply(X = bckg.correlations, FUN = function(i) {
           cor.variables <- paste0("Correlation_", as.character(unique(i[ , V1])))
           cor.variables.SE <- paste0(cor.variables, "_SE")
@@ -431,21 +431,21 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           i <- cbind(unique(i[ , mget(c(key.vars, "Variable"))]), data.table(tmp.corr, tmp.corr.se))
           setnames(x = i, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(i)), new = all.cor.variables)
         }))
-
+        
         if(length(bckg.corr.vars.all.NA) > 0) {
           bckg.correlations[ , (grep(pattern = "Correlation_", x = colnames(bckg.correlations), value = TRUE)) := NaN]
         }
-
+        
       } else if(!is.null(vars.list[["PV.root.corr"]])) {
-
+        
         reshape.list.statistics.PV(estimate.object = PV.correlations, estimate.name = "Correlation", PV.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
-
+          
           i <- lapply(X = seq_along(i), FUN = function(j) {
             i[[j]][ , (c("V1", "V2")) := lapply(.SD, function(k) {
               k <- as.character(k)
-              if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+              if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
                 k <- ifelse(test = k %in% unlist(vars.list[["PV.names"]]), yes = sub(pattern = "^PV[[:digit:]]+", replacement = "PVN", x = k), no = k)
                 k <- factor(x = k, levels = c(gsub(pattern = "[[:digit:]]+", replacement = "N", x = vars.list[["PV.root.corr"]], fixed = TRUE), vars.list[["bckg.corr.vars"]]))
               } else {
@@ -453,10 +453,10 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
                 k <- factor(x = k, levels = c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]))
               }
             }), .SDcols = c("V1", "V2")]
-
+            
             setkeyv(x = i[[j]], c(key.vars, "V1", "V2"))
-
-            if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+            
+            if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
               setnames(x = i[[j]], old = "Correlation", new = paste0("Correlation_", gsub(pattern = "^PVN", replacement = paste0("PV", j), x = i[[j]][ , V1][1])))
               setnames(x = i[[j]], old = "Correlation_SumSq", new = paste0("Correlation_", gsub(pattern = "^PVN", replacement = paste0("PV", j), x = i[[j]][ , V1][1]),"_SumSq"))
             } else {
@@ -464,57 +464,57 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
               setnames(x = i[[j]], old = "Correlation_SumSq", new = paste0("Correlation_", i[[j]][ , V1][1], "0", j, "_SumSq"))
             }
           })
-
+          
         })
-
+        
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
           Reduce(function(...) merge(...), i)
         })
-
+        
         PV.names.cols <- lapply(X = PV.correlations, FUN = function(i) {
           i[ , .(V1, V2)]
         })
-
+        
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
           i[ , (c("V1", "V2")) := NULL]
         })
-
+        
         aggregate.PV.estimates(estimate.object = PV.correlations, estimate.name = "Correlation_", root.PV = vars.list[["PV.root.corr"]], PV.vars.vector = vars.list[["PV.names"]], data.key.variables = key.vars, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-
+        
         PV.correlations <- Map(f = function(input1, input2) {
           cbind(input1[ , mget(key.vars)], input2, input1[ , mget(grep(pattern = paste(key.vars, collapse = "|"), x = colnames(input1), value = TRUE, invert = TRUE))])
         }, input1 = PV.correlations, input2 = PV.names.cols)
-
-
+        
+        
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
           corr.colls <- grep(pattern = "Correlation_", x = colnames(i), value = TRUE)
           setnames(x = i, old = corr.colls, new = gsub(pattern = paste(paste0("_", i[ , V1]), collapse = "|"), replacement = "", x = corr.colls))
         })
-
+        
         PV.correlations <- PV.correlations[[1]]
-
+        
         PV.correlations[ , (grep(pattern = "^Correlation", x = colnames(PV.correlations), value = TRUE)) := lapply(.SD, function(i) {
           ifelse(test = is.na(i), yes = NaN, no = i)
         }), .SDcols = grep(pattern = "^Correlation", x = colnames(PV.correlations), value = TRUE)]
-
+        
         PV.correlations <- PV.correlations[ , c("V1", "V2") := lapply(.SD, function(i) {
-          if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+          if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
             factor(x = i, levels = c(gsub(pattern = "PV[[:digit:]]+", replacement = "PVN", x = vars.list[["PV.root.corr"]], fixed = TRUE), vars.list[["bckg.corr.vars"]]))
           } else {
             factor(x = i, levels = c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]))
           }
         }), .SDcols = c("V1", "V2")]
         setkeyv(x = PV.correlations, cols = c(key.vars, "V1", "V2"))
-
+        
         PV.correlations <- split(x = PV.correlations, by = key.vars, drop = TRUE)
-
+        
         PV.correlations <- rbindlist(l = lapply(X = PV.correlations, FUN = function(i) {
           cor.variables <- paste0("Correlation_", as.character(unique(i[ , V1])))
           cor.variables.SE <- paste0(cor.variables, "_SE")
           cor.variables.SVR <- paste0(cor.variables, "_SVR")
           cor.variables.MVR <- paste0(cor.variables, "_MVR")
           all.cor.variables <- c(cor.variables, cor.variables.SE, cor.variables.SVR, cor.variables.MVR)
-
+          
           setnames(x = i, old = "V1", new = "Variable")
           number.of.columns <- sum(length(vars.list[["PV.root.corr"]]), length(vars.list[["bckg.corr.vars"]]))
           tmp.corr <- matrix(i[ , get("Correlation")], ncol = number.of.columns)
@@ -524,16 +524,16 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           i <- cbind(unique(i[ , mget(c(key.vars, "Variable"))]), data.table(tmp.corr, tmp.corr.se, tmp.corr.SVR, tmp.corr.MVR))
           setnames(x = i, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(i)), new = all.cor.variables)
         }))
-
+        
         if(!is.null(vars.list[["bckg.corr.vars"]]) && length(bckg.corr.vars.all.NA) > 0) {
           PV.correlations[ , (grep(pattern = "Correlation_", x = colnames(PV.correlations), value = TRUE)) := NaN]
         }
-
+        
         merged.PV.estimates <- PV.correlations
         PV.correlations <- NULL
-
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
-
+        
+        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
+          
           lapply(X = PVs.pct.miss, FUN = function(i) {
             pct.miss.columns <- grep(pattern = paste0("Percent_Missing_", vars.list[["PV.root.corr"]], collapse = "|"), x = names(i), value = TRUE)
             i[ , avg.PVs.pct.miss := rowSums(.SD)/length(pct.miss.columns), .SDcols = pct.miss.columns]
@@ -545,9 +545,9 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
             setnames(x = i, old = "avg.PVs.pct.miss", new = paste0("Percent_Missing_", PV.root.corr.in.scope))
             i[ , grep(pattern = paste0("Percent_Missing_", paste(unlist(vars.list[["PV.names"]]), sep = "", collapse = "|"), collapse = "|"), x = names(i), value = TRUE) := NULL]
           })
-
+          
         } else {
-
+          
           lapply(X = PVs.pct.miss, FUN = function(i) {
             PV.root.corr.in.scope <- intersect(unique(gsub(pattern = "Percent_Missing_|[[:digit:]]+$", replacement = "", x = colnames(i))), unlist(vars.list[["PV.root.corr"]]))
             PV.root.corr.in.scope <- grep(pattern = paste0("Percent_Missing_", PV.root.corr.in.scope <- intersect(unique(gsub(pattern = "Percent_Missing_|[[:digit:]]+$", replacement = "", x = colnames(i))), unlist(vars.list[["PV.root.corr"]])), "[[:digit:]]+"), x = names(i), value = TRUE)
@@ -561,13 +561,11 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
         }
         PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
       }
-
-
-
+      
       country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
-
+      
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
-
+      
       if(!is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && is.null(vars.list[["PV.root.corr"]])) {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.correlations, bckg.vars.pct.miss))
       } else if(!is.null(vars.list[["split.vars"]]) && is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])){
@@ -581,11 +579,11 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       } else if(is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])) {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.vars.pct.miss, merged.PV.estimates, PVs.pct.miss))
       }
-
+      
       cor.columns <- grep(pattern = "^Correlation_", x = colnames(merged.outputs), value = TRUE)
       cor.SE.columns <- grep(pattern = "_SE$", x = cor.columns, value = TRUE)
       cor.columns <- grep(pattern = "_SE$|_SVR$|_MVR$", x = cor.columns, value = TRUE, invert = TRUE)
-      if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+      if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
         t.value.columns <- paste0("t_", c(gsub(pattern = "[[:digit:]]+", replacement = "N", x = vars.list[["PV.root.corr"]], fixed = TRUE), vars.list[["bckg.corr.vars"]]))
       } else {
         t.value.columns <- paste0("t_", c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]))
@@ -594,8 +592,8 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       merged.outputs[ , (t.value.columns) := lapply(.SD, function(i) {
         ifelse(test = is.infinite(i), yes = NA, no = i)
       }), .SDcols = t.value.columns]
-
-      if(file.attributes[["lsa.study"]] %in% c("PISA", "ICCS", "ICILS")) {
+      
+      if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
         p.value.columns <- paste0("p_", c(gsub(pattern = "[[:digit:]]+", replacement = "N", x = vars.list[["PV.root.corr"]], fixed = TRUE), vars.list[["bckg.corr.vars"]]))
       } else {
         p.value.columns <- paste0("p_", c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]))
@@ -604,73 +602,73 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       merged.outputs[ , (p.value.columns) := lapply(.SD, function(i) {
         2 * pt(q = -abs(i), df = degrees.of.freedom)
       }), .SDcols = t.value.columns]
-
+      
       merged.outputs[ , degrees.of.freedom := NULL]
-
+      
       setcolorder(x = merged.outputs, neworder = c(grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE, invert = TRUE), grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE)))
-
+      
       merged.outputs[ , (c(t.value.columns, p.value.columns)) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
       }), .SDcols = c(t.value.columns, p.value.columns)]
-
+      
       counter <<- counter + 1
-
+      
       message("     ",
-
+          
           if(nchar(counter) == 1) {
             paste0("( ", counter, "/", number.of.countries, ")   ")
           } else if(nchar(counter) == 2) {
             paste0("(", counter, "/", number.of.countries, ")   ")
           },
-
+          
           paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), "processed in ", country.analysis.info[ , DURATION]))
-
+      
       return(merged.outputs)
     }
-
+    
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
-
+    
     estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
     setkeyv(x = estimates, cols = key.vars)
-
+    
     total.exec.time <- rbindlist(analysis.info)[ , DURATION]
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
-
+    
     if(length(unique(estimates[ , get(key.vars)])) > 1) {
       message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("\n")
     }
-
+    
     ptm.add.table.average <- proc.time()
-
+    
     if(!is.null(vars.list[["bckg.corr.vars"]]) && anyNA(estimates[ , Variable])) {
       estimates[ , Variable := `levels<-` (addNA(Variable), c(levels(Variable), "<NA>"))]
       estimates[ , n_Cases := as.numeric(n_Cases)]
       estimates[Variable == "<NA>" , (grep(pattern = paste(c("n_Cases", "Sum_", "Percentages_", "Correlation_"), collapse = "|"), x = colnames(estimates), value = TRUE)) := NaN]
     }
-
+    
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
-
+    
     message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-
+   
     export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-
+    
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
     }
-
+    
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-
+  
   vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.corr.vars", x = names(vars.list), value = TRUE)
   vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
   vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-
+  
   if(length(vars.list.analysis.vars) > 0) {
     warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.corr.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
   }
-
+  
 }

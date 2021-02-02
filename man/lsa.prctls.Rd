@@ -91,11 +91,11 @@ The second sheet contains some additional information related to the analysis pe
 \item WEIGHT - which weight variable was used.
 \item DESIGN - which resampling technique was used (JRR or BRR).
 \item SHORTCUT - logical, whether the shortcut method was used.
-\item NREPS - how many replication weigths were used.
+\item NREPS - how many replication weights were used.
 \item ANALYSIS_DATE - on which date the analysis was performed.
 \item START_TIME - at what time the analysis started.
 \item END_TIME - at what time the analysis finished.
-\item DURATION - how long the analysis took in hours, minutes, seconds and miliseconds.
+\item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
 The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.

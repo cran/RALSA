@@ -12,10 +12,11 @@ library(DT)
 library(shinyjs)
 library(shinyFiles)
 
+
 ui <- tagList(
-
-
-  load.app.CSS.screen <- "
+  
+  
+load.app.CSS.screen <- "
 #loading-content {
   position: absolute;
   background: #000000;
@@ -29,35 +30,42 @@ ui <- tagList(
 }
 ",
 
+
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
-  useShinyjs(),
 
 
-  inlineCSS(load.app.CSS.screen),
+jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
+
+
+useShinyjs(),
+
+inlineCSS(load.app.CSS.screen),
+
+div(
+  id = "loading-content", class = "center",
+  h1(HTML("<br/><br/><br/><br/><br/><blink>Loading...</blink><br/><br/><br/><br/>")),
+  img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
+  h1(HTML("<br/><br/><br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="http://www.ralsa.ineri.org/", "(http://www.ineri.org/)", target = "_blank"))
+),
+
+hidden(
   div(
-    id = "loading-content", class = "center",
-    h1(HTML("<br/><br/><br/><br/><blink>Loading...</blink><br/><br/><br/>")),
-    img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
-    h1(HTML("<br/><br/>Brought to you by the<br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="http://www.ralsa.ineri.org/", "(http://www.ineri.org/)", target = "_blank"))
-  ),
-  hidden(
-    div(
-      id = "app-content",
-
-      dashboardPage(
-
-        title = "RALSA",
-
+    id = "app-content",
+    
+    dashboardPage(
+      
+      title = "RALSA",
+        
         dashboardHeader(
           title =
             tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
           tags$li(class = "dropdown",
                   tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
                   tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),
-
+                  
                   tags$style(".navbar {background-color: #000000 !important; color: #ffffff !important; font-size: 20px;}"),
-
+                  
                   tags$header(HTML("R Analyzer for Large-Scale Assessments"), align = "left", style = "
               position: fixed;
               left: 300px; /*Add a left margin of 300px so that the header does not cover the logo on the left*/
@@ -70,60 +78,58 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
               background-color: #000000;")
           )
         ),
-
-
+        
         dashboardSidebar(width = 260,
-
+                         
                          tags$style(".main-sidebar {background-color: #000000 !important;}"),
-
+                         
                          sidebarMenu(id = "home",
                                      br(), br(),
                                      menuItem(text = "Home", icon = icon("home"), tabName = "home")
                          ),
-
+                         
                          sidebarMenu(id = "dataMenu",
-
-
+                                     
                                      menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
-
+                                              
                                               menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
-
+                                              
                                               menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
-
+                                              
                                               menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
-
+                                              
                                               menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
-
-
+                                              
+                                              
                                      )
                          ),
-
+                         
                          sidebarMenu(id = "analysisMenu",
                                      menuItem(text = "Analysis types", icon = icon("square-root-alt"), tabName = "analyzeData",
-
+                                              
                                               menuSubItem(text = "Percentages and means", icon = icon("chart-pie"), tabName = "pctsMeans"),
-
+                                              
                                               menuSubItem(text = "Percentiles", icon = icon("chart-pie"), tabName = "prctls"),
-
+                                              
                                               menuSubItem(text = "Benchmarks", icon = icon("chart-pie"), tabName = "bnchMarks"),
-
+                                              
                                               menuSubItem(text = "Correlations", icon = icon("chart-pie"), tabName = "corr"),
-
+                                              
                                               menuSubItem(text = "Linear regression", icon = icon("chart-pie"), tabName = "linReg"),
-
+                                              
                                               menuSubItem(text = "Binary logistic regression", icon = icon("chart-pie"), tabName = "binLogReg")
-
+                                              
                                      )
                          ),
-
+                         
                          sidebarMenu(id = "help",
                                      menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
                          ),
-
+                         
                          sidebarMenu(id = "exit",
                                      menuItem(text = "Exit", icon = icon("running"), tabName = "exitUI")
                                      ),
-
+                         
                          tags$style(".main-sidebar {background-color: #000000 !important;}"),
                          tags$style(".sidebar-menu li a {color: white !important;}"),
                          tags$style(HTML(".sidebar-menu li.active a {border-left-color: red !important;}")),
@@ -131,20 +137,22 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                          tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
                          tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
                          tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
-
-
-
+                         
+                         
+                         
         ),
-
-
+        
+        
         dashboardBody(
-
+          
+          extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
+          
           tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico", type="image/x-icon")),
-
+          
           tags$style(HTML(".content-wrapper, .right-side {
       background-color: #e2e2e2;
     }")),
-
+          
           tags$head(tags$style(HTML(
             "
                         .multicol .shiny-options-group {
@@ -162,9 +170,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                         -webkit-margin-after: 0px !important;
                         }
                         "))),
-
           tags$script(HTML("$('body').addClass('fixed');")),
-
           tags$head(
             tags$style(
               HTML(".shiny-notification {
@@ -175,13 +181,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                 font-size: 18px;
                                 opacity: 1;}"))
           ),
-
+          
           tags$head(tags$style(HTML("a {color: #FE0F1A}"))),
-
+          
           tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {border: 0.05em solid #c1c1c1; background-color: #dddddd !important;}')),
-
+          
           tags$head(tags$style(HTML('.has-feedback .form-control {padding-left: 0px; padding-right: 0px;}'))),
-
+          
           tags$head(tags$script(
             HTML(
               "Shiny.addCustomMessageHandler('unbindDT', function(id) {
@@ -191,38 +197,39 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                 }
                })")
           )),
-
+          
           tags$head(tags$style("td .form-group {margin-bottom: 0; margin-top: 0;}")),
-
+          
           tabItems(
-
+            
             tabItem(tabName = "home", class = "active",
                     fluidRow(align = "center",
                              h1(textOutput(outputId = "welcomeToRALSA"))
                     ),
-
+                    
                     htmlOutput(outputId = "welcomeText")
-
+                    
             ),
-
+            
             tabItem(tabName = "ralsaHelp", class = "active",
                     h1(textOutput(outputId = "helpHeading")),
-                    htmlOutput(outputId = "helpOnRALSAWebsite")
+                    htmlOutput(outputId = "helpOnRALSAWebsite"),
+                    htmlOutput(outputId = "helpRALSAWebsiteLinks")
             ),
-
+            
             tabItem(tabName = "exitUI", class = "active",
                     h1(textOutput(outputId = "exitHeading")),
-
+                    
                     extendShinyjs(text = jscode.close.RALSA.GUI, functions = c("closeWindow")),
                     actionButton(inputId = "closeGUI", label = "Exit", icon = icon("running"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
             ),
-
+            
             tabItem(tabName = "convertData", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1ConvertData")),
-
+                    
                     htmlOutput(outputId = "convertIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyDirButton(id = "convertChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -233,16 +240,16 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertIEAStudyName"),
                                     htmlOutput(outputId = "convertIEAStudyCycle"),
                                     br()
                     )),
-
-
+                    
+                    
                     htmlOutput(outputId = "convertAvailableIEACntsText"),
-
+                    
                     conditionalPanel(condition = "output.convertIEAStudyName && output.convertIEAStudyCycle",
                                      fluidRow(
                                        br(),
@@ -250,7 +257,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                               DTOutput(outputId = "convertAvailCntIEAFiles"),
                                               tags$head(tags$style("#convertAvailCntIEAFiles {white-space: nowrap;}"))
                                        ),
-
+                                       
                                        conditionalPanel(condition = "output.convertAvailCntIEAFiles",
                                                         column(width = 1, align = "center",
                                                                br(), br(), br(), br(), br(), br(), br(), br(), br(),
@@ -261,24 +268,21 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                                                uiOutput(outputId = "convertDblArrowIEALeft")
                                                         )
                                        ),
-
+                                       
                                        column(width = 5,
                                               DTOutput(outputId = "convertSelectionIEA"),
                                               tags$head(tags$style("#convertSelectionIEA {white-space: nowrap;}"))
                                        ),
                                      )),
-
-
-
-
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISA2015PlusStudyName"),
                                     htmlOutput(outputId = "convertPISA2015PlusStudyCycle"),
                                     br()
                     )),
-
+                    
                     htmlOutput(outputId = "convertAvailablePISA2015PlusFilesText"),
-
+                    
                     fluidRow(
                       column(width = 2),
                       column(width = 8,
@@ -287,16 +291,15 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       column(width = 2)
                     ),
-
-
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISApre2015StudyName"),
                                     htmlOutput(outputId = "convertPISApre2015StudyCycle"),
                                     br()
                     )),
-
+                    
                     htmlOutput(outputId = "convertAvailablePISApre2015FilesText"),
-
+                    
                     fluidRow(
                       column(width = 2),
                       column(width = 8,
@@ -305,19 +308,36 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       column(width = 2)
                     ),
-
-
-
+                    
+                    fluidRow(column(width = 12,
+                                    htmlOutput(outputId = "convertPISADev2019PlusStudyName"),
+                                    htmlOutput(outputId = "convertPISADev2019PlusStudyCycle"),
+                                    br()
+                    )),
+                    
+                    htmlOutput(outputId = "convertAvailablePISADev2019PlusFilesText"),
+                    
+                    fluidRow(
+                      column(width = 2),
+                      column(width = 8,
+                             DTOutput(outputId = "convertPISADev2019PlusFiles"),
+                             tags$head(tags$style("#convertPISADev2019PlusFiles {white-space: nowrap;}"))
+                      ),
+                      column(width = 2)
+                    ),
+                    
+                    
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 12,
-                             conditionalPanel(condition = "output.convertSelectionIEA || output.convertPISA2015PlusFiles || output.convertPISApre2015Files",
+                             conditionalPanel(condition = "output.convertSelectionIEA || output.convertPISA2015PlusFiles || output.convertPISApre2015Files || output.convertPISADev2019PlusFiles",
                                               fluidRow(
                                                 column(width = 4,
                                                        checkboxInput(inputId = "convertMissToNA", label = "Convert user-defined missings to NA", value = FALSE)
                                                 ),
                                                 br(), br(),
-
+                                                
                                                 column(width = 2,
                                                        shinyDirButton(id = "convertChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                                                 ),
@@ -332,9 +352,9 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                                                verbatimTextOutput(outputId = "convertSyntax"),
                                                                tags$head(tags$style(HTML("#convertSyntax {background-color: white; white-space: pre-wrap;}")))
                                               ),
-
+                                              
                                               br(), br(),
-
+                                              
                                               conditionalPanel(condition = "output.convertSyntax",
                                                                textOutput(outputId = "convertExecBtnHead"),
                                                                uiOutput(outputId = "execConvertData")
@@ -354,22 +374,20 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                                                ),
                                                                br()
                                               ),
-
+                                              
                                               br(), br()
-
+                                              
                              )
                       )),
-
+                    
             ),
-
-
-
+            
             tabItem(tabName = "mergeData", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1MergeData")),
-
+                    
                     htmlOutput(outputId = "mergeIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyDirButton(id = "mergeChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -380,18 +398,16 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       ),
                     ),
-
-
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "mergeIEAStudyName"),
                                     htmlOutput(outputId = "mergeIEAStudyCycle"),
                                     br()
                     )),
-
-
+                    
+                    
                     htmlOutput(outputId = "mergeAvailableIEACntsText"),
-
-
+                    
                     conditionalPanel(condition = "output.mergeIEAStudyName && output.mergeIEAStudyCycle",
                                      fluidRow(
                                        br(),
@@ -399,7 +415,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                               DTOutput(outputId = "mergeAvailCntIEAFiles"),
                                               tags$head(tags$style("#mergeAvailCntIEAFiles {white-space: nowrap;}"))
                                        ),
-
+                                       
                                        conditionalPanel(condition = "output.mergeAvailCntIEAFiles",
                                                         column(width = 1, align = "center",
                                                                br(), br(), br(), br(), br(), br(), br(), br(), br(),
@@ -410,13 +426,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                                                uiOutput(outputId = "mergeDblArrowIEALeft")
                                                         )
                                        ),
-
+                                       
                                        column(width = 5,
                                               DTOutput(outputId = "mergeSelectionIEA"),
                                               tags$head(tags$style("#mergeSelectionIEA {white-space: nowrap;}"))
                                        ),
                                      ),
-
+                                     
                                      fluidRow(
                                        br(), br(),
                                        column(width = 12, htmlOutput(outputId = "mergeAvailRespText"))
@@ -425,7 +441,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      column(width = 4,
                                               br(),
                                               uiOutput(outputId = "mergeAvailRespCheckboxes")
-
+                                              
                                        ),
                                        column(width = 8,
                                               br(), br(),
@@ -433,7 +449,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                               tags$head(tags$style("#warnNoSuchCombination {color: red; font-weight: bold;}"))
                                        )
                                      ),
-
+                                     
                                      fluidRow(
                                        br(),
                                        column(width = 12, htmlOutput(outputId = "mergeAvailVarsText")),
@@ -455,9 +471,9 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                        )
                                      )
                     ),
-
+                    
                     conditionalPanel(condition = "output.mergeVarsSelection",
-
+                                     
                                      br(), br(), br(),
                                      shinySaveButton(id = "mergeChooseOutFile", label = "Define merged file name", title = "Define file name", icon = icon("file-import"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"),
                                      br(), br(),
@@ -466,13 +482,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      tags$head(tags$style(HTML("#mergeSyntax {background-color: white; white-space: pre-wrap;}"))),
                                      br()
                     ),
-
+                    
                     br(), br(),
                     conditionalPanel(condition = "output.mergeSyntax",
                                      textOutput(outputId = "mergeExecBtnHead"),
                                      uiOutput(outputId = "execMergeData")
                     ), br(), br(),
-
+                    
                     br(),
                     conditionalPanel(condition = "output.execMergeData != 0",
                                      verbatimTextOutput(outputId = "consoleMergeData"),
@@ -488,22 +504,17 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      ),
                                      br()
                     ),
-
+                    
                     br(), br()
-
-
-
+                    
             ),
-
-
-
-
+            
             tabItem(tabName = "varProperties", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1VarProperties")),
-
+                    
                     htmlOutput(outputId = "varPropsIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "varPropsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -514,7 +525,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -526,17 +537,17 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              htmlOutput(outputId = "varPropsRespAvailable"),
                              br(), br()
                       )
-
+                      
                     ),
-
+                    
                     htmlOutput(outputId = "varPropsExplText"),
-
+                    
                     fluidRow(
                       column(width = 6,
                              DTOutput(outputId = "varPropsAllAvailableVars"),
                              tags$head(tags$style("#varPropsAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 1, align = "center",
                              br(), br(), br(), br(), br(), br(), br(), br(), br(),
                              uiOutput(outputId = "varPropsArrowSelVarsRight"),
@@ -545,21 +556,20 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              uiOutput(outputId = "varPropsArrowSelVarsLeft"),
                              uiOutput(outputId = "varPropsDblArrowSelVarsLeft")
                       ),
-
+                      
                       column(width = 5,
                              DTOutput(outputId = "varPropsVarsSelection"),
                              tags$head(tags$style("#varPropsVarsSelection {white-space: nowrap;}"))
                       ),
                       br(), br()
                     ),
-
-
+                    
                     conditionalPanel(condition = "output.varPropsVarsSelection",
-
+                                     
                                      br(), br(), br(),
                                      checkboxInput(inputId = "varPropsSaveOutput", label = "Save the variable dictionaries in a file", value = FALSE, width = "400px"),
                                      checkboxInput(inputId = "varPropsOpenOutput", label = "Open the variable dictionaries file when finished", value = FALSE),
-
+                                     
                                      conditionalPanel(condition = "output.varPropsSaveOutput",
                                      fluidRow(
                                        column(width = 2,
@@ -576,12 +586,12 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      verbatimTextOutput(outputId = "varPropsSyntax"),
                                      tags$head(tags$style(HTML("#varPropsSyntax {background-color: white; white-space: pre-wrap;}"))),
                                      br(),
-
+                                     
                                      conditionalPanel(condition = "output.varPropsSyntax",
                                                       textOutput(outputId = "varPropsExecBtnHead"),
                                                       uiOutput(outputId = "execVarProps")
                                      ), br(), br(),
-
+                                     
                                      conditionalPanel(condition = "varPropsSyntax",
                                      verbatimTextOutput(outputId = "consoleVarProps"),
                                      tags$head(tags$style("#consoleVarProps {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -597,17 +607,15 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br()
                                      )
                     ),
-
+                    
             ),
-
-
-
+            
             tabItem(tabName = "recodeVars", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1RecodeVars")),
-
+                    
                     htmlOutput(outputId = "recodeIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "recodeChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -618,7 +626,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -630,31 +638,31 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              htmlOutput(outputId = "recodeRespAvailable"),
                              br(), br()
                       )
-
+                      
                     ),
-
+                    
                     htmlOutput(outputId = "recodeVariablesExplText"),
-
+                    
                     fluidRow(
                       column(width = 6,
                              DTOutput(outputId = "recodeAllAvailableVars"),
                              tags$head(tags$style("#recodeAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 1, align = "center",
                              br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
                              uiOutput(outputId = "recodeArrowSelVarsRight"),
                              br(), br(),
                              uiOutput(outputId = "recodeArrowSelVarsLeft"),
                       ),
-
+                      
                       column(width = 5,
                              DTOutput(outputId = "recodeVarsSelection"),
                              tags$head(tags$style("#recodeVarsSelection {white-space: nowrap;}"))
                       ),
                       br(), br()
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 12,
@@ -663,7 +671,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              tags$head(tags$style("#recodeSchemeWarn {color: red; font-weight: bold;}"))
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 12,
@@ -674,15 +682,15 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              tags$head(tags$style("#warningNotNumeric {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "warningDiffNumValuesLabels"),
                              tags$head(tags$style("#warningDiffNumValuesLabels {color: red; font-weight: bold;}")),
-
+                             
                              htmlOutput(outputId = "warningUniqueLabelsValues"),
                              tags$head(tags$style("#warningUniqueLabelsValues {color: red; font-weight: bold;}")),
-
+                             
                              htmlOutput(outputId = "warningUniqueValuesLabels"),
                              tags$head(tags$style("#warningUniqueValuesLabels {color: red; font-weight: bold;}"))
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12, align = "center",
                              DTOutput(outputId = "recodeSchemeFAC"),
@@ -694,7 +702,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 6,
                              htmlOutput(outputId = "recodeMissings"),
@@ -706,7 +714,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              ),
                       br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              checkboxInput(inputId = "recodeInNewVars", label = "Recode into new variables", value = TRUE),
@@ -716,7 +724,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              br(), br(),
@@ -725,7 +733,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 6,
@@ -733,7 +741,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "recodeSyntaxHead"),
@@ -742,14 +750,14 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "output.recodeSyntax",
                                      textOutput(outputId = "recodeExecBtnHead"),
                                      uiOutput(outputId = "execRecode"),
                                      br(), br(), br()
                     ),
-
-
+                    
+                    
                     conditionalPanel(condition = "recodeSyntax",
                                      verbatimTextOutput(outputId = "consoleRecode"),
                                      tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -765,17 +773,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br()
                     )
             ),
-
-
-
-
-
+            
             tabItem(tabName = "pctsMeans", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1PctsMeans")),
-
+                    
                     htmlOutput(outputId = "pctsMeansIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "pctsMeansChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -786,7 +790,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -799,88 +803,84 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br(), br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "pctsMeansNoWeights"),
                              tags$head(tags$style("#pctsMeansNoWeights {color: red; font-weight: bold;}"))
                              )
                     ),
-
+                    
                     htmlOutput(outputId = "pctsMeansVariablesExplText"),
-
+                    
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "pctsMeansAllAvailableVars"),
                              tags$head(tags$style("#pctsMeansAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 6,
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "pctsMeansArrowSelSplitVarsRight"),
                                       uiOutput(outputId = "pctsMeansArrowSelSplitVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "pctsMeansSplitVars"),
                                       tags$head(tags$style("#pctsMeansSplitVars {white-space: nowrap;}")),
                                       uiOutput(outputId = "pctsMeansInclMiss"),
                                       br()
                                )
                              ),
-
-
-
+                             
+                             
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "pctsMeansArrowSelBckgVarsRight"),
                                       uiOutput(outputId = "pctsMeansArrowSelBckgVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "pctsMeansBckgVars"),
                                       tags$head(tags$style("#pctsMeansBckgVars {white-space: nowrap;}"))
                                ),
                                br()
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "pctsMeansArrowSelPVsRight"),
                                       uiOutput(outputId = "pctsMeansArrowSelPVsLeft"),
                                       uiOutput(outputId = "pctsMeansArrowSelPVsRightDisbld"),
                                       uiOutput(outputId = "pctsMeansArrowSelPVsLeftDisbld")
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "pctsMeansPVVars"),
                                       tags$head(tags$style("#pctsMeansPVVars {white-space: nowrap;}")),
                                       DTOutput(outputId = "pctsMeansPVVarsDisbld"),
                                       br()
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "pctsMeansArrowSelWeightVarsRight"),
                                       uiOutput(outputId = "pctsMeansArrowSelWeightVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "pctsMeansWeightVar"),
                                       tags$head(tags$style("#pctsMeansWeightVar {white-space: nowrap;}")),
                                       br(), br()
                                )
                              ),
-
+                             
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "pctsMeansPVsNotPVs"),
@@ -891,29 +891,28 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              tags$head(tags$style("#pctsMeansBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "pctsMeansWgtsNotWgts"),
                              tags$head(tags$style("#pctsMeansWgtsNotWgts {color: red; font-weight: bold;}")),
-
+                             
                              htmlOutput(outputId = "pctsMeansWarnMoreVars"),
                              br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "pctsMeansShortcut")
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
-                      column(width = 2,
-                             shinySaveButton(id = "pctsMeansChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 6,
-                             uiOutput(outputId = "pctsMeansOpenOutput")
+                      column(width = 12,
+                             div(style="display:inline-block", shinySaveButton(id = "pctsMeansChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             
+                             div(style="display:inline-block", uiOutput(outputId = "pctsMeansOpenOutput"))
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "pctsMeansSyntaxHead"),
@@ -922,14 +921,14 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "output.pctsMeansSyntax",
                                      textOutput(outputId = "pctsMeansExecBtnHead"),
                                      uiOutput(outputId = "execPctsMeans"),
                                      br(), br(), br()
                     ),
-
-
+                    
+                    
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
                                      tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -944,11 +943,9 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      ),
                                      br()
                     )
-
+                    
             ),
-
-
-
+            
             tabItem(tabName = "prctls", class = "active",
 
                     h1(textOutput(outputId = "h1Prctls")),
@@ -966,8 +963,6 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       )
                     ),
 
-
-
             fluidRow(
               br(), br(),
               column(width = 2,
@@ -980,16 +975,16 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                      br(), br()
               )
             ),
-
+            
             fluidRow(
               column(width = 12,
                      htmlOutput(outputId = "prctlsNoWeights"),
                      tags$head(tags$style("#prctlsNoWeights {color: red; font-weight: bold;}"))
               )
             ),
-
+            
             htmlOutput(outputId = "prctlsVariablesExplText"),
-
+            
             fluidRow(
               column(width = 6, align = "center",
                      DTOutput(outputId = "prctlsAllAvailableVars"),
@@ -998,12 +993,12 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
 
               column(width = 6,
                      fluidRow(
-                       column(width = 1,
+                       column(width = 2, align = "center",
                               br(), br(),  br(), br(),
                               uiOutput(outputId = "prctlsArrowSelSplitVarsRight"),
                               uiOutput(outputId = "prctlsArrowSelSplitVarsLeft"),
                        ),
-                       column(width = 11,
+                       column(width = 10,
                               DTOutput(outputId = "prctlsSplitVars"),
                               tags$head(tags$style("#prctlsSplitVars {white-space: nowrap;}")),
                               uiOutput(outputId = "prctlsInclMiss"),
@@ -1014,45 +1009,41 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
 
 
                      fluidRow(
-                       column(width = 1,
+                       column(width = 2, align = "center",
                               br(), br(),  br(), br(),
                               uiOutput(outputId = "prctlsArrowSelBckgVarsRight"),
                               uiOutput(outputId = "prctlsArrowSelBckgVarsLeft"),
                        ),
-                       column(width = 11,
+                       column(width = 10,
                               DTOutput(outputId = "prctlsBckgVars"),
                               tags$head(tags$style("#prctlsBckgVars {white-space: nowrap;}"))
                        ),
                        br()
                      ),
 
-
-
                      fluidRow(
-                       column(width = 1,
+                       column(width = 2, align = "center",
                               br(), br(),  br(), br(),
                               uiOutput(outputId = "prctlsArrowSelPVsRight"),
                               uiOutput(outputId = "prctlsArrowSelPVsLeft"),
                               uiOutput(outputId = "prctlsArrowSelPVsRightDisbld"),
                               uiOutput(outputId = "prctlsArrowSelPVsLeftDisbld")
                        ),
-                       column(width = 11,
+                       column(width = 10,
                               DTOutput(outputId = "prctlsPVVars"),
                               tags$head(tags$style("#prctlsPVVars {white-space: nowrap;}")),
                               DTOutput(outputId = "prctlsPVVarsDisbld"),
                               br()
                        )
                      ),
-
-
-
+                     
                      fluidRow(
-                       column(width = 1,
+                       column(width = 2, align = "center",
                               br(), br(),  br(), br(),
                               uiOutput(outputId = "prctlsArrowSelWeightVarsRight"),
                               uiOutput(outputId = "prctlsArrowSelWeightVarsLeft"),
                        ),
-                       column(width = 11,
+                       column(width = 10,
                               DTOutput(outputId = "prctlsWeightVar"),
                               tags$head(tags$style("#prctlsWeightVar {white-space: nowrap;}")),
                               br(), br()
@@ -1060,7 +1051,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                      )
               )
             ),
-
+            
             fluidRow(
               column(width = 12,
                      htmlOutput(outputId = "prctlsPVsNotPVs"),
@@ -1073,12 +1064,12 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                      tags$head(tags$style("#prctlsBckgNotCnt {color: red; font-weight: bold;}")),
                      htmlOutput(outputId = "prctlsWgtsNotWgts"),
                      tags$head(tags$style("#prctlsWgtsNotWgts {color: red; font-weight: bold;}")),
-
+                     
                      htmlOutput(outputId = "prctlsWarnMoreVars"),
                      br()
               )
             ),
-
+            
             fluidRow(
               column(width = 12,
               htmlOutput(outputId = "prctlsValuesExpl")
@@ -1099,29 +1090,26 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                      htmlOutput(outputId = "prctlsNotInRange"),
                      tags$head(tags$style("#prctlsNotInRange {color: red; font-weight: bold;}"))
               ),
-
+              
               br(), br(), br(), br(), br(), br()
-
+              
             ),
-
+            
             fluidRow(
               column(width = 6,
                      uiOutput(outputId = "prctlsShortcut")
               ),
               br(), br(), br(), br()
             ),
-
+            
             fluidRow(
-              column(width = 2,
-                     shinySaveButton(id = "prctlsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-              ),
-              column(width = 6,
-                     uiOutput(outputId = "prctlsOpenOutput")
+              column(width = 12,
+                     div(style="display:inline-block", shinySaveButton(id = "prctlsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                     div(style="display:inline-block", uiOutput(outputId = "prctlsOpenOutput"))
               ),
               br(), br(), br(), br()
             ),
-
-
+            
             fluidRow(
               column(width = 12,
                      htmlOutput(outputId = "prctlsSyntaxHead"),
@@ -1130,13 +1118,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
               ),
               br(), br(), br(), br(), br(), br()
             ),
-
+            
             conditionalPanel(condition = "output.prctlsSyntax",
                              textOutput(outputId = "prctlsExecBtnHead"),
                              uiOutput(outputId = "execPrctls"),
                              br(), br(), br()
             ),
-
+            
             conditionalPanel(condition = "prctlsSyntax",
                              verbatimTextOutput(outputId = "consolePrctls"),
                              tags$head(tags$style("#consolePrctls {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1152,17 +1140,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br()
             )
             ),
-
-
-
-
-
+            
             tabItem(tabName = "bnchMarks", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1Bench")),
-
+                    
                     htmlOutput(outputId = "benchIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "benchChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -1173,9 +1157,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
-
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -1188,21 +1170,21 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br(), br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "benchNoWeights"),
                              tags$head(tags$style("#benchNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "noPVsInFile"),
                              tags$head(tags$style("#noPVsInFile {color: red; font-weight: bold;}"))
                              )
                     ),
-
+                    
                     fluidRow(
                       column(width = 2,
                              uiOutput(outputId = "benchType")
@@ -1212,74 +1194,66 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
-
+                    
                     htmlOutput(outputId = "benchVariablesExplText"),
-
-
+                    
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "benchAllAvailableVars"),
                              tags$head(tags$style("#benchAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 6,
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "benchArrowSelSplitVarsRight"),
                                       uiOutput(outputId = "benchArrowSelSplitVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "benchSplitVars"),
                                       tags$head(tags$style("#benchSplitVars {white-space: nowrap;}")),
                                       uiOutput(outputId = "benchInclMiss")
                                ),
                                br()
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "benchArrowSelBckgVarsRight"),
                                       uiOutput(outputId = "benchArrowSelBckgVarsLeft"),
                                       uiOutput(outputId = "benchArrowSelBckgVarsRightDisbld"),
                                       uiOutput(outputId = "benchArrowSelBckgVarsLeftDisbld"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "benchBckgVars"),
                                       tags$head(tags$style("#benchBckgVars {white-space: nowrap;}")),
                                       DTOutput(outputId = "benchBckgVarsDisbld"),
                                       br()
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "benchArrowSelPVsRight"),
                                       uiOutput(outputId = "benchArrowSelPVsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "benchPVVars"),
                                       tags$head(tags$style("#benchPVVars {white-space: nowrap;}")),
                                       br()
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2,
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "benchArrowSelWeightVarsRight"),
                                       uiOutput(outputId = "benchArrowSelWeightVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "benchWeightVar"),
                                       tags$head(tags$style("#benchWeightVar {white-space: nowrap;}")),
                                       br(), br()
@@ -1287,8 +1261,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "benchPVsNotPVs"),
@@ -1299,12 +1272,12 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              tags$head(tags$style("#benchBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "benchWgtsNotWgts"),
                              tags$head(tags$style("#benchWgtsNotWgts {color: red; font-weight: bold;}")),
-
+                             
                              htmlOutput(outputId = "benchWarnMoreVars"),
                              br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "benchValuesExpl")
@@ -1325,11 +1298,11 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              htmlOutput(outputId = "benchNotInRange"),
                              tags$head(tags$style("#benchNotInRange {color: red; font-weight: bold;}"))
                       ),
-
+                      
                       br(), br(), br(), br(), br()
-
+                      
                     ),
-
+                    
                     fluidRow(
                       column(width = 2,
                              uiOutput(outputId = "benchComputeWithin")
@@ -1339,39 +1312,38 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              ),
                       br(), br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "benchShortcut")
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
-                      column(width = 2,
-                             shinySaveButton(id = "benchChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 6,
-                             uiOutput(outputId = "benchOpenOutput")
+                      column(width = 12,
+                             div(style="display:inline-block", shinySaveButton(id = "benchChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             div(style="display:inline-block", uiOutput(outputId = "benchOpenOutput"))
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "benchSyntaxHead"),
                              verbatimTextOutput(outputId = "benchSyntax"),
+                             # Add a tag to wrap the text.
                              tags$head(tags$style(HTML("#benchSyntax {background-color: white; white-space: pre-wrap;}")))
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "output.benchSyntax",
                                      textOutput(outputId = "benchExecBtnHead"),
                                      uiOutput(outputId = "execBench"),
                                      br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "benchSyntax",
                                      verbatimTextOutput(outputId = "consoleBench"),
                                      tags$head(tags$style("#consoleBench {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1386,18 +1358,15 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      ),
                                      br()
                     )
-
+                    
             ),
-
-
-
-
+            
             tabItem(tabName = "corr", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1Corr")),
-
+                    
                     htmlOutput(outputId = "corrIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "corrChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -1408,7 +1377,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -1421,14 +1390,14 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br(), br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "corrNoWeights"),
                              tags$head(tags$style("#corrNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 2,
                              uiOutput(outputId = "corrType")
@@ -1438,82 +1407,76 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     htmlOutput(outputId = "corrVariablesExplText"),
-
+                    
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "corrAllAvailableVars"),
                              tags$head(tags$style("#corrAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 6,
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "corrArrowSelSplitVarsRight"),
                                       uiOutput(outputId = "corrArrowSelSplitVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "corrSplitVars"),
                                       tags$head(tags$style("#corrSplitVars {white-space: nowrap;}")),
                                       uiOutput(outputId = "corrInclMiss"),
                                       br()
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "corrArrowSelBckgVarsRight"),
                                       uiOutput(outputId = "corrArrowSelBckgVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "corrBckgVars"),
                                       tags$head(tags$style("#corrBckgVars {white-space: nowrap;}"))
                                ),
                                br()
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "corrArrowSelPVsRight"),
                                       uiOutput(outputId = "corrArrowSelPVsLeft"),
                                       uiOutput(outputId = "corrArrowSelPVsRightDisbld"),
                                       uiOutput(outputId = "corrArrowSelPVsLeftDisbld")
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "corrPVVars"),
                                       tags$head(tags$style("#corrPVVars {white-space: nowrap;}")),
                                       DTOutput(outputId = "corrPVVarsDisbld"),
                                       br()
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "corrArrowSelWeightVarsRight"),
                                       uiOutput(outputId = "corrArrowSelWeightVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "corrWeightVar"),
                                       tags$head(tags$style("#corrWeightVar {white-space: nowrap;}")),
                                       br(), br()
                                )
                              )
-
+                             
                       )
-
+                      
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "corrPVsNotPVs"),
@@ -1524,29 +1487,27 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              tags$head(tags$style("#corrBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "corrWgtsNotWgts"),
                              tags$head(tags$style("#corrWgtsNotWgts {color: red; font-weight: bold;}")),
-
+                             
                              htmlOutput(outputId = "corrWarnMoreVars"),
                              br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "corrShortcut")
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
-                      column(width = 2,
-                             shinySaveButton(id = "corrChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 6,
-                             uiOutput(outputId = "corrOpenOutput")
+                      column(width = 12,
+                             div(style="display:inline-block", shinySaveButton(id = "corrChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             div(style="display:inline-block", uiOutput(outputId = "corrOpenOutput"))
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "corrSyntaxHead"),
@@ -1555,13 +1516,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "output.corrSyntax",
                                      textOutput(outputId = "corrExecBtnHead"),
                                      uiOutput(outputId = "execCorr"),
                                      br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "corrSyntax",
                                      verbatimTextOutput(outputId = "consoleCorr"),
                                      tags$head(tags$style("#consoleCorr {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1577,18 +1538,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br()
                     )
             ),
-
-
-
-
-
-
+            
             tabItem(tabName = "linReg", class = "active",
-
+                    
                     h1(textOutput(outputId = "h1LinReg")),
-
+                    
                     htmlOutput(outputId = "linRegIntro"),
-
+                    
                     fluidRow(
                       column(width = 2, shinyFilesButton(id = "linRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                       ),
@@ -1599,7 +1555,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              )
                       )
                     ),
-
+                    
                     fluidRow(
                       br(), br(),
                       column(width = 2,
@@ -1612,70 +1568,70 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br(), br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "linRegNoWeights"),
                              tags$head(tags$style("#linRegNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-
+                    
                     htmlOutput(outputId = "linRegVariablesExplText"),
-
+                    
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "linRegAllAvailableVars"),
                              tags$head(tags$style("#linRegAllAvailableVars {white-space: nowrap;}"))
                       ),
-
+                      
                       column(width = 6,
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "linRegArrowSelSplitVarsRight"),
                                       uiOutput(outputId = "linRegArrowSelSplitVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "linRegSplitVars"),
                                       tags$head(tags$style("#linRegSplitVars {white-space: nowrap;}")),
                                       uiOutput(outputId = "linRegInclMiss")
                                )
                              ),
-
+                             
                              br(),
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(),
                                       uiOutput(outputId = "linRegArrowSelIndepCatBckgVarsRight"),
                                       uiOutput(outputId = "linRegArrowSelIndepCatBckgVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       htmlOutput(outputId = "linRegIndepCatCaption"),
                                       tags$head(tags$style("#linRegIndepCatCaption {color: black; font-weight: bold; margin-top: -3px; padding-bottom: 9px;}")),
                                       DTOutput(outputId = "linRegIndepCatBckgVars"),
                                       tags$head(tags$style("#linRegIndepCatBckgVars {white-space: nowrap;}"))
                                )
                              ),
-
+                             
                              br(),
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "linRegArrowSelIndepCntBckgVarsRight"),
                                       uiOutput(outputId = "linRegArrowSelIndepCntBckgVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "linRegIndepCntBckgVars"),
                                       tags$head(tags$style("#linRegIndepCntBckgVars {white-space: nowrap;}"))
                                )
                              ),
-
+                             
                              br(),
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "linRegArrowSelIndepPVsRight"),
                                       uiOutput(outputId = "linRegArrowSelIndepPVsLeft"),
@@ -1683,23 +1639,22 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                       uiOutput(outputId = "linRegArrowSelIndepPVsRightDisbld"),
                                       uiOutput(outputId = "linRegArrowSelIndepPVsLeftDisbld")
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "linRegIndepPVVars"),
                                       tags$head(tags$style("#linRegIndepPVVars {white-space: nowrap;}")),
                                       DTOutput(outputId = "linRegIndepPVVarsDisbld")
                                )
                              ),
-
-
+                             
                              fluidRow(
-                               column(width = 11, offset = 1,
+                               column(width = 2),
+                               column(width = 9,
                                       uiOutput(outputId = "linRegChooseDepType")
                                )
                              ),
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "linRegArrowSelDepBckgVarsRight"),
                                       uiOutput(outputId = "linRegArrowSelDepBckgVarsLeft"),
@@ -1710,7 +1665,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                       uiOutput(outputId = "linRegArrowSelDepPVsRightDisbld"),
                                       uiOutput(outputId = "linRegArrowSelDepPVsLeftDisbld")
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "linRegDepBckgVars"),
                                       tags$head(tags$style("#linRegDepBckgVars {white-space: nowrap;}")),
                                       DTOutput(outputId = "linRegDepPVVars"),
@@ -1718,16 +1673,14 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                       DTOutput(outputId = "linRegDepPVVarsDisbld")
                                )
                              ),
-
-
-
+                             
                              fluidRow(
-                               column(width = 1,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "linRegArrowSelWeightVarsRight"),
                                       uiOutput(outputId = "linRegArrowSelWeightVarsLeft"),
                                ),
-                               column(width = 11,
+                               column(width = 10,
                                       DTOutput(outputId = "linRegWeightVar"),
                                       tags$head(tags$style("#linRegWeightVar {white-space: nowrap;}"))
                                )
@@ -1735,10 +1688,10 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br(), br(), br(), br()
                       )
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
-
+                             
                              htmlOutput(outputId = "linRegSplitArePVs"),
                              tags$head(tags$style("#linRegSplitArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "linRegBckgCatArePVs"),
@@ -1757,33 +1710,29 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                              br()
                       )
                     ),
-
-
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "linRegStandardize")
                       ),
                       br(), br(), br(), br()
                     ),
-
-
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "linRegShortcut")
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
-                      column(width = 2,
-                             shinySaveButton(id = "linRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 6,
-                             uiOutput(outputId = "linRegOpenOutput")
+                      column(width = 12,
+                             div(style="display:inline-block", shinySaveButton(id = "linRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             div(style="display:inline-block", uiOutput(outputId = "linRegOpenOutput"))
                       ),
                       br(), br(), br(), br()
                     ),
-
+                    
                     fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "linRegSyntaxHead"),
@@ -1792,14 +1741,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                       ),
                       br(), br(), br(), br(), br(), br()
                     ),
-
+                    
                     conditionalPanel(condition = "output.linRegSyntax",
                                      textOutput(outputId = "linRegExecBtnHead"),
                                      uiOutput(outputId = "execLinReg"),
                                      br(), br(), br()
                     ),
-
-
+                    
                     conditionalPanel(condition = "linRegSyntax",
                                      verbatimTextOutput(outputId = "consoleLinReg"),
                                      tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1815,17 +1763,13 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br()
                     )
                     ),
-
-
-
-
-
+                    
                     tabItem(tabName = "binLogReg", class = "active",
-
+                            
                             h1(textOutput(outputId = "h1binLogReg")),
-
+                            
                             htmlOutput(outputId = "binLogRegIntro"),
-
+                            
                             fluidRow(
                               column(width = 2, shinyFilesButton(id = "binLogRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
                               ),
@@ -1836,7 +1780,7 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      )
                               )
                             ),
-
+                            
                             fluidRow(
                               br(), br(),
                               column(width = 2,
@@ -1849,71 +1793,70 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br(), br()
                               )
                             ),
-
-
+                            
                             fluidRow(
                               column(width = 12,
                                      htmlOutput(outputId = "binLogRegNoWeights"),
                                      tags$head(tags$style("#binLogRegNoWeights {color: red; font-weight: bold;}"))
                               )
                             ),
-
+                            
                             htmlOutput(outputId = "binLogRegVariablesExplText"),
-
+                            
                             fluidRow(
                               column(width = 6, align = "center",
                                      DTOutput(outputId = "binLogRegAllAvailableVars"),
                                      tags$head(tags$style("#binLogRegAllAvailableVars {white-space: nowrap;}"))
                               ),
-
+                              
                               column(width = 6,
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(), br(),
                                               uiOutput(outputId = "binLogRegArrowSelSplitVarsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelSplitVarsLeft"),
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               DTOutput(outputId = "binLogRegSplitVars"),
                                               tags$head(tags$style("#binLogRegSplitVars {white-space: nowrap;}")),
                                               uiOutput(outputId = "binLogRegInclMiss")
                                        )
                                      ),
-
+                                     
                                      br(),
-
+                                     
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(),
                                               uiOutput(outputId = "binLogRegArrowSelIndepCatBckgVarsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelIndepCatBckgVarsLeft"),
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               htmlOutput(outputId = "binLogRegIndepCatCaption"),
                                               tags$head(tags$style("#binLogRegIndepCatCaption {color: black; font-weight: bold; margin-top: -3px; padding-bottom: 9px;}")),
                                               DTOutput(outputId = "binLogRegIndepCatBckgVars"),
                                               tags$head(tags$style("#binLogRegIndepCatBckgVars {white-space: nowrap;}"))
                                        )
                                      ),
-
+                                     
                                      br(),
-
+                                     
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(), br(),
                                               uiOutput(outputId = "binLogRegArrowSelIndepCntBckgVarsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelIndepCntBckgVarsLeft"),
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               DTOutput(outputId = "binLogRegIndepCntBckgVars"),
                                               tags$head(tags$style("#binLogRegIndepCntBckgVars {white-space: nowrap;}"))
                                        )
                                      ),
-
+                                     
                                      br(),
-
+                                     
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(), br(),
                                               uiOutput(outputId = "binLogRegArrowSelIndepPVsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelIndepPVsLeft"),
@@ -1921,34 +1864,34 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                               uiOutput(outputId = "binLogRegArrowSelIndepPVsRightDisbld"),
                                               uiOutput(outputId = "binLogRegArrowSelIndepPVsLeftDisbld")
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               DTOutput(outputId = "binLogRegIndepPVVars"),
                                               tags$head(tags$style("#binLogRegIndepPVVars {white-space: nowrap;}")),
                                               DTOutput(outputId = "binLogRegIndepPVVarsDisbld")
                                        )
                                      ),
-
+                                     
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(), br(),
                                               uiOutput(outputId = "binLogRegArrowSelDepBinVarsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelDepBinVarsLeft")
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               DTOutput(outputId = "binLogRegDepBinVars"),
                                               tags$head(tags$style("#binLogRegDepBinVars {white-space: nowrap;}"))
                                        )
                                      ),
-
+                                     
                                      br(),
-
+                                     
                                      fluidRow(
-                                       column(width = 1,
+                                       column(width = 2, align = "center",
                                               br(), br(),  br(), br(),
                                               uiOutput(outputId = "binLogRegArrowSelWeightVarsRight"),
                                               uiOutput(outputId = "binLogRegArrowSelWeightVarsLeft"),
                                        ),
-                                       column(width = 11,
+                                       column(width = 10,
                                               DTOutput(outputId = "binLogRegWeightVar"),
                                               tags$head(tags$style("#binLogRegWeightVar {white-space: nowrap;}"))
                                        )
@@ -1956,83 +1899,81 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                      br(), br()
                               )
                             ),
-
+                            
                             fluidRow(
                               column(width = 12,
-
+                                     
                                      htmlOutput(outputId = "binLogRegSplitArePVs"),
                                      tags$head(tags$style("#binLogRegSplitArePVs {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegBckgCatArePVs"),
                                      tags$head(tags$style("#binLogRegBckgCatArePVs {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegBckgCntArePVs"),
                                      tags$head(tags$style("#binLogRegBckgCntArePVs {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegIndepPVsAreBckg"),
                                      tags$head(tags$style("#binLogRegIndepPVsAreBckg {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegDepBinArePVs"),
                                      tags$head(tags$style("#binLogRegDepBinArePVs {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegDepNotBin"),
                                      tags$head(tags$style("#binLogRegDepNotBin {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegWgtsNotWgts"),
                                      tags$head(tags$style("#binLogRegWgtsNotWgts {color: red; font-weight: bold;}")),
-
+                                     
                                      htmlOutput(outputId = "binLogRegWarnMoreVars"),
                                      br()
                               )
                             ),
-
+                            
                             fluidRow(
                               column(width = 6,
                                      uiOutput(outputId = "binLogRegWgtNorm")
                               ),
                               br(), br(), br(), br()
                             ),
-
+                            
                             fluidRow(
                               column(width = 6,
                                      uiOutput(outputId = "binLogRegStandardize")
                               ),
                               br(), br(), br(), br()
                             ),
-
-
+                            
                             fluidRow(
                               column(width = 6,
                                      uiOutput(outputId = "binLogRegShortcut")
                               ),
                               br(), br(), br(), br()
                             ),
-
+                            
                             fluidRow(
-                              column(width = 2,
-                                     shinySaveButton(id = "binLogRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                              ),
-                              column(width = 6,
-                                     uiOutput(outputId = "binLogRegOpenOutput")
+                              column(width = 12,
+                                     div(style="display:inline-block", shinySaveButton(id = "binLogRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                                     div(style="display:inline-block", uiOutput(outputId = "binLogRegOpenOutput"))
                               ),
                               br(), br(), br(), br()
                             ),
-
+                            
                             fluidRow(
                               column(width = 12,
                                      htmlOutput(outputId = "binLogRegSyntaxHead"),
                                      verbatimTextOutput(outputId = "binLogRegSyntax"),
+                                     # Add a tag to wrap the text.
                                      tags$head(tags$style(HTML("#binLogRegSyntax {background-color: white; white-space: pre-wrap;}")))
                               ),
                               br(), br(), br(), br(), br(), br()
                             ),
-
+                            
                             conditionalPanel(condition = "output.binLogRegSyntax",
                                              textOutput(outputId = "binLogRegExecBtnHead"),
                                              uiOutput(outputId = "execBinLogReg"),
                                              br(), br(), br()
                             ),
-
+                            
                             conditionalPanel(condition = "binLogRegSyntax",
                                              verbatimTextOutput(outputId = "consoleBinLogReg"),
                                              tags$head(tags$style("#consoleBinLogReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -2047,14 +1988,11 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
                                              ),
                                              br()
                             )
-
+                            
                     )
-
+            
           ),
-
-
-
-
+          
           tags$footer(HTML("R Analyzer for Large-Scale Assessments by INERI.org - &copy;(left) 2019"), align = "center", style = "
               position: fixed;
               left: 0px;
@@ -2067,11 +2005,11 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
               padding-left: 260px; /*Add left padding equal to the width of the sidebar (260px) to make the footer text centered to the dashboard body*/
               background-color: #000000;
               z-index: 1000;")
-
+          
         )
       )
-
+      
     )
-
+    
   )
 )
