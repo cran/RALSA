@@ -13,10 +13,10 @@ library(shinyjs)
 library(shinyFiles)
 
 
+
 ui <- tagList(
   
-  
-load.app.CSS.screen <- "
+  load.app.CSS.screen <- "
 #loading-content {
   position: absolute;
   background: #000000;
@@ -30,13 +30,9 @@ load.app.CSS.screen <- "
 }
 ",
 
-
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
-
-
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-
 
 useShinyjs(),
 
@@ -56,17 +52,17 @@ hidden(
     dashboardPage(
       
       title = "RALSA",
-        
-        dashboardHeader(
-          title =
-            tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
-          tags$li(class = "dropdown",
-                  tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
-                  tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),
-                  
-                  tags$style(".navbar {background-color: #000000 !important; color: #ffffff !important; font-size: 20px;}"),
-                  
-                  tags$header(HTML("R Analyzer for Large-Scale Assessments"), align = "left", style = "
+      
+      dashboardHeader(
+        title =
+          tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
+        tags$li(class = "dropdown",
+                tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
+                tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),
+                
+                tags$style(".navbar {background-color: #000000 !important; color: #ffffff !important; font-size: 20px;}"),
+                
+                tags$header(HTML("R Analyzer for Large-Scale Assessments"), align = "left", style = "
               position: fixed;
               left: 300px; /*Add a left margin of 300px so that the header does not cover the logo on the left*/
               width: 100%;
@@ -76,85 +72,85 @@ hidden(
               padding-top: 15px;
               padding-left: 75px; /*Add left padding to indent the header text so that it is displayed a bit further away from the toggle. The best would be to be centered to the navigation bar, but it is not possible at the moment.*/
               background-color: #000000;")
-          )
-        ),
+        )
+      ),
+      
+      dashboardSidebar(width = 260,
+                       
+                       tags$style(".main-sidebar {background-color: #000000 !important;}"),
+                       
+                       sidebarMenu(id = "home",
+                                   br(), br(),
+                                   menuItem(text = "Home", icon = icon("home"), tabName = "home")
+                       ),
+                       
+                       sidebarMenu(id = "dataMenu",
+                                   
+                                   menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
+                                            
+                                            menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
+                                            
+                                            menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
+                                            
+                                            menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
+                                            
+                                            menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
+                                            
+                                            
+                                   )
+                       ),
+                       
+                       sidebarMenu(id = "analysisMenu",
+                                   menuItem(text = "Analysis types", icon = icon("square-root-alt"), tabName = "analyzeData",
+                                            
+                                            menuSubItem(text = "Percentages and means", icon = icon("chart-pie"), tabName = "pctsMeans"),
+                                            
+                                            menuSubItem(text = "Percentiles", icon = icon("chart-pie"), tabName = "prctls"),
+                                            
+                                            menuSubItem(text = "Benchmarks", icon = icon("chart-pie"), tabName = "bnchMarks"),
+                                            
+                                            menuSubItem(text = "Correlations", icon = icon("chart-pie"), tabName = "corr"),
+                                            
+                                            menuSubItem(text = "Linear regression", icon = icon("chart-pie"), tabName = "linReg"),
+                                            
+                                            menuSubItem(text = "Binary logistic regression", icon = icon("chart-pie"), tabName = "binLogReg")
+                                            
+                                   )
+                       ),
+                       
+                       sidebarMenu(id = "help",
+                                   menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
+                       ),
+                       
+                       sidebarMenu(id = "exit",
+                                   menuItem(text = "Exit", icon = icon("running"), tabName = "exitUI")
+                       ),
+                       
+                       tags$style(".main-sidebar {background-color: #000000 !important;}"),
+                       tags$style(".sidebar-menu li a {color: white !important;}"),
+                       tags$style(HTML(".sidebar-menu li.active a {border-left-color: red !important;}")),
+                       tags$style(HTML(".sidebar-menu li:hover a {border-left-color: red !important;}")),
+                       tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
+                       tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
+                       tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
+                       
+                       
+                       
+      ),
+      
+      
+      dashboardBody(
         
-        dashboardSidebar(width = 260,
-                         
-                         tags$style(".main-sidebar {background-color: #000000 !important;}"),
-                         
-                         sidebarMenu(id = "home",
-                                     br(), br(),
-                                     menuItem(text = "Home", icon = icon("home"), tabName = "home")
-                         ),
-                         
-                         sidebarMenu(id = "dataMenu",
-                                     
-                                     menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
-                                              
-                                              menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
-                                              
-                                              menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
-                                              
-                                              menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
-                                              
-                                              menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
-                                              
-                                              
-                                     )
-                         ),
-                         
-                         sidebarMenu(id = "analysisMenu",
-                                     menuItem(text = "Analysis types", icon = icon("square-root-alt"), tabName = "analyzeData",
-                                              
-                                              menuSubItem(text = "Percentages and means", icon = icon("chart-pie"), tabName = "pctsMeans"),
-                                              
-                                              menuSubItem(text = "Percentiles", icon = icon("chart-pie"), tabName = "prctls"),
-                                              
-                                              menuSubItem(text = "Benchmarks", icon = icon("chart-pie"), tabName = "bnchMarks"),
-                                              
-                                              menuSubItem(text = "Correlations", icon = icon("chart-pie"), tabName = "corr"),
-                                              
-                                              menuSubItem(text = "Linear regression", icon = icon("chart-pie"), tabName = "linReg"),
-                                              
-                                              menuSubItem(text = "Binary logistic regression", icon = icon("chart-pie"), tabName = "binLogReg")
-                                              
-                                     )
-                         ),
-                         
-                         sidebarMenu(id = "help",
-                                     menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
-                         ),
-                         
-                         sidebarMenu(id = "exit",
-                                     menuItem(text = "Exit", icon = icon("running"), tabName = "exitUI")
-                                     ),
-                         
-                         tags$style(".main-sidebar {background-color: #000000 !important;}"),
-                         tags$style(".sidebar-menu li a {color: white !important;}"),
-                         tags$style(HTML(".sidebar-menu li.active a {border-left-color: red !important;}")),
-                         tags$style(HTML(".sidebar-menu li:hover a {border-left-color: red !important;}")),
-                         tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
-                         tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
-                         tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
-                         
-                         
-                         
-        ),
+        extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
         
+        tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico", type="image/x-icon")),
         
-        dashboardBody(
-          
-          extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
-          
-          tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico", type="image/x-icon")),
-          
-          tags$style(HTML(".content-wrapper, .right-side {
+        tags$style(HTML(".content-wrapper, .right-side {
       background-color: #e2e2e2;
     }")),
-          
-          tags$head(tags$style(HTML(
-            "
+        
+        tags$head(tags$style(HTML(
+          "
                         .multicol .shiny-options-group {
                         width: 700px;
                         height: auto;
@@ -170,27 +166,27 @@ hidden(
                         -webkit-margin-after: 0px !important;
                         }
                         "))),
-          tags$script(HTML("$('body').addClass('fixed');")),
-          tags$head(
-            tags$style(
-              HTML(".shiny-notification {
+        tags$script(HTML("$('body').addClass('fixed');")),
+        tags$head(
+          tags$style(
+            HTML(".shiny-notification {
                                 position:fixed;
                                 top: calc(50%);;
                                 left: calc(50%);
                                 color: black;
                                 font-size: 18px;
                                 opacity: 1;}"))
-          ),
-          
-          tags$head(tags$style(HTML("a {color: #FE0F1A}"))),
-          
-          tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {border: 0.05em solid #c1c1c1; background-color: #dddddd !important;}')),
-          
-          tags$head(tags$style(HTML('.has-feedback .form-control {padding-left: 0px; padding-right: 0px;}'))),
-          
-          tags$head(tags$script(
-            HTML(
-              "Shiny.addCustomMessageHandler('unbindDT', function(id) {
+        ),
+        
+        tags$head(tags$style(HTML("a {color: #FE0F1A}"))),
+        
+        tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {border: 0.05em solid #c1c1c1; background-color: #dddddd !important;}')),
+        
+        tags$head(tags$style(HTML('.has-feedback .form-control {padding-left: 0px; padding-right: 0px;}'))),
+        
+        tags$head(tags$script(
+          HTML(
+            "Shiny.addCustomMessageHandler('unbindDT', function(id) {
                var $table = $('#'+id).find('table');
                 if($table.length > 0) {
                  Shiny.unbindAll($table.DataTable().table().node());
@@ -246,7 +242,6 @@ hidden(
                                     htmlOutput(outputId = "convertIEAStudyCycle"),
                                     br()
                     )),
-                    
                     
                     htmlOutput(outputId = "convertAvailableIEACntsText"),
                     
@@ -405,7 +400,6 @@ hidden(
                                     br()
                     )),
                     
-                    
                     htmlOutput(outputId = "mergeAvailableIEACntsText"),
                     
                     conditionalPanel(condition = "output.mergeIEAStudyName && output.mergeIEAStudyCycle",
@@ -506,6 +500,8 @@ hidden(
                     ),
                     
                     br(), br()
+                    
+                    
                     
             ),
             
@@ -849,6 +845,8 @@ hidden(
                                br()
                              ),
                              
+                             
+                             
                              fluidRow(
                                column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
@@ -864,6 +862,8 @@ hidden(
                                       br()
                                )
                              ),
+                             
+                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -928,7 +928,6 @@ hidden(
                                      br(), br(), br()
                     ),
                     
-                    
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
                                      tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -963,6 +962,7 @@ hidden(
                       )
                     ),
 
+            
             fluidRow(
               br(), br(),
               column(width = 2,
@@ -1006,8 +1006,6 @@ hidden(
                        )
                      ),
 
-
-
                      fluidRow(
                        column(width = 2, align = "center",
                               br(), br(),  br(), br(),
@@ -1036,6 +1034,8 @@ hidden(
                               br()
                        )
                      ),
+                     
+                     
                      
                      fluidRow(
                        column(width = 2, align = "center",
@@ -1332,7 +1332,6 @@ hidden(
                       column(width = 12,
                              htmlOutput(outputId = "benchSyntaxHead"),
                              verbatimTextOutput(outputId = "benchSyntax"),
-                             # Add a tag to wrap the text.
                              tags$head(tags$style(HTML("#benchSyntax {background-color: white; white-space: pre-wrap;}")))
                       ),
                       br(), br(), br(), br(), br(), br()
@@ -1431,6 +1430,8 @@ hidden(
                                )
                              ),
                              
+                             
+                             
                              fluidRow(
                                column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
@@ -1443,6 +1444,8 @@ hidden(
                                ),
                                br()
                              ),
+                             
+                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -1459,6 +1462,8 @@ hidden(
                                       br()
                                )
                              ),
+                             
+                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -1748,6 +1753,7 @@ hidden(
                                      br(), br(), br()
                     ),
                     
+                    
                     conditionalPanel(condition = "linRegSyntax",
                                      verbatimTextOutput(outputId = "consoleLinReg"),
                                      tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1763,6 +1769,7 @@ hidden(
                                      br()
                     )
                     ),
+                    
                     
                     tabItem(tabName = "binLogReg", class = "active",
                             
@@ -1962,7 +1969,6 @@ hidden(
                               column(width = 12,
                                      htmlOutput(outputId = "binLogRegSyntaxHead"),
                                      verbatimTextOutput(outputId = "binLogRegSyntax"),
-                                     # Add a tag to wrap the text.
                                      tags$head(tags$style(HTML("#binLogRegSyntax {background-color: white; white-space: pre-wrap;}")))
                               ),
                               br(), br(), br(), br(), br(), br()

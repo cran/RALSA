@@ -14,7 +14,8 @@
 #'                      (e.g. \code{ISO = c("aus", "svn")}). If none of the files contain the
 #'                      specified ISO codes in their names, the codes are ignored and a warning is
 #'                      shown. Ignored when converting PISA files (both for cycles prior 2015 and
-#'                      2015 and later). Note that the ISO codes have to be passed in the same case
+#'                      2015 and later). This argument is case-insensitive, i.e. the ISO codes can be
+#'                      passed as lower- or upper-case.
 #'                      (lower or upper) as the original SPSS \code{.sav} files.
 #' @param missing.to.NA Should the user-defined missing values be recoded to \code{NA}? If \code{TRUE},
 #'                      all user-defined missing values from the SPSS files (or specified in the OECD PISA
@@ -146,11 +147,11 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         
       } else {
         
-        files <- list.files(path = inp.folder, pattern = ".sav")
+        files <- list.files(path = inp.folder, pattern = ".sav", ignore.case = TRUE)
         
         cnt.ISOs <- unique(x = substr(x = files, start = 4, stop = 6))
         
-        if(length(files) > 0 & length(intersect(x = ISO, cnt.ISOs)) == 0) {
+        if(length(files) > 0 & length(intersect(x = tolower(ISO), tolower(cnt.ISOs))) == 0) {
           
           message("\nError:\nNo country codes matching the data files in the input folder were entered in \"ISO = ...\". \nCheck your input and the files in the input folder.\n\n")
           
@@ -176,13 +177,13 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         
         available.ISOs <- unique(substring(text = files, first = 4, last = 8))
         
-        if(any(paste0(ISO, study.and.cycle) %in% available.ISOs == "FALSE")) {
+        if(any(tolower(paste0(ISO, study.and.cycle)) %in% tolower(available.ISOs) == "FALSE")) {
           
           warning("Data files for one or more countries in \"ISO = ...\"", " do not exist in the specified folder.", "\nCheck your input.\n", call. = FALSE)
           
         }
         
-        ISO <- files[grep(pattern = paste0(ISO, study.and.cycle, collapse = "|"), x = files)]
+        ISO <- files[grep(pattern = paste0(ISO, study.and.cycle, collapse = "|"), x = files, ignore.case = TRUE)]
         
         full.inp.file.path <- file.path(inp.folder, ISO)
         
@@ -566,14 +567,14 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             })
             
             Filter(Negate(is.na), lapply(X = tmp, FUN = function(i) {
-              
+
               if(length(levels(i)) > 0) {
                 if(!is.null(attr(i, "missings")) && !is.na(attr(i, "missings")[levels(i)[1] == attr(i, "missings")][1])) {
                   miss.to.remove <- attr(i, "missings")[levels(i)[1] %in% attr(i, "missings")][1]
                   setattr(x = i, name = "missings", value = attr(i, "missings")[!attr(i, "missings") %in% miss.to.remove])
                 }
               }
-              
+
             }))
           }
           
@@ -642,6 +643,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           
         }
         
+        inp.file.first.char <- tolower(inp.file.first.char)
+        study.and.cycle <- tolower(study.and.cycle)
+        
         if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m1") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "1995"
@@ -654,19 +658,19 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m4") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2007"
-        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b4") { # Note it is "b4" for the bridge booklets
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b4") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2007"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m5") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2011"
-        } else if(inp.file.first.char %in% c("A", "B") && study.and.cycle == "M6") {
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m6") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2015"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m7") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2019"
-        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b7") { # Note it is "b4" for the bridge booklets
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b7") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2019"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m8") {
@@ -675,7 +679,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m9") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2027"
-        } else if(inp.file.first.char %in% c("A", "B") && study.and.cycle == "N1") {
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "n1") {
           study.attribute <- "preTIMSS"
           cycle.attribute <- "2015"
         } else if(inp.file.first.char %in% c("m", "p") && study.and.cycle == "m1") {
@@ -684,7 +688,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("m", "p") && study.and.cycle == "m2") {
           study.attribute <- "TIMSS Advanced"
           cycle.attribute <- "2008"
-        } else if(inp.file.first.char %in% c("M", "P") && study.and.cycle == "M3") {
+        } else if(inp.file.first.char %in% c("m", "p") && study.and.cycle == "m3") {
           study.attribute <- "TIMSS Advanced"
           cycle.attribute <- "2015"
         } else if(inp.file.first.char == "a" && study.and.cycle == "r1") {
@@ -735,37 +739,37 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("i", "j") && study.and.cycle == "c2") {
           study.attribute <- "ICCS"
           cycle.attribute <- "2009"
-        } else if(inp.file.first.char == "I" && study.and.cycle == "C3") {
+        } else if(inp.file.first.char == "i" && study.and.cycle == "c3") {
           study.attribute <- "ICCS"
           cycle.attribute <- "2016"
         } else if(inp.file.first.char == "b"  && study.and.cycle == "i1") {
           study.attribute <- "ICILS"
           cycle.attribute <- "2013"
-        } else if(inp.file.first.char == "B"  && study.and.cycle == "I2") {
+        } else if(inp.file.first.char == "b"  && study.and.cycle == "i2") {
           study.attribute <- "ICILS"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char == "B"  && study.and.cycle == "T1") {
+        } else if(inp.file.first.char == "b"  && study.and.cycle == "t1") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2008"
-        } else if(inp.file.first.char %in% c("A", "B", "C", "P")  && study.and.cycle == "T2") {
+        } else if(inp.file.first.char %in% c("a", "b", "c", "p")  && study.and.cycle == "t2") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2013"
-        } else if(inp.file.first.char %in% c("A", "B", "C", "P")  && study.and.cycle == "T3") {
+        } else if(inp.file.first.char %in% c("a", "b", "c", "p")  && study.and.cycle == "t3") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char %in% c("A", "B")  && study.and.cycle == "S1") {
+        } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s1") {
           study.attribute <- "TALIS 3S"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char == "D"  && study.and.cycle == "T1") {
+        } else if(inp.file.first.char == "d"  && study.and.cycle == "t1") {
           study.attribute <- "TEDS-M"
           cycle.attribute <- "2008"
-        } else if(inp.file.first.char %in% c("CY6", "cy6", "Cy6")) {
+        } else if(inp.file.first.char == "cy6") {
           study.attribute <- "PISA"
           cycle.attribute <- "2015"
-        } else if(inp.file.first.char %in% c("CY07", "cy07", "Cy07")) {
+        } else if(inp.file.first.char == "cy07") {
           study.attribute <- "PISA"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char %in% c("CY1", "cy1", "Cy1")) {
+        } else if(inp.file.first.char == "cy1") {
           study.attribute <- "PISA for Development"
           cycle.attribute <- "2019"
         }
@@ -773,11 +777,11 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
           inp.file.abbrev <- substr(x = basename(inp.file), start = 1, stop = 3)
         } else if (any(sapply(X = ISO, FUN = nchar) > 12 )) {
-          if(study.and.cycle %in% c("CY6", "cy6", "Cy6")) {
+          if(study.and.cycle == "cy6") {
             inp.file.abbrev <- substr(x = basename(inp.file), start = 12, stop = 18)
-          } else if(study.and.cycle %in% c("CY07", "cy07", "Cy07")) {
+          } else if(study.and.cycle == "cy07") {
             inp.file.abbrev <- substr(x = basename(inp.file), start = 10, stop = 16)
-          } else if(study.and.cycle %in% c("CY1", "cy1", "Cy1")) {
+          } else if(study.and.cycle == "cy1") {
             if(nchar(basename(inp.file)) == 19) {
               inp.file.abbrev <- substr(x = basename(inp.file), start = 9, stop = 15)
             } else if(nchar(basename(inp.file)) == 15) {
@@ -1356,7 +1360,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             tmp.value.labels <- str_trim(unlist(tmp.value.labels), side = "both")
           }
           
-          
           value.labels.var.names.pos <- grep(pattern = "^/", x = tmp.value.labels)
           
           value.labels.start.pos <- value.labels.var.names.pos + 1
@@ -1366,7 +1369,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           value.labels.end.pos <- value.labels.end.pos[-1]
           
           form.statements <- function(string.object) {
-            
             if(length(grep(pattern = "^/", x = string.object)) == 0) {
               obj.var.names <- string.object
             } else {

@@ -1,3 +1,30 @@
+# RALSA v.0.90.2 (2021-03-15)
+
+## Bug fixes
+* `lsa.convert.data` function. The function crashes when the different cycles of the study change the case of the file names and their extensions. Thank to Yuan-Ling (Linda) Liaw.
+
+* `lsa.recode.vars` function. If the recoding instruction ends with semicolon, the function crashes.
+
+* `lsa.bin.log.reg` function. The function crashes if some specific patterns are found in the binary dependent variable names.
+
+* `lsa.pcts.means` function. Some missing estimates in columns Mean, Mean_SE, Mean_SVR, Mean_MVR, SD_SE and SD_MVR when the groups are too small.
+
+* All analysis functions crash using SITES 2006 data when only mathematics teacher or only science teacher data are used.
+
+* `lsa.pcts.means` function. Some estimates using CivED data were incorrect.
+
+* `lsa.pcts.means` function. Missing estimates in some columns for specific combination of splitting variables.
+
+## Miscellaneous
+The `ISO` argument in `lsa.convert.data` is now case-insensitive.
+
+The `file.types` and `ISO` arguments in `lsa.merge.data` are now case insensitive.
+
+The error messages in `lsa.recode.vars` are improved.
+
+
+
+
 # RALSA v.0.90.2 (2021-01-02)
 
 ## Bug fixes

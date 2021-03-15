@@ -58,7 +58,6 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   
-  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
@@ -70,7 +69,6 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-    
     
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {

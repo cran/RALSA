@@ -54,6 +54,8 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     inp.folder <- getwd()
   }
   
+  names(file.types) <- tolower(names(file.types))
+  
   if(!is.list(file.types)) {
     stop('The "file.types" argument is missing or does not follow the required format. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(is.list(file.types) & is.null(names(file.types))) {
@@ -97,6 +99,8 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
   if(missing(ISO)) {
     ISO <- unique(substr(x = file.list, start = 4, stop = 6))
   }
+  
+  ISO <- tolower(ISO)
   
   if(all(ISO %in% unique(substr(x = file.list, start = 4, stop = 6)) == FALSE)) {
     stop('No files for the specified countries supplied in "ISO" (', paste(ISO, collapse = ", "), ') were found in the "input.folder". All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -231,7 +235,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     }, m = k)
     
     import.time <- format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.import}[[3]], "%H:%M:%OS3")
-    
     
     message('   "', substr(x = basename(j[[i]])[[1]], start = 1, stop = 3), '" files imported in ', import.time)
     
@@ -545,6 +548,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
           teacher.level.data[[linkage.file]][ , (cols.to.remove) := NULL]
         }
         
+        
         lapply(X = teacher.level.data, FUN = function(i) {
           setkeyv(x = i, cols = c(key.var, add.key.2))
         })
@@ -688,7 +692,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
         suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
       }
-      
       final.merged.data <- merge(x = student.level.data, y = teacher.level.data, all.y = TRUE)
       student.level.data <- NULL
       teacher.level.data <- NULL
@@ -697,10 +700,8 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       
       all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(school.level.data))
       all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
-      
       school.level.data[ , (all.common.columns) := NULL]
       school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
-      
       if(study.name != "CivED") {
         suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
       }
@@ -711,7 +712,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       }
       setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
       setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
-      
       if(study.name == "TIMSS" && study.cycle == "1999") {
         tmp <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
       } else {
@@ -780,7 +780,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       inst.program.level.data <- NULL
       future.sec.teacher.file.name <- NULL
      
-      # Third, for the TALIS Starting Strong Survey (3S)
     } else if(identical(c("staff.level.data"), existing.merge.types) == TRUE) {
       
       final.merged.data <- staff.level.data
@@ -851,7 +850,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       
       eval(parse(text = miss.attr.statements))
     }
-    
   }
   
   existing.variable.labels.columns <- intersect(x = colnames(final.merged.data), y = variable.labels[ , V1])
@@ -889,7 +887,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
   message('   The merged data file "', basename(out.file), '" is saved under "', dirname(out.file), '" in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.save}[[3]], "%H:%M:%OS3"))
   
   message('\n All operations finished in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"), "\n")
-  
   
   }, interrupt = function(f) {
     message("\nInterrupted by the user. The files for the specified countries and respondents are not merged and merged file is not produced.\n")

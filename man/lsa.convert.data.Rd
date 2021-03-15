@@ -27,7 +27,8 @@ the input folder contains IEA-like studies.}
 (e.g. \code{ISO = c("aus", "svn")}). If none of the files contain the
 specified ISO codes in their names, the codes are ignored and a warning is
 shown. Ignored when converting PISA files (both for cycles prior 2015 and
-2015 and later). Note that the ISO codes have to be passed in the same case
+2015 and later). This argument is case-insensitive, i.e. the ISO codes can be
+passed as lower- or upper-case.
 (lower or upper) as the original SPSS \code{.sav} files.}
 
 \item{missing.to.NA}{Should the user-defined missing values be recoded to \code{NA}? If \code{TRUE},

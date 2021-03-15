@@ -164,7 +164,6 @@
 #' @export
 
 
-
 lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, standardize = FALSE, weight.var, norm.weight = FALSE, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
   
   tmp.options <- options(scipen = 999, digits = 22)
@@ -216,7 +215,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
   } else if(!missing(data.object)) {
-    
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -252,11 +250,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     }
     
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
-    
-    data <- lapply(X = data, FUN = function(i) {
-      i <- na.omit(object = i, cols = unlist(vars.list[c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bckg.cat.contrasts", "bckg.ref.cats")]))
-      i[get(vars.list[["weight.var"]]) > 0, ]
-    })
     
     max.two.cats <- sapply(X = data, FUN = function(i) {
       length(unique(na.omit(i[ , get(bin.dep.var)])))
@@ -335,6 +328,11 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       })
     }
     
+    data <- lapply(X = data, FUN = function(i) {
+      i <- na.omit(object = i, cols = unlist(vars.list[c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bckg.cat.contrasts", "bckg.ref.cats")]))
+      i[get(vars.list[["weight.var"]]) > 0, ]
+    })
+    
     if(standardize == TRUE) {
       data <- lapply(X = data, FUN = function(i) {
         all.model.vars <- unlist(x = Filter(Negate(is.null), vars.list[c("bckg.indep.cont.vars", "PV.names")]), use.names = FALSE)
@@ -373,9 +371,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
             
             input1 <- factor(x = input1, levels = c(levels(input1)[!levels(input1) == input3], input3))
             deviation.contrasts <- contr.sum(n = length(levels(input1)))
-            
             dimnames(deviation.contrasts) <- list(levels(input1), grep(pattern = input3, x = levels(input1), value = TRUE, invert = TRUE))
-            
             contrasts(input1) <- deviation.contrasts
             
           } else if(input2 == "simple") {
@@ -402,7 +398,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       })
       
       data <- Map(f = cbind, data, contrast.columns)
-      
     }
     
     vars.list[["pcts.var"]] <- tmp.pcts.var
@@ -425,6 +420,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     compute.all.stats <- function(data) {
       
       independent.variables <- grep(pattern = ".indep", x = names(vars.list), value = TRUE)
+      
       
       if("PV.root.indep" %in% independent.variables) {
         independent.variables.PV <- lapply(X = vars.list[["PV.root.indep"]], FUN = function(i) {
@@ -493,38 +489,26 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       
       if(include.missing == FALSE) {
         data1 <- na.omit(object = copy(data), cols = key.vars)
-        
         if(!is.null(vars.list[["pcts.var"]])) {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])])
-          
           number.of.cases <- na.omit(data1[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), by = key.vars])
-          
           sum.of.weights <- na.omit(data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
-          
         } else {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))])
           number.of.cases <- na.omit(data1[ , .(n_Cases = .N), by = key.vars])
           sum.of.weights <- na.omit(data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
         }
-        
       } else if (include.missing == TRUE) {
-        
         data1 <- copy(data)
-        
         if(!is.null(vars.list[["pcts.var"]])) {
-          
           percentages <- data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])]
           number.of.cases <- data1[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), by = key.vars]
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
-          
         } else {
-          
           percentages <- data[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]
           number.of.cases <- data[ , .(n_Cases = .N), by = key.vars]
           sum.of.weights <- data[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
-          
         }
-        
       }
       
       percentages <- list(percentages)
@@ -649,6 +633,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
           })
         })
         
+        
         PV.regression <- lapply(X = PV.regression, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             setnames(x = j, old = c("V1", all.weights), new = c("Variable", paste0("V", 1:length(all.weights))))
@@ -703,7 +688,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
           setnames(x = input1, old = grep(pattern = "^Coefficients_SumSq$", x = colnames(input1), value = TRUE), new = paste0("Coefficients_", input2, "_SumSq"))
         }
         
-        
         PV.regression <- lapply(X = PV.regression, FUN = function(i) {
           list(Map(f = reset.coefficients.colnames, input1 = i, input2 = as.list(paste(vars.list[["bin.dep.var"]], 1:length(vars.list[["PV.names"]][[1]]), sep = "0"))))[[1]]
         })
@@ -716,10 +700,14 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
         
         if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
           lapply(X = PV.regression, FUN = function(i) {
-            setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]]))
-            setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_SE$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_SE"))
-            setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_SVR$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_SVR"))
-            setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_MVR$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_MVR"))
+            if(length(grep(pattern = "^Coefficients_[[:alnum:]]+$", x = colnames(i), value = TRUE)) > 0) {
+              setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]]))
+              setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_SE$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_SE"))
+              setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_SVR$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_SVR"))
+              setnames(x = i, old = grep(pattern = "^Coefficients_[[:alnum:]]+_MVR$", x = colnames(i), value = TRUE), new = paste0("Coefficients_", vars.list[["bin.dep.var"]], "_MVR"))
+            } else {
+              i
+            }
           })
         }
         
@@ -796,7 +784,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.regression))
       } else if("PV.root.indep" %in% names(vars.list) == TRUE) {
         merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates))
-        
         colnames(merged.outputs) <- gsub(pattern = paste(paste0("Coefficients_", unlist(vars.list[["bin.dep.var"]])), collapse = "|"), replacement = "Coefficients", x = colnames(merged.outputs))
       }
       

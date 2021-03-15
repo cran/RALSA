@@ -211,7 +211,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     stop('An unsupported contrast coding scheme was passed to the "bckg.indep.cat.vars". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
   
-  
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file)) {
@@ -399,6 +398,9 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       data <- Map(f = cbind, data, contrast.columns)
     }
     
+    
+    
+    
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
     
@@ -427,7 +429,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       }
 
       independent.variables <- grep(pattern = ".indep", x = names(vars.list), value = TRUE)
-      
       
       if("PV.root.indep" %in% independent.variables) {
         independent.variables.PV <- lapply(X = vars.list[["PV.root.indep"]], FUN = function(i) {
@@ -551,7 +552,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       
       if(!is.null(vars.list[["PV.names"]])) {
         
-        PV.names.to.split.by <- transpose(vars.list[["PV.names"]]) # Uses "transpose" from the "data.table" package
+        PV.names.to.split.by <- transpose(vars.list[["PV.names"]])
         
         PV.names.to.keep <- lapply(X = PV.names.to.split.by, FUN = function(i) {
           grep(pattern = paste(c(key.vars, i, vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]], all.weights, vars.list[["jk.zones"]], vars.list[["rep.ind"]]), collapse = "|"), x = colnames(data1), value = TRUE)

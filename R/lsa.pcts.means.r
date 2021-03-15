@@ -156,11 +156,12 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
+    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
+    
     used.data <- deparse(substitute(data.file))
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-    
     
   } else if(!missing(data.object)) {
     if(!exists(all.vars(match.call()))) {
@@ -367,6 +368,30 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
         reshape.list.statistics.PV(estimate.object = PV.means, estimate.name = "Mean_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         reshape.list.statistics.PV(estimate.object = PV.variances, estimate.name = "Variance_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         reshape.list.statistics.PV(estimate.object = PV.SDs, estimate.name = "SD_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
+        
+        lapply(X = PV.means, FUN = function(i) {
+          lapply(X = i, FUN = function(j) {
+            j[ , (grep(pattern = "_SumSq$", x = colnames(j), value = TRUE)) := lapply(.SD, function(k) {
+              ifelse(test = is.nan(k), yes = 0, no = k)
+            }), .SDcols = grep(pattern = "_SumSq", x = colnames(j), value = TRUE)]
+          })
+        })
+        
+        lapply(X = PV.variances, FUN = function(i) {
+          lapply(X = i, FUN = function(j) {
+            j[ , (grep(pattern = "_SumSq$", x = colnames(j), value = TRUE)) := lapply(.SD, function(k) {
+              ifelse(test = is.nan(k), yes = 0, no = k)
+            }), .SDcols = grep(pattern = "_SumSq", x = colnames(j), value = TRUE)]
+          })
+        })
+        
+        lapply(X = PV.SDs, FUN = function(i) {
+          lapply(X = i, FUN = function(j) {
+            j[ , (grep(pattern = "_SumSq$", x = colnames(j), value = TRUE)) := lapply(.SD, function(k) {
+              ifelse(test = is.nan(k), yes = 0, no = k)
+            }), .SDcols = grep(pattern = "_SumSq", x = colnames(j), value = TRUE)]
+          })
+        })
         
         PV.means <- lapply(X = PV.means, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
