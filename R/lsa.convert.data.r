@@ -791,7 +791,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           
         }
         
-        
         if(inp.file.abbrev %in% c("alg", "ALG", "blg", "BLG")) {
           file.type.attribute <- "leader.bckg"
         } else if(study.attribute != "TALIS 3S" && inp.file.abbrev %in% c("asg", "bsg", "ASG", "BSG", "asc", "bs_", "cs_", "isg", "ISG", "jsg", "JSG")) {
@@ -1052,6 +1051,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           variables <- gsub(pattern = "\\)\\s+\\.", replacement = ").", x = variables)
           
           var.names <- toupper(word(string = variables, start = 1, end = 1))
+          
           
           ranges <- str_extract(string = variables, pattern = "[[:digit:]]+\\s*-\\s*[[:digit:]]+")
           
@@ -1754,6 +1754,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             missing.values.statements <- toupper(gsub(pattern = "\\s*mis[[:alpha:]]* val[[:alpha:]]* ", replacement = "", x = grep(pattern = "mis[[:alpha:]]* val[[:alpha:]]*", x = missing.values.statements, ignore.case = TRUE, value = TRUE), ignore.case = TRUE))
             
           }
+          
+          
           
           if(length(grep(pattern = " TO ", x = missing.values.statements)) > 0) {
             

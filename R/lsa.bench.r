@@ -152,9 +152,12 @@
 
 
 lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
+  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
+  
   warnings.collector <- list()
+  
   if(missing(PV.root.bench)) {
     stop('No PV root has been provided for the "PV.root.bench" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
@@ -188,14 +191,17 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
     
       message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
+    
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -238,7 +244,9 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "TiPi") {
       bench.vals <- default.benchmarks[["TiPi"]]
     } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "PISA") {
+      
       tmp.PV.root.name <- gsub(pattern = "[[:digit:]]+", replacement = "#", x = vars.list[["PV.root.bench"]], fixed = TRUE)
+      
       tmp.benchmarks <- default.benchmarks[["PISA"]]
       tmp.benchmarks.PVs <- grep(pattern = "root.PVs$", x = names(tmp.benchmarks), value = TRUE)
       tmp.benchmarks.PVs <- names(unlist(sapply(X = tmp.benchmarks.PVs, FUN = function(i) {
@@ -247,8 +255,11 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
       tmp.benchmarks.PVs <- gsub(pattern = ".root.PVs", replacement = "", x = tmp.benchmarks.PVs)
       tmp.benchmarks <- default.benchmarks[["PISA"]][[tmp.benchmarks.PVs]]
       bench.vals <- tmp.benchmarks[[as.character(file.attributes[["lsa.cycle"]])]]
+      
       } else if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "PISA for Development") {
+        
         tmp.PV.root.name <- gsub(pattern = "[[:digit:]]+", replacement = "#", x = vars.list[["PV.root.bench"]], fixed = TRUE)
+        
         tmp.benchmarks <- default.benchmarks[["PISA for Development"]]
         tmp.benchmarks.PVs <- grep(pattern = "root.PVs$", x = names(tmp.benchmarks), value = TRUE)
         tmp.benchmarks.PVs <- names(unlist(sapply(X = tmp.benchmarks.PVs, FUN = function(i) {
@@ -257,6 +268,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         tmp.benchmarks.PVs <- gsub(pattern = ".root.PVs", replacement = "", x = tmp.benchmarks.PVs)
         tmp.benchmarks <- default.benchmarks[["PISA for Development"]][[tmp.benchmarks.PVs]]
         bench.vals <- tmp.benchmarks[[as.character(file.attributes[["lsa.cycle"]])]]
+        
     }
   }
   
@@ -370,38 +382,55 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         lapply(X = i, FUN = function(j) {
           tmp.sum.of.weights <- cbind(data1[ , mget(key.vars)], data1[ , j, with = FALSE], data1[ , mget(all.weights)])
           tmp.sum.of.weights <- lapply(X = bench.vals, FUN = function(k) {
+            
             if(bench.type == "discrete") {
+              
               if(pcts.within == FALSE) {
+                
                 tmp.sum.of.weights <- tmp.sum.of.weights[between(x = tmp.sum.of.weights[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(tmp.sum.of.weights), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                 tmp.sum.of.weights <- na.omit(tmp.sum.of.weights[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
+                
               } else if (pcts.within == TRUE) {
+                
                 if(length(key.vars) > 2) {
+                  
                   tmp.sum.of.weights <- split(x = tmp.sum.of.weights, by = key.vars)
+                  
                   tmp.sum.of.weights <- Filter(function(l) {nrow(l) > 0}, tmp.sum.of.weights)
+                  
                   tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                     l[between(x = l[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(l), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                   })
+                  
                   tmp.sum.of.weights <- lapply(tmp.sum.of.weights, function(l) {
                     na.omit(l[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
                   })
+                  
                 } else if(length(key.vars) <= 2) {
                   tmp.sum.of.weights <- tmp.sum.of.weights[between(x = tmp.sum.of.weights[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(tmp.sum.of.weights), value = TRUE))], lower = k[1], upper = (k[2] - 0.000000001))]
                   tmp.sum.of.weights <- na.omit(tmp.sum.of.weights[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
                 }
+                
               }
+              
             } else if(bench.type == "cumulative") {
+              
               tmp.sum.of.weights <- split(x = tmp.sum.of.weights, by = key.vars, drop = TRUE)
+              
               tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                 l[between(x = l[ , get(grep(pattern = vars.list[["PV.root.bench"]], x = colnames(l), value = TRUE))], lower = k[1], upper = 2000)]
               })
+              
               tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(l) {
                 na.omit(l[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights])
               })
+              
               tmp.sum.of.weights <- rbindlist(tmp.sum.of.weights)
             }
           })
           
           if(bench.type == "discrete" && pcts.within == FALSE || bench.type == "discrete" && pcts.within == TRUE && length(key.vars) <= 2 || bench.type == "cumulative") {
+            
             tmp.sum.of.weights <- rbindlist(l = lapply(X = seq_along(tmp.sum.of.weights), FUN = function(k) {
               lapply(X = tmp.sum.of.weights[k], FUN = function(l) {
                 tmp <- cbind(data.table("Performance_Group" = names.bench.vals[k]), l)
@@ -411,9 +440,13 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               })[[1]]
             }))
             tmp.sum.of.weights <- na.omit(object = tmp.sum.of.weights, cols = key.vars[1])
+            
           } else if(bench.type == "discrete" && pcts.within == TRUE && length(key.vars) > 2) {
+            
             tmp.leading.cols <- copy(number.of.cases[[1]])
             tmp.leading.cols <- tmp.leading.cols[ , n_cases := NULL]
+            
+            
             tmp.sum.of.weights <- lapply(X = tmp.sum.of.weights, FUN = function(k) {
               tmp.table <- lapply(X = k, FUN = function(l) {
                 tmp.key.cols <- cbind(l[ , mget(key.vars[1:(length(key.vars) - 1)])][1])
@@ -626,6 +659,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           
         }
         
+        
         if(length(key.vars) <= 2) {
           tmp.key.cols <- lapply(X = sum.of.weights.1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
@@ -702,7 +736,6 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               setcolorder(x = k, neworder = c(key.vars, "Performance_Group", grep(pattern = paste(c(key.vars, "Performance_Group"), collapse = "|"), x = colnames(k), value = TRUE, invert = TRUE)))
               setkeyv(x = k, cols = c(key.vars, "Performance_Group"))
             })
-            
             tmp <- unique(rbindlist(l = tmp), by = c(key.vars, "Performance_Group"))
             setkeyv(x = tmp, cols = c(key.vars, "Performance_Group"))
             } else {
@@ -845,7 +878,6 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
       reshape.list.statistics.PV(estimate.object = PV.bench.percentages, estimate.name = "Percentages_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
       
       if(bench.type == "discrete" && !is.null(vars.list[["bckg.var"]])) {
-        
         reshape.list.statistics.PV(estimate.object = bckg.means, estimate.name = "Mean_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         
         bckg.means <- lapply(X = bckg.means, FUN = function(i) {

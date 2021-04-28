@@ -236,6 +236,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     
     import.time <- format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.import}[[3]], "%H:%M:%OS3")
     
+    
     message('   "', substr(x = basename(j[[i]])[[1]], start = 1, stop = 3), '" files imported in ', import.time)
     
     return(imported)
@@ -431,6 +432,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     tmp <- rbindlist(l = j[[i]], use.names = TRUE, fill = TRUE)
     
     message('   "', k[[i]], '" cases added together in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.adding}[[3]], "%H:%M:%OS3"))
+    
     
     return(tmp)
   }, j = all.data.imported, k = names(all.data.imported))
@@ -662,6 +664,9 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       
       all.common.columns <- intersect(x = colnames(school.level.data), y = colnames(teacher.level.data))
       all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
+      if(study.name == "TALIS") {
+        all.common.columns <- all.common.columns[!all.common.columns == "SCHWGT"]
+      }
       teacher.level.data[ , (all.common.columns) := NULL]
       
       setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
@@ -850,6 +855,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       
       eval(parse(text = miss.attr.statements))
     }
+    
   }
   
   existing.variable.labels.columns <- intersect(x = colnames(final.merged.data), y = variable.labels[ , V1])

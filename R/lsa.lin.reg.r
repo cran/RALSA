@@ -222,8 +222,10 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     used.data <- deparse(substitute(data.file))
       message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
-    
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -364,6 +366,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
           } else if(input2 == "deviation") {
             
             input1 <- factor(x = input1, levels = c(levels(input1)[!levels(input1) == input3], input3))
+            
             deviation.contrasts <- contr.sum(n = length(levels(input1)))
             
             dimnames(deviation.contrasts) <- list(levels(input1), grep(pattern = input3, x = levels(input1), value = TRUE, invert = TRUE))
@@ -396,10 +399,8 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       })
       
       data <- Map(f = cbind, data, contrast.columns)
+      
     }
-    
-    
-    
     
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
@@ -689,7 +690,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
           PV.regression <- list(Map(f = reset.coefficients.colnames, input1 = PV.regression[[1]], input2 = as.list(paste(vars.list[["bckg.dep.var"]], 1:length(vars.list[["PV.names"]][[1]]), sep = "0"))))
           
         }
-        
         
         PV.regression <- lapply(X = PV.regression, FUN = function(i) {
           Reduce(function(...) merge(...), i)

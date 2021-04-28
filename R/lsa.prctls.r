@@ -155,11 +155,12 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     data <- copy(import.data(path = data.file))
     
     used.data <- deparse(substitute(data.file))
-    
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
-    
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -243,7 +244,9 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
         if(!is.null(vars.list[["bckg.prctls.vars"]])) {
           bckg.prctls <- na.omit(data1[ , Map(f = wgt.prctl, variable = mget(vars.list[["bckg.prctls.vars"]]), weight = mget(rep(all.weights, each = length(prctls)*length(vars.list[["bckg.prctls.vars"]]))), prctls.values = prctls), by = eval(key.vars)])
           setnames(bckg.prctls, c(key.vars, paste0("V", 1:(length(all.weights)*length(prctls)*length(bckg.prctls.vars)))))
+          
           bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.prctls.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
+          
           bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
         }
         
@@ -263,7 +266,6 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
             compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
           })
-          
           
         }
         
@@ -368,6 +370,22 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
         
         reshape.list.statistics.PV(estimate.object = PV.prctls, estimate.name = "Prctls_", PV.vars.vector = vars.list[["PV.names"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut, multiply.columns = prctls)
         
+        if(!is.null(vars.list[["split.vars"]])) {
+          PV.prctls <- lapply(X = PV.prctls, FUN = function(i) {
+            lapply(X = i, FUN = function(j) {
+              j[ , Percentiles := factor(x = Percentiles, labels = paste0("Prctl_", sort(eval(action.args.list[["prctls"]]))))]
+              setkeyv(x = j, cols = c(vars.list[["group.vars"]], vars.list[["split.vars"]], "Percentiles"))
+            })
+          })
+        } else {
+          PV.prctls <- lapply(X = PV.prctls, FUN = function(i) {
+            lapply(X = i, FUN = function(j) {
+              j[ , Percentiles := factor(x = Percentiles, labels = paste0("Prctl_", sort(eval(action.args.list[["prctls"]]))))]
+              setkeyv(x = j, cols = c(colnames(j[1]), "Percentiles"))
+            })
+          })
+        }
+        
         PV.prctls <- lapply(X = PV.prctls, FUN = function(i) {
           Reduce(function(...) merge(...), i)
         })
@@ -470,7 +488,6 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
       return(merged.outputs)
     }
     
-    
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
 
     estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
@@ -499,7 +516,6 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  
   
   vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.prctls.vars", x = names(vars.list), value = TRUE)
   vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])

@@ -1,4 +1,36 @@
-# RALSA v.0.90.2 (2021-03-15)
+# RALSA v.1.0.0 (2021-04-28)
+## Bug fixes
+* All analysis functions. Any analysis function crashes when TALIS 3S data is used and the weight variable is specified explicitly.
+
+* All analysis functions. When ICCS teacher and school data are merged, the default weight, jakknifing zone and jakknifing replication indicator are not automatically detected and the function crashes, while specifying the weight manually passes.
+
+* `lsa.prctls` function. The order of the columns for the percentiles, their SE, SVR and MVR is scrambled.
+
+* All data preparation and analysis functions. When using `data.object` to provide data and the object is in quotes, the function crashes with uninterpretable error message. Added custom handle and error message.
+
+* `lsa.lin.reg` function. The function crashes when using specific variable combinations.
+
+* GUI. The filtering of the tables with country ISOs, country names, variable names and labels is very slow and oftentimes unresponsive.
+
+* GUI with `lsa.recode.vars`. Occasionally, when the `lsa.recode.vars` function is executed by pressing the "Execute syntax" button, the interface crashes. This is because there is a factor level for which no actual values exist in the data. Now handled with custom error message.
+
+* `lsa.merge.data` function. The school weight was dropped when merging school and teacher data in TALIS which prevented the use of the merged file in multilevel models. Thank to Jelena Veletic.
+
+## New functionality
+* RALSA has a new data preparation function, `lsa.data.diag`, a quick automated production of weighted or unweighted frequency tables for categorical variables and descriptive statistics for continuous variables. These tables are for data diagnostic purposes prior to analysis and are not for reporting results from large-scale assessments.
+
+## Miscellaneous
+* After updating R to v4.0.5 and the packages RALSA depends on, the warning messages in the GUI console were not displayed, although displayed in RStudio console. The warning messages are now back in the GUI console as well.
+
+* Showing and hiding elements in the GUI when using the benchmarks analysis type was improved.
+
+* The version number was incremented to 1.0 since the package has already achieved stability and maturity.
+
+
+
+
+
+# RALSA v.0.90.3 (2021-03-15)
 
 ## Bug fixes
 * `lsa.convert.data` function. The function crashes when the different cycles of the study change the case of the file names and their extensions. Thank to Yuan-Ling (Linda) Liaw.
@@ -16,11 +48,11 @@
 * `lsa.pcts.means` function. Missing estimates in some columns for specific combination of splitting variables.
 
 ## Miscellaneous
-The `ISO` argument in `lsa.convert.data` is now case-insensitive.
+* The `ISO` argument in `lsa.convert.data` is now case-insensitive.
 
-The `file.types` and `ISO` arguments in `lsa.merge.data` are now case insensitive.
+* The `file.types` and `ISO` arguments in `lsa.merge.data` are now case insensitive.
 
-The error messages in `lsa.recode.vars` are improved.
+* The error messages in `lsa.recode.vars` are improved.
 
 
 
@@ -40,7 +72,7 @@ The error messages in `lsa.recode.vars` are improved.
 TIMSS 2019 is now fully supported.
 
 ## New study added
-PISA for Development is now supported, as suggested by David Joseph Rutkowski.
+PISA for Development is now supported, as requested by David Joseph Rutkowski.
 
 ## Miscellaneous
 * Various improvements for the `GUI` elements location.

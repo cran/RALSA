@@ -16,7 +16,7 @@
 #'                        splitting variables. See details.
 #' @param PV.root.avg     The root name(s) for the set(s) of plausible values. See details.
 #' @param weight.var      The name of the variable containing the weights. If no name of a weight
-#'                        variable is provide, the function will automatically select the default
+#'                        variable is provided, the function will automatically select the default
 #'                        weight variable for the provided data, depending on the respondent type.
 #' @param include.missing Logical, shall the missing values of the splitting variables be included
 #'                        as categories to split by and all statistics produced for them? The
@@ -34,9 +34,9 @@
 #'                        on the computer.
 #'
 #' @details
+#' The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continuous variable(s) are provided (background or sets of plausible values), their means will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
+#' 
 #' Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
-#'
-#' The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continous variable(s) are provided (background or sets of plausible values), their means will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
 #'
 #' Multiple continuous background variables can be provided to compute their means. Please note that in this case the results will slightly differ compared to using each of the same background continuous variables in separate analyses. This is because the cases with the missing values on \code{bckg.avg.vars} are removed in advance and the more variables are provided to \code{bckg.avg.vars}, the more cases are likely to be removed.
 #'
@@ -156,7 +156,6 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     
@@ -164,6 +163,9 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -299,7 +301,6 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
           
         } else {
-          
           if(!is.null(vars.list[["bckg.avg.vars"]])) {
             
             percentages <- data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]

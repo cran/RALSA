@@ -71,6 +71,9 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }

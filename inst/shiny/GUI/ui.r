@@ -12,8 +12,6 @@ library(DT)
 library(shinyjs)
 library(shinyFiles)
 
-
-
 ui <- tagList(
   
   load.app.CSS.screen <- "
@@ -33,36 +31,34 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-
-useShinyjs(),
-
-inlineCSS(load.app.CSS.screen),
-
-div(
-  id = "loading-content", class = "center",
-  h1(HTML("<br/><br/><br/><br/><br/><blink>Loading...</blink><br/><br/><br/><br/>")),
-  img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
-  h1(HTML("<br/><br/><br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="http://www.ralsa.ineri.org/", "(http://www.ineri.org/)", target = "_blank"))
-),
-
-hidden(
+  
+  useShinyjs(),
+  
+  inlineCSS(load.app.CSS.screen),
   div(
-    id = "app-content",
-    
-    dashboardPage(
+    id = "loading-content", class = "center",
+    h1(HTML("<br/><br/><br/><br/><br/><blink>Loading...</blink><br/><br/><br/><br/>")),
+    img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
+    h1(HTML("<br/><br/><br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="http://www.ralsa.ineri.org/", "(http://www.ineri.org/)", target = "_blank"))
+  ),
+  hidden(
+    div(
+      id = "app-content",
       
-      title = "RALSA",
-      
-      dashboardHeader(
-        title =
-          tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
-        tags$li(class = "dropdown",
-                tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
-                tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),
-                
-                tags$style(".navbar {background-color: #000000 !important; color: #ffffff !important; font-size: 20px;}"),
-                
-                tags$header(HTML("R Analyzer for Large-Scale Assessments"), align = "left", style = "
+      dashboardPage(
+        
+        title = "RALSA",
+        
+        dashboardHeader(
+          title =
+            tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
+          tags$li(class = "dropdown",
+                  tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
+                  tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),
+                  
+                  tags$style(".navbar {background-color: #000000 !important; color: #ffffff !important; font-size: 20px;}"),
+                  
+                  tags$header(HTML("R Analyzer for Large-Scale Assessments"), align = "left", style = "
               position: fixed;
               left: 300px; /*Add a left margin of 300px so that the header does not cover the logo on the left*/
               width: 100%;
@@ -72,85 +68,85 @@ hidden(
               padding-top: 15px;
               padding-left: 75px; /*Add left padding to indent the header text so that it is displayed a bit further away from the toggle. The best would be to be centered to the navigation bar, but it is not possible at the moment.*/
               background-color: #000000;")
-        )
-      ),
-      
-      dashboardSidebar(width = 260,
-                       
-                       tags$style(".main-sidebar {background-color: #000000 !important;}"),
-                       
-                       sidebarMenu(id = "home",
-                                   br(), br(),
-                                   menuItem(text = "Home", icon = icon("home"), tabName = "home")
-                       ),
-                       
-                       sidebarMenu(id = "dataMenu",
-                                   
-                                   menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
-                                            
-                                            menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
-                                            
-                                            menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
-                                            
-                                            menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
-                                            
-                                            menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
-                                            
-                                            
-                                   )
-                       ),
-                       
-                       sidebarMenu(id = "analysisMenu",
-                                   menuItem(text = "Analysis types", icon = icon("square-root-alt"), tabName = "analyzeData",
-                                            
-                                            menuSubItem(text = "Percentages and means", icon = icon("chart-pie"), tabName = "pctsMeans"),
-                                            
-                                            menuSubItem(text = "Percentiles", icon = icon("chart-pie"), tabName = "prctls"),
-                                            
-                                            menuSubItem(text = "Benchmarks", icon = icon("chart-pie"), tabName = "bnchMarks"),
-                                            
-                                            menuSubItem(text = "Correlations", icon = icon("chart-pie"), tabName = "corr"),
-                                            
-                                            menuSubItem(text = "Linear regression", icon = icon("chart-pie"), tabName = "linReg"),
-                                            
-                                            menuSubItem(text = "Binary logistic regression", icon = icon("chart-pie"), tabName = "binLogReg")
-                                            
-                                   )
-                       ),
-                       
-                       sidebarMenu(id = "help",
-                                   menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
-                       ),
-                       
-                       sidebarMenu(id = "exit",
-                                   menuItem(text = "Exit", icon = icon("running"), tabName = "exitUI")
-                       ),
-                       
-                       tags$style(".main-sidebar {background-color: #000000 !important;}"),
-                       tags$style(".sidebar-menu li a {color: white !important;}"),
-                       tags$style(HTML(".sidebar-menu li.active a {border-left-color: red !important;}")),
-                       tags$style(HTML(".sidebar-menu li:hover a {border-left-color: red !important;}")),
-                       tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
-                       tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
-                       tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
-                       
-                       
-                       
-      ),
-      
-      
-      dashboardBody(
+          )
+        ),
         
-        extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
+        dashboardSidebar(width = 260,
+                         
+                         tags$style(".main-sidebar {background-color: #000000 !important;}"),
+                         
+                         sidebarMenu(id = "home",
+                                     br(), br(),
+                                     menuItem(text = "Home", icon = icon("home"), tabName = "home")
+                         ),
+                         
+                         sidebarMenu(id = "dataMenu",
+                                     
+                                     menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
+                                              
+                                              menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
+                                              
+                                              menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
+                                              
+                                              menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
+                                              
+                                              menuSubItem(text = "Data diagnostics", icon = icon("table"), tabName = "dataDiag"),
+                                              
+                                              menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
+                                              
+                                              
+                                     )
+                         ),
+                         
+                         sidebarMenu(id = "analysisMenu",
+                                     menuItem(text = "Analysis types", icon = icon("square-root-alt"), tabName = "analyzeData",
+                                              
+                                              menuSubItem(text = "Percentages and means", icon = icon("chart-pie"), tabName = "pctsMeans"),
+                                              
+                                              menuSubItem(text = "Percentiles", icon = icon("chart-pie"), tabName = "prctls"),
+                                              
+                                              menuSubItem(text = "Benchmarks", icon = icon("chart-pie"), tabName = "bnchMarks"),
+                                              
+                                              menuSubItem(text = "Correlations", icon = icon("chart-pie"), tabName = "corr"),
+                                              
+                                              menuSubItem(text = "Linear regression", icon = icon("chart-pie"), tabName = "linReg"),
+                                              
+                                              menuSubItem(text = "Binary logistic regression", icon = icon("chart-pie"), tabName = "binLogReg")
+                                              
+                                     )
+                         ),
+                         
+                         sidebarMenu(id = "help",
+                                     menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
+                         ),
+                         
+                         sidebarMenu(id = "exit",
+                                     menuItem(text = "Exit", icon = icon("running"), tabName = "exitUI")
+                                     ),
+                         
+                         tags$style(".main-sidebar {background-color: #000000 !important;}"),
+                         tags$style(".sidebar-menu li a {color: white !important;}"),
+                         tags$style(HTML(".sidebar-menu li.active a {border-left-color: red !important;}")),
+                         tags$style(HTML(".sidebar-menu li:hover a {border-left-color: red !important;}")),
+                         tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
+                         tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
+                         tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
+                         
+        ),
         
-        tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico", type="image/x-icon")),
         
-        tags$style(HTML(".content-wrapper, .right-side {
+        dashboardBody(
+          
+          extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
+          
+          tags$head(tags$link(rel = "shortcut icon", href = "favicon.ico", type="image/x-icon")),
+          
+          tags$style(HTML(".content-wrapper, .right-side {
       background-color: #e2e2e2;
     }")),
-        
-        tags$head(tags$style(HTML(
-          "
+          
+          tags$head(tags$style(HTML(
+            "
                         .multicol .shiny-options-group {
                         width: 700px;
                         height: auto;
@@ -166,27 +162,27 @@ hidden(
                         -webkit-margin-after: 0px !important;
                         }
                         "))),
-        tags$script(HTML("$('body').addClass('fixed');")),
-        tags$head(
-          tags$style(
-            HTML(".shiny-notification {
+          tags$script(HTML("$('body').addClass('fixed');")),
+          tags$head(
+            tags$style(
+              HTML(".shiny-notification {
                                 position:fixed;
                                 top: calc(50%);;
                                 left: calc(50%);
                                 color: black;
                                 font-size: 18px;
                                 opacity: 1;}"))
-        ),
-        
-        tags$head(tags$style(HTML("a {color: #FE0F1A}"))),
-        
-        tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {border: 0.05em solid #c1c1c1; background-color: #dddddd !important;}')),
-        
-        tags$head(tags$style(HTML('.has-feedback .form-control {padding-left: 0px; padding-right: 0px;}'))),
-        
-        tags$head(tags$script(
-          HTML(
-            "Shiny.addCustomMessageHandler('unbindDT', function(id) {
+          ),
+          
+          tags$head(tags$style(HTML("a {color: #FE0F1A}"))),
+          
+          tags$style(HTML('table.dataTable tr.selected td, table.dataTable td.selected {border: 0.05em solid #c1c1c1; background-color: #dddddd !important;}')),
+          
+          tags$head(tags$style(HTML('.has-feedback .form-control {padding-left: 0px; padding-right: 0px;}'))),
+          
+          tags$head(tags$script(
+            HTML(
+              "Shiny.addCustomMessageHandler('unbindDT', function(id) {
                var $table = $('#'+id).find('table');
                 if($table.length > 0) {
                  Shiny.unbindAll($table.DataTable().table().node());
@@ -242,6 +238,7 @@ hidden(
                                     htmlOutput(outputId = "convertIEAStudyCycle"),
                                     br()
                     )),
+                    
                     
                     htmlOutput(outputId = "convertAvailableIEACntsText"),
                     
@@ -377,6 +374,9 @@ hidden(
                     
             ),
             
+            
+            
+            
             tabItem(tabName = "mergeData", class = "active",
                     
                     h1(textOutput(outputId = "h1MergeData")),
@@ -399,6 +399,7 @@ hidden(
                                     htmlOutput(outputId = "mergeIEAStudyCycle"),
                                     br()
                     )),
+                    
                     
                     htmlOutput(outputId = "mergeAvailableIEACntsText"),
                     
@@ -501,9 +502,10 @@ hidden(
                     
                     br(), br()
                     
-                    
-                    
             ),
+            
+            
+            
             
             tabItem(tabName = "varProperties", class = "active",
                     
@@ -605,6 +607,160 @@ hidden(
                     ),
                     
             ),
+            
+            
+            
+            
+            
+            tabItem(tabName = "dataDiag", class = "active",
+                    
+                    h1(textOutput(outputId = "h1DataDiag")),
+                    
+                    htmlOutput(outputId = "dataDiagIntro"),
+                    
+                    fluidRow(
+                      column(width = 2, shinyFilesButton(id = "dataDiagChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                      ),
+                      column(width = 9, offset = 1,
+                             conditionalPanel(condition = "input.dataDiagChooseSrcFile",
+                                              verbatimTextOutput(outputId = "dataDiagSrcPathDisplay"),
+                                              tags$head(tags$style("#dataDiagSrcPathDisplay {background-color: white;}"))
+                             )
+                      )
+                    ),
+                    
+                    fluidRow(
+                      br(), br(),
+                      column(width = 2,
+                             htmlOutput(outputId = "dataDiagStudyName"),
+                             htmlOutput(outputId = "dataDiagStudyCycle"),
+                      ),
+                      column(width = 10,
+                             htmlOutput(outputId = "dataDiagRespHead"),
+                             htmlOutput(outputId = "dataDiagRespAvailable"),
+                             br(), br()
+                      )
+                    ),
+                    
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "dataDiagNoWeights"),
+                             tags$head(tags$style("#dataDiagNoWeights {color: red; font-weight: bold;}"))
+                      )
+                    ),
+                    
+                    htmlOutput(outputId = "dataDiagVariablesExplText"),
+                    
+                    fluidRow(
+                      column(width = 6, align = "center",
+                             DTOutput(outputId = "dataDiagAllAvailableVars"),
+                             tags$head(tags$style("#dataDiagAllAvailableVars {white-space: nowrap;}"))
+                      ),
+                      
+                      column(width = 6,
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "dataDiagArrowSelSplitVarsRight"),
+                                      uiOutput(outputId = "dataDiagArrowSelSplitVarsLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "dataDiagSplitVars"),
+                                      tags$head(tags$style("#dataDiagSplitVars {white-space: nowrap;}")),
+                                      uiOutput(outputId = "dataDiagInclMiss"),
+                                      br()
+                               )
+                             ),
+                             
+                             
+                             
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "dataDiagArrowSelAnalVarsRight"),
+                                      uiOutput(outputId = "dataDiagArrowSelAnalVarsLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "dataDiagAnalVars"),
+                                      tags$head(tags$style("#dataDiagAnalVars {white-space: nowrap;}"))
+                               ),
+                               br()
+                             ),
+                             
+                             
+                             
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "dataDiagArrowSelWeightVarsRight"),
+                                      uiOutput(outputId = "dataDiagArrowSelWeightVarsLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "dataDiagWeightVar"),
+                                      tags$head(tags$style("#dataDiagWeightVar {white-space: nowrap;}")),
+                                      br(), br()
+                               )
+                             ),
+                             
+                      )
+                    ),
+                    
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "dataDiagWgtsNotWgts"),
+                             tags$head(tags$style("#dataDiagWgtsNotWgts {color: red; font-weight: bold;}")),
+                             br()
+                      )
+                    ),
+                    
+                    fluidRow(
+                      column(width = 12,
+                             uiOutput(outputId = "dataDiagContFreq"),
+                             br(), br(),
+                             div(style="display:inline-block", shinySaveButton(id = "dataDiagChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             
+                             div(style="display:inline-block", uiOutput(outputId = "dataDiagOpenOutput"))
+                      ),
+                      br(), br(), br(), br()
+                    ),
+                    
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "dataDiagSyntaxHead"),
+                             verbatimTextOutput(outputId = "dataDiagSyntax"),
+                             tags$head(tags$style(HTML("#dataDiagSyntax {background-color: white; white-space: pre-wrap;}")))
+                      ),
+                      br(), br(), br(), br(), br(), br()
+                    ),
+                    
+                    conditionalPanel(condition = "output.dataDiagSyntax",
+                                     textOutput(outputId = "dataDiagExecBtnHead"),
+                                     uiOutput(outputId = "execDataDiag"),
+                                     br(), br(), br()
+                    ),
+                    
+                    
+                    conditionalPanel(condition = "dataDiagSyntax",
+                                     verbatimTextOutput(outputId = "consoleDataDiag"),
+                                     tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$script(
+                                       '
+      Shiny.addCustomMessageHandler("scrollCallback",
+        function(color) {
+          var objDiv = document.getElementById("consoleDataDiag"); /* Here we point to "console" output, adapt in other cases */
+          objDiv.scrollTop = objDiv.scrollHeight;
+        }
+      );'
+                                     ),
+                                     br()
+                    )
+                    
+            ),
+            
+            
+            
+            
+            
             
             tabItem(tabName = "recodeVars", class = "active",
                     
@@ -753,7 +909,6 @@ hidden(
                                      br(), br(), br()
                     ),
                     
-                    
                     conditionalPanel(condition = "recodeSyntax",
                                      verbatimTextOutput(outputId = "consoleRecode"),
                                      tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -769,6 +924,11 @@ hidden(
                                      br()
                     )
             ),
+            
+            
+            
+            
+            
             
             tabItem(tabName = "pctsMeans", class = "active",
                     
@@ -928,6 +1088,7 @@ hidden(
                                      br(), br(), br()
                     ),
                     
+                    
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
                                      tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -944,6 +1105,10 @@ hidden(
                     )
                     
             ),
+            
+            
+            
+            
             
             tabItem(tabName = "prctls", class = "active",
 
@@ -963,6 +1128,7 @@ hidden(
                     ),
 
             
+
             fluidRow(
               br(), br(),
               column(width = 2,
@@ -1006,6 +1172,8 @@ hidden(
                        )
                      ),
 
+
+
                      fluidRow(
                        column(width = 2, align = "center",
                               br(), br(),  br(), br(),
@@ -1018,6 +1186,8 @@ hidden(
                        ),
                        br()
                      ),
+
+
 
                      fluidRow(
                        column(width = 2, align = "center",
@@ -1110,6 +1280,7 @@ hidden(
               br(), br(), br(), br()
             ),
             
+            
             fluidRow(
               column(width = 12,
                      htmlOutput(outputId = "prctlsSyntaxHead"),
@@ -1141,6 +1312,11 @@ hidden(
             )
             ),
             
+            
+            
+            
+            
+            
             tabItem(tabName = "bnchMarks", class = "active",
                     
                     h1(textOutput(outputId = "h1Bench")),
@@ -1157,6 +1333,7 @@ hidden(
                              )
                       )
                     ),
+                    
                     
                     fluidRow(
                       br(), br(),
@@ -1218,6 +1395,8 @@ hidden(
                                br()
                              ),
                              
+                             
+                             
                              fluidRow(
                                column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
@@ -1234,6 +1413,8 @@ hidden(
                                )
                              ),
                              
+                             
+                             
                              fluidRow(
                                column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
@@ -1246,6 +1427,8 @@ hidden(
                                       br()
                                )
                              ),
+                             
+                             
                              
                              fluidRow(
                                column(width = 2,
@@ -1261,6 +1444,7 @@ hidden(
                              )
                       )
                     ),
+                    
                     
                     fluidRow(
                       column(width = 12,
@@ -1359,6 +1543,11 @@ hidden(
                     )
                     
             ),
+            
+            
+            
+            
+            
             
             tabItem(tabName = "corr", class = "active",
                     
@@ -1544,6 +1733,12 @@ hidden(
                     )
             ),
             
+            
+            
+            
+            
+            
+            
             tabItem(tabName = "linReg", class = "active",
                     
                     h1(textOutput(outputId = "h1LinReg")),
@@ -1651,12 +1846,14 @@ hidden(
                                )
                              ),
                              
+                             
                              fluidRow(
                                column(width = 2),
                                column(width = 9,
                                       uiOutput(outputId = "linRegChooseDepType")
                                )
                              ),
+                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -1678,6 +1875,8 @@ hidden(
                                       DTOutput(outputId = "linRegDepPVVarsDisbld")
                                )
                              ),
+                             
+                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -1715,6 +1914,7 @@ hidden(
                              br()
                       )
                     ),
+                    
                     
                     fluidRow(
                       column(width = 6,
@@ -1769,6 +1969,11 @@ hidden(
                                      br()
                     )
                     ),
+                    
+                    
+                    
+                    
+                    
                     
                     
                     tabItem(tabName = "binLogReg", class = "active",

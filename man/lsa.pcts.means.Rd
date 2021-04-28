@@ -37,7 +37,7 @@ splitting variables. See details.}
 \item{PV.root.avg}{The root name(s) for the set(s) of plausible values. See details.}
 
 \item{weight.var}{The name of the variable containing the weights. If no name of a weight
-variable is provide, the function will automatically select the default
+variable is provided, the function will automatically select the default
 weight variable for the provided data, depending on the respondent type.}
 
 \item{include.missing}{Logical, shall the missing values of the splitting variables be included
@@ -111,9 +111,9 @@ The third sheet contains the call to the function with values for all parameters
 \code{lsa.pcts.means} computes percentages of respondents within groups defined by one or more variables and the means for one or more variables.
 }
 \details{
-Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
+The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continuous variable(s) are provided (background or sets of plausible values), their means will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
 
-The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continous variable(s) are provided (background or sets of plausible values), their means will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
+Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
 
 Multiple continuous background variables can be provided to compute their means. Please note that in this case the results will slightly differ compared to using each of the same background continuous variables in separate analyses. This is because the cases with the missing values on \code{bckg.avg.vars} are removed in advance and the more variables are provided to \code{bckg.avg.vars}, the more cases are likely to be removed.
 

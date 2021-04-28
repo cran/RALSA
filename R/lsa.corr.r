@@ -139,6 +139,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
+
 lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
   
   tmp.options <- options(scipen = 999, digits = 22)
@@ -167,7 +168,12 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     
     message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
     
+    
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
+    
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -277,7 +283,6 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           data1 <- na.omit(object = copy(data), cols = key.vars)
         }
         
-        
         if(!is.null(vars.list[["pcts.var"]])) {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])])
           
@@ -303,6 +308,7 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
         } else {
           data1 <- na.omit(object = data, cols = unlist(vars.list["bckg.corr.vars"]))
         }
+        
         
         if(!is.null(vars.list[["pcts.var"]])) {
           

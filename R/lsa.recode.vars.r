@@ -155,6 +155,9 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     
     
   } else if(!missing(data.object)) {
+    if(length(all.vars(match.call())) == 0) {
+      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -182,7 +185,6 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
   if(length(unique(vars.unique.values)) > 1) {
     stop('The variables passed to "src.variables" do not have the same number of distinct values, this means they have different properties. All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-  
   
   if(vars.classes == "factor" & missing(new.labels)) {
     warnings.collector[["no.labels.for.factor"]] <- 'The variables passed to "src.variables" are factors, but no new labels are defined in "new.labels". Thus, the variable is converted to numeric. Check your input.'
@@ -261,7 +263,7 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     tmp.data[ , (tmp.colnames) := lapply(.SD, function(i) {
       
       if(length(unique(na.omit(i))) != length(new.labels)) {
-        stop('The number of new labels in "new.labels" has a different length than the number of distinct values in the recoded variables. All operations stop here. Check the following:\n1. Your input.\n2. If all levels in the source variables have valid values for all levels.\n\n', call. = FALSE)
+        stop('The number of new labels in "new.labels" has a different length than the number of distinct values in the recoded variables. All operations stop here. Check the following:\n1. Your input;\n2. If all levels in the source variables have valid values for all levels.\n\n', call. = FALSE)
       } else {
         i <- factor(x = i, labels = new.labels)
       }
@@ -428,4 +430,5 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     }
     
   }
+  
 }
