@@ -251,7 +251,6 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     undeclared.values <- setdiff(x = undeclared.values, y = 1:length(values.to.recode))
   }
   
-  
   if(length(undeclared.values) > 0) {
     warnings.collector[["less.recodings.than.avail"]] <- 'The number of values to recode supplied to the "old.new" argument is less than the number of unique values in the variable(s). The values not set for recoding are set to NA. This can have consequences for analysis. Check your input.'
   }
@@ -312,6 +311,7 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
   }, input1 = new.vars.freqs, input2 = names.new.vars.freqs)
   
   src.new.vars.freqs <- Map(f = function(input1, input2) {
+    
     nrows.max <- max(nrow(input1), nrow(input2))
     
     if(nrow(input1) < nrows.max) {

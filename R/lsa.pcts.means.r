@@ -244,6 +244,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           data1 <- na.omit(object = data)
         }
         
+        
         if(!is.null(vars.list[["pcts.var"]])) {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])])
           
@@ -261,7 +262,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           bckg.means <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.multiple.means.all.repwgt, data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
           bckg.variances <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.dispersion.all.repwgt, dispersion.type = "variance", data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
           bckg.SDs <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.dispersion.all.repwgt, dispersion.type = "SD", data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.avg.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
+          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.avg.vars"]], data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
           bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
         }
         
@@ -279,7 +280,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           })
           
           PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-            compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
+            compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = vars.list[["weight.var"]], keys = key.vars)
           })
         }
         
@@ -301,6 +302,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
           
         } else {
+          
           if(!is.null(vars.list[["bckg.avg.vars"]])) {
             
             percentages <- data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]
@@ -317,7 +319,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           bckg.means <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.multiple.means.all.repwgt, data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
           bckg.variances <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.dispersion.all.repwgt, dispersion.type = "variance", data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
           bckg.SDs <- lapply(X = vars.list[["bckg.avg.vars"]], FUN = compute.dispersion.all.repwgt, dispersion.type = "SD", data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.avg.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
+          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.avg.vars"]], data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
         }
         
         if(!is.null(vars.list[["PV.root.avg"]])) {
@@ -331,7 +333,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
             lapply(X = i, FUN = compute.dispersion.all.repwgt, dispersion.type = "SD", data.object = data, weight.var = all.weights, keys = key.vars, include.missing.arg = action.args.list[["include.missing"]])
           })
           PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-            compute.cont.vars.pct.miss(vars.vector = i, data.object = data, weight.var = all.weights, keys = key.vars)
+            compute.cont.vars.pct.miss(vars.vector = i, data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
           })
         }
       }
@@ -459,7 +461,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
         PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
       }
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[[1]])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
       
@@ -503,8 +505,8 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+    if(length(unique(estimates[ , get(key.vars[[1]])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[[1]])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("")
     }

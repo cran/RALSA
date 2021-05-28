@@ -301,7 +301,6 @@ server <- function(input, output, session) {
     
   )
   
-  
   file.merged.respondents <- list(
     "educ.bckg"                                     = "Educator background",
     "inst.bckg"                                     = "Institutional background",
@@ -436,6 +435,16 @@ server <- function(input, output, session) {
     list(study.ID, cycle.ID)
   }
   
+  
+  
+  
+  
+  
+  
+  # Define a function which takes the "PISA.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA 2015 and later in the convert data part of the UI.
+  # Arguments:
+  # list.abbrev - the "PISA.data.files" list from above.
+  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identlify the study and cycle.
   extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- Filter(length, lapply(list.abbrev, function(i) {
@@ -462,6 +471,14 @@ server <- function(input, output, session) {
   }
   
   
+  
+  
+  
+  
+  # Define a function which takes the "PISA.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA prior to 2015 in the convert data part of the UI.
+  # Arguments:
+  # list.abbrev - the "PISA.data.files" list from above.
+  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identify the study and cycle.
   extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
@@ -489,6 +506,13 @@ server <- function(input, output, session) {
   }
   
   
+  
+  
+  
+  # Define a function which takes the "PISA.for.Development.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA for Development) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA for Development 2019 and later in the convert data part of the UI.
+  # Arguments:
+  # list.abbrev - the "PISA.for.Development.data.files" list from above.
+  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identify the study and cycle.
   extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- Filter(length, lapply(list.abbrev, function(i) {
@@ -592,6 +616,7 @@ server <- function(input, output, session) {
   
   all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
   
+  
   studies.all.design.variables <- list(
     
     sampling.vars = list(
@@ -686,6 +711,7 @@ server <- function(input, output, session) {
     )
   )
   
+  
   default.benchmarks <- list(
     ICCS = list(
       "2009" = c(395, 479, 563),
@@ -763,6 +789,7 @@ server <- function(input, output, session) {
       Mathematics.root.PVs = "PV#MATH"
     )
   )
+  
   
   merge.combinations <- list(
     CivED = list(
@@ -1103,6 +1130,7 @@ server <- function(input, output, session) {
     )
   )
   
+  
   design.weight.variables <- list(
     IEA.JK2.studies = c("CivED",
                         "ICCS",
@@ -1186,10 +1214,12 @@ server <- function(input, output, session) {
     IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
                                    "SCHWGT",
                                    "TOTWGTT"),
+    
     IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
                                     "JKCZONE",
                                     "JKZONE",
                                     "JKZONET"),
+    
     IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
                                       "JKCREP",
                                       "JKREPT"),
@@ -1252,7 +1282,9 @@ server <- function(input, output, session) {
     IEA.JK2.dflt.tch.bckg.rep.ind = c("JKREPT",
                                       "JKREP",
                                       "JKINDIC"),
+    
     IEA.BRR.studies = "TEDS-M",
+    
     IEA.BRR.dflt.inst.bckg.types = "inst.bckg",
     IEA.BRR.dflt.inst.bckg.wgts = "FINWGTI",
     IEA.BRR.dflt.inst.bckg.rep.wgts = paste0("FINRWI", 1:32),
@@ -1282,9 +1314,11 @@ server <- function(input, output, session) {
     OECD.BRR.dflt.std.bckg = "std.bckg",
     OECD.BRR.dflt.std.bckg.wgts = "W_FSTUWT",
     OECD.BRR.dflt.std.bckg.rep.wgts = c(paste0("W_FSTR", 1:80), paste0("W_FSTURWT", 1:80)),
+    
     OECD.BRR.dflt.out.of.school.bckg = "out.of.school.bckg",
     OECD.BRR.dflt.out.of.school.bckg.wgts = "SPFWT0",
     OECD.BRR.dflt.out.of.school.bckg.rep.wgts = paste0("SPFWT0", 1:30),
+    
     OECD.BRR.dflt.sch.bckg = "sch.bckg",
     OECD.BRR.dflt.sch.bckg.wgts = "SCHWGT",
     OECD.dflt.sch.bckg.rep.wgts = paste0("SRWGT", 1:100),
@@ -1365,7 +1399,6 @@ server <- function(input, output, session) {
                                          <br>For questions, feature requests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>.<br/><br/><br/><br/><br/><br/>')})
   
   available.volumes <- getVolumes()()
-  
   
   hide("convertMissToNA")
   hide("convertChooseOutDir")
@@ -1568,7 +1601,8 @@ server <- function(input, output, session) {
             pageLength = 5000,
             autoWidth = TRUE,
             columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
-            rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+            rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}")
+            ,
             deferRender = TRUE, scrollY = 400, scroller = TRUE
             
           ))
@@ -1812,7 +1846,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       default.data.files <- data.table(PISA.data.files[["PISA.pre2015.TXT.files"]][[convert.study.and.cycle[[2]]]], PISA.data.files[["PISA.pre2015.TXT.files"]][[convert.study.and.cycle[[2]]]], 1:length(unlist(PISA.data.files[["PISA.pre2015.TXT.files"]][[convert.study.and.cycle[[2]]]])))
       
       default.syntaxes <- data.table(PISA.data.files[["PISA.pre2015.SPS.files"]][[convert.study.and.cycle[[2]]]], PISA.data.files[["PISA.pre2015.SPS.files"]][[convert.study.and.cycle[[2]]]], 1:length(PISA.data.files[["PISA.pre2015.SPS.files"]][[convert.study.and.cycle[[2]]]]))
@@ -1967,7 +2000,6 @@ server <- function(input, output, session) {
     })
     
     
-    
     observe({
       
       if(length(parseSavePath(available.volumes, input$convertChooseSrcDir)$datapath) > 0 && length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0 && identical(as.character(parseSavePath(available.volumes, input$convertChooseSrcDir)$datapath), as.character(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath))) {
@@ -1991,6 +2023,7 @@ server <- function(input, output, session) {
       study.type.loaded$PISA.2015.plus <- exists("convertPISASAVFiles") && length(convertPISASAVFiles$convertAvailPISASAVFiles) && length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0
       study.type.loaded$PISA.pre.2015 <- exists("convertPISATXTFiles") && length(convertPISATXTFiles$convertAvailPISATXTFiles) && length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0
     })
+    
     
     
     output$convertSyntaxHead <- renderText({
@@ -2046,6 +2079,7 @@ server <- function(input, output, session) {
   })
   
   
+  
   observeEvent(input$execConvertData, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     
@@ -2062,8 +2096,6 @@ server <- function(input, output, session) {
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
-  
   
   
   
@@ -2115,7 +2147,6 @@ server <- function(input, output, session) {
         
         if(any(c(length(first.char), length(last.two.chars)) > 1)) {
           showNotification(ui = HTML("The folder must contain .RData<br/>files from just one study, cycle<br/>and population. Files for multiple<br/>studies, cycles and/or populations were<br/>found. Please check the folder content."), duration = 5, type = "error")
-          
         } else {
           
           first.RData.file <- tolower(c(substr(x = full.file.list.merge$RData.files[1], start = 1, stop = 3), substr(x = full.file.list.merge$RData.files[1], start = 7, stop = 8)))
@@ -2146,6 +2177,7 @@ server <- function(input, output, session) {
             }
           })
           
+          
           merge.initial.country.list <- country.ISO.and.names[ISOs %in% grep(pattern = paste(substr(x = full.file.list.merge$RData.files, start = 4, stop = 6), collapse = "|"), x = ISOs, ignore.case = TRUE, value = TRUE), ]
           merge.initial.country.list[ , order_col := 1:nrow(merge.initial.country.list)]
           merge.selected.IEA.files <- data.table(ISOs = as.character(), Names = as.character(), order_col = numeric())
@@ -2153,6 +2185,7 @@ server <- function(input, output, session) {
           mergeAllCountries <- reactiveValues(
             mergeAvailCntIEAFiles = merge.initial.country.list, mergeSelectionIEA = merge.selected.IEA.files
           )
+          
           
           output$mergeArrowIEARight <- renderUI({
             if(length(full.file.list.merge$RData.files) > 0) {
@@ -2215,6 +2248,7 @@ server <- function(input, output, session) {
           })
           
           
+          
           output$mergeAvailCntIEAFiles <- renderDT({
             
             if(length(full.file.list.merge$RData.files) > 0) {
@@ -2244,6 +2278,7 @@ server <- function(input, output, session) {
             deferRender = TRUE, scrollY = 400, scroller = TRUE
             
           ))
+          
           
           output$mergeSelectionIEA <- renderDT({
             
@@ -2283,6 +2318,7 @@ server <- function(input, output, session) {
             paste(i, collapse = "")
           })
           
+          
           file.variables <- lapply(X = file.abbrev, FUN = function(i) {
             tmp.data <- get(load(file.path(parseDirPath(available.volumes, input$mergeChooseSrcDir), grep(pattern = paste0("^", i), x = full.file.list.merge$RData.files, ignore.case = TRUE, value = TRUE)[1])))
             tmp.data <- data.table(
@@ -2299,6 +2335,7 @@ server <- function(input, output, session) {
           names(file.variables) <- file.abbrev
           file.variables <- Map(f = cbind, file.variables, lapply(X = file.abbrev, FUN = function(i) {data.table(type = toupper(i))}))
           
+          
           collapsed.respondents.and.cycles <- lapply(respondents.and.cycles, function(i) {
             unlist(sapply(i[[1]], function(j) {
               paste0(j, i[[2]])
@@ -2310,6 +2347,7 @@ server <- function(input, output, session) {
           }))
           
           merge.checkboxes.names <- sort(paste0("(", toupper(sapply(X = merge.available.respondents, FUN = names)), ") ", names(merge.available.respondents)))
+          
           
           output$mergeAvailRespText <- renderText({
             if(length(full.file.list.merge$RData.files) > 0 && nrow(mergeAllCountries$mergeSelectionIEA) > 0) {
@@ -2326,6 +2364,7 @@ server <- function(input, output, session) {
               return(NULL)
             }
           })
+          
           
           output$warnNoSuchCombination <- renderPrint({
             
@@ -2383,7 +2422,6 @@ server <- function(input, output, session) {
           
           mergeAllVars <- reactiveValues(mergeAvailVars = merge.initial.available.vars, mergeSelectedVars = merge.initial.selected.vars)
           
-          
           observeEvent(eventExpr = input$mergeAvailRespCheckboxes, {
             
             mergeAllVars$mergeAvailVars <- unique(x = rbindlist(file.variables[tolower(substr(x = input$mergeAvailRespCheckboxes, start = 2, stop = 4))]), by = "Variables")
@@ -2408,6 +2446,7 @@ server <- function(input, output, session) {
             }
             
           }, ignoreNULL = FALSE)
+          
           
           
           observe({
@@ -2488,6 +2527,8 @@ server <- function(input, output, session) {
             }
           })
           
+          
+          
           output$mergeAllAvailableVars <- renderDT({
             
             if(length(full.file.list.merge$RData.files) == 0 || merge.render.vars.condition() == FALSE && length(input$mergeAvailRespCheckboxes) == 0) {
@@ -2562,6 +2603,7 @@ server <- function(input, output, session) {
           ))
           
           
+          
           observeEvent(input$mergeArrowSelVarsRight, {
             req(input$mergeAllAvailableVars_rows_selected)
             mergeAllVars$mergeSelectedVars <- rbind(isolate(mergeAllVars$mergeSelectedVars), mergeAllVars$mergeAvailVars[input$mergeAllAvailableVars_rows_selected, , drop = FALSE])
@@ -2600,6 +2642,7 @@ server <- function(input, output, session) {
             }
           })
           
+          
           observe({
             
             if(length(parseSavePath(available.volumes, input$mergeChooseSrcDir)$datapath) > 0 && length(parseSavePath(available.volumes, input$mergeChooseOutFile)$datapath) > 0 && identical(as.character(parseSavePath(available.volumes, input$mergeChooseSrcDir)$datapath), dirname(parseSavePath(available.volumes, input$mergeChooseOutFile)$datapath))) {
@@ -2622,6 +2665,8 @@ server <- function(input, output, session) {
               resp.w.all.vars.selected <- setdiff(unique(mergeAllVars$mergeSelectedVars[ , type]), unique(mergeAllVars$mergeAvailVars[ , type]))
               
               other.vars.selected <- setdiff(unique(mergeAllVars$mergeSelectedVars[ , type]), resp.w.all.vars.selected)
+              
+              
               
               merge.all.selected <- if(length(resp.w.all.vars.selected) > 0) {
                 paste(paste0(tolower(resp.w.all.vars.selected), " = NULL"), sep = '', collapse = ", ")
@@ -2653,7 +2698,9 @@ server <- function(input, output, session) {
                 parseSavePath(available.volumes, input$mergeChooseSrcDir)$datapath,
                 '", ',
                 
+                
                 merge.sel.vars,
+                
                 
                 if(exists("mergeAllCountries") && nrow(mergeAllCountries$mergeSelectionIEA) != 0 && length(mergeAllCountries$mergeSelectionIEA[["ISOs"]]) == 1 && nrow(mergeAllCountries$mergeAvailCntIEAFiles) > 0) {
                   paste0('), ISO = "', tolower(mergeAllCountries$mergeSelectionIEA[["ISOs"]]), '"')
@@ -2664,6 +2711,7 @@ server <- function(input, output, session) {
                 } else if(exists("mergeAllCountries") && nrow(mergeAllCountries$mergeAvailCntIEAFiles) == 0) {
                   ""
                 },
+                
                 
                 paste0(', out.file = "', parseSavePath(available.volumes, input$mergeChooseOutFile)$datapath, '")')
               )
@@ -2722,6 +2770,7 @@ server <- function(input, output, session) {
   })
   
   
+  
   observeEvent(input$execMergeData, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleMergeData", "")
@@ -2737,6 +2786,8 @@ server <- function(input, output, session) {
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
+  
+  
   
   
   output$h1VarProperties <- renderText("Variable dictionaries")
@@ -2837,7 +2888,6 @@ server <- function(input, output, session) {
         }
       })
       
-      # Display the explanatory text.
       output$varPropsExplText <- renderText({
         if(is.null(file.var.properties$resp.type)) {
           return(NULL)
@@ -2845,6 +2895,7 @@ server <- function(input, output, session) {
           HTML('Use the panels below to select the variables for which the dictionaries shall be produced.')
         }
       })
+      
       
       var.props.initial.available.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       var.props.initial.selected.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
@@ -2953,6 +3004,7 @@ server <- function(input, output, session) {
         deferRender = TRUE, scrollY = 400, scroller = TRUE
         
       ))
+      
       
       
       observeEvent(input$varPropsArrowSelVarsRight, {
@@ -3104,7 +3156,6 @@ server <- function(input, output, session) {
   })
   
   
-  
   observeEvent(input$execVarProps, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleVarProps", "")
@@ -3120,9 +3171,6 @@ server <- function(input, output, session) {
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
-  
-  
   
   
   
@@ -3190,6 +3238,7 @@ server <- function(input, output, session) {
     output$dataDiagSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$dataDiagChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
   
+  
   observe({
     
     if(!is.null(file.data.diag$loaded) && file.data.diag$is.lsa.data == FALSE) {
@@ -3246,6 +3295,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       data.diag.initial.available.vars <- file.data.diag$loaded[!Variables %in% c(file.data.diag$default.weight, file.data.diag$country.ID), ]
       data.diag.initial.selected.split.vars <- file.data.diag$loaded[Variables == file.data.diag$country.ID, ]
       data.diag.initial.selected.anal.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
@@ -3253,6 +3303,7 @@ server <- function(input, output, session) {
       
       
       dataDiagAllVars <- reactiveValues(dataDiagAvailVars = data.diag.initial.available.vars, dataDiagSelectedSplitVars = data.diag.initial.selected.split.vars, dataDiagSelectedAnalVars = data.diag.initial.selected.anal.vars, dataDiagSelectedWeightVar = data.diag.initial.selected.weight.var)
+      
       
       output$dataDiagArrowSelSplitVarsRight <- renderUI({
         if(is.null(file.data.diag$resp.type)) {
@@ -3301,6 +3352,7 @@ server <- function(input, output, session) {
           actionButton(inputId = "dataDiagArrowSelWeightVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
+      
       
       observeEvent(input$dataDiagArrowSelSplitVarsRight, {
         req(input$dataDiagAllAvailableVars_rows_selected)
@@ -3353,6 +3405,7 @@ server <- function(input, output, session) {
           dataDiagAllVars$dataDiagSelectedWeightVar <- isolate(dataDiagAllVars$dataDiagSelectedWeightVar[-input$dataDiagWeightVar_rows_selected, , drop = FALSE])
         }
       })
+      
       
       output$dataDiagAllAvailableVars <- renderDT({
         
@@ -3561,7 +3614,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       output$dataDiagExecBtnHead <- renderText({
         if(length(parseSavePath(available.volumes, input$dataDiagChooseOutFile)$datapath) == 1) {
           HTML("Press the button below to execute the syntax")
@@ -3577,7 +3629,6 @@ server <- function(input, output, session) {
           return(NULL)
         }
       })
-      
       
       observe({
         
@@ -3600,9 +3651,9 @@ server <- function(input, output, session) {
           show("execDataDiag")
           show("consoleDataDiag")
         }
-        
+
         if(is.null(file.data.diag$default.weight) || length(file.data.diag$default.weight) == 0) {
-          
+
           hide("dataDiagVariablesExplText")
           hide("dataDiagAllAvailableVars")
           hide("dataDiagArrowSelSplitVarsRight")
@@ -3615,9 +3666,9 @@ server <- function(input, output, session) {
           hide("dataDiagArrowSelWeightVarsRight")
           hide("dataDiagArrowSelWeightVarsLeft")
           hide("dataDiagWeightVar")
-          
+
         } else if(!is.null(file.data.diag$default.weight) || length(file.data.diag$default.weight) != 0) {
-          
+
           show("dataDiagVariablesExplText")
           show("dataDiagAllAvailableVars")
           show("dataDiagArrowSelSplitVarsRight")
@@ -3630,9 +3681,9 @@ server <- function(input, output, session) {
           show("dataDiagArrowSelWeightVarsRight")
           show("dataDiagArrowSelWeightVarsLeft")
           show("dataDiagWeightVar")
-          
+
         }
-        
+
       })
       
     }
@@ -3655,9 +3706,6 @@ server <- function(input, output, session) {
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
-  
-  
   
   
   
@@ -3761,6 +3809,7 @@ server <- function(input, output, session) {
       
       order_col = 1:ncol(file.var.recode$loaded))
       
+      
     }
     output$recodeSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
@@ -3808,8 +3857,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
-      # Display the explanatory text for the panels below, also hide/show it depending on the availability of data.
       output$recodeVariablesExplText <- renderText({
         if(is.null(file.var.recode$resp.type)) {
           return(NULL)
@@ -3817,6 +3864,7 @@ server <- function(input, output, session) {
           HTML('Use the panels below to select the variables which shall be recoded.<br/><b>Note: The selected variables <u>must</u> have the same structure - same class, number of levels (if they are factors), same user-defined missing values (if any).</b><br/>Running the "Variable dictionaties" module in advance can be helpful to identify the structure of the variables of interest.')
         }
       })
+      
       
       recode.initial.available.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       recode.initial.selected.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
@@ -4013,6 +4061,7 @@ server <- function(input, output, session) {
       })
       
       
+      
       generate.recode.new.inputs <- function(obj, input.type, pix.width) {
         unlist(lapply(X = seq_along(obj), FUN = function(i) {
           i <- paste0(textInput(inputId = paste0(input.type, i), label = NULL, value = NULL, width = pix.width))
@@ -4122,6 +4171,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       output$warningDiffNumValuesLabels <- renderText({
         if(new.values.and.labels.mismatch$diff.count == TRUE) {
           HTML('Warning: The number of new values and their labels differ. Please check the entered values and labels.')
@@ -4200,6 +4250,7 @@ server <- function(input, output, session) {
       ))
       
       
+      
       output$recodeSchemeCHAR <- renderDT({
         
         if(!is.null(file.var.recode$loaded) && !is.null(unlist(unique(file.var.recode$var.char.values[recodeAllVars$recodeSelectedVars[ , Variables]]))) && recode.sel.vars.mismatch$value == TRUE) {
@@ -4224,6 +4275,7 @@ server <- function(input, output, session) {
         drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
         
       ))
+      
       
       observe({
         if(nrow(recodeAllVars$recodeSelectedVars) == 0) {
@@ -4347,7 +4399,6 @@ server <- function(input, output, session) {
         drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
       ))
       
-      
       new.values.and.labels.mismatch <- reactiveValues(value = FALSE, label = FALSE, diff.count = FALSE, diff.missings = FALSE)
       
       observe({
@@ -4366,6 +4417,8 @@ server <- function(input, output, session) {
         } else {
           new.values.and.labels <- data.table(V1 = numeric(), V2 = character())
         }
+        
+        
         
         if(!is.null(new.recoding.values.FAC$values)) {
           if(length(new.recoding.values.FAC$values[new.recoding.values.FAC$values != ""]) > 0 && length(new.recoding.labels.FAC$labels[new.recoding.labels.FAC$labels != ""]) == 0 || length(new.recoding.values.FAC$values[new.recoding.values.FAC$values != ""]) == length(new.recoding.labels.FAC$labels[new.recoding.labels.FAC$labels != ""])) {
@@ -4390,6 +4443,7 @@ server <- function(input, output, session) {
           
         }
         
+        
         if(nrow(new.values.and.labels) > 0 && all(new.values.and.labels[ , V2] != "")) {
 
           if(all(new.values.and.labels[ , V2] != "") && any(duplicated(new.values.and.labels[ , V1]) == TRUE)) {
@@ -4405,6 +4459,7 @@ server <- function(input, output, session) {
           }
 
         }
+        
         
         if(is.null(file.var.recode$loaded) || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE) {
           hide("recodeNewMissings")
@@ -4468,6 +4523,7 @@ server <- function(input, output, session) {
           
         }
         
+        
         if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE) {
           hide("recodeInNewVars")
           hide("recodeOverwriteWarn")
@@ -4489,6 +4545,7 @@ server <- function(input, output, session) {
           show("recodeExecBtnHead")
           show("execRecode")
         }
+        
         
         if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE || input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "")) {
           hide("recodeChooseOutFile")
@@ -4626,8 +4683,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
   output$h1PctsMeans <- renderText("Percentages and means")
   
   hide("pctsMeansChooseOutFile")
@@ -4635,6 +4690,7 @@ server <- function(input, output, session) {
   output$pctsMeansIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   
   file.pct.means <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, pct.means.syntax = NULL)
+  
   
   shinyFileChoose(input, "pctsMeansChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
   
@@ -4709,6 +4765,8 @@ server <- function(input, output, session) {
     
     output$pctsMeansSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$pctsMeansChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
+  
+  
   
   observe({
     
@@ -4951,6 +5009,7 @@ server <- function(input, output, session) {
         
       ))
       
+      
       output$pctsMeansSplitVars <- renderDT({
         
           pctsMeansAllVars$pctsMeansSelectedSplitVars
@@ -5039,6 +5098,7 @@ server <- function(input, output, session) {
         deferRender = TRUE, scrollY = 100, scroller = TRUE
         
       ))
+      
       
       output$pctsMeansPVVarsDisbld <- renderDT({
         if(is.null(file.pct.means$PV.sets)) {
@@ -5131,6 +5191,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       observe({
         
         if(nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) > 1) {
@@ -5160,6 +5221,7 @@ server <- function(input, output, session) {
           checkboxInput(inputId = "pctsMeansOpenOutput", label = "Open the output when done", value = TRUE, width = "250px")
         }
       })
+      
       
       syntaxPctsMeans <- reactive({
         
@@ -5212,6 +5274,7 @@ server <- function(input, output, session) {
           ')'
         )
       })
+      
       
       output$pctsMeansSyntaxHead <- renderText({
         if(length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 1) {
@@ -5318,6 +5381,7 @@ server <- function(input, output, session) {
     }
   })
   
+  
   observeEvent(input$execPctsMeans, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consolePctsMeans", "")
@@ -5329,11 +5393,11 @@ server <- function(input, output, session) {
     warning = function(w) {
       shinyjs::html(id = "consolePctsMeans", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
+    # Tell the console to scroll down when the new output arrives.
     session$sendCustomMessage(type = "scrollCallback", 1)
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
   
   
   
@@ -5348,7 +5412,6 @@ server <- function(input, output, session) {
   file.prctls <- reactiveValues(loaded = NULL, is.lsa.data = NULL, vars.classes = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, prctls.values = "5 25 50 75 95", prctls.syntax = NULL)
 
   shinyFileChoose(input, "prctlsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
-
 
   observeEvent(eventExpr = input$prctlsChooseSrcFile, {
     
@@ -5423,6 +5486,8 @@ server <- function(input, output, session) {
   output$prctlsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$prctlsChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
   
+  
+  
   observe({
     
     if(!is.null(file.prctls$loaded) && file.prctls$is.lsa.data == FALSE) {
@@ -5430,6 +5495,7 @@ server <- function(input, output, session) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
       
     } else if (!is.null(file.prctls$loaded) && file.prctls$is.lsa.data == TRUE) {
+      
       
       output$prctlsStudyName <- renderText({
         if(is.null(file.prctls$resp.type)) {
@@ -5463,6 +5529,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       output$prctlsNoWeights <- renderText({
         if(!is.null(file.prctls$loaded) && is.null(file.prctls$default.weight) || !is.null(file.prctls$loaded) && length(file.prctls$default.weight) == 0) {
           HTML('Error: The loaded file does not contain any recognizable default weight variable. Such files cannot be analyzed on their own and must be merged with other respondents in advance.')
@@ -5479,12 +5546,12 @@ server <- function(input, output, session) {
         }
       })
       
-      
       prctls.initial.available.vars <- file.prctls$loaded[!Variables %in% c(file.prctls$default.weight, file.prctls$country.ID), ]
       prctls.initial.selected.split.vars <- file.prctls$loaded[Variables == file.prctls$country.ID, ]
       prctls.initial.selected.bckg.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       prctls.initial.selected.PV.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       prctls.initial.selected.weight.var <- file.prctls$loaded[Variables %in% file.prctls$default.weight, ]
+      
       
       prctlsAllVars <- reactiveValues(prctlsAvailVars = prctls.initial.available.vars, prctlsSelectedSplitVars = prctls.initial.selected.split.vars, prctlsSelectedBckgVars = prctls.initial.selected.bckg.vars, prctlsSelectedPVVars = prctls.initial.selected.PV.vars, prctlsSelectedWeightVar = prctls.initial.selected.weight.var)
       
@@ -5568,7 +5635,6 @@ server <- function(input, output, session) {
           actionButton(inputId = "prctlsArrowSelWeightVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
-      
       
       observeEvent(input$prctlsArrowSelSplitVarsRight, {
         req(input$prctlsAllAvailableVars_rows_selected)
@@ -5962,7 +6028,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       syntaxPrctls <- reactive({
         
         tmp.prctls.values <- unlist(str_split(string = trimws(input$prctlsValues), pattern = "[[:space:]]+"))
@@ -6052,7 +6117,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       output$prctlsExecBtnHead <- renderText({
         if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 1) {
           HTML("Press the button below to execute the syntax")
@@ -6068,7 +6132,6 @@ server <- function(input, output, session) {
           return(NULL)
         }
       })
-      
       
       observe({
         
@@ -6173,10 +6236,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  
   output$h1Bench <- renderText("Benchmarks")
   
   hide("benchChooseOutFile")
@@ -6258,6 +6317,7 @@ server <- function(input, output, session) {
     
     output$benchSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$benchChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
+  
   
   
   observe({
@@ -6437,7 +6497,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       observeEvent(input$benchArrowSelSplitVarsRight, {
         req(input$benchAllAvailableVars_rows_selected)
         benchAllVars$benchSelectedSplitVars <- rbind(isolate(benchAllVars$benchSelectedSplitVars), benchAllVars$benchAvailVars[input$benchAllAvailableVars_rows_selected, , drop = FALSE])
@@ -6449,6 +6508,7 @@ server <- function(input, output, session) {
         req(input$benchSplitVars_rows_selected)
         benchAllVars$benchAvailVars <- rbind(isolate(benchAllVars$benchAvailVars),        benchAllVars$benchSelectedSplitVars[input$benchSplitVars_rows_selected, , drop = FALSE])
         benchAllVars$benchAvailVars <- benchAllVars$benchAvailVars[complete.cases(benchAllVars$benchAvailVars[ , "Variables"]), , drop = FALSE]
+        
         if(nrow(benchAllVars$benchSelectedSplitVars) > 0) {
           benchAllVars$benchSelectedSplitVars <- isolate(benchAllVars$benchSelectedSplitVars[-input$benchSplitVars_rows_selected, , drop = FALSE])
         }
@@ -6503,11 +6563,10 @@ server <- function(input, output, session) {
         req(input$benchWeightVar_rows_selected)
         benchAllVars$benchAvailVars <- rbind(isolate(benchAllVars$benchAvailVars),        benchAllVars$benchSelectedWeightVar[input$benchWeightVar_rows_selected, , drop = FALSE])
         benchAllVars$benchAvailVars <- benchAllVars$benchAvailVars[complete.cases(benchAllVars$benchAvailVars[ , "Variables"]), , drop = FALSE]
-        if(nrow(benchAllVars$benchSelectedWeightVar) > 0) {
+        if(nrow(benchAllVars$benchSelectedWeightVar) > 0) { # If nrow > 0
           benchAllVars$benchSelectedWeightVar <- isolate(benchAllVars$benchSelectedWeightVar[-input$benchWeightVar_rows_selected, , drop = FALSE])
         }
       })
-      
       
       output$benchAllAvailableVars <- renderDT({
         
@@ -6607,7 +6666,6 @@ server <- function(input, output, session) {
         deferRender = TRUE, scrollY = 100, scroller = TRUE
         
       ))
-      
       
       output$benchBckgVarsDisbld <- renderDT({
         
@@ -6761,12 +6819,10 @@ server <- function(input, output, session) {
         
       })
       
-      
       observeEvent(eventExpr = input$benchChooseSrcFile, {
         benchAllVars$benchSelectedPVVars <- NULL
         benchAllVars$benchSelectedBckgVars <- NULL
       }, ignoreInit = TRUE)
-      
       
       observe({
         
@@ -6922,6 +6978,7 @@ server <- function(input, output, session) {
           checkboxInput(inputId = "benchShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
+      
       
       shinyFileSave(input, "benchChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       
@@ -7155,14 +7212,11 @@ server <- function(input, output, session) {
     warning = function(w) {
       shinyjs::html(id = "consoleBench", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
+    # Tell the console to scroll down when the new output arrives.
     session$sendCustomMessage(type = "scrollCallback", 1)
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
-  
-  
-  
   
   
   
@@ -7478,7 +7532,6 @@ server <- function(input, output, session) {
         }
       })
       
-      
       output$corrAllAvailableVars <- renderDT({
         
         setkeyv(x = corrAllVars$corrAvailVars, cols = "order_col")
@@ -7539,7 +7592,6 @@ server <- function(input, output, session) {
           checkboxInput(inputId = "corrInclMiss", label = "Compute statistics for the missing values of the split variables", value = FALSE, width = "400px")
         }
       })
-      
       
       output$corrBckgVars <- renderDT({
         
@@ -7907,17 +7959,15 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  
   hide("linRegChooseOutFile")
+  
   
   output$h1LinReg <- renderText("Linear regression")
   
   output$linRegIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   
   file.lin.reg <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, var.levels = NULL, var.num.values = NULL, var.char.values = NULL, var.missings = NULL, var.unique.values = NULL, default.weight = NULL, lin.reg.syntax = NULL)
+  
   
   shinyFileChoose(input, "linRegChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
   
@@ -8038,6 +8088,7 @@ server <- function(input, output, session) {
       }
       
     }
+    
     output$linRegSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$linRegChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
   
@@ -8082,6 +8133,7 @@ server <- function(input, output, session) {
           HTML(file.merged.respondents[[file.lin.reg$resp.type]])
         }
       })
+      
       
       output$linRegNoWeights <- renderText({
         if(!is.null(file.lin.reg$loaded) && is.null(file.lin.reg$default.weight) || !is.null(file.lin.reg$loaded) && length(file.lin.reg$default.weight) == 0) {
@@ -8377,6 +8429,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       observeEvent(input$linRegChooseDepType, {
         linRegAllVars$linRegAvailVars <- rbind(isolate(linRegAllVars$linRegAvailVars),        linRegAllVars$linRegSelectedDepBckgVars[input$linRegDepBckgVars_rows_all, , drop = FALSE])
         linRegAllVars$linRegAvailVars <- linRegAllVars$linRegAvailVars[complete.cases(linRegAllVars$linRegAvailVars[ , "Variables"]), , drop = FALSE]
@@ -8391,6 +8444,7 @@ server <- function(input, output, session) {
           linRegAllVars$linRegSelectedDepPVVars <- isolate(linRegAllVars$linRegSelectedDepPVVars[-input$linRegDepPVVars_rows_all, , drop = FALSE])
         }
       })
+      
       
       generate.lin.reg.contr.new.inputs <- function(FUN, len, id, ...) {
         inputs <- character(len)
@@ -8527,6 +8581,8 @@ server <- function(input, output, session) {
           lin.reg.contrasts$values
         }
         
+        
+        
       },
       rownames = FALSE,
       selection = "single",
@@ -8576,6 +8632,7 @@ server <- function(input, output, session) {
         deferRender = TRUE, scrollY = 100, scroller = TRUE
         
       ))
+      
       
       
       output$linRegIndepPVVars <- renderDT({
@@ -8727,7 +8784,6 @@ server <- function(input, output, session) {
       ))
       
       
-      
       output$linRegWeightVar <- renderDT({
         linRegAllVars$linRegSelectedWeightVar
         
@@ -8751,6 +8807,7 @@ server <- function(input, output, session) {
         deferRender = TRUE, scrollY = 100, scroller = TRUE
         
       ))
+      
       
       output$linRegSplitArePVs <- renderText({
         if(!is.null(linRegAllVars$linRegSelectedSplitVars) && any(linRegAllVars$linRegSelectedSplitVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE)) {
@@ -8808,6 +8865,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       observe({
         
         if(nrow(linRegAllVars$linRegSelectedWeightVar) > 1) {
@@ -8819,6 +8877,7 @@ server <- function(input, output, session) {
         
       })
       
+      
       observe({
         
         if(!is.null(linRegAllVars$linRegSelectedDepBckgVars) && nrow(linRegAllVars$linRegSelectedDepBckgVars) > 1) {
@@ -8829,6 +8888,7 @@ server <- function(input, output, session) {
         }
         
       })
+      
       
       observe({
         
@@ -8865,6 +8925,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       output$linRegShortcut <- renderUI({
         if(!is.null(file.lin.reg$study) && file.lin.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "linRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
@@ -8878,6 +8939,7 @@ server <- function(input, output, session) {
           checkboxInput(inputId = "linRegOpenOutput", label = "Open the output when done", value = TRUE, width = "250px")
         }
       })
+      
       
       syntaxLinReg <- reactive({
         
@@ -8973,6 +9035,7 @@ server <- function(input, output, session) {
         )
       })
       
+      
       output$linRegSyntaxHead <- renderText({
         if(length(parseSavePath(available.volumes, input$linRegChooseOutFile)$datapath) == 1) {
           HTML("Syntax")
@@ -8988,6 +9051,7 @@ server <- function(input, output, session) {
           return(NULL)
         }
       })
+      
       
       output$linRegExecBtnHead <- renderText({
         if(length(parseSavePath(available.volumes, input$linRegChooseOutFile)$datapath) == 1) {
@@ -9150,6 +9214,7 @@ server <- function(input, output, session) {
     
   })
   
+  
   observeEvent(input$execLinReg, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleLinReg", "")
@@ -9169,11 +9234,8 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  
   hide("binLogRegChooseOutFile")
+  
   
   output$h1binLogReg <- renderText("Binary logistic regression")
   
@@ -9249,7 +9311,6 @@ server <- function(input, output, session) {
       
       names(file.bin.log.reg$var.unique.values) <- tmp.names
       
-      
       if("lsa.data" %in% class(file.bin.log.reg$loaded)) {
         file.bin.log.reg$is.lsa.data <- TRUE
       } else {
@@ -9299,10 +9360,11 @@ server <- function(input, output, session) {
         file.bin.log.reg$country.ID <- "CNT"
       }
       
-      
     }
+    
     output$binLogRegSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$binLogRegChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
+  
   
   observe({
     
@@ -9345,6 +9407,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       output$binLogRegNoWeights <- renderText({
         if(!is.null(file.bin.log.reg$loaded) && is.null(file.bin.log.reg$default.weight) || !is.null(file.bin.log.reg$loaded) && length(file.bin.log.reg$default.weight) == 0) {
           HTML('Error: The loaded file does not contain any recognizable default weight variable. Such files cannot be analyzed on their own and must be merged with other respondents in advance.')
@@ -9361,6 +9424,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       bin.log.reg.initial.available.vars <- file.bin.log.reg$loaded[!Variables %in% c(file.bin.log.reg$default.weight, file.bin.log.reg$country.ID), ]
       bin.log.reg.initial.selected.split.vars <- file.bin.log.reg$loaded[Variables == file.bin.log.reg$country.ID, ]
       bin.log.reg.initial.selected.indep.cat.bckg.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
@@ -9369,7 +9433,9 @@ server <- function(input, output, session) {
       bin.log.reg.initial.selected.dep.bin.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       bin.log.reg.initial.selected.weight.var <- file.bin.log.reg$loaded[Variables %in% file.bin.log.reg$default.weight, ]
       
+      
       binLogRegAllVars <- reactiveValues(binLogRegAvailVars = bin.log.reg.initial.available.vars, binLogRegSelectedSplitVars = bin.log.reg.initial.selected.split.vars, binLogRegSelectedIndepCatBckgVars = bin.log.reg.initial.selected.indep.cat.bckg.vars, binLogRegSelectedIndepCntBckgVars = bin.log.reg.initial.selected.indep.cnt.bckg.vars, binLogRegSelectedIndepPVVars = bin.log.reg.initial.selected.indep.PV.vars, binLogRegSelectedDepBinVars = bin.log.reg.initial.selected.dep.bin.vars, binLogRegSelectedWeightVar = bin.log.reg.initial.selected.weight.var)
+      
       
       output$binLogRegArrowSelSplitVarsRight <- renderUI({
         if(is.null(file.bin.log.reg$resp.type)) {
@@ -9483,6 +9549,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       observeEvent(input$binLogRegArrowSelSplitVarsRight, {
         req(input$binLogRegAllAvailableVars_rows_selected)
         binLogRegAllVars$binLogRegSelectedSplitVars <- rbind(isolate(binLogRegAllVars$binLogRegSelectedSplitVars), binLogRegAllVars$binLogRegAvailVars[input$binLogRegAllAvailableVars_rows_selected, , drop = FALSE])
@@ -9588,6 +9655,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       generate.bin.log.reg.contr.new.inputs <- function(FUN, len, id, ...) {
         inputs <- character(len)
         lapply(seq_len(len), function(i) {
@@ -9627,6 +9695,7 @@ server <- function(input, output, session) {
               generate.bin.log.reg.contr.new.inputs(FUN = selectInput, id = 'binlogregcontrast', len = nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars), choices = "PVs are added, check your input", width = "100%")
             },
             
+            
             V5 = lapply(seq_along(1:nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars)), function(i) {
               
               if(any(sapply(X = file.bin.log.reg$var.unique.values[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]], FUN = is.null)) == FALSE) {
@@ -9634,6 +9703,7 @@ server <- function(input, output, session) {
               } else {
                 generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = "PVs are added, check your input", width = "100%")
               }
+              
               
             }),
             V6 = data.table(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , order_col])
@@ -9710,6 +9780,7 @@ server <- function(input, output, session) {
         }
       })
       
+      
       output$binLogRegIndepCatCaption <- renderText({
         HTML("Independent background categorical variables")
       })
@@ -9721,6 +9792,8 @@ server <- function(input, output, session) {
         } else {
           bin.log.reg.contrasts$values
         }
+        
+        
         
       },
       rownames = FALSE,
@@ -9968,6 +10041,7 @@ server <- function(input, output, session) {
         checkboxInput(inputId = "binLogRegWgtNorm", label = "Normalize the weights", value = FALSE, width = "350px")
       })
       
+      
       output$binLogRegStandardize <- renderUI({
         checkboxInput(inputId = "binLogRegStandardize", label = "Standardized coefficients", value = FALSE, width = "350px")
       })
@@ -9977,6 +10051,7 @@ server <- function(input, output, session) {
           checkboxInput(inputId = "binLogRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
+      
       
       shinyFileSave(input, "binLogRegChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       
@@ -10079,6 +10154,7 @@ server <- function(input, output, session) {
         )
       })
       
+      
       output$binLogRegSyntaxHead <- renderText({
         if(length(parseSavePath(available.volumes, input$binLogRegChooseOutFile)$datapath) == 1) {
           HTML("Syntax")
@@ -10110,6 +10186,7 @@ server <- function(input, output, session) {
           return(NULL)
         }
       })
+      
       
       observe({
         
@@ -10256,6 +10333,7 @@ server <- function(input, output, session) {
     
   })
   
+  
   observeEvent(input$execBinLogReg, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleBinLogReg", "")
@@ -10267,13 +10345,11 @@ server <- function(input, output, session) {
     warning = function(w) {
       shinyjs::html(id = "consoleBinLogReg", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
+    # Tell the console to scroll down when the new output arrives.
     session$sendCustomMessage(type = "scrollCallback", 1)
     
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
-  
-  
-  
   
   
   
@@ -10303,8 +10379,6 @@ server <- function(input, output, session) {
       <ul><li><a href = http://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
     )
   })
-  
-  
   
   
   

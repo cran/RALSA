@@ -1,11 +1,13 @@
+### Do not use the objects and functions from this file on their own. They are intended for the functions of the RALSA package.
+
 import.data <- function(path) {
   tmp <- load(path)
   return(get(tmp))
 }
 
 
+
 produce.analysis.data.table <- function(data.object, object.variables, action.arguments, imported.file.attributes) {
-  
   if(imported.file.attributes[["lsa.study"]] %in% design.weight.variables[["IEA.JK2.studies"]]) {
     DESIGN <- "JRR"
   } else if(imported.file.attributes[["lsa.study"]] %in% c(design.weight.variables[["IEA.BRR.studies"]], design.weight.variables[["OECD.BRR.studies"]])) {
@@ -123,17 +125,15 @@ produce.analysis.data.table <- function(data.object, object.variables, action.ar
 all.missing.values.combinations <- list("not administered", "not admin.", "not admin", "n. admin.", "noz admin", "missing", "MISSING", c("not admin.", "missing"), c("crossed out, not interpretable", "not reached", "not admin.", "missing"), c("crossed out, not interpretable", "not reached", "not admin.", "omitted"), c("not admin.", "omitted"), c("omitted", "not admin."), c("not reached", "two or more responses, not interpretable", "not admin."), c("not reached", "two or more responses, not interpretable", "not admin.", "omitted (blank only)"), c("not reached", "two or more responses, uninterpretable, ...", "not admin."), c("not reached", "two or more responses, uninterpretable", "not admin."), c("NOT REACHED", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "MISSING (BLANK ONLY)"), c("not reached", "uninterpretable", "not admin."), c("not reached", "uninterpretable", "not admin"), c("n. rea.", "n. adm."), c("n. rea.", "n. admin."), c("n.reach.", "n. admin."), c("not appl.", "not admin."), c("not appl", "not admin"), c(" not appl.", "not admin."), c("not applicable", "not admin."), c("not reached", "not admin."), "n. adm.", c("n. reached", "n. admin."), c("n.rea.", "n. adm."), c("n. reach.", "n. admin."), c("not reached", "not admin"), c("log.not appl.", "not admin."), c("Not Applicable", "Not Administered"), c("don't know", "not admin.", "missing"), c("Not reached", "INVALID", "not admin."), c("not reached", "INVALID", "not admin."), c("INVALID", "OMITTED OR INVALID"), c("INVALID", "OMITTED"), "OMITTED", c("NOT REACHED", "INVALID", "OMITTED"), c("NOT REACHED", "MISSING"), c("MISSING", "LOGICALLY NOT APPLICABLE"), c("LOGICALLY NOT APPLICABLE", "MISSING"), c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED"), c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED OR INVALID"), c("Not administered/missing by design", "Presented but not answered/invalid"), c("Logically not applicable", "Not administered/missing by design", "Presented but not answered/invalid"), c("Not applicable", "Not stated"), c("Not reached", "Not administered/missing by design", "Presented but not answered/invalid"), c("Notadministered/missing by design", "Presented but not answered/invalid"), c("Not administered/missing by design", "Presented but not answered/invalid"), "Not administered or missing by design", "Presented but not answered or invalid", c("Not administered or missing by design", "Presented but not answered or invalid"), "OMITTED OR INVALID", "Omitted or invalid", c("LOGICALLY NOT APPLICABLE", "OMITTED OR INVALID"), c("Logically not applicable", "Omitted or invalid"), c("Omitted or invalid", "Logically not applicable"), c("NOT REACHED", "OMITTED"), c("Not reached", "Omitted"), c("LOGICALLY NOT APPLICABLE", "OMITTED"), c("OMITTED", "LOGICALLY NOT APPLICABLE"), c("LOGICALLY NOT APPLICABLE", "NOT REACHED", "OMITTED"), "NOT EXCLUDED", c("Not reached (default during data processing)", "Not administered", "Omitted or Invalid"), c("Logically not applicable", "Not reached", "Not administered", "Omitted or Invalid"), c("Default", "Not applicable", "Not stated"), c("Valid Skip", "Not Applicable", "Invalid", "No Response"), c("Valid Skip", "Not Reached", "Not Applicable", "Invalid", "No Response"), c("Not Applicable", "Invalid"), c("Not administered", "Omitted"), c("Invalid", "Not administered", "Omitted"), c("NOT REACHED", "INVALID RESPONSE", "OMITTED"), c("INVALID RESPONSE", "OMITTED"), c("Not reached", "Omitted or invalid"), c("Omitted or invalid", "Not reached"), c("Not applicable", "Omitted or invalid"), c("Not Reached", "Not Applicable", "Invalid", "No Response"))
 
 
+
 fac.to.num.missing.codes <- c(99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999992, 99999994, 99999995, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999998, 99999998, 99999998, 99999998, 99999998, 99999998, 99999998, 99999999, 99999998, 99999998, 99999998, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999)
 
 names(fac.to.num.missing.codes) <- c(" not appl.", "Default", "log.not appl.", "LOGICALLY NOT APPLICABLE", "Logically not applicable", "not appl", "not appl.", "Not Applicable", "Not applicable", "not applicable", "don't know", "No Response", "Valid Skip", "n. rea.", "n. reach.", "n. reached", "n.rea.", "n.reach.", "NOT REACHED", "Not Reached", "Not reached", "not reached", "Not reached (default during data processing)", "crossed out, not interpretable", "INVALID", "Invalid", "INVALID RESPONSE", "Presented but not answered/invalid", "Presented but not answered or invalid", "two or more responses, not interpretable", "two or more responses, uninterpretable", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "two or more responses, uninterpretable, ...", "uninterpretable", "n. adm.", "n. admin.", "not admin", "not admin.", "Not administered", "not administered", "Not administered/missing by design", "Not administered or missing by design", "Not stated", "Notadministered/missing by design", "noz admin", "missing", "MISSING", "MISSING (BLANK ONLY)", "NOT EXCLUDED", "OMITTED", "Omitted", "omitted", "omitted (blank only)", "OMITTED OR INVALID", "Omitted or invalid", "Omitted or Invalid")
 
 
 get.analysis.and.design.vars <- function(x) {
-  
   passed.args <- as.list(sys.call(which = -1))
-  
-  passed.args <- passed.args[c("split.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "weight.var")]
-  
+  passed.args <- passed.args[c("split.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "row.var", "col.var", "weight.var")]
   if(is.na(names(passed.args["weight.var"])) == TRUE) {
     
     if(attr(x, "study") %in% design.weight.variables[["IEA.JK2.studies"]]) {
@@ -268,7 +268,6 @@ get.analysis.and.design.vars <- function(x) {
         
       }
       
-      
     } else if(attr(x, "study") %in% design.weight.variables[["OECD.BRR.studies"]]) {
       
       if(attr(x, "file.type") %in% design.weight.variables[["OECD.BRR.dflt.std.bckg"]]) {
@@ -304,6 +303,7 @@ get.analysis.and.design.vars <- function(x) {
       }
     }
   }
+  
   
   passed.args <- passed.args[!is.na(names(passed.args))]
   passed.args <- lapply(X = passed.args, FUN = eval)
@@ -342,7 +342,6 @@ get.analysis.and.design.vars <- function(x) {
 
 
 get.action.arguments <- function() {
-  
   passed.args <- as.list(sys.call(which = -1))
   
   passed.args[["executed.analysis.function"]] <- as.character(Filter(is.symbol, passed.args))[[1]]
@@ -885,10 +884,12 @@ design.weight.variables <- list(
   IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
                                  "SCHWGT",
                                  "TOTWGTT"),
+  
   IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
                                   "JKCZONE",
                                   "JKZONE",
                                   "JKZONET"),
+  
   IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
                                     "JKCREP",
                                     "JKREPT"),
@@ -1006,6 +1007,7 @@ design.weight.variables <- list(
 )
 
 
+
 default.benchmarks <- list(
   ICCS = list(
     "2009" = c(395, 479, 563),
@@ -1085,6 +1087,7 @@ default.benchmarks <- list(
 )
 
 
+
 produce.jk.reps.data <- function(data, weight.var, jk.zones, jk.replicates, shortcut = FALSE) {
   data <- lapply(X = data, FUN = function(i) {
     unique.jk.zones <- unique(i[[jk.zones]])
@@ -1102,6 +1105,7 @@ produce.jk.reps.data <- function(data, weight.var, jk.zones, jk.replicates, shor
   })
   return(data)
 }
+
 
 
 weighted.variance.or.SD <- function (x, weights = weight.var, statistics = c("variance", "SD"), na.rm) {
@@ -1122,6 +1126,7 @@ weighted.variance.or.SD <- function (x, weights = weight.var, statistics = c("va
 }
 
 
+
 wgt.prctl <- function(variable, weight, prctls.values) {
   ranked.variable <- order(variable)
   
@@ -1134,6 +1139,8 @@ wgt.prctl <- function(variable, weight, prctls.values) {
   })
   
 }
+
+
 
 
 wgt.pct <- function(variable, weight, na.rm = TRUE) {
@@ -1153,6 +1160,7 @@ wgt.pct <- function(variable, weight, na.rm = TRUE) {
 }
 
 
+
 compute.multiple.means.all.repwgt <- function(data.object, vars.vector, weight.var, keys, include.missing.arg) {
   
   if(all(is.na(data.object[ , mget(vars.vector)])) | include.missing.arg == TRUE) {
@@ -1167,6 +1175,7 @@ compute.multiple.means.all.repwgt <- function(data.object, vars.vector, weight.v
                                       w = mget(weight.var),
                                       na.rm = TRUE), 
                                 by = keys]
+    
   }
   
   if(include.missing.arg == FALSE) {
@@ -1188,6 +1197,8 @@ compute.multiple.means.all.repwgt <- function(data.object, vars.vector, weight.v
   }
   return(tmp)
 }
+
+
 
 
 compute.dispersion.all.repwgt <- function(data.object, vars.vector, dispersion.type, weight.var, keys, include.missing.arg) {
@@ -1227,6 +1238,7 @@ compute.dispersion.all.repwgt <- function(data.object, vars.vector, dispersion.t
   }
   return(tmp)
 }
+
 
 
 compute.correlations.all.repwgt <- function (data.object, vars.vector, weight.var, keys, method) {
@@ -1281,6 +1293,7 @@ compute.correlations.all.repwgt <- function (data.object, vars.vector, weight.va
 }
 
 
+
 compute.linear.regression.all.repwgt <- function(data.object, vars.vector, weight.var, keys, reg.formula) {
   
   all.regressions <- lapply(X = weight.var, FUN = function(i) {
@@ -1314,6 +1327,7 @@ compute.linear.regression.all.repwgt <- function(data.object, vars.vector, weigh
   all.regressions <- Reduce(function(...) merge(..., all = TRUE), all.regressions)
   
 }
+
 
 
 compute.logistic.regression.all.repwgt <- function(data.object, vars.vector, weight.var, keys, reg.formula) {
@@ -1377,6 +1391,7 @@ compute.logistic.regression.all.repwgt <- function(data.object, vars.vector, wei
 }
 
 
+
 compute.cont.vars.pct.miss <- function(data.object, vars.vector, weight.var, keys) {
   cont.vars.pct.miss <- data.object[ , lapply(.SD, function(i) {
     if(!all(!is.na(i))) {
@@ -1387,6 +1402,7 @@ compute.cont.vars.pct.miss <- function(data.object, vars.vector, weight.var, key
   }), by = eval(keys), .SDcols = vars.vector]
   setnames(x = cont.vars.pct.miss, c(keys, paste0("Percent_Missing_", vars.vector)))
 }
+
 
 
 reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.vars.vector, weighting.variable, data.key.variables, new.names.vector, replication.weights, study.name, SE.design, multiply.columns = 1) {
@@ -1461,7 +1477,6 @@ reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.va
     i[ , c(replication.weights, "sum.of.squares") := NULL]
     
   })
-
   
   assign.vars.names <- function(list.of.data.tables, old.names, new.names, stat.name) {
     setnames(list.of.data.tables, old.names, paste0(stat.name, new.names), skip_absent = TRUE)
@@ -1492,6 +1507,7 @@ reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.va
     }
   
 }
+
 
 
 reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.vector, weighting.variable, replication.weights, study.name, SE.design, multiply.columns = 1) {
@@ -1575,6 +1591,7 @@ reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.v
 }
 
 
+
 aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.vars.vector, data.key.variables, study.name, SE.design) {
   
   object.type <- deparse(substitute(estimate.object))
@@ -1643,6 +1660,7 @@ aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.v
     
   })
 }
+
 
 
 compute.table.average <- function(output.obj, object.variables, data.key.variables, data.properties) {
@@ -1748,6 +1766,7 @@ compute.table.average <- function(output.obj, object.variables, data.key.variabl
 }
 
 
+
 produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, rep.design, used.shortcut, number.of.reps, in.time) {
   tmp <- data.table(COUNTRY = cnt.ID,
                     DATA = data,
@@ -1782,6 +1801,7 @@ produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, r
 }
 
 
+
 export.results <- function(output.object, analysis.type, analysis.info.obj, model.stats.obj, destination.file, open.exported.file) {
   
   export.workbook <- createWorkbook(title = "Analysis created using RALSA (www.ralsa.ineri.org) provided by INERI (www.ineri.org)")
@@ -1810,7 +1830,6 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
   addStyle(wb = export.workbook, sheet = main.results.sheet.name, style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object)), rows = 2:(nrow(output.object) + 1), gridExpand = TRUE)
   
   writeData(wb = export.workbook, x = output.object, sheet = main.results.sheet.name)
-  
   
   if(!missing(model.stats.obj)) {
     cols.with.decimals <- grep(pattern = paste(c("Estimate", "Estimate_SE", "t_value", "p_value"), collapse = "|"), x = colnames(model.stats.obj))
@@ -1863,8 +1882,8 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
 }
 
 
-#################################################################
-# Objects from "global.r"
+#####################################################################
+# Objects from "global.r".
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

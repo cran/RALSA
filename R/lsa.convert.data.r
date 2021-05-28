@@ -230,6 +230,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             gsub(pattern = "'", replacement = "\\\\'", x = i)
           })
           
+          
           index.missings.only <- function(missing.values, labels.list) {
             which(setNames(labels.list %in% missing.values, names(labels.list)))
           }
@@ -266,6 +267,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             
             i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "-+\\'", replacement = "'", x = levels(i)))
           })
+          
           
           factors.to.be.numeric <- names(
             Filter(Negate(is.null), lapply(X = tmp[factor.vars], FUN = function(i) {
@@ -658,7 +660,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m4") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2007"
-        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b4") {
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b4") { # Note it is "b4" for the bridge booklets
           study.attribute <- "TIMSS"
           cycle.attribute <- "2007"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m5") {
@@ -670,7 +672,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m7") {
           study.attribute <- "TIMSS"
           cycle.attribute <- "2019"
-        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b7") {
+        } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "b7") { # Note it is "b4" for the bridge booklets
           study.attribute <- "TIMSS"
           cycle.attribute <- "2019"
         } else if(inp.file.first.char %in% c("a", "b") && study.and.cycle == "m8") {
@@ -954,6 +956,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         
       }
       
+      
       ptm <- proc.time()
       
       suppressWarnings(
@@ -1051,7 +1054,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           variables <- gsub(pattern = "\\)\\s+\\.", replacement = ").", x = variables)
           
           var.names <- toupper(word(string = variables, start = 1, end = 1))
-          
           
           ranges <- str_extract(string = variables, pattern = "[[:digit:]]+\\s*-\\s*[[:digit:]]+")
           
@@ -1360,6 +1362,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             tmp.value.labels <- str_trim(unlist(tmp.value.labels), side = "both")
           }
           
+          
           value.labels.var.names.pos <- grep(pattern = "^/", x = tmp.value.labels)
           
           value.labels.start.pos <- value.labels.var.names.pos + 1
@@ -1369,6 +1372,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           value.labels.end.pos <- value.labels.end.pos[-1]
           
           form.statements <- function(string.object) {
+            
             if(length(grep(pattern = "^/", x = string.object)) == 0) {
               obj.var.names <- string.object
             } else {
@@ -1755,8 +1759,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             
           }
           
-          
-          
           if(length(grep(pattern = " TO ", x = missing.values.statements)) > 0) {
             
             statements.with.var.ranges <- grep(pattern = " TO ", missing.values.statements)
@@ -1903,23 +1905,15 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           
           if(missing.to.NA == TRUE) {
             eval(parse(text = assign.attributes(data = tmp, attr.name = "missings", attr.list = missing.levels.list, to.na = "yes")))
-            
             tmp <- droplevels(tmp)
-            
           } else if(missing.to.NA == FALSE) {
-            
             tmp <- droplevels(tmp)
-            
             classes.missing.levels.list <- lapply(missing.levels.list, class)
-            
             fac.vars.missing.levels.list <- names(classes.missing.levels.list[classes.missing.levels.list == "character"])
-            
             missing.strings.fac <- lapply(tmp[fac.vars.missing.levels.list], function(i) {
               grep(pattern = paste(missing.patterns, collapse = "|"), x = levels(i), value = TRUE)
             })
-            
             missing.strings.fac <- missing.strings.fac[lapply(missing.strings.fac, length) != 0]
-            
             num.vars.missing.levels.list <- names(classes.missing.levels.list[classes.missing.levels.list == "numeric"])
             
             if(length(num.vars.missing.levels.list) > 0) {

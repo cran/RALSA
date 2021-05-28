@@ -150,7 +150,6 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-
 lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
   
   tmp.options <- options(scipen = 999, digits = 22)
@@ -429,6 +428,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
             }
           })
           
+          
           if(bench.type == "discrete" && pcts.within == FALSE || bench.type == "discrete" && pcts.within == TRUE && length(key.vars) <= 2 || bench.type == "cumulative") {
             
             tmp.sum.of.weights <- rbindlist(l = lapply(X = seq_along(tmp.sum.of.weights), FUN = function(k) {
@@ -523,6 +523,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           }), .SDcols = all.weights, by = key.vars]
           
           lapply(X = i, FUN = function(j) {
+            
             tmp.key.cols <- j[ , mget(key.vars)]
             sum.of.all.weights <- merge(x = sum.of.all.weights, y = tmp.key.cols)
             
@@ -854,7 +855,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
               setcolorder(x = j, neworder = c(key.vars, "Performance_Group", grep(pattern = paste(c(key.vars, "Performance_Group"), collapse = "|"), x = colnames(j), value = TRUE, invert = TRUE)))
             })
             tmp <- lapply(X = tmp, FUN = function(k) {
-              lapply(X = vars.list[["bckg.var"]], FUN = compute.cont.vars.pct.miss, data.object = k, weight.var = all.weights, keys = c(key.vars, "Performance_Group"))[[1]]
+              lapply(X = vars.list[["bckg.var"]], FUN = compute.cont.vars.pct.miss, data.object = k, weight.var = vars.list[["weight.var"]], keys = c(key.vars, "Performance_Group"))[[1]]
             })
             tmp <- rbindlist(l = tmp)
             setkeyv(x = tmp, cols = c(key.vars, "Performance_Group"))
@@ -1011,7 +1012,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
         bckg.var.pct.miss <- bckg.var.pct.miss[[1]]
       }
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
       
@@ -1053,8 +1054,8 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     total.exec.time <- rbindlist(analysis.info)[ , DURATION]
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"), "\n")
+    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"), "\n")
     } else {
       message("\n")
     }

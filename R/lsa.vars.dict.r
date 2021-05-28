@@ -123,7 +123,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       if(length(levels(i)) > 2) {
         c(paste0("'", levels(i)[1], "'\n"), paste0("                 '", levels(i)[2:(length(levels(i)) - 1)], "'\n"), paste0("                 '", levels(i)[length(levels(i))], "'"))
       } else {
-        c(paste0("'", levels(i)[1], "'\n"), paste0("                 '", levels(i)[2]))
+        c(paste0("'", levels(i)[1], "'\n"), paste0("                 '", levels(i)[2]), "'")
       }
     } else {
       if(length(unique(i)) > 6) {
@@ -171,7 +171,6 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
   
   message("")
   message("The following tables contain the dictionaries for the variables of interest.\n")
-  
   invisible(lapply(X = vars.dict, FUN = function(i) {
     message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
     message("Variable name:   '", i[[1]], "'")

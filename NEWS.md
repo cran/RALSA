@@ -1,3 +1,22 @@
+# RALSA v.1.0.1 (2021-05-28)
+This is a maintenance version following the update of base R to v4.1.0 where some functions' behavior has changed and cause crashes in the analysis functions
+
+## Bug fixes
+* All analysis functions. Some functions in base R were updated and their behavior has changed causing crashes in the analysis functions with `first argument has length \> 1` error messages.
+
+* `lsa.vars.dict` function. When there are just two levels for a factor variable, the second level in ?Variable levels? ends without a single quote.
+
+* Occasionally, the `lsa.data.diag`  freezes R with a question mark in the console and eventually crashes the R session when `split.vars` are provided.
+
+## Miscellaneous
+* Various optimizations in the `lsa.corr`, `lsa.lin.reg` and `lsa.bin.log.reg` functions.
+
+* The `lsa.data.diag` function now has user interruption handling with a message.
+
+
+
+
+
 # RALSA v.1.0.0 (2021-04-28)
 ## Bug fixes
 * All analysis functions. Any analysis function crashes when TALIS 3S data is used and the weight variable is specified explicitly.

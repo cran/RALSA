@@ -218,7 +218,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
@@ -377,9 +376,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
             deviation.contrasts <- contr.sum(n = length(levels(input1)))
             
             dimnames(deviation.contrasts) <- list(levels(input1), grep(pattern = input3, x = levels(input1), value = TRUE, invert = TRUE))
-            
             contrasts(input1) <- deviation.contrasts
-            
           } else if(input2 == "simple") {
             
             input1 <- factor(x = input1, levels = c(levels(input1)[levels(input1) == input3], levels(input1)[!levels(input1) == input3]))
@@ -575,24 +572,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
           setnames(x = i, old = "V1", new = "Variable")
         })
         
-        bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = unlist(Filter(Negate(is.null), vars.list[c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars")])), data.object = data, weight.var = all.weights, keys = key.vars)
-        
-        bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        
-        bckg.vars.pct.miss <- melt(data = bckg.vars.pct.miss, id.vars = key(bckg.vars.pct.miss))
-        bckg.vars.pct.miss[ , variable := gsub(pattern = "^Percent_Missing_", replacement = "", x = variable)]
-        setnames(x = bckg.vars.pct.miss, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-        bckg.vars.pct.miss[ , Role := sapply(Variable, function(i) {
-          if(i %in% vars.list[["bin.dep.var"]]) {
-            "bin.dep.var"
-          } else if (i %in% vars.list[["bckg.indep.cont.vars"]]) {
-            "bckg.indep.cont.vars"
-          } else if(i %in% vars.list[["bckg.indep.cat.vars"]]) {
-            "bckg.indep.cat.vars"
-          }
-        })]
-        setcolorder(x = bckg.vars.pct.miss, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
-        
       } else if(!is.null(vars.list[["PV.root.indep"]])) {
         
         PV.regression <- list(lapply(X = seq_along(data1), FUN = function(i) {
@@ -611,6 +590,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
             j[!V1 %in% grep(pattern = "_odds$", x = V1, value = TRUE), ]
           })
         })
+        
         
         PV.regression <- lapply(X = PV.regression, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
@@ -657,16 +637,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
           })
         })
         
-        PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-          compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
-        })
-        
-        PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
-        
-        if(any(c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars") %in% names(vars.list)) == TRUE) {
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = unlist(Filter(Negate(is.null), vars.list[c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars")])), data.object = data, weight.var = all.weights, keys = key.vars)
-          bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        }
       }
       
       if(is.null(vars.list[["PV.root.indep"]])) {
@@ -743,47 +713,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
         merged.PV.estimates <- PV.regression
         PV.regression <- NULL
         
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
-          
-          all.PV.roots <- vars.list[["PV.root.indep"]]
-          
-          all.PV.roots <- grep(pattern = paste(all.PV.roots, collapse = "|"), x = colnames(PVs.pct.miss), value = TRUE)
-          
-        } else {
-          
-          all.PV.roots <- vars.list[["PV.root.indep"]]
-          
-        }
-        
-        PVs.pct.miss <- lapply(X = all.PV.roots, FUN = function(i) {
-          tmp <- cbind(PVs.pct.miss[ , mget(key(PVs.pct.miss))], rowSums(PVs.pct.miss[ , mget(grep(pattern = i, x = colnames(PVs.pct.miss), value = TRUE))])/length(grep(pattern = i, x = colnames(PVs.pct.miss), value = TRUE)))
-          setnames(x = tmp, old = "V2", new = i)
-        })
-        
-        PVs.pct.miss <- rbindlist(l = lapply(X = PVs.pct.miss, FUN = function(i) {
-          tmp <- melt(data = i, id.vars = key(i))
-          setnames(x = tmp, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-          tmp[ , Role := "PV.root.indep"]
-          setcolorder(x = tmp, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
-        }))
-        
-        if(any(c("bin.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars") %in% names(vars.list)) == TRUE) {
-          bckg.vars.pct.miss <- melt(data = bckg.vars.pct.miss, id.vars = key(bckg.vars.pct.miss))
-          bckg.vars.pct.miss[ , variable := gsub(pattern = "^Percent_Missing_", replacement = "", x = variable)]
-          setnames(x = bckg.vars.pct.miss, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-          bckg.vars.pct.miss[ , Role := sapply(Variable, function(i) {
-            if(i %in% vars.list[["bin.dep.var"]]) {
-              "bin.dep.var"
-            } else if (i %in% vars.list[["bckg.indep.cont.vars"]]) {
-              "bckg.indep.cont.vars"
-            } else if(i %in% vars.list[["bckg.indep.cat.vars"]]) {
-              "bckg.indep.cat.vars"
-            }
-          })]
-          setcolorder(x = bckg.vars.pct.miss, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
-          PVs.pct.miss <- rbindlist(list(PVs.pct.miss, bckg.vars.pct.miss))
-        }
-        
       }
       
       country.model.stats[ , Statistic := factor(x = Statistic, levels = c("null.deviance", "deviance", "df.null", "df.residual", "aic", "bic", "chi.square", "r2hl", "r2cs", "r2n"), labels = c("Null Deviance (-2LL)", "Deviance (-2LL)", "DF Null", "DF Residual", "AIC", "BIC", "Chi-Square", "R-Squared (Hosmer & Lemeshow)", "R-Squared (Cox & Snell)", "R-Squared (Nagelkerke)"))]
@@ -793,7 +722,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       
       model.stats[[cnt.model.name]] <<- country.model.stats
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
       
@@ -810,8 +739,6 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       }), .SDcols = "Wald_Statistic"]
       
       merged.outputs[ , p_value := 2 * pnorm(q = abs(Wald_Statistic), lower.tail = FALSE)]
-      
-      setcolorder(x = merged.outputs, neworder = c(grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE, invert = TRUE), grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE)))
       
       merged.outputs[ , (c("Wald_Statistic", "p_value")) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
@@ -865,12 +792,12 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("")
     }
-
+    
     ptm.add.table.average <- proc.time()
     
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)

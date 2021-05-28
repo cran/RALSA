@@ -86,7 +86,7 @@ lsa.merge.data(inp.folder = "C:/Data", file.types = list(acg = NULL),
 out.file = "C:/Merged/Merged.RData")
 }
 
-# Produce diagnostic tables for some factor (categorical) and numeric (continuous) variables 
+# Produce diagnostic tables for some factor (categorical) and numeric (continuous) variables
 # by country
 \dontrun{
 lsa.data.diag(data.file = "C:/Merged/Merged.RData",
@@ -121,5 +121,5 @@ open.output = TRUE)
 
 }
 \seealso{
-\code{\link{lsa.convert.data}, \link{lsa.vars.dict}}
+\code{\link{lsa.convert.data}}
 }

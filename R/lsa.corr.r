@@ -76,8 +76,6 @@
 #'   \item t_\verb{<}Background variable\verb{>} - the \emph{t}-test value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 #'   \item p_\verb{<}root PV\verb{>} - the \emph{p}-value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 #'   \item p_\verb{<}Background variable\verb{>} - the \emph{p}-value value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
-#'   \item Percent_Missings_\verb{<}Background variable\verb{>} - the percentage of missing values for each of the \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars}. There will be one column with the percentage of missing values for each variable specified in \code{bckg.corr.vars}.
-#'   \item Percent_Missings_\verb{<}root PV\verb{>} - the percentage of missing values for the PVs in the \verb{<}root PV\verb{>} specified in \code{PV.root.corr}. There will be one column with the percentage of missing values for each set of PVs specified in \code{PV.root.corr}.
 #' }
 #' The second sheet contains some additional information related to the analysis per country in columns:
 #' \itemize{
@@ -309,7 +307,6 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           data1 <- na.omit(object = data, cols = unlist(vars.list["bckg.corr.vars"]))
         }
         
-        
         if(!is.null(vars.list[["pcts.var"]])) {
           
           percentages <- data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])]
@@ -368,18 +365,11 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
         
         bckg.correlations <- list(compute.correlations.all.repwgt(data.object = data1, vars.vector = vars.list[["bckg.corr.vars"]], weight.var = all.weights, keys = key.vars, method = corr.type))
         
-        bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.corr.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
-        bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        
       } else if(is.null(vars.list[["bckg.corr.vars"]]) & !is.null(vars.list[["PV.root.corr"]])) {
         
         PV.correlations <- list(lapply(X = data1, FUN = function(i) {
           compute.correlations.all.repwgt(data.object = i, vars.vector = grep(pattern = paste(vars.list[["PV.root.corr"]], collapse = "|"), x = colnames(i), value = TRUE), weight.var = all.weights, keys = key.vars, method = corr.type)
         }))
-        
-        PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-          compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
-        })
         
       } else if(!is.null(vars.list[["bckg.corr.vars"]]) & !is.null(vars.list[["PV.root.corr"]])) {
         
@@ -401,13 +391,6 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           })
         })
         
-        PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-          compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
-        })
-        
-        bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.corr.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
-        bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        
       }
       
       if(!is.null(vars.list[["bckg.corr.vars"]]) & is.null(vars.list[["PV.root.corr"]])) {
@@ -427,7 +410,7 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           cor.variables.SE <- paste0(cor.variables, "_SE")
           all.cor.variables <- c(cor.variables, cor.variables.SE)
           setnames(x = i, old = "V1", new = "Variable")
-          tmp.corr <- matrix(i[ , get(grep(pattern = paste(cor.variables, collapse = "|"), x = colnames(i), value = TRUE))], ncol = length(vars.list[["bckg.corr.vars"]]))
+          tmp.corr <- matrix(i[ , get(grep(pattern = paste(cor.variables, collapse = "|"), x = colnames(i), value = TRUE)[1])], ncol = length(vars.list[["bckg.corr.vars"]]))
           tmp.corr.se <- matrix(i[ , get(grep(pattern = paste(cor.variables.SE, collapse = "|"), x = colnames(i), value = TRUE))], ncol = length(vars.list[["bckg.corr.vars"]]))
           i <- cbind(unique(i[ , mget(c(key.vars, "Variable"))]), data.table(tmp.corr, tmp.corr.se))
           setnames(x = i, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(i)), new = all.cor.variables)
@@ -533,52 +516,24 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
         merged.PV.estimates <- PV.correlations
         PV.correlations <- NULL
         
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
-          
-          lapply(X = PVs.pct.miss, FUN = function(i) {
-            pct.miss.columns <- grep(pattern = paste0("Percent_Missing_", vars.list[["PV.root.corr"]], collapse = "|"), x = names(i), value = TRUE)
-            i[ , avg.PVs.pct.miss := rowSums(.SD)/length(pct.miss.columns), .SDcols = pct.miss.columns]
-          })
-          lapply(X = PVs.pct.miss, FUN = function(i) {
-            PV.root.corr.in.scope <- grep(pattern = paste(unlist(vars.list[["PV.names"]]), sep = "", collapse = "|"), x = colnames(i), value = TRUE)
-            PV.root.corr.in.scope <- gsub(pattern = "Percent_Missing_", replacement = "", x = PV.root.corr.in.scope)
-            PV.root.corr.in.scope <- unique(gsub(pattern = "[[:digit:]]+", replacement = "N", x = PV.root.corr.in.scope))
-            setnames(x = i, old = "avg.PVs.pct.miss", new = paste0("Percent_Missing_", PV.root.corr.in.scope))
-            i[ , grep(pattern = paste0("Percent_Missing_", paste(unlist(vars.list[["PV.names"]]), sep = "", collapse = "|"), collapse = "|"), x = names(i), value = TRUE) := NULL]
-          })
-          
-        } else {
-          
-          lapply(X = PVs.pct.miss, FUN = function(i) {
-            PV.root.corr.in.scope <- intersect(unique(gsub(pattern = "Percent_Missing_|[[:digit:]]+$", replacement = "", x = colnames(i))), unlist(vars.list[["PV.root.corr"]]))
-            PV.root.corr.in.scope <- grep(pattern = paste0("Percent_Missing_", PV.root.corr.in.scope <- intersect(unique(gsub(pattern = "Percent_Missing_|[[:digit:]]+$", replacement = "", x = colnames(i))), unlist(vars.list[["PV.root.corr"]])), "[[:digit:]]+"), x = names(i), value = TRUE)
-            i[ , avg.PVs.pct.miss := rowSums(.SD)/length(PV.root.corr.in.scope), .SDcols = PV.root.corr.in.scope]
-          })
-          lapply(X = PVs.pct.miss, FUN = function(i) {
-            PV.root.corr.in.scope <- intersect(unique(gsub(pattern = "Percent_Missing_|[[:digit:]]+$", replacement = "", x = colnames(i))), unlist(vars.list[["PV.root.corr"]]))
-            setnames(x = i, old = "avg.PVs.pct.miss", new = paste0("Percent_Missing_", PV.root.corr.in.scope))
-            i[ , grep(pattern = paste0("Percent_Missing_", PV.root.corr.in.scope, "[[:digit:]]+"), x = names(i), value = TRUE) := NULL]
-          })
-        }
-        PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
       }
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
       
       if(!is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && is.null(vars.list[["PV.root.corr"]])) {
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.correlations, bckg.vars.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.correlations))
       } else if(!is.null(vars.list[["split.vars"]]) && is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])){
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates, PVs.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates))
       } else if(!is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])) {
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates, bckg.vars.pct.miss, PVs.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates))
       } else if(is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && is.null(vars.list[["PV.root.corr"]])) {
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.correlations, bckg.vars.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.correlations))
       } else if(is.null(vars.list[["split.vars"]]) && is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])) {
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates, PVs.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates))
       } else if(is.null(vars.list[["split.vars"]]) && !is.null(vars.list[["bckg.corr.vars"]]) && !is.null(vars.list[["PV.root.corr"]])) {
-        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.vars.pct.miss, merged.PV.estimates, PVs.pct.miss))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, merged.PV.estimates))
       }
       
       cor.columns <- grep(pattern = "^Correlation_", x = colnames(merged.outputs), value = TRUE)
@@ -605,8 +560,6 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       }), .SDcols = t.value.columns]
       
       merged.outputs[ , degrees.of.freedom := NULL]
-      
-      setcolorder(x = merged.outputs, neworder = c(grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE, invert = TRUE), grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE)))
       
       merged.outputs[ , (c(t.value.columns, p.value.columns)) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
@@ -636,8 +589,8 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("\n")
     }

@@ -228,6 +228,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           data1 <- na.omit(object = data)
         }
         
+        
         if(!is.null(vars.list[["pcts.var"]])) {
           percentages <- na.omit(data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])])
           
@@ -245,7 +246,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           bckg.prctls <- na.omit(data1[ , Map(f = wgt.prctl, variable = mget(vars.list[["bckg.prctls.vars"]]), weight = mget(rep(all.weights, each = length(prctls)*length(vars.list[["bckg.prctls.vars"]]))), prctls.values = prctls), by = eval(key.vars)])
           setnames(bckg.prctls, c(key.vars, paste0("V", 1:(length(all.weights)*length(prctls)*length(bckg.prctls.vars)))))
           
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.prctls.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
+          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.prctls.vars"]], data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
           
           bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
         }
@@ -264,7 +265,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           })
           
           PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-            compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
+            compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = vars.list[["weight.var"]], keys = key.vars)
           })
           
         }
@@ -288,6 +289,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
           
         } else {
+          
           if(!is.null(vars.list[["bckg.prctls.vars"]])) {
             
             percentages <- data1[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]
@@ -307,7 +309,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           
           setnames(bckg.prctls, c(key.vars, paste0("V", 1:(length(all.weights)*length(prctls)*length(bckg.prctls.vars)))))
           
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.prctls.vars"]], data.object = data, weight.var = all.weights, keys = key.vars)
+          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = vars.list[["bckg.prctls.vars"]], data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
         }
         
         if(!is.null(vars.list[["PV.root.prctls"]])) {
@@ -325,7 +327,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           })
           
           PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-            compute.cont.vars.pct.miss(vars.vector = i, data.object = data, weight.var = all.weights, keys = key.vars)
+            compute.cont.vars.pct.miss(vars.vector = i, data.object = data, weight.var = vars.list[["weight.var"]], keys = key.vars)
           })
         }
         
@@ -455,7 +457,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
         PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
       }
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
         
@@ -497,8 +499,8 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
 
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("")
     }

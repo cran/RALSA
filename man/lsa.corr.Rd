@@ -87,8 +87,6 @@ A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program),
 \item t_\verb{<}Background variable\verb{>} - the \emph{t}-test value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 \item p_\verb{<}root PV\verb{>} - the \emph{p}-value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 \item p_\verb{<}Background variable\verb{>} - the \emph{p}-value value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
-\item Percent_Missings_\verb{<}Background variable\verb{>} - the percentage of missing values for each of the \verb{<}Background variable\verb{>} specified in \code{bckg.corr.vars}. There will be one column with the percentage of missing values for each variable specified in \code{bckg.corr.vars}.
-\item Percent_Missings_\verb{<}root PV\verb{>} - the percentage of missing values for the PVs in the \verb{<}root PV\verb{>} specified in \code{PV.root.corr}. There will be one column with the percentage of missing values for each set of PVs specified in \code{PV.root.corr}.
 }
 The second sheet contains some additional information related to the analysis per country in columns:
 \itemize{

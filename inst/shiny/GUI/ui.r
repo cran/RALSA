@@ -31,7 +31,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-  
+
   useShinyjs(),
   
   inlineCSS(load.app.CSS.screen),
@@ -70,6 +70,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
               background-color: #000000;")
           )
         ),
+        
         
         dashboardSidebar(width = 260,
                          
@@ -131,6 +132,8 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                          tags$style(HTML(".treeview-menu a {background-color: #000000 !important; text-indent: 5px !important;}")),
                          tags$style(HTML(".treeview-menu li.active a {background-color: #FE0F1A !important; text-indent: 10px !important;}")),
                          tags$style(HTML(".treeview-menu li:hover a {background-color: #000000 !important;}"))
+                         
+                         
                          
         ),
         
@@ -267,6 +270,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                        ),
                                      )),
                     
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISA2015PlusStudyName"),
                                     htmlOutput(outputId = "convertPISA2015PlusStudyCycle"),
@@ -283,6 +287,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       ),
                       column(width = 2)
                     ),
+                    
                     
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISApre2015StudyName"),
@@ -301,6 +306,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       column(width = 2)
                     ),
                     
+                    
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISADev2019PlusStudyName"),
                                     htmlOutput(outputId = "convertPISADev2019PlusStudyCycle"),
@@ -317,7 +323,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       ),
                       column(width = 2)
                     ),
-                    
                     
                     
                     fluidRow(
@@ -375,8 +380,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
             ),
             
             
-            
-            
             tabItem(tabName = "mergeData", class = "active",
                     
                     h1(textOutput(outputId = "h1MergeData")),
@@ -393,6 +396,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                              )
                       ),
                     ),
+                    
                     
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "mergeIEAStudyName"),
@@ -504,9 +508,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                     
             ),
             
-            
-            
-            
             tabItem(tabName = "varProperties", class = "active",
                     
                     h1(textOutput(outputId = "h1VarProperties")),
@@ -562,6 +563,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       br(), br()
                     ),
                     
+                    
                     conditionalPanel(condition = "output.varPropsVarsSelection",
                                      
                                      br(), br(), br(),
@@ -607,9 +609,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                     ),
                     
             ),
-            
-            
-            
             
             
             tabItem(tabName = "dataDiag", class = "active",
@@ -671,8 +670,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                       br()
                                )
                              ),
-                             
-                             
                              
                              fluidRow(
                                column(width = 2, align = "center",
@@ -739,7 +736,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br(), br(), br()
                     ),
                     
-                    
                     conditionalPanel(condition = "dataDiagSyntax",
                                      verbatimTextOutput(outputId = "consoleDataDiag"),
                                      tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -756,9 +752,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                     )
                     
             ),
-            
-            
-            
             
             
             
@@ -909,6 +902,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br(), br(), br()
                     ),
                     
+                    
                     conditionalPanel(condition = "recodeSyntax",
                                      verbatimTextOutput(outputId = "consoleRecode"),
                                      tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -924,9 +918,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br()
                     )
             ),
-            
-            
-            
             
             
             
@@ -1088,7 +1079,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br(), br(), br()
                     ),
                     
-                    
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
                                      tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
@@ -1108,8 +1098,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
             
             
             
-            
-            
             tabItem(tabName = "prctls", class = "active",
 
                     h1(textOutput(outputId = "h1Prctls")),
@@ -1126,8 +1114,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                              )
                       )
                     ),
-
-            
 
             fluidRow(
               br(), br(),
@@ -1204,8 +1190,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                               br()
                        )
                      ),
-                     
-                     
                      
                      fluidRow(
                        column(width = 2, align = "center",
@@ -1313,10 +1297,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
             ),
             
             
-            
-            
-            
-            
             tabItem(tabName = "bnchMarks", class = "active",
                     
                     h1(textOutput(outputId = "h1Bench")),
@@ -1372,7 +1352,9 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       br(), br(), br(), br(), br(), br()
                     ),
                     
+                    
                     htmlOutput(outputId = "benchVariablesExplText"),
+                    
                     
                     fluidRow(
                       column(width = 6, align = "center",
@@ -1547,8 +1529,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
             
             
             
-            
-            
             tabItem(tabName = "corr", class = "active",
                     
                     h1(textOutput(outputId = "h1Corr")),
@@ -1618,7 +1598,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                       br()
                                )
                              ),
-                             
                              
                              
                              fluidRow(
@@ -1732,9 +1711,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br()
                     )
             ),
-            
-            
-            
             
             
             
@@ -1923,6 +1899,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                       br(), br(), br(), br()
                     ),
                     
+                    
                     fluidRow(
                       column(width = 6,
                              uiOutput(outputId = "linRegShortcut")
@@ -1973,9 +1950,6 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                     
                     
                     
-                    
-                    
-                    
                     tabItem(tabName = "binLogReg", class = "active",
                             
                             h1(textOutput(outputId = "h1binLogReg")),
@@ -2005,6 +1979,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                                      br(), br()
                               )
                             ),
+                            
                             
                             fluidRow(
                               column(width = 12,
@@ -2155,6 +2130,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                               br(), br(), br(), br()
                             ),
                             
+                            
                             fluidRow(
                               column(width = 6,
                                      uiOutput(outputId = "binLogRegShortcut")
@@ -2203,6 +2179,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
                     )
             
           ),
+          
           
           tags$footer(HTML("R Analyzer for Large-Scale Assessments by INERI.org - &copy;(left) 2019"), align = "center", style = "
               position: fixed;

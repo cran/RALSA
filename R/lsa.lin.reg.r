@@ -217,6 +217,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
+    
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
     used.data <- deparse(substitute(data.file))
@@ -521,15 +522,11 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
           percentages <- data1[ , c(.(na.omit(unique(get(vars.list[["pcts.var"]])))), Map(f = wgt.pct, variable = .(get(vars.list[["pcts.var"]])), weight = mget(all.weights))), by = eval(vars.list[["group.vars"]])]
           number.of.cases <- data1[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), by = key.vars]
           sum.of.weights <- data1[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
-          
         } else {
-          
           percentages <- data[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights)))]
           number.of.cases <- data[ , .(n_Cases = .N), by = key.vars]
           sum.of.weights <- data[ , lapply(.SD, sum), by = key.vars, .SDcols = all.weights]
-          
         }
-        
       }
       
       percentages <- list(percentages)
@@ -553,7 +550,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       
       if(!is.null(vars.list[["PV.names"]])) {
         
-        PV.names.to.split.by <- transpose(vars.list[["PV.names"]])
+        PV.names.to.split.by <- transpose(vars.list[["PV.names"]]) # Uses "transpose" from the "data.table" package
         
         PV.names.to.keep <- lapply(X = PV.names.to.split.by, FUN = function(i) {
           grep(pattern = paste(c(key.vars, i, vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]], all.weights, vars.list[["jk.zones"]], vars.list[["rep.ind"]]), collapse = "|"), x = colnames(data1), value = TRUE)
@@ -576,24 +573,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
         lapply(X = bckg.regression, FUN = function(i) {
           setnames(x = i, old = "V1", new = "Variable")
         })
-        
-        bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = unlist(Filter(Negate(is.null), vars.list[c("bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars")])), data.object = data, weight.var = all.weights, keys = key.vars)
-        
-        bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        
-        bckg.vars.pct.miss <- melt(data = bckg.vars.pct.miss, id.vars = key(bckg.vars.pct.miss))
-        bckg.vars.pct.miss[ , variable := gsub(pattern = "^Percent_Missing_", replacement = "", x = variable)]
-        setnames(x = bckg.vars.pct.miss, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-        bckg.vars.pct.miss[ , Role := sapply(Variable, function(i) {
-          if(i %in% vars.list[["bckg.dep.var"]]) {
-            "bckg.dep.var"
-          } else if (i %in% vars.list[["bckg.indep.cont.vars"]]) {
-            "bckg.indep.cont.vars"
-          } else if(i %in% vars.list[["bckg.indep.cat.vars"]]) {
-            "bckg.indep.cat.vars"
-          }
-        })]
-        setcolorder(x = bckg.vars.pct.miss, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
         
       } else if(!is.null(vars.list[["PV.names"]])) {
         
@@ -649,16 +628,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
           })
         })
         
-        PVs.pct.miss <- lapply(X = vars.list[["PV.names"]], FUN = function(i) {
-          compute.cont.vars.pct.miss(vars.vector = i, data.object = na.omit(object = data, cols = key.vars), weight.var = all.weights, keys = key.vars)
-        })
-        
-        PVs.pct.miss <- Reduce(function(...) merge(..., all = TRUE), PVs.pct.miss)
-        
-        if(any(c("bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars") %in% names(vars.list)) == TRUE) {
-          bckg.vars.pct.miss <- compute.cont.vars.pct.miss(vars.vector = unlist(Filter(Negate(is.null), vars.list[c("bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars")])), data.object = data, weight.var = all.weights, keys = key.vars)
-          bckg.vars.pct.miss <- na.omit(object = bckg.vars.pct.miss, cols = key.vars)
-        }
       }
       
       if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
@@ -730,62 +699,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
         merged.PV.estimates <- PV.regression
         PV.regression <- NULL
         
-        if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
-          
-          all.PV.roots <- unlist(vars.list[c("PV.root.dep", "PV.root.indep")])
-          
-          all.PV.roots <- grep(pattern = paste(all.PV.roots, collapse = "|"), x = colnames(PVs.pct.miss), value = TRUE)
-          
-        } else {
-          
-          all.PV.roots <- unlist(vars.list[c("PV.root.dep", "PV.root.indep")])
-          
-        }
-        
-        PVs.pct.miss <- lapply(X = all.PV.roots, FUN = function(i) {
-          tmp <- cbind(PVs.pct.miss[ , mget(key(PVs.pct.miss))], rowSums(PVs.pct.miss[ , mget(grep(pattern = i, x = colnames(PVs.pct.miss), value = TRUE))])/length(grep(pattern = i, x = colnames(PVs.pct.miss), value = TRUE)))
-          setnames(x = tmp, old = "V2", new = i)
-        })
-        
-        PVs.pct.miss <- rbindlist(l = lapply(X = PVs.pct.miss, FUN = function(i) {
-          tmp <- melt(data = i, id.vars = key(i))
-          setnames(x = tmp, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-          
-          if("Role" %in% colnames(tmp)) {
-            tmp[ , Role := sapply(Variable, function(i) {
-              if(i %in% vars.list[["PV.root.dep"]]) {
-                "PV.root.dep"
-              } else if (i %in% vars.list[["PV.root.indep"]]) {
-                "PV.root.indep"
-              }
-            })]
-          }  
-          
-          if("Role" %in% colnames(tmp)) {
-            setcolorder(x = tmp, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
-          } else {
-            setcolorder(x = tmp, neworder = c(key.vars, "Variable", "Percent_Missing"))
-          }
-        }))
-        
-        if(any(c("bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars") %in% names(vars.list)) == TRUE) {
-          bckg.vars.pct.miss <- melt(data = bckg.vars.pct.miss, id.vars = key(bckg.vars.pct.miss))
-          bckg.vars.pct.miss[ , variable := gsub(pattern = "^Percent_Missing_", replacement = "", x = variable)]
-          setnames(x = bckg.vars.pct.miss, old = c("variable", "value"), new = c("Variable", "Percent_Missing"))
-          bckg.vars.pct.miss[ , Role := sapply(Variable, function(i) {
-            if(i %in% vars.list[["bckg.dep.var"]]) {
-              "bckg.dep.var"
-            } else if (i %in% vars.list[["bckg.indep.cont.vars"]]) {
-              "bckg.indep.cont.vars"
-            } else if(i %in% vars.list[["bckg.indep.cat.vars"]]) {
-              "bckg.indep.cat.vars"
-            }
-          })]
-          
-          setcolorder(x = bckg.vars.pct.miss, neworder = c(key.vars, "Variable", "Role", "Percent_Missing"))
-          PVs.pct.miss <- rbindlist(l = list(PVs.pct.miss, bckg.vars.pct.miss), fill = TRUE)
-        }
-        
       }
       
       country.model.stats[ , Statistic := factor(x = Statistic, levels = c("r.squared", "adj.r.squared", "fstatistic", "df"), labels = c("R-Squared", "Adjusted R-Squared", "F-Statistic", "DF"))]
@@ -795,7 +708,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       
       model.stats[[cnt.model.name]] <<- country.model.stats
       
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars)]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
       
@@ -812,9 +725,6 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       
       merged.outputs <- merge(x = merged.outputs, y = country.model.stats[Statistic == "DF", mget(c(key.vars, "Estimate"))], all = TRUE)
       merged.outputs[ , p_value := 2 * pt(q = -abs(t_value), df = Estimate)]
-      
-      setcolorder(x = merged.outputs, neworder = c(grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE, invert = TRUE), grep(pattern = "Percent_Missing_", x = colnames(merged.outputs), value = TRUE)))
-      
       merged.outputs[ , (c("t_value", "p_value")) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
       }), .SDcols = c("t_value", "p_value")]
@@ -843,8 +753,8 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     
-    if(length(unique(estimates[ , get(key.vars)])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars)])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
     } else {
       message("")
     }

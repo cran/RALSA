@@ -209,6 +209,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
   study.cycle <- attributes(tmp.first.file)[["cycle"]]
   tmp.first.file <- NULL
   
+  
   all.data.imported <- lapply(X = seq_along(file.types.to.merge), FUN = function(i, j, k) {
     
     ptm.import <- proc.time()
@@ -236,7 +237,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     
     import.time <- format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.import}[[3]], "%H:%M:%OS3")
     
-    
     message('   "', substr(x = basename(j[[i]])[[1]], start = 1, stop = 3), '" files imported in ', import.time)
     
     return(imported)
@@ -254,6 +254,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       data.table(V1 = names(tmp.variable.lables), V2 = unlist(tmp.variable.lables))
     })), by = "V1")
   })), by = "V1")
+  
   
   imported.data.sets.attributes <- lapply(X = all.data.imported, FUN = function(i) {
     lapply(X = i, FUN = function(j) {
@@ -549,7 +550,6 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
           
           teacher.level.data[[linkage.file]][ , (cols.to.remove) := NULL]
         }
-        
         
         lapply(X = teacher.level.data, FUN = function(i) {
           setkeyv(x = i, cols = c(key.var, add.key.2))
