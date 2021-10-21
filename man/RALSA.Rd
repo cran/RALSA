@@ -63,6 +63,12 @@ RALSA also has a Graphical User Interface (GUI) for the less technical users. Th
 }
 
 \references{
+Here are the two articles presenting the package and it's technical details:
+
+Mirazchiyski, P.V. (2021). RALSA: The R analyzer for large-scale assessments. \emph{Large-scale Assess Educ 9}(21), 1-24. https://doi.org/10.1186/s40536-021-00114-4
+
+Mirazchiyski, P. V. (2021). RALSA: Design and Implementation. \emph{Psych, 3}(2), 233-248. https://doi.org/10.3390/psych3020018
+
 Here is a list of selected references related to some of the studies' design, relevant to their latest cycles:
 
 Foy, P., & LaRoche, S. (2017). Estimating Standard Errors in the PIRLS 2016 Results. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (p. 4.1-4.22). Lynch School of Education, Boston College.

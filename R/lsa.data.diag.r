@@ -30,12 +30,12 @@
 #' @param open.output     Logical, shall the output be open after it has been written? The default
 #'                        (\code{TRUE}) opens the output in the default spreadsheet program
 #'                        installed on the computer.
-#'                        
+#'
 #' @param ...             Further arguments.
 #'
 #' @details
 #' The function produces data diagnostic tables for variables in an \code{lsa.data} set by the categories of splitting variables. The function is also applicable to data sets which are not of class \code{lsa.data}, a regular \code{data.frame} or a \code{data.table} are accepted as well. If the data is of class \code{lsa.data} and no \code{split.vars} variables are provided, the results will be automatically split and computed by country. The country ID variable will be added automatically, there is no need to specify it explicitly in \code{split.vars}. If the data is not of class \code{lsa.data} and no \code{split.vars} variables are provided, the results will be computed without any split.
-#' 
+#'
 #' Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
 #'
 #' If variables are provided for the \code{split.vars} argument and \code{include.missing = TRUE}, the function will automatically add the \code{NA} and user-defined missing values from the \code{missings} attribute (if available) of the \code{split.vars} variables to the categories to split by and will compute statistics for the provided \code{variables} for these as well. See the documentation on \code{\link{lsa.convert.data}} for more details on the conversion of data with and without user-defined missing values.
@@ -43,12 +43,12 @@
 #' If no variable names are provided to \code{variables} all variables available in the data set will be added automatically, except the weighting and splitting variables, and statistics for all of them will be computed.
 #'
 #' If the variables provided to the \code{variables} argument are factor or character, the function will compute frequencies, percentages, valid percentages, and cumulative percentages. If the variables are numeric, the computed statistics will include the total number of cases, range, minimum, maximum, mean, variance, and standard deviation. If \code{cont.freq = TRUE}, then the numeric variables will be treated as factors.
-#' 
+#'
 #' If the data set is of class \code{lsa.data} and no weight variable is provided, the computed statistics will be automatically weighted by the default weight for the respondents' data in the object. If the name of a weight variable is provided, the statistics will be weighted by it. If \code{weight.var = "none"}, the computed statistics will be unweighted. If the data is not of class \code{lsa.data} and no \code{weight.var} is provided, the computed statistics will be unweighted. If a weight variable is provided, the computed statistics will be weighted by it.
 #'
 #' @return
 #' A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The first sheet in the workbook is an \code{Index} sheet. All other sheets contain the computed statistics for the variables, one sheet per variable. The \code{Index} sheet contains columns with the names of the variables for which statistics are computed and their labels, if available. The names are clickable links, if clicked, they switch to the corresponding sheet with statistics for the corresponding variable. If the data is of class \code{lsa.data}, the \code{Index} sheet also contains information with the study name, cycle, respondent type and used weight. If the data is not of class \code{lsa.data}, the \code{Index} sheet contains information only which weight was used. Each sheet with statistics for a variable contains a clickable link to go back to the \code{Index} sheet, the variable name and label (if any), and the table with statistics for that variable.
-#' 
+#'
 #' @note
 #' This function is intended only as utility function for diagnostic purposes, to inspect the variables prior to performing an actual analysis. It is **not** intended for actual analysis of large-scale assessments' data. Reporting statistics from it can and will lead to biased and erroneous conclusions.
 #'
@@ -83,7 +83,7 @@
 #' variables = c("ACBG05A", "ACBG04", "ACBGELS", "ACBGRRS"),
 #' output.file = "C:/temp/test.xlsx", open.output = TRUE)
 #' }
-#' 
+#'
 #' # Produce diag for all variables in the data set by country and percentage of students
 #' # coming from economically affluent homes ("ASBG03B")
 #' \dontrun{
@@ -94,13 +94,9 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
-
 lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.var, cont.freq = FALSE, include.missing = FALSE, output.file, open.output = TRUE, ...) {
-  
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
-  
   convert.object <- function(obj) {
     if("variable.labels" %in% names(attributes(x = obj))) {
       var.labels <- as.list(attr(x = obj, which = "variable.labels"))
@@ -117,27 +113,20 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       setDT(obj)
     }
   }
-  
   if(!missing(data.file) & !missing(data.object)) {
-    
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(missing(data.file) & missing(data.object)) {
     stop('Neither "data.file" nor "data.object" is provided. All operations stop here. Check your input.\n\n', call. = FALSE)
   } else if(!missing(data.file) & missing(data.object)) {
-    
     if(file.exists(data.file) == FALSE) {
       stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    
     ptm.data.import <- proc.time()
     data.object <- copy(import.data(path = data.file))
-    
     message('\nData file ', deparse(substitute(data.file)), ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"))
-    
     if(!"lsa.data" %in% class(data.object)) {
       data.object <- convert.object(obj = data.object)
     }
-    
   } else if(!missing(data.object) & missing(data.file)) {
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -145,27 +134,20 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     if(!exists(all.vars(match.call()))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    
     message('\nUsing data from object "', deparse(substitute(data.object)), '".')
-    
     if(!"lsa.data" %in% class(data.object)) {
       data.object <- convert.object(obj = data.object)
     }
-    
   }
-  
   passed.vars <- as.list(sys.call())[!names(as.list(sys.call())) %in% c("", "data.file", "data.object", "output.file", "open.output", "cont.freq", "include.missing", "no.CNT.split")]
-  
   if(length(passed.vars) > 0) {
     passed.vars <- unlist(lapply(passed.vars, function(i) {
       as.character(i)[as.character(i) != "c"]
     }))
-    
     if(any(!passed.vars[passed.vars != "none"] %in% colnames(data.object))) {
       stop('One or more variable names passed to the function arguments do not exist in the data. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
   }
-  
   if("lsa.data" %in% class(data.object)) {
     if(missing(weight.var)) {
       weight.var <- get.analysis.and.design.vars(data.object)[["weight.var"]]
@@ -183,11 +165,8 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       weight.var <- weight.var
     }
   }
-  
   tryCatch({
-    
     further.args <- list(...)
-    
     if(!missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       split.vars <- unique(c(key(data.object), split.vars))
     } else if(!missing(split.vars) && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
@@ -199,7 +178,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     } else if(!missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
       split.vars <- split.vars
     }
-    
     if(missing(split.vars)) {
       if(missing(variables)) {
         variables <- colnames(data.object)[!colnames(data.object) == weight.var]
@@ -212,9 +190,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       data.object <- copy(data.object[ , c(split.vars, variables, weight.var), with = FALSE])
       setkeyv(x = data.object, split.vars)
     }
-    
     message("\nTables for a total of ", length(variables), " variables will be produced.")
-    
     if(!missing(split.vars) && length(split.vars) > 1 && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       message("The tables for each variable will be split by country ID and ", length(split.vars) - 1, " other variables.\n")
     } else if(!missing(split.vars) && length(split.vars) > 1 && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
@@ -232,17 +208,12 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     } else if(missing(split.vars) && class(data.object) != "lsa.data") {
       message("Tables will not be split by any variables.\n")
     }
-    
     message("Some computations can be rather intensive. Please be patient.\n")
-    
     ptm.computations <- proc.time()
-    
     names.and.labels <- lapply(X = data.object[ , mget(variables)], FUN = function(i) {
       attr(x = i, which = "variable.label")
     })
-    
     names.and.labels <- data.table(Names = names(names.and.labels), Labels = names.and.labels)
-    
     if(cont.freq == TRUE) {
       if(missing(split.vars)) {
         data.object[ , (variables) := lapply(.SD, function(i) {
@@ -262,7 +233,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }), .SDcols = c(split.vars, variables)]
       }
     }
-    
     if(cont.freq == FALSE) {
       data.object[ , (variables) := lapply(.SD, function(i) {
         if(class(i) == "numeric" && !is.null(attr(x = i, which = "missings"))) {
@@ -272,7 +242,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }
       }), .SDcols = variables]
     }
-    
     study.name <- NULL
     study.cycle <- NULL
     resp.type <- NULL
@@ -280,10 +249,8 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       study.name <- attr(x = data.object, which = "study")
       study.cycle <- attr(x = data.object, which = "cycle")
       resp.type <- attr(x = data.object, which = "file.type")
-      
       resp.type <- gsub(pattern = "<br/>", replacement = ", ", x = file.merged.respondents[[resp.type]])
     }
-    
     if(!missing(split.vars) & include.missing == TRUE) {
       data.object[ , (split.vars) := lapply(.SD, function(i) {
         if(is.factor(i)) {
@@ -313,13 +280,10 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       }), .SDcols = split.vars]
       data.object <- na.omit(object = data.object, cols = split.vars)
     }
-    
     analysis.vars.missings.attr <- lapply(X = data.object[ , mget(variables)], FUN = function(i) {
       attr(x = i, which = "missings")
     })
-    
     if(missing(split.vars)) {
-      
       data.object[ , (variables) := lapply(.SD, function(i) {
         if(is.factor(i)) {
           droplevels(i)
@@ -327,9 +291,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           i
         }
       }), .SDcols = variables]
-      
     } else {
-      
       data.object[ , c(variables, split.vars) := lapply(.SD, function(i) {
         if(is.factor(i)) {
           droplevels(i)
@@ -337,9 +299,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           i
         }
       }), .SDcols = c(variables, split.vars)]
-      
     }
-    
     if(!missing(split.vars)) {
       data.object <- lapply(X = data.object[ , variables, with = FALSE], FUN = function(i) {
         i <- data.table(data.object[ , c(split.vars, weight.var), with = FALSE], i)
@@ -348,7 +308,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         split(x = i, by = split.vars, drop = TRUE)
       })
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = data.object[ , mget(colnames(data.object)[colnames(data.object) != weight.var])], FUN = function(i) {
         x <- cbind(as.data.table(i), data.object[ , get(weight.var)])
@@ -401,7 +360,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       })
     }
-    
     if(missing(split.vars)) {
       desc.tables <- sapply(X = names(desc.tables), function(z) {
         if("Mean" %in% colnames(desc.tables[[z]])) {
@@ -423,7 +381,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }, USE.NAMES = TRUE, simplify = FALSE)
       }, USE.NAMES = TRUE, simplify = FALSE)
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         if(any(is.na(i[ , 1])) == TRUE) {
@@ -446,7 +403,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     } else {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
-          if("i" %in% colnames(j) && any(is.na(j[ , i])) == TRUE) { # Note here we seek for column "i", not list element "i".
+          if("i" %in% colnames(j) && any(is.na(j[ , i])) == TRUE) {
             if(is.factor(j[ , i]) == TRUE) {
               j[ , i := addNA(i)]
               tmp.levels <- levels(unlist(j[ , i]))
@@ -462,18 +419,15 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       })
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = desc.tables, FUN = as.data.table)
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         setkeyv(x = i, unlist(colnames(i)[[1]]))
       })
     } else {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
-        
         lapply(X = i, FUN = function(j) {
           if("i" %in% colnames(j)) {
             setkeyv(x = j, "i")
@@ -481,10 +435,8 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             return(j)
           }
         })
-        
       })
     }
-    
     if(missing(split.vars)) {
       desc.tables <- sapply(X = names(desc.tables), FUN = function(k) {
         var.colname <- names(desc.tables[[k]])[length(colnames(desc.tables[[k]])) - 1]
@@ -510,7 +462,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }, USE.NAMES = TRUE, simplify = FALSE)
       }, USE.NAMES = TRUE, simplify = FALSE)
     }
-    
     if(missing(split.vars)) {
       desc.tables <- sapply(X = names(desc.tables), function(k) {
         var.colname <- names(desc.tables[[k]])[length(colnames(desc.tables[[k]])) - 2]
@@ -544,7 +495,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }, USE.NAMES = TRUE, simplify = FALSE)
       }, USE.NAMES = TRUE, simplify = FALSE)
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = desc.tables, function(k) {
         var.colname <- names(k)[length(colnames(k)) - 3]
@@ -568,7 +518,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       })
     }
-    
     if(missing(split.vars)) {
       desc.tables <- sapply(X = names(desc.tables), function(j) {
         var.colname <- grep(pattern = "^i$|^i.j$", x = colnames(desc.tables[[j]]), ignore.case = TRUE, value = TRUE)
@@ -598,7 +547,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       }, USE.NAMES = TRUE, simplify = FALSE)
     }
-    
     if(missing(split.vars)) {
       desc.tables <- lapply(X = names(desc.tables), FUN = function(j) {
         var.colname <- names(desc.tables[[j]])[length(colnames(desc.tables[[j]])) - 4]
@@ -624,10 +572,8 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             j[eval(parse(text = var.colname)) %in% c("<NA>", analysis.vars.missings.attr[i]), Value_Type := "Missing"]
             j[is.na(Valid_Percent) & eval(parse(text = var.colname)) == "Total", Value_Type := "Total"]
             setcolorder(x = j, neworder = c(split.vars, "Value_Type", "i", "N", "Percent", "Valid_Percent", "Cumulative_Percent"))
-            
             j[ , Value_Type := factor(x = Value_Type, levels = c("Valid", "Missing", "Total"))]
             setkeyv(x = j, cols = c("Value_Type", "i"))
-            
             if(length(split.vars) > 1) {
               j[ , (split.vars) := lapply(.SD, function(l) {
                 unique(as.character(unlist(na.omit(l))))
@@ -650,7 +596,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       })
     }
-    
     if(!missing(split.vars)) {
       lapply(desc.tables, function(i) {
         lapply(i, function(j) {
@@ -664,19 +609,16 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         })
       })
     }
-    
     if(!missing(split.vars)) {
       desc.tables <- lapply(desc.tables, function(i) {
         i[order(names(i))]
       })
     }
-    
     if(!missing(split.vars)) {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         rbindlist(l = i)
       })
     }
-    
     desc.tables <- lapply(X = seq(desc.tables), function(i) {
       tmp <- data.table(desc.tables[[i]])
       var.colname <- grep(pattern = "^i$|^i.j$", x = colnames(tmp), value = TRUE, ignore.case = TRUE)
@@ -689,9 +631,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         return(tmp)
       }
     })
-    
     names(desc.tables) <- variables
-    
     if(!missing(split.vars) && length(split.vars) > 1) {
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         i <- split(x = i, by = colnames(i)[1])
@@ -709,132 +649,92 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           } else {
             return(j)
           }
-          
         })
       })
-      
       desc.tables <- lapply(X = desc.tables, FUN = function(i) {
         rbindlist(l = i, use.names = TRUE)
       })
-      
     }
-    
     export.workbook <- createWorkbook()
-    
     lapply(X = variables, FUN = function(i) {
       addWorksheet(wb = export.workbook, sheetName = i)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       writeData(wb = export.workbook, sheet = i, x = desc.tables[[i]], startRow = 6)
     })
-    
     apply(X = names.and.labels, MARGIN = 1, FUN = function(i) {
       var.name <- i[["Names"]]
       var.label <- i[["Labels"]]
-      
       writeData(wb = export.workbook, sheet = var.name, x = data.table(x = "Variable name", y = "Variable label"), startRow = 3, colNames = FALSE)
       writeData(wb = export.workbook, sheet = var.name, x = data.table(var.name, var.label), startRow = 4, colNames = FALSE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       setColWidths(wb = export.workbook, sheet = i, widths = "auto", cols = 1:ncol(desc.tables[[i]]))
     })
-    
     thousands.style <- createStyle(numFmt = "#,###0", valign = "center")
-    
     vertical.alignment <- createStyle(valign = "center")
-    
     percentages.style <- createStyle(numFmt = "0.0", valign = "center")
-    
     descriptives.style <- createStyle(numFmt = "0.00", valign = "center")
-    
     horizontal.alignment <- createStyle(halign = "center")
-    
     border.style <- createStyle(border = c("top", "bottom", "left", "right"))
-    
     grey.highlight.style <- createStyle(fgFill = "#eaeaea")
-    
     table.header.style <- createStyle(fgFill = "#000000", textDecoration = "bold", fontColour = "#ffffff", border = c("top", "bottom", "left", "right"), borderColour = "#ffffff", borderStyle = "double")
-    
     return.index.style <- createStyle(fgFill = "#ffff00", textDecoration = "bold")
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = vertical.alignment, cols = 1:ncol(desc.tables[[i]]), rows = c(3:4, 6:(nrow(desc.tables[[i]]) + 6)), gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, rows = 6:(nrow(desc.tables[[i]]) + 6), cols = grep(pattern = "Frequency|^N$", x = colnames(desc.tables[[i]])), style = thousands.style, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, rows = 6:(nrow(desc.tables[[i]]) + 6), cols = grep(pattern = "Percent|Valid_Percent|Cumulative_Percent", x = colnames(desc.tables[[i]])), style = percentages.style, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, rows = 6:(nrow(desc.tables[[i]]) + 6), cols = grep(pattern = "Range|Minimum|Maximum|Mean|Variance|SD", x = colnames(desc.tables[[i]])), style = descriptives.style, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = horizontal.alignment, cols = 1:ncol(desc.tables[[i]]), rows = 6, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = vertical.alignment, cols = 1:2, rows = 1, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = border.style, cols = 1:6, rows = 4, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = table.header.style, cols = 1:6, rows = 3, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = grey.highlight.style, cols = 1:6, rows = 4, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = table.header.style, cols = 1:ncol(desc.tables[[i]]), rows = 6, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = return.index.style, cols = 1:6, rows = 1, gridExpand = TRUE, stack = TRUE)
     })
-    
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = border.style, cols = 1:ncol(desc.tables[[i]]), rows = 7:(nrow(desc.tables[[i]]) + 6), gridExpand = TRUE, stack = TRUE)
     })
-    
     addWorksheet(wb = export.workbook, sheetName = "Index", tabColour = "#FE001A")
-    
     setColWidths(wb = export.workbook, sheet = "Index", cols = 1, widths = (max(nchar(c("Variable names", variables))) + 5))
     setColWidths(wb = export.workbook, sheet = "Index", cols = 2, widths = (max(nchar(c("Variable labels", names.and.labels[ , Labels]))) + 10))
     setColWidths(wb = export.workbook, sheet = "Index", cols = 4:5, widths = "auto")
     addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:(length(variables) +1), cols = 1:2, gridExpand = TRUE, stack = TRUE)
     addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:2, cols = 4:5, gridExpand = TRUE, stack = TRUE)
-    
     write.sheet.links <- function(table.names, names.seq.num) {
-      
       writeFormula(wb = export.workbook, sheet = "Index", startCol = 1, startRow = names.seq.num, x = makeHyperlinkString(sheet = table.names, text = table.names))
-      
     }
-    
     mapply(write.sheet.links, table.names = names.and.labels[ , Names], names.seq.num = 2:(length(variables) + 1))
-    
     writeData(
       wb = export.workbook,
       sheet = "Index",
       x = data.table(names.and.labels[ , Labels]), startCol = 2,
       startRow = 2,
       colNames = FALSE)
-    
     writeData(wb = export.workbook, sheet = "Index", x = data.table("Variable names", "Variable labels"), startCol = 1, startRow = 1, colNames = FALSE)
-    
     addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 1:2, style = table.header.style, stack = TRUE)
     addStyle(wb = export.workbook, sheet = "Index", rows = 2:(length(variables) + 1), cols = 1:2, style = border.style, gridExpand = TRUE, stack = TRUE)
-    
     if(!is.null(study.name)) {
       if(weight.var != "TMPWGT") {
         export.weight.var <- weight.var
@@ -856,103 +756,73 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 4, style = table.header.style, stack = TRUE)
       addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
     }
-    
     worksheetOrder(wb = export.workbook) <- c(length(sheets(export.workbook)), 1:length(variables))
-    
     lapply(X = variables, FUN = function(i) {
       writeFormula(wb = export.workbook, sheet = i, startCol = 1, startRow = 1, x = makeHyperlinkString(sheet = "Index", text = "<<Return to the 'Index' sheet"))
     })
-    
     lapply(X = variables, FUN = function(i) {
       mergeCells(wb = export.workbook, sheet = i, cols = 1:6, rows = 1)
     })
-    
     if(missing(split.vars)) {
       cells.with.valid <- lapply(X = desc.tables, FUN = function(i) {
         grep(pattern = "^Valid$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
       })
-      
       valid.cells.ranges <- lapply(X = cells.with.valid, FUN = function(i) {
         split(x = i, f = cumsum(c(TRUE, diff(i) != 1)))
       })
-      
       merging.statements <- lapply(X = valid.cells.ranges, FUN = function(i) {
         sapply(X = i, function(j) {
           paste0("mergeCells(wb = export.workbook, cols = 1, rows = ", list(j))
         })
       })
-      
       merging.statements <- lapply(X = merging.statements, FUN = function(i) {
         unlist(x = i[!sapply(X = i, FUN = is.null)])
       })
-      
       merging.statements <- merging.statements[!sapply(X = merging.statements, FUN = is.null)]
-      
       merging.statements <- Map(f = paste0, merging.statements, ", sheet = '", as.list(names(merging.statements)), "')")
-      
       eval(parse(text = unlist(merging.statements)))
-      
       cells.with.missings <- lapply(X = desc.tables, FUN = function(i) {
         grep(pattern = "^Missing$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
       })
-      
       cells.with.missings <- Filter(length, cells.with.missings)
-      
       if(length(cells.with.missings)) {
-        
         missings.cells.ranges <- lapply(X = cells.with.missings, FUN = function(i) {
           split(x = i, f = cumsum(c(TRUE, diff(i) != 1)))
         })
-        
         merging.statements <- lapply(X = missings.cells.ranges, FUN = function(i) {
           sapply(X = i, function(j) {
             paste0("mergeCells(wb = export.workbook, cols = 1, rows = ", list(j))
           })
         })
-        
         merging.statements <- lapply(X = merging.statements, FUN = function(i) {
           unlist(x = i[!sapply(X = i, FUN = is.null)])
         })
-        
         merging.statements <- merging.statements[!sapply(X = merging.statements, FUN = is.null)]
-        
         merging.statements <- Map(f = paste0, merging.statements, ", sheet = '", as.list(names(merging.statements)), "')")
-        
         eval(parse(text = unlist(merging.statements)))
       }
     } else {
       unique.split.cats.cells <- lapply(X = desc.tables, FUN = function(i) {
-        
         unique.ranges.split.vars <- lapply(X = i[ , mget(split.vars)], FUN = function(j) {
-          
           tmp.vals <- unique(as.character(j))
-          
           tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
             which(k == j)
           })
-          
           tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
             tmp.ranges <- split(k, cumsum(c(1, diff(k) != 1)))
-            
             lapply(X = tmp.ranges, FUN = function(l) {
               l <- l + 6
               paste(c(l[1], l[length(l)]), collapse = ":")
             })
           })
-          
           unlist(tmp.vals)
-          
         })
-        
       })
-      
       unique.split.cats.cells <- lapply(X = unique.split.cats.cells, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           j[!j == "NA"]
         })
       })
-      
-      
       merging.statements.split.vars <- lapply(X = names(unique.split.cats.cells), FUN = function(i) {
         lapply(X = names(unique.split.cats.cells[[i]]), FUN = function(j) {
           lapply(X = unique.split.cats.cells[[i]][[j]], FUN = function(k) {
@@ -960,13 +830,10 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           })
         })
       })
-      
       eval(parse(text = unlist(merging.statements.split.vars)))
-      
       unique.split.cats.value.types <- lapply(X = unique.split.cats.cells, FUN = function(i) {
         i[length(i)]
       })
-      
       unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           lapply(X = j, FUN = function(k) {
@@ -974,7 +841,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           })
         })
       })
-      
       unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           Filter(length, lapply(X = j, FUN = function(k) {
@@ -982,16 +848,12 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           }))
         })
       })
-      
-      
       not.valid.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
         unlist(lapply(X = i, FUN = function(j) {
           grep(pattern = "^Valid$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
         }))
       }, USE.NAMES = TRUE, simplify = FALSE)
-      
       if(length(unlist(not.valid.positions)) != 0) {
-        
         not.valid.positions <- Map(f = function(list1, list2) {
           lapply(X = list1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
@@ -999,7 +861,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             })
           })
         }, list1 = unique.split.cats.value.types, list2 = not.valid.positions)
-        
         merging.statements.value.type <- lapply(X = names(not.valid.positions), FUN = function(i) {
           lapply(X = not.valid.positions[[i]], FUN = function(j) {
             lapply(X = j, FUN = function(k) {
@@ -1007,18 +868,14 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             })
           })
         })
-        
         eval(parse(text = unlist(merging.statements.value.type)))
       }
-      
       not.missing.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
         unlist(lapply(X = i, FUN = function(j) {
           grep(pattern = "^Missing$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
         }))
       }, USE.NAMES = TRUE, simplify = FALSE)
-      
       if(length(unlist(not.missing.positions)) != 0) {
-        
         not.missing.positions <- Map(f = function(list1, list2) {
           lapply(X = list1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
@@ -1026,15 +883,12 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             })
           })
         }, list1 = unique.split.cats.value.types, list2 = not.missing.positions)
-        
         not.missing.positions <- Filter(length, not.missing.positions)
-        
         not.missing.positions <- lapply(X = not.missing.positions, FUN = function(i) {
           lapply(X = i, FUN = function(j) {
             Filter(length, j)
           })
         })
-        
         merging.statements.value.type <- lapply(X = names(not.missing.positions), FUN = function(i) {
           lapply(X = not.missing.positions[[i]], FUN = function(j) {
             lapply(X = j, FUN = function(k) {
@@ -1042,80 +896,55 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             })
           })
         })
-        
         merging.statements.value.type <- unlist(merging.statements.value.type)
-        
         if(!is.null(merging.statements.value.type)) {
           eval(parse(text = merging.statements.value.type))
         }
       }
-      
     }
-    
     if(missing(split.vars)) {
-      
       rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
         if("Total" %in% desc.tables[[i]][ , Value_Type]) {
           which(desc.tables[[i]][ , Value_Type] == "Total" & desc.tables[[i]][ , get(i)] == "Total") + 6
         }
       }, USE.NAMES = TRUE, simplify = FALSE)
-      
       if(!is.null(unlist(rows.grand.total))) {
-        
         rows.grand.total <- Filter(Negate(is.null), rows.grand.total)
-        
         merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
           paste0("mergeCells(wb = export.workbook, cols = 1:2, rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
         })
-        
         eval(parse(text = unlist(merge.statements.grand.total)))
-        
       }
-      
     } else if(!missing(split.vars)) {
       rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
         grep(pattern = "^Total", x = unlist(desc.tables[[i]][ , mget(colnames(desc.tables[[i]])[[1]])])) + 6
       }, USE.NAMES = TRUE, simplify = FALSE)
-      
       if(length(unlist(rows.grand.total)) != 0) {
-        
         rows.grand.total <- Filter(length, rows.grand.total)
-        
         remove.merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
           paste0("removeCellMerge(wb = export.workbook, cols = ", 1, ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
         })
-        
         eval(parse(text = unlist(remove.merge.statements.grand.total)))
-        
         merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
           paste0("mergeCells(wb = export.workbook, cols = ", paste0("1:", (length(split.vars) + 2)), ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
         })
-        
         eval(parse(text = unlist(merge.statements.grand.total)))
       }
     }
-    
     lapply(X = variables, FUN = function(i) {
       mergeCells(wb = export.workbook, cols = 2:6, rows = 3, sheet = i)
       mergeCells(wb = export.workbook, cols = 2:6, rows = 4, sheet = i)
     })
-    
     freezePane(wb = export.workbook, sheet = "Index", firstRow = TRUE)
-    
     freeze.statements <- sapply(X = variables, FUN = function(i) {
       paste0("freezePane(wb = export.workbook, sheet = '", i, "', firstActiveRow = 7)")
     })
-    
     eval(parse(text = freeze.statements))
-    
     message('Statistics for all ', length(variables), ' variables computed in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.computations}[[3]], "%H:%M:%OS3"), "\n")
-    
     if(missing(output.file)) {
       output.file <- file.path(getwd(), "Analysis.xlsx")
     }
-    
     does.file.exist <- file.exists(output.file)
-    
     withCallingHandlers(
       saveWorkbook(wb = export.workbook, file = output.file, overwrite = TRUE),
       warning = function(w){
@@ -1125,17 +954,13 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           message(w$message)
         }
       })
-    
     if(does.file.exist == TRUE) {
       warning('The destination file in "output.file" already existed. It was overwritten.', call. = FALSE)
     }
-    
     if(open.output == TRUE && file.exists(output.file)) {
       openXL(file = output.file)
     }
-    
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  
 }

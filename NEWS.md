@@ -1,3 +1,24 @@
+# RALSA v.1.0.2 (2021-10-21)
+This is a maintenance version fixing some bugs and removing package dependency
+
+## Bug fixes
+* `lsa.pcts.means` function crashes with an error message when no split variables are added and both background variables and PVs are added to compute means for. Thanks to an anonymous RALSA user.
+
+* `lsa.bin.log.reg` function crashes when the variable name passed to `bin.dep.var` contains numeric characters.
+
+* `lsa.lin.reg` function crashes when the variable name passed to `bckg.dep.var` contains numeric characters.
+
+* When used in the GUI, the `lsa.recode.vars` assigns the new value labels to the recoded values in incorrect order. Thanks to multiple workshop participants at the ECER 2021 pre-conference training.
+
+## Miscellaneous
+* The `gdata` package is no longer needed by `RALSA`.
+
+* Start up and warning messages when dependencies are loaded during GUI start are not displayed anymore.
+
+
+
+
+
 # RALSA v.1.0.1 (2021-05-28)
 This is a maintenance version following the update of base R to v4.1.0 where some functions' behavior has changed and cause crashes in the analysis functions
 
@@ -33,7 +54,7 @@ This is a maintenance version following the update of base R to v4.1.0 where som
 
 * GUI with `lsa.recode.vars`. Occasionally, when the `lsa.recode.vars` function is executed by pressing the "Execute syntax" button, the interface crashes. This is because there is a factor level for which no actual values exist in the data. Now handled with custom error message.
 
-* `lsa.merge.data` function. The school weight was dropped when merging school and teacher data in TALIS which prevented the use of the merged file in multilevel models. Thank to Jelena Veletic.
+* `lsa.merge.data` function. The school weight was dropped when merging school and teacher data in TALIS which prevented the use of the merged file in multilevel models. Thanks to Jelena Veletic.
 
 ## New functionality
 * RALSA has a new data preparation function, `lsa.data.diag`, a quick automated production of weighted or unweighted frequency tables for categorical variables and descriptive statistics for continuous variables. These tables are for data diagnostic purposes prior to analysis and are not for reporting results from large-scale assessments.
@@ -52,7 +73,7 @@ This is a maintenance version following the update of base R to v4.1.0 where som
 # RALSA v.0.90.3 (2021-03-15)
 
 ## Bug fixes
-* `lsa.convert.data` function. The function crashes when the different cycles of the study change the case of the file names and their extensions. Thank to Yuan-Ling (Linda) Liaw.
+* `lsa.convert.data` function. The function crashes when the different cycles of the study change the case of the file names and their extensions. Thanks to Yuan-Ling (Linda) Liaw.
 
 * `lsa.recode.vars` function. If the recoding instruction ends with semicolon, the function crashes.
 

@@ -54,6 +54,12 @@
 #' RALSA also has a Graphical User Interface (GUI) for the less technical users. The GUI incorporates all aspects of the data preparation and analysis functions.
 #'
 #' @references
+#' 
+#' Here are the two articles presenting the package and it's technical details:
+#' 
+#' Mirazchiyski, P.V. (2021). RALSA: The R analyzer for large-scale assessments. \emph{Large-scale Assess Educ 9}(21), 1-24. https://doi.org/10.1186/s40536-021-00114-4
+#' 
+#' Mirazchiyski, P. V. (2021). RALSA: Design and Implementation. \emph{Psych, 3}(2), 233-248. https://doi.org/10.3390/psych3020018
 #'
 #' Here is a list of selected references related to some of the studies' design, relevant to their latest cycles:
 #'
@@ -73,12 +79,11 @@
 #' @name RALSA
 #' @import data.table openxlsx stringr foreign readr stringi shiny shinydashboard shinyFiles
 #' @importFrom DT JS renderDT DTOutput
-#' @importFrom gdata mapLevels
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
-#' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula qnorm setNames
+#' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames
 #' @importFrom utils head tail menu
 NULL
 #> NULL
 
-globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i"))
+globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type"))
