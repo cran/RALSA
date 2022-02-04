@@ -36,7 +36,7 @@ More studies (national international) will be added in future.
 
 \section{Functions}{
 
-Currently, RALSA provides the following functions:
+Currently, RALSA provides the following functionality:
 \itemize{
 \item Data preparation functions - prepare data for analysis
 \itemize{
@@ -51,6 +51,7 @@ Currently, RALSA provides the following functions:
 \item \code{lsa.pcts.means} Computes percentages of respondents and means for continuous variables within groups
 \item \code{lsa.prctls} Computes percentiles of continuous variables within groups
 \item \code{lsa.bench} Computes percentages of respondents reaching or surpassing benchmarks of achievement
+\item \code{lsa.crosstabs} Crosstabulations with Rao-Scott first- and second-order chi-square adjustments
 \item \code{lsa.corr} Computes correlations between variables (Pearson or Spearman)
 \item \code{lsa.lin.reg} Computes linear regression with or without contrast coding of categorical variables
 \item \code{lsa.bin.log.reg} Computes binary logistic regression with or without contrast coding of categorical variables

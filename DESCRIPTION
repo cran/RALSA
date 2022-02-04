@@ -1,8 +1,8 @@
 Package: RALSA
 Type: Package
 Title: R Analyzer for Large-Scale Assessments
-Version: 1.0.2
-Date: 2021-10-21 18:00
+Version: 1.1.0
+Date: 2022-02-04 18:00
 Authors@R: c(person(given = "Plamen V.",
                     family = "Mirazchiyski",
                     role = c("aut", "cre"),
@@ -37,6 +37,6 @@ License: GPL-2
 URL: http://ralsa.ineri.org/
 RoxygenNote: 7.1.2
 NeedsCompilation: no
-Packaged: 2021-10-21 14:57:27 UTC; Plamen
+Packaged: 2022-02-03 21:40:36 UTC; Plamen
 Repository: CRAN
-Date/Publication: 2021-10-21 15:20:05 UTC
+Date/Publication: 2022-02-04 13:10:02 UTC

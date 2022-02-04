@@ -43,6 +43,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
+
 lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -126,7 +127,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
   if(is.null(which.combination.exists)) {
     stop('Merging files for the respondent types specified in the "file.types" argument (', paste(names(file.types), collapse = ', '), ") is not possible. Check the RALSA documentation for the possible merging options in ", study.name, ". All operations stop here. Check your input.\n\n", call. = FALSE)
   }
-  if(study.name %in% c("TIMSS", "TIMSS Advanced", "preTIMSS", "eTIMSS", "PIRLS", "prePIRLS", "ePIRLS", "TiPi", "CivED") && grepl(pattern = "tch", x = which.combination.exists[length(which.combination.exists)]) == TRUE) {
+  if(study.name %in% c("TIMSS", "TIMSS Advanced", "preTIMSS", "eTIMSS PSI", "PIRLS", "prePIRLS", "ePIRLS", "TiPi", "CivED") && grepl(pattern = "tch", x = which.combination.exists[length(which.combination.exists)]) == TRUE) {
     tch.stud.link.files <- list.files(path = inp.folder, pattern = paste("^.st|^bl_", ISO, sep = "", collapse = "|"))
     tch.stud.link.files <- grep(pattern = paste(ISO, collapse = "|"), x = tch.stud.link.files, ignore.case = TRUE, value = TRUE)
     if(length(tch.stud.link.files) == 0) {
@@ -402,14 +403,14 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
           teacher.level.data <- data.obj[intersect(c(linkage.file, all.file.types[["teacher.file.types"]]), imported.files)]
           bckg.file.names <- intersect(all.file.types[["teacher.file.types"]], names(teacher.level.data))
           teacher.level.data <- teacher.level.data[c(bckg.file.names, linkage.file)]
-          if(study.name == "TIMSS" && "btm" %in% names(teacher.level.data)) {
+          if(study.name %in% c("TIMSS", "eTIMSS PSI") && "btm" %in% names(teacher.level.data)) {
             if(is.factor(teacher.level.data[["bst"]][, MATSUBJ])) {
               teacher.level.data[["bst"]] <- teacher.level.data[["bst"]][MATSUBJ == "Yes", ]
             } else {
               teacher.level.data[["bst"]] <- teacher.level.data[["bst"]][MATSUBJ == 1, ]
             }
             teacher.level.data[["bst"]][ , SCIWGT := NULL]
-          } else if(study.name == "TIMSS" && "bts" %in% names(teacher.level.data)) {
+          } else if(study.name %in% c("TIMSS", "eTIMSS PSI") && "bts" %in% names(teacher.level.data)) {
             if(is.factor(teacher.level.data[["bst"]][, SCISUBJ])) {
               teacher.level.data[["bst"]] <- teacher.level.data[["bst"]][SCISUBJ == "Yes", ]
             } else {
@@ -500,7 +501,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         }
         setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
         setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
-        if(study.name %in% c("CivED", "ICCS", "ICILS") || study.name == "TIMSS" && study.cycle == "1999" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
+        if(study.name %in% c("CivED", "ICCS", "ICILS", "REDS") || study.name == "TIMSS" && study.cycle == "1999" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
           final.merged.data <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
         } else {
           final.merged.data <- merge(x = school.level.data, y = student.level.data, all.x = TRUE)
@@ -523,7 +524,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         if(!study.name %in% c("CivED", "SITES")) {
           suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
         }
-        if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES") || study.name == "TALIS" & study.cycle == "2018" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
+        if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS") || study.name == "TALIS" & study.cycle == "2018" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
           final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.y = TRUE)
         } else {
           final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.x = TRUE)

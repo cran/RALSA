@@ -50,6 +50,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.recode.vars}}
 #' @export
+
 lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.file = FALSE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)

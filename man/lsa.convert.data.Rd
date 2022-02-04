@@ -2,6 +2,7 @@
 % Please edit documentation in R/lsa.convert.data.r
 \name{lsa.convert.data}
 \alias{lsa.convert.data}
+\alias{print.lsa.data}
 \title{Convert Large-Scale Assessments' Datasets to .RData Format}
 \usage{
 lsa.convert.data(
@@ -11,9 +12,11 @@ lsa.convert.data(
   missing.to.NA = FALSE,
   out.folder
 )
+
+\method{print}{lsa.data}(x, col.nums, ...)
 }
 \arguments{
-\item{inp.folder}{The folder containing the IEA-like SPSS data files or text ASCII files and
+\item{inp.folder}{The folder containing the IEA-like SPSS data files or ASCII text files and
 \code{.sps} import files for OECD PISA data from cycles prior to 2015 (see the details).
 If blank, the working directory (\code{getwd()}) is used.}
 
@@ -40,6 +43,12 @@ an attribute \code{missings} for each variable.}
 \item{out.folder}{Path to the folder where the converted files will be stored. If blank, same
 as the \code{inp.folder}, and if the \code{inp.folder} is missing as well,
 this will be \code{getwd()}.}
+
+\item{x}{\code{lsa.data} object.}
+
+\item{col.nums}{Which columns to print, positions by number.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class. The \code{data.table} object has the same name as the \code{.RData} file it is saved in. The object has additional attributes: study name (\code{study}), study cycle (\code{cycle}), and respondent file type (\code{file.type}). Each variable has its own additional attributes: its own label attached to it, if it existed in the source SPSS file. If the \code{missing.to.NA} was set to \code{TRUE}, each variable has an attribute \code{missings}, containing the user-defined missing values from the SPSS files.
@@ -47,12 +56,13 @@ this will be \code{getwd()}.}
 The object in the \code{.RData} file is keyed on the country ID variable.
 }
 \description{
-\code{lsa.convert.data} converts datasets from large-scale assessments from their original (SPSS) format into \code{.RData} files.
+\code{lsa.convert.data} converts datasets from large-scale assessments from their original formats (SPSS or ASCII text) into \code{.RData} files. \code{print} prints the properties of an \code{lsa.data} objects on screen.
 }
 \details{
+The \code{lsa.convert.data} function converts the originally provided data files into \code{.RData} sets. The \code{print} function adds its own printing method on how to print \code{lsa.data} objects on screen.
 IEA studies, as well as some OECD ones and those conducted by multiple organizations, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. Cycles of OECD PISA prior to 2015, on the other hand, do not provide SPSS \code{.sav} or other binary files, but ASCII text files, accompanied with SPSS syntax (\code{.sps}) files that are used to import the text files into SPSS. These files are per each type of respondent containing all countries' data. The \code{lsa.convert.data} function converts the data from either source assuring that the structure of the output \code{.RData} files is the same, although the structure of the input files is the different (SPSS binary files vs. ASCII text files plus import \code{.sps} files). The data from PISA 2015 and later, on the other hand, is provided in SPSS format (all countries in one file per type of respondent). Thus, the \code{PISApre15} argument needs to be specified as \code{TRUE} when converting data sets from PISA prior to its 2015 cycle. The default for the \code{PISApre15} argument is \code{FALSE} which means that the function expects to find IEA-like SPSS binary files per country and type of respondent in the directory in \code{inp.folder} or OECD PISA 2015 (or later) SPSS \code{.sav} files. If \code{PISApre15 = TRUE} and country codes are provided to \code{ISO}, they will be ignored because PISA files contain data from all countries together.
 
-The files to be converted must be in a folder on their own, from a single study, single cycle and single population. In case of OECD PISA prior 2015, the folder must contain both the ASCII text files and the SPSS \code{.sps} import syntax files. If the folder contains data sets from more than one study or cycle, the operation will break with error messages.
+The files to be converted must be in a folder on their own, from a single study, single cycle and single population. In addition, if there are more than one file types per study, cycle and population, these also must be in different folders. For example, in TIMSS 2019 the grade 8 data files are main (end with "m7", electronic version of the paper administered items), bridge (end with "b7", paper administration with trend items for countries participating in previous TIMSS cycles) and Problem Solving and Inquiry (PSI) tasks (end with "z7", electronic administration only, optional for countries). These different types must be in separate folders. In case of OECD PISA prior 2015, the folder must contain both the ASCII text files and the SPSS \code{.sps} import syntax files. If the folder contains data sets from more than one study or cycle, the operation will break with error messages.
 
 If the path for the \code{inp.folder} argument is not specified, the function will search for files in the working directory (i.e. as returned by \code{getwd()}). If folder path for the the \code{out.folder} is not specified, it will take the one from the \code{inp.folder} and the files will be stored there. If both the \code{inp.folder} and \code{out.folder} arguments are missing, the directory from \code{getwd()} will be used to search, convert and store files.
 

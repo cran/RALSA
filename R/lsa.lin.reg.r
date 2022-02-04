@@ -28,6 +28,7 @@
 #'                             contrasts to compute in case \code{bckg.indep.cat.vars} are provided. See details.
 #' @param PV.root.indep        The root names for a set of plausible values used as a independent variables
 #'                             in the model. See details.
+#' @param interactions         Interaction terms - a list containing vectors of length of two. See details.
 #' @param standardize          Shall the dependent and independent variables be standardized to produce
 #'                             beta coefficients? The default is \code{FALSE}. See details.
 #' @param weight.var           The name of the variable containing the weights. If no name of a weight
@@ -38,7 +39,7 @@
 #'                             default (\code{FALSE}) takes all cases on the splitting variables
 #'                             without missing values before computing any statistics. See details.
 #' @param shortcut             Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-#'                             TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
+#'                             TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
 #'                             The default (\code{FALSE}) applies the "full" design when computing
 #'                             the variance components and the standard errors of the estimates.
 #' @param output.file          Full path to the output file including the file name. If omitted,
@@ -70,9 +71,19 @@
 #'
 #' Computation of regression coefficients involving plausible values requires providing a root of the plausible values names in \code{PV.root.dep} and/or \code{PV.root.indep}. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per construct (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.dep} or \code{PV.root.indep} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.dep} or \code{PV.root.indep} as "PV#CIV". More than one set of PVs can be added in \code{PV.root.indep}.
 #'
+#' The function can also compute two-way interaction effects between independent variables by passing a list to the \code{interactions} argument. The list must contain vectors of length two and all variables in these vectors **must also be passed as independent variables** (see the examples). Note the following:
+#' \itemize{
+#' \item When an interaction is between two independent background continuous variables (i.e. both are passed to \code{bckg.indep.cont.vars}), the interaction effect will be computed between them as they are.
+#' \item When the interaction is between two categorical variables (i.e. both are passed to \code{bckg.indep.cat.vars}), the interaction effect will be computed between each possible pair of categories of the two variables, except for the reference categories.
+#' \item When the interaction is between one continuous (i.e. passed to \code{bckg.indep.cont.vars}) and one categorical (i.e. passed to \code{bckg.indep.cat.vars}), the interaction effect will be computed between the continuous variable and each category of the categorical variable, except for the reference category.
+#' \item When the interaction is between a continuous variable (i.e. passed to \code{bckg.indep.cont.vars}) and a set of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the continuous variable and each PV in the set and the results are aggregated.
+#' \item When the interaction is between a categorical variable  (i.e. passed to \code{bckg.indep.cat.vars}) and a set of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between each category of the categorical variable (except the reference category) and each PV in the set. The results are aggregated for each of the categories of the categorical variables and the set of PVs.
+#' \item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
+#' }
+#'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
-#' The \code{shortcut} argument is valid only for TIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+#' The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #' The function provides two-tailed \emph{t}-test and \emph{p}-values for the regression coefficients.
 #'
 #' @return
@@ -94,6 +105,9 @@
 #'   \item t_value - the \emph{t}-test value for the regression coefficients.
 #'   \item p_value - the \emph{p}-value for the regression coefficients.
 #' }
+#'
+#' When interaction terms are included, the cells with the interactions in the \code{Variables} column will contain the names of the two variables in each of the interaction terms, divided by colon, e.g. \code{ASBGSSB:ASBGHRL}.
+#'
 #' The second sheet contains the model statistics:
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -163,6 +177,13 @@
 #' bckg.ref.cats = c(2, 3))
 #' }
 #'
+#' # Compute linear regression with interaction terms using PIRLS 2016 student data.
+#' \dontrun{
+#' lsa.lin.reg(data.file = "C:/temp/test.RData", bckg.dep.var = "ASBGSB",
+#' bckg.indep.cont.vars = c("ASBGSSB", "ASBGHRL"), bckg.indep.cat.vars = "ASBG01",
+#' interactions = list(c("ASBG01", "ASBGSSB"), c("ASBGHRL", "ASBGSSB")))
+#' }
+#'
 #' @references
 #' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
 #' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
@@ -170,7 +191,8 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.root.dep, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, standardize = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
+
+lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.root.dep, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, interactions, standardize = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -188,6 +210,21 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
   }
   if(!missing(bckg.ref.cats) && !is.numeric(bckg.ref.cats)) {
     stop('The reference category passed to "bckg.ref.cats" must be a numeric value. All operations stop here. Check your input.\n\n', call. = FALSE)
+  }
+  if(!missing(interactions)) {
+    indeps.passed <- as.list(sys.call())
+    indeps.passed <- indeps.passed[c("bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")]
+    indeps.passed <- lapply(X = indeps.passed, FUN = eval)
+    indeps.passed <- unname(sort(unlist(indeps.passed[!is.na(names(indeps.passed))])))
+    if(!all(sort(unlist(unique(interactions))) %in% indeps.passed)) {
+      stop('The variables passed to "interactions" must be present in "bckg.indep.cont.vars", "bckg.indep.cat.vars" and "PV.root.indep". Check your input.\n\n', call. = FALSE)
+    }
+    if(!is.list(interactions)) {
+      stop('The "interactions" argument is not a list. Check your input.\n\n', call. = FALSE)
+    }
+    if(!all(sapply(X = interactions, length) == 2)) {
+      stop('Two-way interactions are supported only. The individual vectors of variable names in the "interactions" argument must be pairs of variable names. Check your input.\n\n', call. = FALSE)
+    }
   }
   if(!missing(bckg.indep.cat.vars) & missing(bckg.cat.contrasts)) {
     bckg.cat.contrasts <- rep(x = "dummy", times = length(bckg.indep.cat.vars))
@@ -221,6 +258,12 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
   vars.list <- get.analysis.and.design.vars(data)
+  if(!missing(split.vars)) {
+    vars.list[["split.vars"]] <- vars.list[["split.vars"]][!split.vars == key(data)]
+    if(length(vars.list[["split.vars"]]) == 0) {
+      vars.list[["split.vars"]] <- NULL
+    }
+  }
   if(!missing(bckg.indep.cat.vars) & missing(bckg.ref.cats)) {
     bckg.ref.cats <- sapply(X = data[ , mget(vars.list[["bckg.indep.cat.vars"]])], FUN = function(i) {
       min(na.omit(as.numeric(i)))
@@ -230,10 +273,10 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
   tryCatch({
-    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
+    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
-    data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    data <- produce.analysis.data.table(data.object = data, object.variables = vars.list[names(vars.list) != "interactions"], action.arguments = action.args.list, imported.file.attributes = file.attributes)
     data <- lapply(X = data, FUN = function(i) {
       i <- na.omit(object = i, cols = unlist(vars.list[c("bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bckg.cat.contrasts", "bckg.ref.cats")]))
       i[get(vars.list[["weight.var"]]) > 0, ]
@@ -387,6 +430,86 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       } else if(is.character(dependent.variable) && is.list(independent.variables)) {
         regression.formula <- Map(f = paste, dependent.variable, list(independent.variables), sep = " ~ ")
       }
+      if("interactions" %in% names(vars.list)) {
+        interaction.terms <- lapply(X = vars.list[["interactions"]], FUN = function(i) {
+          if(exists("bckg.cat.vars.new.names")) {
+            cat.interaction.vars <- grep(pattern = paste(i, collapse = "|"), x = bckg.cat.vars.new.names, value = TRUE)
+          }
+          if(!is.null(vars.list[["bckg.indep.cont.vars"]])) {
+            cont.interaction.vars <- grep(pattern = paste(i, collapse = "|"), x = bckg.indep.cont.vars, value = TRUE)
+          }
+          if(exists("independent.variables.PV")) {
+            PV.interaction.vars <- lapply(X = independent.variables.PV, FUN = function(j) {
+              if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
+                grep(pattern = paste(i, collapse = "|"), x = unlist(j), value = TRUE)
+              } else if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
+                grep(pattern = paste(gsub(pattern = "#", replacement = "[[:digit:]]+", x = i), collapse = "|"), x = unlist(j), value = TRUE)
+              }
+            })
+          }
+          which.interact.terms.exist <- names(which(sapply(X = c("cat.interaction.vars", "PV.interaction.vars", "cont.interaction.vars"), FUN = function(i) {exists(i)}) == TRUE))
+          Filter(length, mget(which.interact.terms.exist))
+        })
+        interaction.terms <- lapply(interaction.terms, function(i) {
+          lapply(i, function(j) {
+            Filter(length, j)
+          })
+        })
+        interaction.terms <- lapply(interaction.terms, function(i) {
+          Filter(length, i)
+        })
+        interaction.terms <- lapply(X = interaction.terms, FUN = function(i) {
+          if(length(i) == 1 && names(i) == "cat.interaction.vars") {
+            paste(unlist(i), collapse = ":")
+          } else if(length(i) == 1 && names(i) == "cont.interaction.vars") {
+            paste(unlist(i), collapse = ":")
+          } else if(length(i) == 2 && identical(names(i), c("cat.interaction.vars", "cont.interaction.vars"))) {
+            paste(c(i[[1]], i[[2]]), collapse = ":")
+          } else if(length(i) == 2 && identical(names(i), c("cont.interaction.vars", "cat.interaction.vars"))) {
+            paste(c(i[[1]], i[[2]]), collapse = ":")
+          } else if(length(i) == 2 && identical(names(i), c("cat.interaction.vars", "PV.interaction.vars"))) {
+            lapply(X = unlist(i[["PV.interaction.vars"]]), FUN = function(j) {
+              paste(c(i[["cat.interaction.vars"]], j), collapse = ":")
+            })
+          } else if(length(i) == 2 && identical(names(i), c("PV.interaction.vars", "cat.interaction.vars"))) {
+            lapply(X = unlist(i[["PV.interaction.vars"]]), FUN = function(j) {
+              paste(c(i[["cat.interaction.vars"]], j), collapse = ":")
+            })
+          } else if(length(i) == 2 && identical(names(i), c("cont.interaction.vars", "PV.interaction.vars"))) {
+            lapply(X = unlist(i[["PV.interaction.vars"]]), FUN = function(j) {
+              paste(c(i[["cont.interaction.vars"]], j), collapse = ":")
+            })
+          } else if(length(i) == 2 && identical(names(i), c("PV.interaction.vars", "cont.interaction.vars"))) {
+            lapply(X = unlist(i[["PV.interaction.vars"]]), FUN = function(j) {
+              paste(c(i[["cont.interaction.vars"]], j), collapse = ":")
+            })
+          } else if(length(i) == 1 && identical(names(i), "PV.interaction.vars")) {
+            unlist(lapply(X = i, FUN = function(j) {
+              as.list(apply(X = data.table(j[[1]], j[[2]]), MARGIN = 1, FUN = function(k) {
+                paste(k, collapse = ":")
+              }))
+            }), recursive = FALSE)
+          }
+        })
+        interaction.terms <- lapply(X = interaction.terms, FUN = function(i) {
+          data.table(i)
+        })
+        interaction.terms <- Reduce(cbind, interaction.terms)
+        interaction.terms <- apply(X = interaction.terms, MARGIN = 1, FUN = function(i) {
+          paste(i, collapse = " + ")
+        }, simplify = FALSE)
+        if(is.list(regression.formula)) {
+          regression.formula <- as.data.table(cbind(regression.formula, interaction.terms))
+          regression.formula <- apply(X = regression.formula, MARGIN = 1, FUN = function(i) {
+            paste(i, collapse = " + ")
+          }, simplify = FALSE)
+        } else {
+          regression.formula <- as.data.table(cbind(as.list(regression.formula), interaction.terms))
+          regression.formula <- apply(X = regression.formula, MARGIN = 1, FUN = function(i) {
+            paste(i, collapse = " + ")
+          })
+        }
+      }
       rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
         unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
       }))), collapse = "|")
@@ -457,9 +580,25 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
             lapply(X = i, FUN = function(j) {
               j[ , V1 := as.character(V1)]
               PV.values.names <- grep(pattern = paste(vars.list[["PV.root.indep"]], collapse = "|"), x = j[ , V1], value = TRUE)
-              new.V1.values <- unname(sapply(X = j[ , V1], FUN = function(k) {
-                ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = k), no = k)
+              new.V1.values <- unname(lapply(X = j[ , V1], FUN = function(k) {
+                if(grepl(pattern = "\\:", x = k) == TRUE) {
+                  k <- unlist(strsplit(x = k, split = ":", fixed = TRUE))
+                  k <- sapply(X = k, FUN = function(l) {
+                    if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:digit:]]+$", x = l) == TRUE) {
+                      gsub(pattern = "[[:digit:]]+", replacement = "", x = l)
+                    } else if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:alpha:]]+[[:digit:]]+[[:alpha:]]+", x = l) == TRUE) {
+                      gsub(pattern = "[[:digit:]]+", replacement = "N", x = l)
+                    } else if(!l %in% unlist(vars.list[["PV.names"]])) {
+                      l
+                    }
+                  })
+                } else {
+                  ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = k), no = k)
+                }
               }))
+              new.V1.values <- lapply(X = new.V1.values, FUN = function(k) {
+                paste(k, collapse = ":")
+              })
               j[ , V1 := new.V1.values]
               if(exists("bckg.cat.vars.new.names")) {
                 new.cat.indep.vars.vals <- unique(grep(pattern = paste(bckg.cat.vars.new.names, collapse = "|"), x = j[ , V1], value = TRUE))
@@ -468,9 +607,9 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
                   j[ , V1 := sapply(.SD, FUN = function(k) {
                     ifelse(test = grepl(pattern = paste(vars.list[["PV.root.indep"]], collapse = "|"), x = k), yes = gsub(pattern = "[[:digit:]]+", replacement = "N", x = k), no = k)
                   }), .SDcols = "V1"]
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, "r.squared", "df", "adj.r.squared", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"))]
                 } else {
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, "r.squared", "df", "adj.r.squared", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"))]
                 }
               } else {
                 if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
@@ -478,9 +617,9 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
                   j[ , V1 := sapply(.SD, FUN = function(k) {
                     ifelse(test = grepl(pattern = paste(vars.list[["PV.root.indep"]], collapse = "|"), x = k), yes = gsub(pattern = "[[:digit:]]+", replacement = "N", x = k), no = k)
                   }), .SDcols = "V1"]
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]],"r.squared", "df", "adj.r.squared", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"))]
                 } else {
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]],"r.squared", "df", "adj.r.squared", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "r.squared", "df", "adj.r.squared", "fstatistic"))]
                 }
               }
               setkeyv(x = j, cols = c(key.vars, "V1"))

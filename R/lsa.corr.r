@@ -26,7 +26,7 @@
 #'                        default (\code{FALSE}) takes all cases on the splitting variables without
 #'                        missing values before computing any statistics. See details.
 #' @param shortcut        Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-#'                        TIMSS Numeracy, eTIMSS, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
+#'                        TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
 #'                        The default (\code{FALSE}) applies the "full" design when computing the
 #'                        variance components and the standard errors of the estimates.
 #' @param output.file     Full path to the output file including the file name. If omitted, a file
@@ -49,7 +49,7 @@
 #'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
-#' The \code{shortcut} argument is valid only for TIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+#' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #' The function provides two-tailed \emph{t}-test and \emph{p}-values for the correlation coefficients.
 #'
 #' @return
@@ -136,6 +136,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
+
 lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -173,6 +174,12 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     stop('\nThe data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
   vars.list <- get.analysis.and.design.vars(data)
+  if(!missing(split.vars)) {
+    vars.list[["split.vars"]] <- vars.list[["split.vars"]][!split.vars == key(data)]
+    if(length(vars.list[["split.vars"]]) == 0) {
+      vars.list[["split.vars"]] <- NULL
+    }
+  }
   if(is.null(vars.list[["PV.root.corr"]]) & length(vars.list[["bckg.corr.vars"]]) < 2 || is.null(vars.list[["bckg.corr.vars"]]) & length(vars.list[["PV.root.corr"]]) < 2) {
     message("\n\n")
     stop('Insufficient number of variable names passed to "bckg.corr.vars" and/or number of sets of PVs passed "PV.root.corr". All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -180,7 +187,7 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
   tryCatch({
-    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
+    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- data[get(vars.list[["weight.var"]]) > 0, ]

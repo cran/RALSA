@@ -128,6 +128,7 @@
 #' }
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.vars.dict}}
 #' @export
+
 lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables, old.new, new.labels, missings.attr, variable.labels, out.file) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)

@@ -28,7 +28,7 @@
 #' More studies (national international) will be added in future.
 #'
 #' @section Functions:
-#' Currently, RALSA provides the following functions:
+#' Currently, RALSA provides the following functionality:
 #' \itemize{
 #'     \item Data preparation functions - prepare data for analysis
 #'         \itemize{
@@ -43,6 +43,7 @@
 #'             \item \code{lsa.pcts.means} Computes percentages of respondents and means for continuous variables within groups
 #'             \item \code{lsa.prctls} Computes percentiles of continuous variables within groups
 #'             \item \code{lsa.bench} Computes percentages of respondents reaching or surpassing benchmarks of achievement
+#'             \item \code{lsa.crosstabs} Crosstabulations with Rao-Scott first- and second-order chi-square adjustments
 #'             \item \code{lsa.corr} Computes correlations between variables (Pearson or Spearman)
 #'             \item \code{lsa.lin.reg} Computes linear regression with or without contrast coding of categorical variables
 #'             \item \code{lsa.bin.log.reg} Computes binary logistic regression with or without contrast coding of categorical variables
@@ -81,9 +82,9 @@
 #' @importFrom DT JS renderDT DTOutput
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
-#' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames
+#' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames model.frame model.matrix pchisq pf xtabs
 #' @importFrom utils head tail menu
 NULL
 #> NULL
 
-globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type"))
+globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "cnt.warn.insuff.RS.collector"))

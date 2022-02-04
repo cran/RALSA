@@ -1,5 +1,3 @@
-### Do not use the objects and functions from this file on their own. They are intended for the functions of the RALSA package.
-
 import.data <- function(path) {
   tmp <- load(path)
   return(get(tmp))
@@ -12,7 +10,7 @@ produce.analysis.data.table <- function(data.object, object.variables, action.ar
   }
   assign(x = "DESIGN", value = DESIGN, envir = parent.frame())
   data.object <- data.object[ , mget(unique(c(key(data.object), unname(unlist(object.variables[!names(object.variables) %in% c("PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep")])))))]
-  bckg.vars.in.data <- unname(unlist(Filter(Negate(is.null), object.variables[c("bckg.var", "bckg.corr.vars", "bckg.avg.vars", "bckg.prctls.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var")])))
+  bckg.vars.in.data <- unname(unlist(Filter(Negate(is.null), object.variables[c("bckg.var", "bckg.corr.vars", "bckg.avg.vars", "bckg.prctls.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "bckg.row.var", "bckg.col.var")])))
   if(!is.null(bckg.vars.in.data)) {
     data.object[ , (bckg.vars.in.data) := lapply(.SD, function(i) {
       if(!is.null(attr(i, "missings"))) {
@@ -90,9 +88,9 @@ produce.analysis.data.table <- function(data.object, object.variables, action.ar
     data.object <- data.object[!names(data.object) %in% any.split.vars.only.NA]
     assign(x = "removed.countries.where.any.split.var.is.all.NA", value = any.split.vars.only.NA, envir = parent.frame())
   }
-  if(imported.file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+  if(imported.file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
     data.object <- produce.jk.reps.data(data = data.object, weight.var = object.variables[["weight.var"]], jk.zones = object.variables[["jk.zones"]], jk.replicates = object.variables[["rep.ind"]], shortcut = action.arguments[["shortcut"]])
-  } else if(imported.file.attributes[["lsa.study"]] %in% c("CivED", "ICCS", "ICILS", "SITES")) {
+  } else if(imported.file.attributes[["lsa.study"]] %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
     data.object <- produce.jk.reps.data(data = data.object, weight.var = object.variables[["weight.var"]], jk.zones = object.variables[["jk.zones"]], jk.replicates = object.variables[["rep.ind"]], shortcut = TRUE)
   }
   return(data.object)
@@ -102,7 +100,7 @@ fac.to.num.missing.codes <- c(99999991, 99999991, 99999991, 99999991, 99999991, 
 names(fac.to.num.missing.codes) <- c(" not appl.", "Default", "log.not appl.", "LOGICALLY NOT APPLICABLE", "Logically not applicable", "not appl", "not appl.", "Not Applicable", "Not applicable", "not applicable", "don't know", "No Response", "Valid Skip", "n. rea.", "n. reach.", "n. reached", "n.rea.", "n.reach.", "NOT REACHED", "Not Reached", "Not reached", "not reached", "Not reached (default during data processing)", "crossed out, not interpretable", "INVALID", "Invalid", "INVALID RESPONSE", "Presented but not answered/invalid", "Presented but not answered or invalid", "two or more responses, not interpretable", "two or more responses, uninterpretable", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "two or more responses, uninterpretable, ...", "uninterpretable", "n. adm.", "n. admin.", "not admin", "not admin.", "Not administered", "not administered", "Not administered/missing by design", "Not administered or missing by design", "Not stated", "Notadministered/missing by design", "noz admin", "missing", "MISSING", "MISSING (BLANK ONLY)", "NOT EXCLUDED", "OMITTED", "Omitted", "omitted", "omitted (blank only)", "OMITTED OR INVALID", "Omitted or invalid", "Omitted or Invalid")
 get.analysis.and.design.vars <- function(x) {
   passed.args <- as.list(sys.call(which = -1))
-  passed.args <- passed.args[c("split.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "bckg.row.var", "bckg.col.var", "weight.var")]
+  passed.args <- passed.args[c("split.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "bckg.row.var", "bckg.col.var", "weight.var", "interactions")]
   if(is.na(names(passed.args["weight.var"])) == TRUE) {
     if(attr(x, "study") %in% design.weight.variables[["IEA.JK2.studies"]]) {
       if(attr(x, "file.type") %in% design.weight.variables[["IEA.JK2.dflt.std.bckg.types"]]) {
@@ -223,7 +221,7 @@ get.analysis.and.design.vars <- function(x) {
   } else {
     passed.args <- passed.args
   }
-  if(all(unlist(unname(passed.args[!names(passed.args) %in% c("PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep")])) %in% names(x)) != TRUE
+  if(all(unlist(unname(passed.args[!names(passed.args) %in% c("PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "interactions")])) %in% names(x)) != TRUE
      || any(unlist(lapply(X = passed.args, FUN = function(i) {
        lapply(i, length)
      })) < 1) == TRUE) {
@@ -302,6 +300,13 @@ merge.combinations <- list(
     c("jse", "jsg", "jsa", "std.bckg.ach.EUM")
   ),
   ICILS = list(
+    c("bcg", "sch.bckg"),
+    c("bsg", "std.bckg"),
+    c("btg", "tch.bckg"),
+    c("bcg", "bsg", "std.bckg.sch.bckg"),
+    c("bcg", "btg", "sch.bckg.tch.bckg")
+  ),
+  REDS = list(
     c("bcg", "sch.bckg"),
     c("bsg", "std.bckg"),
     c("btg", "tch.bckg"),
@@ -555,6 +560,58 @@ merge.combinations <- list(
     c("asg", "asa", "atg", "std.bckg.ach.tch.bckg"),
     c("ash", "asa", "atg", "std.ach.home.tch.bckg")
   ),
+  "eTIMSS PSI" = list(
+    c("acg", "sch.bckg"),
+    c("asg", "std.bckg"),
+    c("asa", "std.ach"),
+    c("asg", "asa", "std.bckg.ach"),
+    c("asg", "ash", "std.bckg.home"),
+    c("ash", "asa", "std.ach.home"),
+    c("asg", "ash", "asa", "std.bckg.ach.home"),
+    c("acg", "asg", "std.bckg.sch.bckg"),
+    c("acg", "ash", "std.home.sch.bckg"),
+    c("acg", "asa", "std.ach.sch.bckg"),
+    c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
+    c("acg", "asg", "asa", "std.bckg.ach.sch.bckg"),
+    c("acg", "asg", "ash", "std.bckg.home.sch.bckg"),
+    c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
+    c("acg", "atg", "sch.bckg.tch.bckg"),
+    c("asg", "atg", "std.bckg.tch.bckg"),
+    c("asa", "atg", "std.ach.tch.bckg"),
+    c("ash", "atg", "std.home.tch.bckg"),
+    c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
+    c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
+    c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
+    c("acg", "asg", "ash", "asa", "atg", "std.bckg.ach.home.sch.bckg.tch.bckg"),
+    c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
+    c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
+    c("acg", "ash", "asa", "atg", "std.ach.home.sch.bckg.tch.bckg"),
+    c("asg", "ash", "asa", "atg", "std.bckg.ach.home.tch.bckg"),
+    c("asg", "ash", "atg", "std.bckg.home.tch.bckg"),
+    c("asg", "asa", "atg", "std.bckg.ach.tch.bckg"),
+    c("ash", "asa", "atg", "std.ach.home.tch.bckg"),
+    c("bcg", "sch.bckg"),
+    c("bsg", "std.bckg"),
+    c("bsa", "std.ach"),
+    c("bsg", "bsa", "std.bckg.ach"),
+    c("bcg", "bsg", "std.bckg.sch.bckg"),
+    c("bcg", "bsa", "std.ach.sch.bckg"),
+    c("bcg", "bsg", "bsa", "std.bckg.ach.sch.bckg"),
+    c("bcg", "btm", "sch.bckg.math.tch.bckg"),
+    c("bcg", "bts", "sch.bckg.sci.tch.bckg"),
+    c("bsg", "btm", "std.bckg.math.tch.bckg"),
+    c("bsg", "bts", "std.bckg.sci.tch.bckg"),
+    c("bsa", "btm", "std.ach.math.tch.bckg"),
+    c("bsa", "bts", "std.ach.sci.tch.bckg"),
+    c("bcg", "bsg", "btm", "std.bckg.sch.bckg.math.tch.bckg"),
+    c("bcg", "bsg", "bts", "std.bckg.sch.bckg.sci.tch.bckg"),
+    c("bcg", "bsa", "btm", "std.ach.sch.bckg.math.tch.bckg"),
+    c("bcg", "bsa", "bts", "std.ach.sch.bckg.sci.tch.bckg"),
+    c("bsg", "bsa", "btm", "std.bckg.ach.math.tch.bckg"),
+    c("bsg", "bsa", "bts", "std.bckg.ach.sci.tch.bckg"),
+    c("bcg", "bsg", "bsa", "btm", "std.bckg.ach.sch.bckg.math.tch.bckg"),
+    c("bcg", "bsg", "bsa", "bts", "std.bckg.ach.sch.bckg.sci.tch.bckg")
+  ),
   "TIMSS Advanced" = list(
     c("mcg", "math.sch.bckg"),
     c("msg", "math.std.bckg"),
@@ -673,8 +730,10 @@ design.weight.variables <- list(
                       "SITES",
                       "TIMSS",
                       "preTIMSS",
+                      "eTIMSS PSI",
                       "TIMSS Advanced",
-                      "TiPi"),
+                      "TiPi",
+                      "REDS"),
   IEA.JK2.dflt.std.bckg.types = c("std.bckg",
                                   "std.bckg.sch.bckg",
                                   "std.EUM",
@@ -869,8 +928,8 @@ default.benchmarks <- list(
   ePIRLS = c(400, 475, 550, 625),
   prePIRLS = c(400, 475, 550, 625),
   TIMSS = c(400, 475, 550, 625),
-  eTIMSS = c(400, 475, 550, 625),
   preTIMSS = c(400, 475, 550, 625),
+  "eTIMSS PSI" = c(400, 475, 550, 625),
   "TIMSS Advanced" = c(475, 550, 625),
   TiPi = c(400, 475, 550, 625),
   PISA = list(
@@ -1188,7 +1247,7 @@ compute.crosstabs.all.repwgt <- function(data.object, var1, var2, keys, weight, 
   if(length(keys) > 1) {
     lapply(X = all.crosstabs, FUN = function(i) {
       i[ , (keys[2:length(keys)]) := lapply(.SD, function(j) {
-        levels.j <- levels(j)
+        levels.j <- levels(droplevels(j))
         j <- ifelse(test = is.na(j), yes = "Total", no = j)
         j <- factor(x = j, labels = c(levels.j, "Total"))
       }), .SDcols = grep(pattern = paste(keys[2:length(keys)], collapse = "|"), x = colnames(i), value = TRUE)]
@@ -1423,6 +1482,73 @@ compute.crosstabs.all.repwgt <- function(data.object, var1, var2, keys, weight, 
   all.crosstabs <- Reduce(function(...) merge(..., by = c(keys, var1, "Type", var2)), all.crosstabs)
   return(all.crosstabs)
 }
+compute.Rao.Scott.adj.chi.sq <- function(data.obj, var1, var2, weights, des.scale.fac, deg.freedom, miss.to.include, keys) {
+  data.obj[ , (colnames(data.obj)) := lapply(.SD, function(i) {
+    if(is.factor(i)) {
+      i <- droplevels(i)
+    } else {
+      i
+    }
+  })]
+  if(miss.to.include == FALSE) {
+    data.obj <- na.omit(object = data.obj, cols = keys)
+  }
+  cnt.name <- as.character(unique(data.obj[ , get(keys[1])]))
+  data.obj <- split(x = data.obj, by = keys)
+  insufficient.split <- lapply(X = data.obj, FUN = function(i) {
+    if(
+      length(unique(i[ , get(var1)])) == 1 && length(unique(i[ , get(var2)]))  > 1 ||
+      length(unique(i[ , get(var1)]))  > 1 && length(unique(i[ , get(var2)])) == 1 ||
+      length(unique(i[ , get(var1)])) == 1 && length(unique(i[ , get(var2)])) == 1 ||
+      nrow(i) ==0) {
+      return(TRUE)
+    }
+  })
+  insufficient.split <- names(Filter(isTRUE, insufficient.split))
+  data.obj[which(names(data.obj) %in% insufficient.split)] <- NULL
+  if(length(insufficient.split) > 0) {
+    assign(x = "cnt.warn.insuff.RS.collector", value = cnt.name, envir = parent.frame())
+  }
+  Rao.Scott.adjustment <- lapply(X = data.obj, FUN = function(i) {
+    interaction.formula <- formula(x = paste0("~interaction(factor(", var1, "), factor(", var2, ")) - 1"))
+    Rao.Scott.design.matrix <- model.matrix(object = interaction.formula, model.frame(formula = interaction.formula, na.omit(i)))
+    rows.and.cols.seq.values <- expand.grid(var1 = 1:length(unique(i[ , get(var1)])), var2 = 1:length(unique(i[ , get(var2)])))
+    indic.var.rows <- model.matrix(~factor(var1) + factor(var2), rows.and.cols.seq.values)
+    indic.var.cols <- model.matrix(~factor(var1) * factor(var2), rows.and.cols.seq.values)
+    covar.matrix <- qr.resid(qr(indic.var.rows), indic.var.cols[ , -(1:(length(unique(i[ , get(var1)])) + length(unique(i[ , get(var2)])) - 1))])
+    replicated.averages <- rbindlist(l = lapply(X = i[ , mget(weights[2:length(weights)])], FUN = function(j) {
+      setDT(as.list(colSums(j * Rao.Scott.design.matrix) / sum(j)))
+    }))
+    rescaled.wgt <- 1/i[ , get(weights[1])]
+    wgt.sums <- sum(rescaled.wgt)
+    wgt.average <- colSums(Rao.Scott.design.matrix * rescaled.wgt / wgt.sums)
+    mean.replicate.averages <- unlist(lapply(X = replicated.averages, FUN = function(j) {
+      na.omit(mean(j)[wgt.average > 0])
+    }))
+    averages.variances <- unname(obj = crossprod(x = sweep(x = as.matrix(replicated.averages), MARGIN = 2, mean.replicate.averages, FUN = "-"))*des.scale.fac)
+    diag.prop.averages.matrix <- diag(ifelse(test = wgt.average == 0, yes = 0, no = 1/mean.replicate.averages))
+    deff.var.d <- t(covar.matrix) %*% (diag.prop.averages.matrix/nrow(Rao.Scott.design.matrix)) %*% covar.matrix
+    deff.cov.n <- t(covar.matrix) %*% diag.prop.averages.matrix %*% averages.variances %*% diag.prop.averages.matrix %*% covar.matrix
+    Rao.Scott.deff <- solve(a = deff.var.d, b = deff.cov.n, tol = 1e-17)
+    pearson.chi.sq <- suppressWarnings(xtabs(i[ , get(weights[1])] ~ i[ , get(var1)] + i[ , get(var2)]))
+    pearson.chi.sq <- summary(pearson.chi.sq * (length(i[ , get(weights[1])])/sum(pearson.chi.sq)))
+    pearson.stats.1st.order <- data.table(Chi_Square = rep("First-Order Rao-Scott", times = 3), Statistic = c("Chi-Square", "Degrees of Freedom", "p-value"), Value = rep(NA_real_, times = 3))
+    pearson.stats.1st.order[Statistic == "Chi-Square", Value := pearson.chi.sq[["statistic"]]]
+    pearson.stats.1st.order[Statistic == "Degrees of Freedom", Value := pearson.chi.sq[["parameter"]]]
+    pearson.stats.1st.order[Statistic == "p-value", Value := pchisq(pearson.chi.sq[["statistic"]] / mean(diag(Rao.Scott.deff)), df=pearson.chi.sq[["parameter"]], lower.tail=FALSE)]
+    second.ord.des.correction <- sum(diag(x = Rao.Scott.deff))^2 / (sum(diag(x = Rao.Scott.deff %*% Rao.Scott.deff)))
+    pearson.stats.2nd.order <-data.table(Chi_Square = rep("Second-Order Rao-Scott", times = 4), Statistic = c("Chi-Square", "Sample Degrees of Freedom", "Design Degrees of Freedom", "p-value"), Value = rep(NA_real_, times = 4))
+    pearson.stats.2nd.order[Statistic == "Chi-Square", Value := pearson.chi.sq[["statistic"]]/sum(diag(Rao.Scott.deff))]
+    pearson.stats.2nd.order[Statistic == "Sample Degrees of Freedom", Value := second.ord.des.correction]
+    pearson.stats.2nd.order[Statistic == "Design Degrees of Freedom", Value := second.ord.des.correction * deg.freedom]
+    pearson.stats.2nd.order[Statistic == "p-value", Value := pf(q = pearson.chi.sq[["statistic"]]/sum(diag(Rao.Scott.deff)), df1 = second.ord.des.correction, df2 = second.ord.des.correction * deg.freedom, lower.tail=FALSE)]
+    Rao.Scott.table.lead.cols <- unique(x = i[ , mget(keys)])
+    setkeyv(x = Rao.Scott.table.lead.cols, cols = keys)
+    pearson.stats <- rbindlist(l = list(pearson.stats.1st.order, pearson.stats.2nd.order))
+    return(cbind(Rao.Scott.table.lead.cols, pearson.stats))
+  })
+  return(rbindlist(l = Rao.Scott.adjustment))
+}
 compute.cont.vars.pct.miss <- function(data.object, vars.vector, weight.var, keys) {
   cont.vars.pct.miss <- data.object[ , lapply(.SD, function(i) {
     if(!all(!is.na(i))) {
@@ -1480,9 +1606,9 @@ reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.va
     i[ , (replication.weights) := Map(f = `-`, mget(replication.weights), .(get(weighting.variable)))]
     i[ , (replication.weights) := lapply(X = .SD, FUN = function(i) {i^2}), .SDcols = replication.weights]
     i[ , sum.of.squares := Reduce(`+`, .SD), .SDcols = replication.weights]
-    if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") && SE.design == FALSE) {
+    if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == FALSE) {
       i[ , paste0("_SE") := sqrt(0.5*sum.of.squares)]
-    } else if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") && SE.design == TRUE || study.name %in% c("CivED", "ICCS", "ICILS", "SITES")) {
+    } else if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == TRUE || study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
       i[ , paste0("_SE") := sqrt(sum.of.squares)]
     } else if(study.name %in% c("TEDS-M", "PISA", "PISA for Development", "TALIS", "TALIS 3S")) {
       i[ , paste0("_SE") := sqrt(sum.of.squares/(length(replication.weights)*(1 - 0.5)^2))]
@@ -1554,7 +1680,7 @@ reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.v
       j[ , (replication.weights) := Map(f = `-`, mget(replication.weights), .(get(weighting.variable)))]
       j[ , (replication.weights) := lapply(X = .SD, FUN = function(k) {k^2}), .SDcols = replication.weights]
       j[ , sum.of.squares := Reduce(`+`, .SD), .SDcols = replication.weights]
-      if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") && SE.design == FALSE) {
+      if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == FALSE) {
         j[ , sum.of.squares := 0.5*sum.of.squares]
       } else if(study.name %in% c("TEDS-M", "PISA", "PISA for Development", "TALIS")) {
         j[ , sum.of.squares := sum.of.squares/(length(replication.weights)*(1 - 0.5)^2)]
@@ -1573,12 +1699,12 @@ reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.v
 }
 aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.vars.vector, data.key.variables, study.name, SE.design) {
   object.type <- deparse(substitute(estimate.object))
-  if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") && SE.design == FALSE || study.name %in% c("ICCS", "ICILS")) {
+  if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == FALSE || study.name %in% c("ICCS", "ICILS")) {
     lapply(X = estimate.object, FUN = function(i) {
       i[ , sampling.variance := Reduce(`+`, .SD), .SDcols = grep(pattern = "_SumSq", x = names(i))]
       i[ , sampling.variance := sampling.variance*(1/length(grep(pattern = "_SumSq", x = colnames(i))))]
     })
-  } else if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi") && SE.design == TRUE || study.name %in% c("CivED", "SITES")) {
+  } else if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == TRUE || study.name %in% c("CivED", "SITES")) {
     lapply(X = estimate.object, FUN = function(i) {
       i[ , sampling.variance := Reduce(`+`, .SD), .SDcols = grep(pattern = "_SumSq", x = names(i))[1]]
     })
@@ -1601,7 +1727,7 @@ aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.v
     i[ , (tmp.names) := lapply(.SD, function(i) {i^2}), .SDcols = tmp.names]
     i[ , sum.of.PV.diff := rowSums(.SD), .SDcols = tmp.names]
     i[ , measurement.variance := (sum.of.PV.diff/(length(tmp.names) - 1))*(1 + 1/length(tmp.names))]
-    if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+    if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
       root.PV.name <- unique(unlist(lapply(root.PV, function(j) {
         as.character(na.omit(str_extract(string = colnames(i), pattern = j)))
       })))
@@ -1720,14 +1846,14 @@ produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, r
                     CYCLE = cycle,
                     WEIGHT = eval(weight.variable),
                     DESIGN = rep.design,
-                    if(!missing(used.shortcut) && study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+                    if(!missing(used.shortcut) && study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
                       SHORTCUT = used.shortcut
                     },
                     NREPS = length(number.of.reps),
                     ANALYSIS_DATE = format(Sys.Date(), "%B %d, %Y"),
                     START_TIME = in.time,
                     END_TIME = format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3"))
-  if(!missing(used.shortcut) && study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+  if(!missing(used.shortcut) && study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
     setnames(x = tmp, old = "V7", new = "SHORTCUT")
   }
   time.difference <- difftime(time1 = in.time, time2 = tmp[ , END_TIME], units = "secs")
@@ -1742,7 +1868,7 @@ produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, r
     gsub(pattern = "^[[:digit:]]+\\-[[:digit:]]+\\-[[:digit:]]+[[:space:]]|\\.[[:digit:]]+$", replacement = "", x = i)
   }), .SDcols = c("START_TIME", "END_TIME")]
 }
-export.results <- function(output.object, analysis.type, analysis.info.obj, model.stats.obj, destination.file, open.exported.file) {
+export.results <- function(output.object, analysis.type, analysis.info.obj, model.stats.obj, Rao.Scott.adj.chi.sq.obj, destination.file, open.exported.file) {
   export.workbook <- createWorkbook(title = "Analysis created using RALSA (www.ralsa.ineri.org) provided by INERI (www.ineri.org)")
   header.row.style <- createStyle(fontColour = "#FFFFFF", bgFill = "#000000", border = c("left", "right"), borderColour = "#FFFFFF")
   call.cell.style <- createStyle(valign = "top", wrapText = TRUE)
@@ -1770,6 +1896,14 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
     addStyle(wb = export.workbook, sheet = "Model statistics", style = header.row.style, rows = 1, cols = 1:ncol(model.stats.obj))
     addStyle(wb = export.workbook, sheet = "Model statistics", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(model.stats.obj) + 1), gridExpand = TRUE)
     setColWidths(wb = export.workbook, sheet = "Model statistics", cols = 1:ncol(model.stats.obj), widths = "auto")
+  }
+  if(!missing(Rao.Scott.adj.chi.sq.obj)) {
+    cols.with.decimals <- grep(pattern = "Value", x = colnames(Rao.Scott.adj.chi.sq.obj))
+    addWorksheet(wb = export.workbook, sheetName = "Rao-Scott Adjusted Chi-Square")
+    writeData(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", x = Rao.Scott.adj.chi.sq.obj)
+    addStyle(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", style = header.row.style, rows = 1, cols = 1:ncol(Rao.Scott.adj.chi.sq.obj))
+    addStyle(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", style = three.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(Rao.Scott.adj.chi.sq.obj) + 1), gridExpand = TRUE)
+    setColWidths(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", cols = 1:ncol(Rao.Scott.adj.chi.sq.obj), widths = "auto")
   }
   addWorksheet(wb = export.workbook, sheetName = "Analysis information")
   writeData(wb = export.workbook, sheet = "Analysis information", x = analysis.info.obj)
@@ -1803,8 +1937,7 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
   }
 }
 
-#############################################
-# Global shiny object
+# Objects from global.r
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

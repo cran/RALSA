@@ -1,3 +1,42 @@
+# RALSA v.1.1.0 (2022-02-03)
+## Bug fixes
+* All analysis functions. When "IDCNTRY" is added explicitly to the list of `split.vars` and `include.missing = TRUE`, the function crashes with the following error message. Thanks to Laura Ringiene.
+
+* `lsa.prctls` function. When computations involve PVs, the estimates of specific percentile appear in a wrong column, e.g. the 25th percentile columns contain the estimates for the 5th percentile columns and the other way around. Thanks to Laura Ringiene.
+
+* `lsa.data.diag` function. When the tables are exported to Excel, the "Index" sheet appears as the first one, but the file opens with the sheet with statistics for the first variable on the front.
+
+* GUI with `lsa.data.diag` and all analysis functions. When using the GUI and an output file with the same name as the specified is already opened, the GUI crashes when the respective function tries to write the new output file.
+
+* `lsa.bin.log.reg` function. The coefficients output is not sorted properly by the names of the independent variables and the desired order.
+
+* GUI with `lsa.corr` function. When the loaded data file in "Correlations" analysis contains no PVs, the radio buttons for choosing between Pearson and Spearman correlation are not shown.
+
+* GUI with all functions. If any error occurs during a function execution (i.e. after pressing the “Execute syntax” button), the GUI crashes.
+
+## New functionality
+* New analysis function, `lsa.crosstabs`. It computes a two-way table (crosstabulations) and Rao-Scott first- and second-order design corrected chi-square statistics. The Rao-Scott adjustment is needed because of the clustered design of the large-scale assessments and surveys data.
+
+* Added the possibility to include two-way interaction terms in `lsa.lin.reg` and `lsa.bin.log.reg`. The interactions can be between two categorical variables, categorical and continuous, continuous and continuous, categorical with PVs, continuous with PVs, and PVs with PVs.
+
+* Added a new printing method for `lsa.data` objects in memory. It prints the study name, cycle, respondent type(s), total number of countries, key, if the data has user-defined missing values or not, and a snippet of the data.
+
+## New study added
+* Support for the IEA Responses to Educational Disruption Survey (REDS) 2021 was added.
+
+## Miscellaneous
+* Added support for the recently released IEA eTIMSS 2019 Problem Solving and Inquiry (PSI) tasks' data.
+
+* The RALSA logos in the GUI and GUI start-up screen was replaced with higher-resolution images.
+
+* Various visual improvements of the GUI.
+
+* Updated and improved documentation.
+
+
+
+
+
 # RALSA v.1.0.2 (2021-10-21)
 This is a maintenance version fixing some bugs and removing package dependency
 

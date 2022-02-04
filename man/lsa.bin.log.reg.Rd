@@ -14,6 +14,7 @@ lsa.bin.log.reg(
   bckg.cat.contrasts,
   bckg.ref.cats,
   PV.root.indep,
+  interactions,
   standardize = FALSE,
   weight.var,
   norm.weight = FALSE,
@@ -57,6 +58,8 @@ contrasts to compute in case \code{bckg.indep.cat.vars} are provided. See detail
 \item{PV.root.indep}{The root names for a set of plausible values used as a independent variables in
 the model. See details.}
 
+\item{interactions}{Interaction terms - a list containing vectors of length of two. See details.}
+
 \item{standardize}{Shall the dependent and independent variables be standardized to produce beta
 coefficients? The default is \code{FALSE}. See details.}
 
@@ -73,7 +76,7 @@ categories to split by and all statistics produced for them? The default
 values before computing any statistics. See details.}
 
 \item{shortcut}{Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-TIMSS Numeracy, eTIMSS, PIRLS, ePIRLS, PIRLS Literacy and RLII be
+TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be
 applied? The default (\code{FALSE}) applies the "full" design when
 computing the variance components and the standard errors of the estimates.}
 
@@ -110,6 +113,9 @@ A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program),
 \item Odds_L95CI - the lower 95\% model-based confidence intervals for the odds ratios.
 \item Odds_U95CI - the upper 95\% model-based confidence intervals for the odds ratios.
 }
+
+When interaction terms are included, the cells with the interactions in the \code{Variables} column will contain the names of the two variables in each of the interaction terms, divided by colon, e.g. \code{ASBGSSB:ASBGHRL}.
+
 The second sheet contains the model statistics:
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -161,11 +167,21 @@ Multiple continuous or categorical background variables and/or sets of plausible
 
 Computation of regression coefficients involving plausible values requires providing a root of the plausible values names in \code{PV.root.dep} and/or \code{PV.root.indep}. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per construct (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.dep} or \code{PV.root.indep} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.dep} or \code{PV.root.indep} as "PV#CIV". More than one set of PVs can be added in \code{PV.root.indep}.
 
+The function can also compute two-way interaction effects between independent variables by passing a list to the \code{interactions} argument. The list must contain vectors of length two and all variables in these vectors \strong{must also be passed as independent variables} (see the examples). Note the following:
+\itemize{
+\item When an interaction is between two independent background continuous variables (i.e. both are passed to \code{bckg.indep.cont.vars}), the interaction effect will be computed between them as they are.
+\item When the interaction is between two categorical variables (i.e. both are passed to \code{bckg.indep.cat.vars}), the interaction effect will be computed between each possible pair of categories of the two variables, except for the reference categories.
+\item When the interaction is between one continuous (i.e. passed to \code{bckg.indep.cont.vars}) and one categorical (i.e. passed to \code{bckg.indep.cat.vars}), the interaction effect will be computed between the continuous variable and each category of the categorical variable, except for the reference category.
+\item When the interaction is between a continuous variable (i.e. passed to \code{bckg.indep.cont.vars}) and a set of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the continuous variable and each PV in the set and the results are aggregated.
+\item When the interaction is between a categorical variable  (i.e. passed to \code{bckg.indep.cat.vars}) and a set of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between each category of the categorical variable (except the reference category) and each PV in the set. The results are aggregated for each of the categories of the categorical variables and the set of PVs.
+\item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
+}
+
 If \code{norm.weight = TRUE}, the weights will be normalized before used in the model. This may be necessary in some countries in some studies extreme weights for some of the cases may result in inflated estimates due to model perfect separation. The consequence of normalizing weights is that the number of elements in the population will sum to the number of cases in the sample. Use with caution.
 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
-The \code{shortcut} argument is valid only for TIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 The function provides two-tailed \emph{t}-test and \emph{p}-values for the regression coefficients.
 }
 \examples{
@@ -191,6 +207,14 @@ bin.dep.var = "ASBG12Dr", bckg.indep.cont.vars = "ASBGSSB")
 \dontrun{
 lsa.bin.log.reg(data.object = test, split.vars = "ASBG01",
 bin.dep.var = "ASBG12Dr", PV.root.indep = "ASRREA")
+}
+
+# Compute linear regression with interaction terms using PIRLS 2016 student data.
+\dontrun{
+lsa.bin.log.reg(data.file = "C:/temp/test.RData", bin.dep.var = "ASBG05B",
+bckg.indep.cont.vars = "ASBGSSB", bckg.indep.cat.vars = c("ASBG01", "ASBG12B"),
+PV.root.indep = c("ASRREA", "ASRLIT"),
+interactions = list(c("ASBG12B", "ASBGSSB"), c("ASBG01", "ASRLIT")))
 }
 
 }

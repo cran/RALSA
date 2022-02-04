@@ -2,8 +2,7 @@ server <- function(input, output, session) {
   
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   #$ Define common objects
-  
-  country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "VNM", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "Macedonia", "Malta (Maltese)", "Malta", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Vietnam", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)"))
+  country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
   
   PISA.data.files <- list(
     PISA.pre2015.TXT.files = list(
@@ -96,12 +95,16 @@ server <- function(input, output, session) {
     )
   )
   
+  
   studies.and.cycles <- list(
     TIMSS = list(
       first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
     ),
     preTIMSS = list(
       first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2015" = "n1"
+    ),
+    "eTIMSS PSI" = list(
+      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "2019" = "z7", "2023" = "z8", "2027" = "z9"
     ),
     "TIMSS Advanced" = list(
       first.chars = c("mcg", "msa", "msg", "msr", "mst", "mtg", "pcg", "psa", "psg", "psr", "pst", "ptg"), "1995" = "m1", "2008" = "m2", "2015" = "m3"
@@ -133,6 +136,9 @@ server <- function(input, output, session) {
     ICILS = list(
       first.chars = c("bcg", "bsg", "btg"), "2013" = "i1", "2018" = "i2"
     ),
+    REDS = list(
+      first.chars = c("bcg", "bsg", "btg"), "2021" = "v1"
+    ),
     TALIS = list(
       first.chars = c("acg", "atg", "bcg", "btg", "ccg", "ctg", "pcg", "ptg"), "2008" = "t1", "2013" = "t2", "2018" = "t3"
     ),
@@ -144,6 +150,8 @@ server <- function(input, output, session) {
     )
   )
   
+  
+  
   respondents.and.cycles <- list(
     
     "Student background" = list(
@@ -154,8 +162,11 @@ server <- function(input, output, session) {
         "e1", "e2", "e3", "e4", "e5", "e6",
         "f2",
         "i1", "i2", "i3", "i4", "i5", "i6",
+        "v1",
         "l1", "l2", "l3", "l4", "l5", "l6",
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "n1", "n2", "n3", "n4", "n5", "n6",
+        "z7", "z8", "z9",
         "r1", "r2", "r3", "r4", "r5", "r6", "r7",
         "t1", "t2"
       )
@@ -178,6 +189,8 @@ server <- function(input, output, session) {
         "e1", "e2", "e3", "e4", "e5", "e6",
         "l1", "l2", "l3", "l4", "l5", "l6",
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "n1", "n2", "n3", "n4", "n5", "n6",
+        "z7", "z8", "z9",
         "r1", "r2", "r3", "r4", "r5", "r6", "r7"
       )
     ),
@@ -189,6 +202,8 @@ server <- function(input, output, session) {
         "e1", "e2", "e3", "e4", "e5", "e6",
         "l1", "l2", "l3", "l4", "l5", "l6",
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "n1", "n2", "n3", "n4", "n5", "n6",
+        "z7", "z8", "z9",
         "r1", "r2", "r3", "r4", "r5", "r6", "r7"
       )
     ),
@@ -216,8 +231,11 @@ server <- function(input, output, session) {
         "e1", "e2", "e3", "e4", "e5", "e6",
         "f2",
         "i1", "i2", "i3", "i4", "i5", "i6",
+        "v1",
         "l1", "l2", "l3", "l4", "l5", "l6",
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "n1", "n2", "n3", "n4", "n5", "n6",
+        "z7", "z8", "z9",
         "r1", "r2", "r3", "r4", "r5", "r6", "r7",
         "t1", "t2", "t3", "t4", "t5", "t6"
       )
@@ -227,6 +245,7 @@ server <- function(input, output, session) {
       resp.type = c("btm", "mtg"),
       round = c(
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "z7", "z8", "z9",
         "s1"
       )
     ),
@@ -240,6 +259,7 @@ server <- function(input, output, session) {
       resp.type = "bts",
       round = c(
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "z7", "z8", "z9",
         "s1"
       )
     ),
@@ -250,9 +270,11 @@ server <- function(input, output, session) {
         "f2",
         "c2", "c3", "c4", "c5", "c6",
         "i1", "i2", "i3", "i4", "i5", "i6",
+        "v1",
         "e1", "e2", "e3", "e4", "e5", "e6",
         "l1", "l2", "l3", "l4", "l5", "l6",
         "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+        "z7", "z8", "z9",
         "r1", "r2", "r3", "r4", "r5", "r6", "r7",
         "s1",
         "t1", "t2", "t3", "t4", "t5", "t6"
@@ -300,6 +322,9 @@ server <- function(input, output, session) {
     )
     
   )
+  
+  
+  
   
   file.merged.respondents <- list(
     "educ.bckg"                                     = "Educator background",
@@ -438,13 +463,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  # Define a function which takes the "PISA.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA 2015 and later in the convert data part of the UI.
-  # Arguments:
-  # list.abbrev - the "PISA.data.files" list from above.
-  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identlify the study and cycle.
   extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- Filter(length, lapply(list.abbrev, function(i) {
@@ -472,13 +490,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  
-  # Define a function which takes the "PISA.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA prior to 2015 in the convert data part of the UI.
-  # Arguments:
-  # list.abbrev - the "PISA.data.files" list from above.
-  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identify the study and cycle.
   extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
@@ -507,12 +518,6 @@ server <- function(input, output, session) {
   
   
   
-  
-  
-  # Define a function which takes the "PISA.for.Development.data.files" list from above, checks the first four characters of the file file names and returns a list with the study name (PISA for Development) and its cycle. The will be used when displaying the study and cycle abbreviations for the OECD PISA for Development 2019 and later in the convert data part of the UI.
-  # Arguments:
-  # list.abbrev - the "PISA.for.Development.data.files" list from above.
-  # file.string - the first file from a vector in the UI, this will be used as a source to extract the file type abbreviation and the last two characters to identify the study and cycle.
   extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
     
     tmp <- Filter(length, lapply(list.abbrev, function(i) {
@@ -539,7 +544,9 @@ server <- function(input, output, session) {
   }
   
   
+  
   all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+  
   
   
   collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
@@ -567,6 +574,7 @@ server <- function(input, output, session) {
       return(tmp)
     }
   }
+  
   
   
   define.default.weight <- function(study, loaded.names.and.labels, respondent.type) {
@@ -614,17 +622,15 @@ server <- function(input, output, session) {
   }
   
   
-  all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
   
+  all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
+
   
   studies.all.design.variables <- list(
-    
     sampling.vars = list(
-      
       bc_ = c("SCHWGT", "STDWGT"),
       bl_ = c("TOTWGT", "SENWGT", "JKZONE", "JKREP", "TOTWGTCH", "SENWGTCH"),
       bs_ = c("TOTWGT", "SENWGT", "JKZONE", "JKREP"),
-      
       isa = c("TOTWGTS", "JKZONES", "JKREPS", paste0("SRWGT", 1:75)),
       icg = c("TOTWGTC", "JKZONEC", "JKREPC", paste0("CRWGT", 1:75)),
       ise = c("TOTWGTS", "JKZONES", "JKREPS", paste0("SRWGT", 1:75)),
@@ -635,7 +641,6 @@ server <- function(input, output, session) {
       jsa = c("TOTWGTS", "JKZONES", "JKREPS", paste0("SRWGT", 1:75)),
       jse = c("TOTWGTS", "JKZONES", "JKREPS", paste0("SRWGT", 1:75)),
       jsg = c("TOTWGTS", "JKZONES", "JKREPS", paste0("SRWGT", 1:75)),
-      
       asa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP", "JKINDIC"),
       acg = c("SCHWGT", "STOTWGTU", "STOTWGTL", "JKCZONE", "JKCREP", paste0("SRWGT", 1:100)),
       asc = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
@@ -643,7 +648,6 @@ server <- function(input, output, session) {
       ast = c("TCHWGT", "MATWGT", "SCIWGT", "REAWGT", "JKZONE", "JKREP"),
       atg = c("TCHWGT", paste0("TRWGT", 1:100)),
       alg = c("CNTRWGT", paste0("CRWGT", 1:92)),
-      
       bsa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       bcg = c("TOTWGTC", paste0("CRWGT", 1:75), "JKZONEC", "JKREPC", "SCHWGT", "STOTWGTL", "STOTWGTU", "STOTWGTE", "JKCZONE", "JKCREP", paste0("SRWGT", 1:100)),
       bsg = c("TOTWGTS", paste0("SRWGT", 1:75), "JKZONES", "JKREPS", "TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP", "STAFFWGT", paste0("SRWGT", 1:92)),
@@ -652,12 +656,10 @@ server <- function(input, output, session) {
       bts = c("STOTWGT", "JKZONE", "JKREP"),
       bst = c("MATWGT", "SCIWGT", "TCHWGT", "TOTWGT", "JKZONE", "JKREP"),
       blg = c("CNTRWGT", paste0("CRWGT", 1:92)),
-      
       mcg = c("SCHWGT", "STOTWGT", "STOTWGTU", "JKCZONE", "JKCREP"),
       msa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       msg = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       mst = c("MATWGT", "JKZONE", "JKREP"),
-      
       psa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       psg = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       pst = c("PHYWGT", "JKZONE", "JKREP"),
@@ -665,52 +667,240 @@ server <- function(input, output, session) {
       ctg = c("TCHWGT", paste0("TRWGT", 1:100)),
       pcg = c("SCHWGT", "STOTWGT", "STOTWGTU", "JKCZONE", "JKCREP", paste0("SRWGT", 1:100)),
       ptg = c("TCHWGT", paste0("TRWGT", 1:100)),
-      
       deg = c("INSWGTE", "FINWGTE", paste0("INSRWE", 1:32), paste0("FINRWE", 1:32)),
       dig = c("INSWGTI", "FINWGTI", paste0("INSRWI", 1:32), paste0("FINRWI", 1:32)),
       dpg = c("INSWGTP", "FINWGTP", paste0("INSRWP", 1:32), paste0("FINRWP", 1:32)),
       dsg = c("INSWGTS", "FINWGTS", paste0("INSRWS", 1:32), paste0("FINRWS", 1:32))
     ),
-    
     PV.roots = list(
-      
       TIMSS = list(
         G4 = c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA"),
         G8 = c("BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA")
       ),
-      
       "TIMSS Advanced" = list(
         Mathematics = c("PSPPHY", "PSPPHY", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA"),
         Physics = c("MSMMAT", "MSMMAT", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA")
       ),
-      
       TiPi = list(
         G4 = c("ASMMAT", "ASSSCI", "ASRREA")
       ),
-      
       PIRLS = list(
         G4 = c("ASRINF", "ASRLIT", "ASRREA", "ASRIIE", "ASRRSI", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI", "ASRREA", "ASRLIT", "ASRINF", "ASRIIE", "ASRRSI")
       ),
-      
       RLII = list(
         G4 = c("ASRDOC", "ASRDOC", "ASRDOC", "ASRDOC", "ASRDOC", "ASREXP", "ASREXP", "ASREXP", "ASREXP", "ASREXP", "ASRNAR", "ASRNAR", "ASRNAR", "ASRNAR", "ASRNAR", "ASRREA", "ASRREA", "ASRREA", "ASRREA", "ASRREA", "ASRDOC", "ASRDOC", "ASRDOC", "ASRDOC", "ASRDOC", "ASREXP", "ASREXP", "ASREXP", "ASREXP", "ASREXP", "ASRNAR", "ASRNAR", "ASRNAR", "ASRNAR", "ASRNAR", "ASRREA", "ASRREA", "ASRREA", "ASRREA", "ASRREA")
       ),
-      
       ICCS = list(
         G8 = c("PV[[:digit:]]+CIV"),
         G9 = c("PV[[:digit:]]+CIV")
       ),
-      
       ICILS = list(
         G8 = c("PV[[:digit:]]+CIL", "PV[[:digit:]]+CT")
       ),
-      
       PISA = list(
         fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
       )
     )
   )
-  
+  design.weight.variables <- list(
+    IEA.JK2.studies = c("CivED",
+                        "ICCS",
+                        "ICILS",
+                        "PIRLS",
+                        "prePIRLS",
+                        "ePIRLS",
+                        "RLII",
+                        "SITES",
+                        "TIMSS",
+                        "preTIMSS",
+                        "eTIMSS PSI",
+                        "TIMSS Advanced",
+                        "TiPi",
+                        "REDS"),
+    IEA.JK2.dflt.std.bckg.types = c("std.bckg",
+                                    "std.bckg.sch.bckg",
+                                    "std.EUM",
+                                    "std.AM",
+                                    "std.LAM",
+                                    "std.ach.EUM",
+                                    "std.ach.AM",
+                                    "std.ach.LAM",
+                                    "std.EUM.sch.bckg",
+                                    "std.AM.sch.bckg",
+                                    "std.LAM.sch.bckg",
+                                    "std.bckg.EUM",
+                                    "std.bckg.AM",
+                                    "std.bckg.LAM",
+                                    "std.bckg.ach.EUM",
+                                    "std.bckg.ach.AM",
+                                    "std.bckg.ach.LAM",
+                                    "std.ach.sch.bckg",
+                                    "std.bckg.EUM",
+                                    "std.bckg.AM",
+                                    "std.bckg.LAM",
+                                    "std.ach",
+                                    "std.bckg.ach",
+                                    "std.bckg.ach.sch.bckg",
+                                    "std.bckg.EUM.sch.bckg",
+                                    "std.bckg.AM.sch.bckg",
+                                    "std.bckg.LAM.sch.bckg",
+                                    "std.ach.EUM.sch.bckg",
+                                    "std.ach.AM.sch.bckg",
+                                    "std.ach.LAM.sch.bckg",
+                                    "std.bckg.std.ach.EUM.sch.bckg",
+                                    "std.bckg.std.ach.AM.sch.bckg",
+                                    "std.bckg.std.ach.LAM.sch.bckg",
+                                    "std.bckg.home",
+                                    "std.bckg.ach.home",
+                                    "std.ach.home",
+                                    "std.ach.home.sch.bckg",
+                                    "std.bckg.home.sch.bckg",
+                                    "std.bckg.ach.home.sch.bckg",
+                                    "math.std.bckg",
+                                    "math.std.ach",
+                                    "math.std.bckg.ach",
+                                    "math.std.bckg.math.sch.bckg",
+                                    "math.std.ach.math.sch.bckg",
+                                    "math.std.bckg.ach.math.sch.bckg",
+                                    "phys.std.bckg",
+                                    "phys.std.ach",
+                                    "phys.std.bckg.ach",
+                                    "phys.std.bckg.phys.sch.bckg",
+                                    "phys.std.ach.phys.sch.bckg",
+                                    "phys.std.bckg.ach.phys.sch.bckg"),
+    IEA.JK2.dflt.std.bckg.wgts = c("TOTWGT",
+                                   "TOTWGTS"),
+    IEA.JK2.dflt.std.bckg.zones = c("JKZONE",
+                                    "JKZONES"),
+    IEA.JK2.dflt.std.bckg.rep.ind = c("JKREP",
+                                      "JKREPS",
+                                      "JKINDIC"),
+    IEA.JK2.dflt.sch.bckg.types = c("sch.bckg",
+                                    "sch.bckg.tch.bckg",
+                                    "sch.bckg.math.tch.bckg",
+                                    "sch.bckg.sci.tch.bckg",
+                                    "std.home.sch.bckg",
+                                    "math.sch.bckg",
+                                    "math.sch.bckg.math.tch.bckg",
+                                    "phys.sch.bckg",
+                                    "phys.sch.bckg.phys.tch.bckg"),
+    IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
+                                   "SCHWGT",
+                                   "TOTWGTT"),
+    IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
+                                    "JKCZONE",
+                                    "JKZONE",
+                                    "JKZONET"),
+    IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
+                                      "JKCREP",
+                                      "JKREPT"),
+    IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
+                                    "sch.bckg.tch.bckg",
+                                    "std.bckg.tch.bckg",
+                                    "std.bckg.sch.bckg.tch.bckg",
+                                    "std.ach.sch.bckg.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.tch.bckg",
+                                    "std.bckg.ach.home.tch.bckg",
+                                    "std.bckg.ach.home.sch.bckg.tch.bckg",
+                                    "std.ach.tch.bckg",
+                                    "std.home.tch.bckg",
+                                    "std.ach.home.tch.bckg",
+                                    "math.tch.bckg",
+                                    "math.tch.bckg.math.sch.bckg",
+                                    "math.std.bckg.math.tch.bckg",
+                                    "math.std.bckg.ach.math.tch.bckg",
+                                    "math.std.ach.math.tch.bckg",
+                                    "math.std.bckg.math.sch.bckg.math.tch.bckg",
+                                    "math.std.ach.math.sch.bckg.math.tch.bckg",
+                                    "math.std.bckg.ach.math.sch.bckg.math.tch.bckg",
+                                    "phys.tch.bckg.phys.sch.bckg",
+                                    "phys.std.bckg.phys.tch.bckg",
+                                    "phys.std.bckg.ach.phys.tch.bckg",
+                                    "phys.std.ach.phys.tch.bckg",
+                                    "phys.std.bckg.phys.sch.bckg.phys.tch.bckg",
+                                    "phys.std.ach.phys.sch.bckg.phys.tch.bckg",
+                                    "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg",
+                                    "sci.tch.bckg.sci.sch.bckg",
+                                    "sci.tch.bckg",
+                                    "std.bckg.ach.tch.bckg",
+                                    "std.bckg.home.tch.bckg",
+                                    "std.bckg.sch.bckg.math.tch.bckg",
+                                    "std.bckg.sch.bckg.sci.tch.bckg",
+                                    "std.ach.sch.bckg.math.tch.bckg",
+                                    "std.ach.sch.bckg.sci.tch.bckg",
+                                    "std.home.sch.bckg.tch.bckg",
+                                    "std.bckg.home.sch.bckg.tch.bckg",
+                                    "std.ach.home.sch.bckg.tch.bckg",
+                                    "std.bckg.math.tch.bckg",
+                                    "std.ach.math.tch.bckg",
+                                    "std.bckg.ach.math.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.math.tch.bckg",
+                                    "sch.bckg.math.tch.bckg",
+                                    "std.bckg.sci.tch.bckg",
+                                    "std.ach.sci.tch.bckg",
+                                    "std.bckg.ach.sci.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.sci.tch.bckg",
+                                    "sch.bckg.sci.tch.bckg"),
+    IEA.JK2.dflt.tch.bckg.wgts = c("TOTWGT",
+                                   "TOTWGTT",
+                                   "TCHWGT",
+                                   "MTOTWGT",
+                                   "STOTWGT",
+                                   "MATWGT",
+                                   "SCIWGT"),
+    IEA.JK2.dflt.tch.bckg.zones = c("JKZONET",
+                                    "JKZONE"),
+    IEA.JK2.dflt.tch.bckg.rep.ind = c("JKREPT",
+                                      "JKREP",
+                                      "JKINDIC"),
+    IEA.BRR.studies = "TEDS-M",
+    IEA.BRR.dflt.inst.bckg.types = "inst.bckg",
+    IEA.BRR.dflt.inst.bckg.wgts = "FINWGTI",
+    IEA.BRR.dflt.inst.bckg.rep.wgts = paste0("FINRWI", 1:32),
+    IEA.BRR.other.inst.bckg.wgts = "INSWGTI",
+    IEA.BRR.other.inst.bckg.rep.wgts = paste0("INSRWI", 1:32),
+    IEA.BRR.dflt.prim.tch.bckg.types = c("prim.tch.bckg",
+                                         "inst.bckg.prim.tch.bckg"),
+    IEA.BRR.dflt.prim.tch.bckg.wgts = "FINWGTP",
+    IEA.BRR.dflt.prim.tch.bckg.rep.wgts = paste0("FINRWP", 1:32),
+    IEA.BRR.other.prim.tch.bckg.wgts = "INSWGTP",
+    IEA.BRR.other.prim.tch.bckg.rep.wgts = paste0("INSRWP", 1:32),
+    IEA.BRR.dflt.low_sec.tch.bckg.types = c("low-sec.tch.bckg",
+                                            "inst.bckg.low-sec.tch.bckg"),
+    IEA.BRR.dflt.low_sec.tch.bckg.wgts = "FINWGTS",
+    IEA.BRR.dflt.low_sec.tch.bckg.rep.wgts = paste0("FINRWS", 1:32),
+    IEA.BRR.other.low_sec.tch.bckg.wgts = "INSWGTS",
+    IEA.BRR.other.low_sec.tch.bckg.rep.wgts = paste0("INSRWS", 1:32),
+    IEA.BRR.dflt.educ.bckg.types = "educ.bckg",
+    IEA.BRR.dflt.educ.bckg.wgts = "FINWGTE",
+    IEA.BRR.dflt.educ.bckg.rep.wgts = paste0("FINRWE", 1:32),
+    IEA.BRR.other.educ.bckg.wgts = "INSWGTE",
+    IEA.BRR.other.educ.bckg.rep.wgts = paste0("INSRWE", 1:32),
+    OECD.BRR.studies = c("PISA",
+                         "PISA for Development",
+                         "TALIS",
+                         "TALIS 3S"),
+    OECD.BRR.dflt.std.bckg = "std.bckg",
+    OECD.BRR.dflt.std.bckg.wgts = "W_FSTUWT",
+    OECD.BRR.dflt.std.bckg.rep.wgts = c(paste0("W_FSTR", 1:80), paste0("W_FSTURWT", 1:80)),
+    OECD.BRR.dflt.out.of.school.bckg = "out.of.school.bckg",
+    OECD.BRR.dflt.out.of.school.bckg.wgts = "SPFWT0",
+    OECD.BRR.dflt.out.of.school.bckg.rep.wgts = paste0("SPFWT0", 1:30),
+    OECD.BRR.dflt.sch.bckg = "sch.bckg",
+    OECD.BRR.dflt.sch.bckg.wgts = "SCHWGT",
+    OECD.dflt.sch.bckg.rep.wgts = paste0("SRWGT", 1:100),
+    OECD.BRR.dflt.tch.bckg = c("tch.bckg",
+                               "sch.bckg.tch.bckg"),
+    OECD.BRR.dflt.tch.bckg.wgts = "TCHWGT",
+    OECD.BRR.dflt.tch.bckg.rep.wgts = paste0("TRWGT", 1:100),
+    OECD.BRR.dflt.lead.bckg = c("leader.bckg"),
+    OECD.BRR.dflt.lead.bckg.wgts = "CNTRWGT",
+    OECD.BRR.dflt.lead.bckg.rep.wgts = paste0("CRWGT", 1:92),
+    OECD.BRR.dflt.staff.bckg = c("staff.bckg",
+                                 "leader.bckg.staff.bckg"),
+    OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
+    OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
+  )
   
   default.benchmarks <- list(
     ICCS = list(
@@ -722,8 +912,8 @@ server <- function(input, output, session) {
     ePIRLS = c(400, 475, 550, 625),
     prePIRLS = c(400, 475, 550, 625),
     TIMSS = c(400, 475, 550, 625),
-    eTIMSS = c(400, 475, 550, 625),
     preTIMSS = c(400, 475, 550, 625),
+    "eTIMSS PSI" = c(400, 475, 550, 625),
     "TIMSS Advanced" = c(475, 550, 625),
     TiPi = c(400, 475, 550, 625),
     PISA = list(
@@ -842,9 +1032,15 @@ server <- function(input, output, session) {
       c("jsa", "jsg", "std.bckg.ach"),
       c("jsg", "jse", "std.bckg.EUM"),
       c("jse", "jsg", "jsa", "std.bckg.ach.EUM")
-      
     ),
     ICILS = list(
+      c("bcg", "sch.bckg"),
+      c("bsg", "std.bckg"),
+      c("btg", "tch.bckg"),
+      c("bcg", "bsg", "std.bckg.sch.bckg"),
+      c("bcg", "btg", "sch.bckg.tch.bckg")
+    ),
+    REDS = list(
       c("bcg", "sch.bckg"),
       c("bsg", "std.bckg"),
       c("btg", "tch.bckg"),
@@ -1098,6 +1294,58 @@ server <- function(input, output, session) {
       c("asg", "asa", "atg", "std.bckg.ach.tch.bckg"),
       c("ash", "asa", "atg", "std.ach.home.tch.bckg")
     ),
+    "eTIMSS PSI" = list(
+      c("acg", "sch.bckg"),
+      c("asg", "std.bckg"),
+      c("asa", "std.ach"),
+      c("asg", "asa", "std.bckg.ach"),
+      c("asg", "ash", "std.bckg.home"),
+      c("ash", "asa", "std.ach.home"),
+      c("asg", "ash", "asa", "std.bckg.ach.home"),
+      c("acg", "asg", "std.bckg.sch.bckg"),
+      c("acg", "ash", "std.home.sch.bckg"),
+      c("acg", "asa", "std.ach.sch.bckg"),
+      c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
+      c("acg", "asg", "asa", "std.bckg.ach.sch.bckg"),
+      c("acg", "asg", "ash", "std.bckg.home.sch.bckg"),
+      c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
+      c("acg", "atg", "sch.bckg.tch.bckg"),
+      c("asg", "atg", "std.bckg.tch.bckg"),
+      c("asa", "atg", "std.ach.tch.bckg"),
+      c("ash", "atg", "std.home.tch.bckg"),
+      c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
+      c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
+      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "asa", "atg", "std.bckg.ach.home.sch.bckg.tch.bckg"),
+      c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
+      c("acg", "ash", "asa", "atg", "std.ach.home.sch.bckg.tch.bckg"),
+      c("asg", "ash", "asa", "atg", "std.bckg.ach.home.tch.bckg"),
+      c("asg", "ash", "atg", "std.bckg.home.tch.bckg"),
+      c("asg", "asa", "atg", "std.bckg.ach.tch.bckg"),
+      c("ash", "asa", "atg", "std.ach.home.tch.bckg"),
+      c("bcg", "sch.bckg"),
+      c("bsg", "std.bckg"),
+      c("bsa", "std.ach"),
+      c("bsg", "bsa", "std.bckg.ach"),
+      c("bcg", "bsg", "std.bckg.sch.bckg"),
+      c("bcg", "bsa", "std.ach.sch.bckg"),
+      c("bcg", "bsg", "bsa", "std.bckg.ach.sch.bckg"),
+      c("bcg", "btm", "sch.bckg.math.tch.bckg"),
+      c("bcg", "bts", "sch.bckg.sci.tch.bckg"),
+      c("bsg", "btm", "std.bckg.math.tch.bckg"),
+      c("bsg", "bts", "std.bckg.sci.tch.bckg"),
+      c("bsa", "btm", "std.ach.math.tch.bckg"),
+      c("bsa", "bts", "std.ach.sci.tch.bckg"),
+      c("bcg", "bsg", "btm", "std.bckg.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsg", "bts", "std.bckg.sch.bckg.sci.tch.bckg"),
+      c("bcg", "bsa", "btm", "std.ach.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsa", "bts", "std.ach.sch.bckg.sci.tch.bckg"),
+      c("bsg", "bsa", "btm", "std.bckg.ach.math.tch.bckg"),
+      c("bsg", "bsa", "bts", "std.bckg.ach.sci.tch.bckg"),
+      c("bcg", "bsg", "bsa", "btm", "std.bckg.ach.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsg", "bsa", "bts", "std.bckg.ach.sch.bckg.sci.tch.bckg")
+    ),
     "TIMSS Advanced" = list(
       c("mcg", "math.sch.bckg"),
       c("msg", "math.std.bckg"),
@@ -1130,213 +1378,11 @@ server <- function(input, output, session) {
     )
   )
   
-  
-  design.weight.variables <- list(
-    IEA.JK2.studies = c("CivED",
-                        "ICCS",
-                        "ICILS",
-                        "PIRLS",
-                        "prePIRLS",
-                        "ePIRLS",
-                        "RLII",
-                        "SITES",
-                        "TIMSS",
-                        "preTIMSS",
-                        "TIMSS Advanced",
-                        "TiPi"),
-    IEA.JK2.dflt.std.bckg.types = c("std.bckg",
-                                    "std.bckg.sch.bckg",
-                                    "std.EUM",
-                                    "std.AM",
-                                    "std.LAM",
-                                    "std.ach.EUM",
-                                    "std.ach.AM",
-                                    "std.ach.LAM",
-                                    "std.EUM.sch.bckg",
-                                    "std.AM.sch.bckg",
-                                    "std.LAM.sch.bckg",
-                                    "std.bckg.EUM",
-                                    "std.bckg.AM",
-                                    "std.bckg.LAM",
-                                    "std.bckg.ach.EUM",
-                                    "std.bckg.ach.AM",
-                                    "std.bckg.ach.LAM",
-                                    "std.ach.sch.bckg",
-                                    "std.bckg.EUM",
-                                    "std.bckg.AM",
-                                    "std.bckg.LAM",
-                                    "std.ach",
-                                    "std.bckg.ach",
-                                    "std.bckg.ach.sch.bckg",
-                                    "std.bckg.EUM.sch.bckg",
-                                    "std.bckg.AM.sch.bckg",
-                                    "std.bckg.LAM.sch.bckg",
-                                    "std.ach.EUM.sch.bckg",
-                                    "std.ach.AM.sch.bckg",
-                                    "std.ach.LAM.sch.bckg",
-                                    "std.bckg.std.ach.EUM.sch.bckg",
-                                    "std.bckg.std.ach.AM.sch.bckg",
-                                    "std.bckg.std.ach.LAM.sch.bckg",
-                                    "std.bckg.home",
-                                    "std.bckg.ach.home",
-                                    "std.ach.home",
-                                    "std.ach.home.sch.bckg",
-                                    "std.bckg.home.sch.bckg",
-                                    "std.bckg.ach.home.sch.bckg",
-                                    "math.std.bckg",
-                                    "math.std.ach",
-                                    "math.std.bckg.ach",
-                                    "math.std.bckg.math.sch.bckg",
-                                    "math.std.ach.math.sch.bckg",
-                                    "math.std.bckg.ach.math.sch.bckg",
-                                    "phys.std.bckg",
-                                    "phys.std.ach",
-                                    "phys.std.bckg.ach",
-                                    "phys.std.bckg.phys.sch.bckg",
-                                    "phys.std.ach.phys.sch.bckg",
-                                    "phys.std.bckg.ach.phys.sch.bckg"),
-    IEA.JK2.dflt.std.bckg.wgts = c("TOTWGT",
-                                   "TOTWGTS"),
-    IEA.JK2.dflt.std.bckg.zones = c("JKZONE",
-                                    "JKZONES"),
-    IEA.JK2.dflt.std.bckg.rep.ind = c("JKREP",
-                                      "JKREPS",
-                                      "JKINDIC"),
-    IEA.JK2.dflt.sch.bckg.types = c("sch.bckg",
-                                    "sch.bckg.tch.bckg",
-                                    "sch.bckg.math.tch.bckg",
-                                    "sch.bckg.sci.tch.bckg",
-                                    "std.home.sch.bckg",
-                                    "math.sch.bckg",
-                                    "math.sch.bckg.math.tch.bckg",
-                                    "phys.sch.bckg",
-                                    "phys.sch.bckg.phys.tch.bckg"),
-    IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
-                                   "SCHWGT",
-                                   "TOTWGTT"),
-    
-    IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
-                                    "JKCZONE",
-                                    "JKZONE",
-                                    "JKZONET"),
-    
-    IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
-                                      "JKCREP",
-                                      "JKREPT"),
-    IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
-                                    "sch.bckg.tch.bckg",
-                                    "std.bckg.tch.bckg",
-                                    "std.bckg.sch.bckg.tch.bckg",
-                                    "std.ach.sch.bckg.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.tch.bckg",
-                                    "std.bckg.ach.home.tch.bckg",
-                                    "std.bckg.ach.home.sch.bckg.tch.bckg",
-                                    "std.ach.tch.bckg",
-                                    "std.home.tch.bckg",
-                                    "std.ach.home.tch.bckg",
-                                    "math.tch.bckg",
-                                    "math.tch.bckg.math.sch.bckg",
-                                    "math.std.bckg.math.tch.bckg",
-                                    "math.std.bckg.ach.math.tch.bckg",
-                                    "math.std.ach.math.tch.bckg",
-                                    "math.std.bckg.math.sch.bckg.math.tch.bckg",
-                                    "math.std.ach.math.sch.bckg.math.tch.bckg",
-                                    "math.std.bckg.ach.math.sch.bckg.math.tch.bckg",
-                                    "phys.tch.bckg.phys.sch.bckg",
-                                    "phys.std.bckg.phys.tch.bckg",
-                                    "phys.std.bckg.ach.phys.tch.bckg",
-                                    "phys.std.ach.phys.tch.bckg",
-                                    "phys.std.bckg.phys.sch.bckg.phys.tch.bckg",
-                                    "phys.std.ach.phys.sch.bckg.phys.tch.bckg",
-                                    "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg",
-                                    "sci.tch.bckg.sci.sch.bckg",
-                                    "sci.tch.bckg",
-                                    "std.bckg.ach.tch.bckg",
-                                    "std.bckg.home.tch.bckg",
-                                    "std.bckg.sch.bckg.math.tch.bckg",
-                                    "std.bckg.sch.bckg.sci.tch.bckg",
-                                    "std.ach.sch.bckg.math.tch.bckg",
-                                    "std.ach.sch.bckg.sci.tch.bckg",
-                                    "std.home.sch.bckg.tch.bckg",
-                                    "std.bckg.home.sch.bckg.tch.bckg",
-                                    "std.ach.home.sch.bckg.tch.bckg",
-                                    "std.bckg.math.tch.bckg",
-                                    "std.ach.math.tch.bckg",
-                                    "std.bckg.ach.math.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.math.tch.bckg",
-                                    "sch.bckg.math.tch.bckg",
-                                    "std.bckg.sci.tch.bckg",
-                                    "std.ach.sci.tch.bckg",
-                                    "std.bckg.ach.sci.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.sci.tch.bckg",
-                                    "sch.bckg.sci.tch.bckg"),
-    IEA.JK2.dflt.tch.bckg.wgts = c("TOTWGT",
-                                   "TOTWGTT",
-                                   "TCHWGT",
-                                   "MTOTWGT",
-                                   "STOTWGT",
-                                   "MATWGT",
-                                   "SCIWGT"),
-    IEA.JK2.dflt.tch.bckg.zones = c("JKZONET",
-                                    "JKZONE"),
-    IEA.JK2.dflt.tch.bckg.rep.ind = c("JKREPT",
-                                      "JKREP",
-                                      "JKINDIC"),
-    
-    IEA.BRR.studies = "TEDS-M",
-    
-    IEA.BRR.dflt.inst.bckg.types = "inst.bckg",
-    IEA.BRR.dflt.inst.bckg.wgts = "FINWGTI",
-    IEA.BRR.dflt.inst.bckg.rep.wgts = paste0("FINRWI", 1:32),
-    IEA.BRR.other.inst.bckg.wgts = "INSWGTI",
-    IEA.BRR.other.inst.bckg.rep.wgts = paste0("INSRWI", 1:32),
-    IEA.BRR.dflt.prim.tch.bckg.types = c("prim.tch.bckg",
-                                         "inst.bckg.prim.tch.bckg"),
-    IEA.BRR.dflt.prim.tch.bckg.wgts = "FINWGTP",
-    IEA.BRR.dflt.prim.tch.bckg.rep.wgts = paste0("FINRWP", 1:32),
-    IEA.BRR.other.prim.tch.bckg.wgts = "INSWGTP",
-    IEA.BRR.other.prim.tch.bckg.rep.wgts = paste0("INSRWP", 1:32),
-    IEA.BRR.dflt.low_sec.tch.bckg.types = c("low-sec.tch.bckg",
-                                            "inst.bckg.low-sec.tch.bckg"),
-    IEA.BRR.dflt.low_sec.tch.bckg.wgts = "FINWGTS",
-    IEA.BRR.dflt.low_sec.tch.bckg.rep.wgts = paste0("FINRWS", 1:32),
-    IEA.BRR.other.low_sec.tch.bckg.wgts = "INSWGTS",
-    IEA.BRR.other.low_sec.tch.bckg.rep.wgts = paste0("INSRWS", 1:32),
-    IEA.BRR.dflt.educ.bckg.types = "educ.bckg",
-    IEA.BRR.dflt.educ.bckg.wgts = "FINWGTE",
-    IEA.BRR.dflt.educ.bckg.rep.wgts = paste0("FINRWE", 1:32),
-    IEA.BRR.other.educ.bckg.wgts = "INSWGTE",
-    IEA.BRR.other.educ.bckg.rep.wgts = paste0("INSRWE", 1:32),
-    OECD.BRR.studies = c("PISA",
-                         "PISA for Development",
-                         "TALIS",
-                         "TALIS 3S"),
-    OECD.BRR.dflt.std.bckg = "std.bckg",
-    OECD.BRR.dflt.std.bckg.wgts = "W_FSTUWT",
-    OECD.BRR.dflt.std.bckg.rep.wgts = c(paste0("W_FSTR", 1:80), paste0("W_FSTURWT", 1:80)),
-    
-    OECD.BRR.dflt.out.of.school.bckg = "out.of.school.bckg",
-    OECD.BRR.dflt.out.of.school.bckg.wgts = "SPFWT0",
-    OECD.BRR.dflt.out.of.school.bckg.rep.wgts = paste0("SPFWT0", 1:30),
-    
-    OECD.BRR.dflt.sch.bckg = "sch.bckg",
-    OECD.BRR.dflt.sch.bckg.wgts = "SCHWGT",
-    OECD.dflt.sch.bckg.rep.wgts = paste0("SRWGT", 1:100),
-    OECD.BRR.dflt.tch.bckg = c("tch.bckg",
-                               "sch.bckg.tch.bckg"),
-    OECD.BRR.dflt.tch.bckg.wgts = "TCHWGT",
-    OECD.BRR.dflt.tch.bckg.rep.wgts = paste0("TRWGT", 1:100),
-    OECD.BRR.dflt.lead.bckg = c("leader.bckg"),
-    OECD.BRR.dflt.lead.bckg.wgts = "CNTRWGT",
-    OECD.BRR.dflt.lead.bckg.rep.wgts = paste0("CRWGT", 1:92),
-    OECD.BRR.dflt.staff.bckg = c("staff.bckg",
-                                 "leader.bckg.staff.bckg"),
-    OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
-    OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
-    
-  )
-  
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  
+  
+  
+  
   
   
   
@@ -1370,8 +1416,9 @@ Use the menu on the left to:<br/><br/>
 <ul><ul><li>Recode variables</li></ul></ul>
 <ul><li>Perform analyses (more analysis types will be added in future)</li></ul>
 <ul><ul><li>Percentages of respondents in certain groups and averages on variables of interest, per group</li></ul></ul>
-<ul><ul><li>Percentiles of variables within groups of respondents</li></ul></ul>
+<ul><ul><li>Percentiles of continuous variables within groups of respondents</li></ul></ul>
 <ul><ul><li>Percentages of respondents reaching or surpassing benchmarks of achievement</li></ul></ul>
+<ul><ul><li>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</li></ul></ul>
 <ul><ul><li>Correlations (Pearson or Spearman)</li></ul></ul>
 <ul><ul><li>Linear regression</li></ul></ul>
 <ul><ul><li>Binary logistic regression</li></ul></ul>
@@ -1382,7 +1429,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
 <ul><li>ICILS</li></ul>
 <ul><li>RLII</li></ul>
 <ul><li>PIRLS (including PIRLS Literacy and ePIRLS)</li></ul>
-<ul><li>TIMSS (including TIMSS Numeracy and eTIMSS)</li></ul>
+<ul><li>TIMSS (including TIMSS Numeracy and eTIMSS PSI)</li></ul>
 <ul><li>TiPi (TIMSS and PIRLS joint study)</li></ul>
 <ul><li>TIMSS Advanced</li></ul>
 <ul><li>SITES</li></ul>
@@ -1391,6 +1438,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
 <ul><li>PISA for Development</li></ul>
 <ul><li>TALIS</li></ul>
 <ul><li>TALIS Starting Strong Survey (a.k.a. TALIS 3S)</li></ul>
+<ul><li>REDS</li></ul>
 <br>For questions, feature requests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>.<br/><br/><br/><br/><br/><br/>')})
   available.volumes <- getVolumes()()
   hide("convertMissToNA")
@@ -1938,7 +1986,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   hide("mergeChooseOutFile")
   output$h1MergeData <- renderText("Merge data")
   output$mergeIntro <- renderText({HTML("Select and merge large-scale assessment .RData files. This works with all supported studies, except for PISA.")})
@@ -1950,7 +1998,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     full.file.list.merge$RData.files <- grep(pattern = "\\.RData$", x = full.file.list.merge$all.files, value = TRUE, ignore.case = TRUE)
     full.file.list.merge$RData.files.lengths <- unname(sapply(X = full.file.list.merge$RData.files, FUN = nchar))
     output$mergeSrcPathDisplay <- renderText({parseDirPath(available.volumes, input$mergeChooseSrcDir)})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(length(parseDirPath(available.volumes, input$mergeChooseSrcDir)) > 0 & length(full.file.list.merge$RData.files.lengths) == 0 || length(parseDirPath(available.volumes, input$mergeChooseSrcDir)) > 0 & !any(unique(substr(x = full.file.list.merge$RData.files, start = 1, stop = 3)) %in% unname(unlist(sapply(respondents.and.cycles, function(i) {
       i["resp.type"]
@@ -2204,7 +2252,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             if(exists("vars.selected.box.unchecked") && length(vars.selected.box.unchecked) > 0) {
               mergeAllVars$mergeSelectedVars <- mergeAllVars$mergeSelectedVars[!type %in% vars.selected.box.unchecked, ]
             }
-          }, ignoreNULL = FALSE) # The "ignoreNULL = FALSE" is for setting the reactive value to NULL when the user unselects all boxes.
+          }, ignoreNULL = FALSE)
           observe({
             if(length(full.file.list.merge$RData.files) == 0 || nrow(mergeAllCountries$mergeSelectionIEA) == 0) {
               mergeAllVars$mergeAvailVars <- merge.initial.available.vars
@@ -2467,7 +2515,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$h1VarProperties <- renderText("Variable dictionaries")
   output$varPropsIntro <- renderText({HTML("Select large-scale assessment .RData file to load and display its variables.")})
   file.var.properties <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, var.props.syntax = NULL)
@@ -2504,7 +2552,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       order_col = 1:ncol(file.var.properties$loaded))
     }
     output$varPropsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$varPropsChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.var.properties$loaded) && file.var.properties$is.lsa.data == FALSE) {
       output$varPropsStudyName <- renderText({NULL})
@@ -2668,7 +2716,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else if(nrow(varPropsAllVars$varPropsSelectedVars) == 0) {
           updateCheckboxInput(session, inputId = "varPropsSaveOutput", value = FALSE)
           hide("varPropsSaveOutput")
-          hide("consoleVarProps") # Note here we hide the console, later, when the syntax is executed, it will be shown again.
+          hide("consoleVarProps")
         }
         if(input$varPropsSaveOutput == 1) {
           show("varPropsOpenOutput")
@@ -2766,7 +2814,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$h1DataDiag <- renderText("Data diagnostics")
   hide("dataDiagChooseOutFile")
   output$dataDiagIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -2810,7 +2858,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$dataDiagSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$dataDiagChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.data.diag$loaded) && file.data.diag$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -3181,7 +3229,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execDataDiag, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleDataDiag", "")
-      expr = eval(parse(text = file.data.diag$data.diag.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.data.diag$data.diag.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consoleDataDiag", html = i$message, add = TRUE)
@@ -3190,8 +3244,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleDataDiag", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   hide("recodeInNewVars")
   hide("recodeNewMissings")
   hide("recodeChooseOutFile")
@@ -3269,7 +3322,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       order_col = 1:ncol(file.var.recode$loaded))
     }
     output$recodeSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.var.recode$loaded) && file.var.recode$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -3571,7 +3624,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       rownames = FALSE,
       colnames = c("Old variable factor labels", "Old levels", as.character(icon(name = "arrow-right")), "New levels", "New labels"),
       class = "cell-border stripe;compact cell-border;",
-      selection="none",
+      selection = "none",
       escape = FALSE,
       options = list(
         pageLength = 5000,
@@ -3933,7 +3986,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleRecode", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$h1PctsMeans <- renderText("Percentages and means")
   hide("pctsMeansChooseOutFile")
   output$pctsMeansIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -3987,7 +4040,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$pctsMeansSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$pctsMeansChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.pct.means$loaded) && file.pct.means$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -4187,7 +4240,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 768, scroller = TRUE
+        deferRender = TRUE, scrollY = 766, scroller = TRUE
       ))
       output$pctsMeansSplitVars <- renderDT({
         pctsMeansAllVars$pctsMeansSelectedSplitVars
@@ -4354,7 +4407,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         pctsMeansAllVars$pctsMeansSelectedBckgVars <- NULL
       }, ignoreInit = TRUE)
       output$pctsMeansShortcut <- renderUI({
-        if(!is.null(file.pct.means$loaded) && file.pct.means$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.pct.means$loaded) && file.pct.means$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "pctsMeansShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -4497,7 +4550,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execPctsMeans, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consolePctsMeans", "")
-      expr = eval(parse(text = file.pct.means$pct.means.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.pct.means$pct.means.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consolePctsMeans", html = i$message, add = TRUE)
@@ -4506,8 +4565,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consolePctsMeans", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$h1Prctls <- renderText("Percentiles")
   hide("prctlsChooseOutFile")
   output$prctlsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -4562,7 +4620,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$prctlsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$prctlsChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.prctls$loaded) && file.prctls$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -4657,14 +4715,14 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           actionButton(inputId = "prctlsArrowSelPVsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
-      output$prctlsArrowSelPVsRightDisbld <- renderUI({ # Disabled PV selection button.
+      output$prctlsArrowSelPVsRightDisbld <- renderUI({
         if(is.null(file.prctls$resp.type) || is.null(file.prctls$PV.sets)) {
           actionButton(inputId = "prctlsArrowSelPVsRightDisbld", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #c6c6c6; border-radius: 10px")
         } else {
           return(NULL)
         }
       })
-      output$prctlsArrowSelPVsLeftDisbld <- renderUI({ # Disabled PV selection button.
+      output$prctlsArrowSelPVsLeftDisbld <- renderUI({
         if(is.null(file.prctls$resp.type) || is.null(file.prctls$PV.sets)) {
           actionButton(inputId = "prctlsArrowSelPVsLeftDisbld", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #c6c6c6; border-radius: 10px")
         } else {
@@ -4766,7 +4824,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 768, scroller = TRUE
+        deferRender = TRUE, scrollY = 766, scroller = TRUE
       ))
       output$prctlsSplitVars <- renderDT({
         prctlsAllVars$prctlsSelectedSplitVars
@@ -4998,7 +5056,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         shinyjs::reset("prctlsValues")
       })
       output$prctlsShortcut <- renderUI({
-        if(!is.null(file.prctls$loaded) && file.prctls$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.prctls$loaded) && file.prctls$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "prctlsShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -5168,7 +5226,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execPrctls, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consolePrctls", "")
-      expr = eval(parse(text = file.prctls$prctls.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.prctls$prctls.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consolePrctls", html = i$message, add = TRUE)
@@ -5177,8 +5241,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consolePrctls", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$h1Bench <- renderText("Benchmarks")
   hide("benchChooseOutFile")
   output$benchIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -5232,7 +5295,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$benchSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$benchChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.bench$loaded) && file.bench$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -5322,28 +5385,28 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           actionButton(inputId = "benchArrowSelSplitVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
-      output$benchArrowSelBckgVarsRight <- renderUI({ # The real, enabled button
+      output$benchArrowSelBckgVarsRight <- renderUI({
         if(is.null(file.bench$PV.sets) || is.null(file.bench$resp.type) || is.null(input$benchType) || input$benchType == "Cumulative") {
           return(NULL)
         } else if(!is.null(file.bench$PV.sets) && !is.null(file.bench$resp.type) && input$benchType == "Discrete") {
           actionButton(inputId = "benchArrowSelBckgVarsRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
-      output$benchArrowSelBckgVarsLeft <- renderUI({ # The real, enabled button
+      output$benchArrowSelBckgVarsLeft <- renderUI({
         if(is.null(file.bench$PV.sets) || is.null(file.bench$resp.type) || is.null(input$benchType) || input$benchType == "Cumulative") {
           return(NULL)
         } else if(!is.null(file.bench$PV.sets) && !is.null(file.bench$resp.type) && input$benchType == "Discrete") {
           actionButton(inputId = "benchArrowSelBckgVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         }
       })
-      output$benchArrowSelBckgVarsRightDisbld <- renderUI({ # Disabled background selection button.
+      output$benchArrowSelBckgVarsRightDisbld <- renderUI({
         if(is.null(file.bench$resp.type) || is.null(input$benchType) || input$benchType == "Discrete") {
           return(NULL)
         } else if(!is.null(file.bench$resp.type) && input$benchType == "Cumulative") {
           actionButton(inputId = "benchArrowSelBckgVarsRightDisbld", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #c6c6c6; border-radius: 10px")
         }
       })
-      output$benchArrowSelBckgVarsLeftDisbld <- renderUI({ # Disabled background selection button.
+      output$benchArrowSelBckgVarsLeftDisbld <- renderUI({
         if(is.null(file.bench$resp.type) || is.null(input$benchType) || input$benchType == "Discrete") {
           return(NULL)
         } else if(!is.null(file.bench$resp.type) & !is.null(input$benchType) & input$benchType == "Cumulative") {
@@ -5413,7 +5476,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         req(input$benchAllAvailableVars_rows_selected)
         benchAllVars$benchSelectedPVVars <- rbind(isolate(benchAllVars$benchSelectedPVVars), benchAllVars$benchAvailVars[input$benchAllAvailableVars_rows_selected, , drop = FALSE])
         benchAllVars$benchSelectedPVVars <- benchAllVars$benchSelectedPVVars[complete.cases(benchAllVars$benchSelectedPVVars[ , "Variables"]), , drop = FALSE]
-        if(nrow(benchAllVars$benchSelectedPVVars) > 0) { # If nrow > 0
+        if(nrow(benchAllVars$benchSelectedPVVars) > 0) {
           benchAllVars$benchAvailVars <- isolate(benchAllVars$benchAvailVars[-input$benchAllAvailableVars_rows_selected, , drop = FALSE])
         }
       })
@@ -5421,7 +5484,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         req(input$benchPVVars_rows_selected)
         benchAllVars$benchAvailVars <- rbind(isolate(benchAllVars$benchAvailVars),        benchAllVars$benchSelectedPVVars[input$benchPVVars_rows_selected, , drop = FALSE])
         benchAllVars$benchAvailVars <- benchAllVars$benchAvailVars[complete.cases(benchAllVars$benchAvailVars[ , "Variables"]), , drop = FALSE]
-        if(nrow(benchAllVars$benchSelectedPVVars) > 0) { # If nrow > 0
+        if(nrow(benchAllVars$benchSelectedPVVars) > 0) {
           benchAllVars$benchSelectedPVVars <- isolate(benchAllVars$benchSelectedPVVars[-input$benchPVVars_rows_selected, , drop = FALSE])
         }
       })
@@ -5435,7 +5498,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         req(input$benchWeightVar_rows_selected)
         benchAllVars$benchAvailVars <- rbind(isolate(benchAllVars$benchAvailVars),        benchAllVars$benchSelectedWeightVar[input$benchWeightVar_rows_selected, , drop = FALSE])
         benchAllVars$benchAvailVars <- benchAllVars$benchAvailVars[complete.cases(benchAllVars$benchAvailVars[ , "Variables"]), , drop = FALSE]
-        if(nrow(benchAllVars$benchSelectedWeightVar) > 0) { # If nrow > 0
+        if(nrow(benchAllVars$benchSelectedWeightVar) > 0) {
           benchAllVars$benchSelectedWeightVar <- isolate(benchAllVars$benchSelectedWeightVar[-input$benchWeightVar_rows_selected, , drop = FALSE])
         }
       })
@@ -5463,7 +5526,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 768, scroller = TRUE
+        deferRender = TRUE, scrollY = 766, scroller = TRUE
       ))
       output$benchSplitVars <- renderDT({
         if(!is.null(file.bench$PV.sets)) {
@@ -5667,8 +5730,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             bench.vals <- default.benchmarks[["TIMSS"]]
           } else if(intersect(file.bench$study, names(default.benchmarks)) == "preTIMSS") {
             bench.vals <- default.benchmarks[["preTIMSS"]]
-          } else if(intersect(file.bench$study, names(default.benchmarks)) == "eTIMSS") {
-            bench.vals <- default.benchmarks[["eTIMSS"]]
+          } else if(intersect(file.bench$study, names(default.benchmarks)) == "eTIMSS PSI") {
+            bench.vals <- default.benchmarks[["eTIMSS PSI"]]
           } else if(intersect(file.bench$study, names(default.benchmarks)) == "TIMSS Advanced") {
             bench.vals <- default.benchmarks[["TIMSS Advanced"]]
           } else if(intersect(file.bench$study, names(default.benchmarks)) == "TiPi") {
@@ -5770,7 +5833,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$benchShortcut <- renderUI({
-        if(!is.null(file.bench$loaded) && file.bench$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.bench$loaded) && file.bench$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "benchShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -5958,7 +6021,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execBench, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleBench", "")
-      expr = eval(parse(text = file.bench$bench.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.bench$bench.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consoleBench", html = i$message, add = TRUE)
@@ -5967,8 +6036,581 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleBench", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
+  output$h1CrossTabs <- renderText("Crosstabulations")
+  hide("crossTabsChooseOutFile")
+  output$crossTabsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
+  file.crosstabs <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, crosstabs.syntax = NULL)
+  shinyFileChoose(input, "crossTabsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
+  observeEvent(eventExpr = input$crossTabsChooseSrcFile, {
+    file.crosstabs$loaded <- NULL
+    file.crosstabs$study <- NULL
+    file.crosstabs$cycle <- NULL
+    file.crosstabs$resp.type <- NULL
+    file.crosstabs$PV.sets <- NULL
+    file.crosstabs$default.weight <- NULL
+    if(length(parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath) > 104857600) {
+      showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
+    }
+    if(length(parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath) > 0) {
+      file.crosstabs$loaded <- get(load(parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath))
+      if("lsa.data" %in% class(file.crosstabs$loaded)) {
+        file.crosstabs$is.lsa.data <- TRUE
+      } else {
+        file.crosstabs$is.lsa.data <- FALSE
+      }
+      file.crosstabs$study <- attr(x = file.crosstabs$loaded, which = "study")
+      file.crosstabs$cycle <- attr(x = file.crosstabs$loaded, which = "cycle")
+      file.crosstabs$resp.type <- attr(x = file.crosstabs$loaded, which = "file.type")
+      file.crosstabs$loaded <- data.table(Variables = names(file.crosstabs$loaded), Variable_Labels = sapply(X = file.crosstabs$loaded, FUN = function(j) {
+        if(is.null(attr(x = j, which = "variable.label"))) {
+          return(NA_character_)
+        } else {
+          attr(x = j, which = "variable.label")
+        }
+      }),
+      order_col = 1:ncol(file.crosstabs$loaded))
+      file.crosstabs$PV.sets <- NULL
+      tmp.PV.names <- grep(pattern = paste(all.available.PVs, collapse = "|"), x = file.crosstabs$loaded[ , Variables], value = TRUE)
+      if(length(tmp.PV.names) > 0) {
+        collapsed.PVs <- collapse.loaded.file.PV.names(PV.vector = tmp.PV.names, vars.object = file.crosstabs$loaded)
+        file.crosstabs$loaded <- file.crosstabs$loaded[!Variables %in% tmp.PV.names]
+        file.crosstabs$loaded <- rbindlist(l = list(file.crosstabs$loaded, collapsed.PVs))
+        setkeyv(x = file.crosstabs$loaded, cols = "order_col")
+        file.crosstabs$PV.sets <- collapsed.PVs[ , Variables]
+      }
+      if(!is.null(file.crosstabs$study)) {
+        file.crosstabs$default.weight <- define.default.weight(study = file.crosstabs$study, loaded.names.and.labels = file.crosstabs$loaded, respondent.type = file.crosstabs$resp.type)
+      }
+      file.crosstabs$country.ID <- NULL
+      if("IDCNTRY" %in% file.crosstabs$loaded[ , Variables]) {
+        file.crosstabs$country.ID <- "IDCNTRY"
+      } else {
+        file.crosstabs$country.ID <- "CNT"
+      }
+    }
+    output$crossTabsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath})
+  }, ignoreInit = TRUE)
+  observe({
+    if(!is.null(file.crosstabs$loaded) && file.crosstabs$is.lsa.data == FALSE) {
+      showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
+    } else if (!is.null(file.crosstabs$loaded) && file.crosstabs$is.lsa.data == TRUE) {
+      output$crossTabsStudyName <- renderText({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Study: ', file.crosstabs$study))
+        }
+      })
+      output$crossTabsStudyCycle <- renderText({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Cycle: ', file.crosstabs$cycle))
+        }
+      })
+      output$crossTabsRespHead <- renderText({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('<u>The file contains data from the following respondents:</u>')
+        }
+      })
+      output$crossTabsRespAvailable <- renderText({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(file.merged.respondents[[file.crosstabs$resp.type]])
+        }
+      })
+      output$crossTabsNoWeights <- renderText({
+        if(!is.null(file.crosstabs$loaded) && is.null(file.crosstabs$default.weight) || !is.null(file.crosstabs$loaded) && length(file.crosstabs$default.weight) == 0) {
+          HTML('Error: The loaded file does not contain any recognizable default weight variable. Such files cannot be analyzed on their own and must be merged with other respondents in advance.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsVariablesExplText <- renderText({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('Use the panels below to select the variables to compute crosstabulations for.')
+        }
+      })
+      crosstabs.initial.available.vars <- file.crosstabs$loaded[!Variables %in% c(file.crosstabs$default.weight, file.crosstabs$country.ID), ]
+      crosstabs.initial.selected.split.vars <- file.crosstabs$loaded[Variables == file.crosstabs$country.ID, ]
+      crosstabs.initial.selected.bckg.row.var <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      crosstabs.initial.selected.bckg.col.var <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      crosstabs.initial.selected.PV.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      crosstabs.initial.selected.weight.var <- file.crosstabs$loaded[Variables %in% file.crosstabs$default.weight, ]
+      crossTabsAllVars <- reactiveValues(crossTabsAvailVars = crosstabs.initial.available.vars, crossTabsSelectedSplitVars = crosstabs.initial.selected.split.vars, crossTabsSelectedBckgRowVar = crosstabs.initial.selected.bckg.row.var, crossTabsSelectedBckgColVar = crosstabs.initial.selected.bckg.col.var, crossTabsSelectedPVVars = crosstabs.initial.selected.PV.vars, crossTabsSelectedWeightVar = crosstabs.initial.selected.weight.var)
+      output$crossTabsArrowSelSplitVarsRight <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelSplitVarsRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelSplitVarsLeft <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelSplitVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelBckgRowVarRight <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelBckgRowVarRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelBckgRowVarLeft <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelBckgRowVarLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelBckgColVarRight <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelBckgColVarRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelBckgColVarLeft <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelBckgColVarLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelWeightVarRight <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelWeightVarRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$crossTabsArrowSelWeightVarLeft <- renderUI({
+        if(is.null(file.crosstabs$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "crossTabsArrowSelWeightVarLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      observeEvent(input$crossTabsArrowSelSplitVarsRight, {
+        req(input$crossTabsAllAvailableVars_rows_selected)
+        crossTabsAllVars$crossTabsSelectedSplitVars <- rbind(isolate(crossTabsAllVars$crossTabsSelectedSplitVars), crossTabsAllVars$crossTabsAvailVars[input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsSelectedSplitVars <- crossTabsAllVars$crossTabsSelectedSplitVars[complete.cases(crossTabsAllVars$crossTabsSelectedSplitVars[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsAvailVars <- isolate(crossTabsAllVars$crossTabsAvailVars[-input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelSplitVarsLeft, {
+        req(input$crossTabsSplitVars_rows_selected)
+        crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedSplitVars[input$crossTabsSplitVars_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+        if(nrow(crossTabsAllVars$crossTabsSelectedSplitVars) > 0) {
+          crossTabsAllVars$crossTabsSelectedSplitVars <- isolate(crossTabsAllVars$crossTabsSelectedSplitVars[-input$crossTabsSplitVars_rows_selected, , drop = FALSE])
+        }
+        if(!file.crosstabs$country.ID %in% crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables]) {
+          showNotification(ui = HTML("Country ID <b>must always be</b> the first splitting variable!"), type = "error")
+        }
+        crossTabsAllVars$crossTabsSelectedSplitVars <- rbindlist(l = list(crossTabsAllVars$crossTabsSelectedSplitVars, crossTabsAllVars$crossTabsAvailVars[Variables == file.crosstabs$country.ID, ]))
+        crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[Variables != file.crosstabs$country.ID, ]
+      })
+      observeEvent(input$crossTabsArrowSelBckgRowVarRight, {
+        req(input$crossTabsAllAvailableVars_rows_selected)
+        crossTabsAllVars$crossTabsSelectedBckgRowVar <- rbind(isolate(crossTabsAllVars$crossTabsSelectedBckgRowVar), crossTabsAllVars$crossTabsAvailVars[input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsSelectedBckgRowVar <- crossTabsAllVars$crossTabsSelectedBckgRowVar[complete.cases(crossTabsAllVars$crossTabsSelectedBckgRowVar[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsAvailVars <- isolate(crossTabsAllVars$crossTabsAvailVars[-input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelBckgRowVarLeft, {
+        req(input$crossTabsBckgRowVar_rows_selected)
+        crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedBckgRowVar[input$crossTabsBckgRowVar_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsSelectedBckgRowVar <- isolate(crossTabsAllVars$crossTabsSelectedBckgRowVar[-input$crossTabsBckgRowVar_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelBckgColVarRight, {
+        req(input$crossTabsAllAvailableVars_rows_selected)
+        crossTabsAllVars$crossTabsSelectedBckgColVar <- rbind(isolate(crossTabsAllVars$crossTabsSelectedBckgColVar), crossTabsAllVars$crossTabsAvailVars[input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsSelectedBckgColVar <- crossTabsAllVars$crossTabsSelectedBckgColVar[complete.cases(crossTabsAllVars$crossTabsSelectedBckgColVar[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsAvailVars <- isolate(crossTabsAllVars$crossTabsAvailVars[-input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelBckgColVarLeft, {
+        req(input$crossTabsBckgColVar_rows_selected)
+        crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedBckgColVar[input$crossTabsBckgColVar_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsSelectedBckgColVar <- isolate(crossTabsAllVars$crossTabsSelectedBckgColVar[-input$crossTabsBckgColVar_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelWeightVarRight, {
+        req(input$crossTabsAllAvailableVars_rows_selected)
+        crossTabsAllVars$crossTabsSelectedWeightVar <- rbind(isolate(crossTabsAllVars$crossTabsSelectedWeightVar), crossTabsAllVars$crossTabsAvailVars[input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsSelectedWeightVar <- crossTabsAllVars$crossTabsSelectedWeightVar[complete.cases(crossTabsAllVars$crossTabsSelectedWeightVar[ , "Variables"]), , drop = FALSE]
+        crossTabsAllVars$crossTabsAvailVars <- isolate(crossTabsAllVars$crossTabsAvailVars[-input$crossTabsAllAvailableVars_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$crossTabsArrowSelWeightVarLeft, {
+        req(input$crossTabsWeightVar_rows_selected)
+        crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedWeightVar[input$crossTabsWeightVar_rows_selected, , drop = FALSE])
+        crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+        if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) > 0) {
+          crossTabsAllVars$crossTabsSelectedWeightVar <- isolate(crossTabsAllVars$crossTabsSelectedWeightVar[-input$crossTabsWeightVar_rows_selected, , drop = FALSE])
+        }
+      })
+      output$crossTabsAllAvailableVars <- renderDT({
+        setkeyv(x = crossTabsAllVars$crossTabsAvailVars, cols = "order_col")
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Available variables"),
+      rownames = FALSE,
+      filter = "top",
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables available"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 726, scroller = TRUE
+      ))
+      output$crossTabsSplitVars <- renderDT({
+        crossTabsAllVars$crossTabsSelectedSplitVars
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Split variables"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      output$crossTabsInclMiss <- renderUI({
+        if(nrow(crossTabsAllVars$crossTabsSelectedSplitVars) == 0) {
+          return(NULL)
+        } else {
+          checkboxInput(inputId = "crossTabsInclMiss", label = "Compute statistics for the missing values of the split variables", value = FALSE, width = "400px")
+        }
+      })
+      output$crossTabsBckgRowVar <- renderDT({
+        crossTabsAllVars$crossTabsSelectedBckgRowVar
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Background row variable"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      observe({
+        if(!is.null(crossTabsAllVars$crossTabsSelectedBckgRowVar) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 1) {
+          showNotification(ui = HTML("Only one row variable can be selected!"), type = "error")
+          crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedBckgRowVar[nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar), , drop = FALSE])
+          crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+          crossTabsAllVars$crossTabsSelectedBckgRowVar <- isolate(crossTabsAllVars$crossTabsSelectedBckgRowVar[-2, , drop = FALSE])
+        }
+      })
+      output$crossTabsBckgColVar <- renderDT({
+        crossTabsAllVars$crossTabsSelectedBckgColVar
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Background column variable"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      observe({
+        if(!is.null(crossTabsAllVars$crossTabsSelectedBckgColVar) && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 1) {
+          showNotification(ui = HTML("Only one column variable can be selected!"), type = "error")
+          crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedBckgColVar[nrow(crossTabsAllVars$crossTabsSelectedBckgColVar), , drop = FALSE])
+          crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+          crossTabsAllVars$crossTabsSelectedBckgColVar <- isolate(crossTabsAllVars$crossTabsSelectedBckgColVar[-2, , drop = FALSE])
+        }
+      })
+      output$crossTabsWeightVar <- renderDT({
+        crossTabsAllVars$crossTabsSelectedWeightVar
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Weight variable"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = paste0("No weight selected, default (", file.crosstabs$default.weight, ") will be used")),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      output$crossTabsSplitArePVs <- renderText({
+        if(any(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables] %in% file.crosstabs$PV.sets == TRUE)) {
+          HTML('Warning: One or more of the selected variables in "Split variables" are sets of PVs. Please check the added variables.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsBckgRowIsPVs <- renderText({
+        if(!is.null(crossTabsAllVars$crossTabsSelectedBckgRowVar) && any(crossTabsAllVars$crossTabsSelectedBckgRowVar[ , Variables] %in% file.crosstabs$PV.sets == TRUE)) {
+          HTML('Warning: The selected variable in "Background row variable" is sets of PVs. Please check the added variable.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsBckgColIsPVs <- renderText({
+        if(!is.null(crossTabsAllVars$crossTabsSelectedBckgColVar) && any(crossTabsAllVars$crossTabsSelectedBckgColVar[ , Variables] %in% file.crosstabs$PV.sets == TRUE)) {
+          HTML('Warning: The selected variable in "Background column variable" is sets of PVs. Please check the added variable.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsWgtsNotWgts <- renderText({
+        if(any(crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE)) {
+          HTML('Warning: The variable in "Weight variable" is not a weight. Please check the added variable.')
+        } else {
+          return(NULL)
+        }
+      })
+      observe({
+        if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) > 1) {
+          showNotification(ui = HTML("Only one weight variable can be selected!"), type = "error")
+          crossTabsAllVars$crossTabsAvailVars <- rbind(isolate(crossTabsAllVars$crossTabsAvailVars),        crossTabsAllVars$crossTabsSelectedWeightVar[nrow(crossTabsAllVars$crossTabsSelectedWeightVar), , drop = FALSE])
+          crossTabsAllVars$crossTabsAvailVars <- crossTabsAllVars$crossTabsAvailVars[complete.cases(crossTabsAllVars$crossTabsAvailVars[ , "Variables"]), , drop = FALSE]
+          crossTabsAllVars$crossTabsSelectedWeightVar <- isolate(crossTabsAllVars$crossTabsSelectedWeightVar[-2, , drop = FALSE])
+        }
+      })
+      observeEvent(eventExpr = input$crossTabsChooseSrcFile, {
+        crossTabsAllVars$crossTabsSelectedPVVars <- NULL
+        crossTabsAllVars$crossTabsSelectedBckgRowVar <- NULL
+        crossTabsAllVars$crossTabsSelectedBckgColVar <- NULL
+      }, ignoreInit = TRUE)
+      output$crossTabsExpCnts <- renderUI({
+        if(!is.null(file.crosstabs$loaded)) {
+          checkboxInput(inputId = "crossTabsExpCnts", label = "Compute the expected counts", value = FALSE, width = "350px")
+        }
+      })
+      output$crossTabsRowPcts <- renderUI({
+        if(!is.null(file.crosstabs$loaded)) {
+          checkboxInput(inputId = "crossTabsRowPcts", label = "Compute the row percentages", value = FALSE, width = "350px")
+        }
+      })
+      output$crossTabsColPcts <- renderUI({
+        if(!is.null(file.crosstabs$loaded)) {
+          checkboxInput(inputId = "crossTabsColPcts", label = "Compute the column percentages", value = FALSE, width = "350px")
+        }
+      })
+      output$crossTabsTotPcts <- renderUI({
+        if(!is.null(file.crosstabs$loaded)) {
+          checkboxInput(inputId = "crossTabsTotPcts", label = "Compute the total percentages", value = FALSE, width = "350px")
+        }
+      })
+      output$crossTabsShortcut <- renderUI({
+        if(!is.null(file.crosstabs$loaded) && file.crosstabs$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+          checkboxInput(inputId = "crossTabsShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
+        }
+      })
+      shinyFileSave(input, "crossTabsChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
+      output$crossTabsOpenOutput <- renderUI({
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) > 0) {
+          checkboxInput(inputId = "crossTabsOpenOutput", label = "Open the output when done", value = TRUE, width = "250px")
+        }
+      })
+      syntaxCrossTabs <- reactive({
+        file.crosstabs$crosstabs.syntax <- paste0(
+          'lsa.crosstabs(data.file = "', parseFilePaths(available.volumes, input$crossTabsChooseSrcFile)$datapath, '", ',
+          if(length(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables]) == 1) {
+            paste0('split.vars = "', crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables], '"')
+          } else if(length(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables]) > 1) {
+            paste0('split.vars = c("', paste(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables], collapse = '", "'), '")')
+          },
+          if(nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 1) {
+            paste0(', bckg.row.var = "', crossTabsAllVars$crossTabsSelectedBckgRowVar[ , Variables], '"')
+          },
+          if(nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 1) {
+            paste0(', bckg.col.var = "', crossTabsAllVars$crossTabsSelectedBckgColVar[ , Variables], '"')
+          },
+          if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] == file.crosstabs$default.weight) {
+            NULL
+          } else if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] != file.crosstabs$default.weight) {
+            paste0(', weight.var = "', crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables], '"')
+          } else if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 0) {
+            NULL
+          },
+          if(!is.null(input$crossTabsInclMiss) && input$crossTabsInclMiss == TRUE) {
+            ", include.missing = TRUE"
+          },
+          if(!is.null(input$crossTabsExpCnts) && input$crossTabsExpCnts == TRUE) {
+            ", expected.cnts = TRUE"
+          },
+          if(!is.null(input$crossTabsRowPcts) && input$crossTabsRowPcts == TRUE) {
+            ", row.pcts = TRUE"
+          },
+          if(!is.null(input$crossTabsColPcts) && input$crossTabsColPcts == TRUE) {
+            ", column.pcts = TRUE"
+          },
+          if(!is.null(input$crossTabsTotPcts) && input$crossTabsTotPcts == TRUE) {
+            ", total.pcts = TRUE"
+          },
+          if(!is.null(input$crossTabsShortcut) && input$crossTabsShortcut == TRUE) {
+            ", shortcut = TRUE"
+          },
+          paste0(', output.file = "', parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath, '"'),
+          if(!is.null(input$crossTabsOpenOutput) && input$crossTabsOpenOutput == FALSE) {
+            ', open.output = FALSE'
+          } else if(!is.null(input$crossTabsOpenOutput) && input$crossTabsOpenOutput == TRUE) {
+            NULL
+          },
+          ')'
+        )
+      })
+      output$crossTabsSyntaxHead <- renderText({
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1) {
+          HTML("Syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsSyntax <- renderText({
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1) {
+          syntaxCrossTabs()
+        } else {
+          return(NULL)
+        }
+      })
+      output$crossTabsExecBtnHead <- renderText({
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1) {
+          HTML("Press the button below to execute the syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$execCrossTabs <- renderUI({
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1) {
+          actionButton(inputId = "execCrossTabs", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        } else {
+          return(NULL)
+        }
+      })
+      observe({
+        if(is.null(crossTabsAllVars$crossTabsSelectedPVVars) || is.null(file.crosstabs$loaded) || any(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables] %in% file.crosstabs$PV.sets == TRUE) || nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 0 || nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 0 || any(crossTabsAllVars$crossTabsSelectedBckgRowVar[ , Variables] %in% file.crosstabs$PV.sets == TRUE) || any(crossTabsAllVars$crossTabsSelectedBckgColVar[ , Variables] %in% file.crosstabs$PV.sets == TRUE) || any(crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || is.null(file.crosstabs$default.weight) || length(file.crosstabs$default.weight) == 0) {
+          hide("crossTabsExpCnts")
+          hide("crossTabsRowPcts")
+          hide("crossTabsColPcts")
+          hide("crossTabsTotPcts")
+          hide("crossTabsShortcut")
+          hide("crossTabsChooseOutFile")
+          hide("crossTabsOpenOutput")
+          hide("crossTabsSyntaxHead")
+          hide("crossTabsSyntax")
+          hide("crossTabsExecBtnHead")
+          hide("execCrossTabs")
+          hide("consoleCrossTabs")
+        } else if (!is.null(file.crosstabs$loaded) || any(crossTabsAllVars$crossTabsSelectedPVVars[ , Variables] %in% file.crosstabs$PV.sets == TRUE) || any(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables] %in% file.crosstabs$PV.sets == FALSE) || any(crossTabsAllVars$crossTabsSelectedBckgRowVar[ , Variables] %in% file.crosstabs$PV.sets == FALSE) || any(crossTabsAllVars$crossTabsSelectedBckgColVar[ , Variables] %in% file.crosstabs$PV.sets == FALSE) || any(crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || !is.null(file.crosstabs$default.weight) || length(file.crosstabs$default.weight) != 0) {
+          show("crossTabsExpCnts")
+          show("crossTabsRowPcts")
+          show("crossTabsColPcts")
+          show("crossTabsTotPcts")
+          show("crossTabsShortcut")
+          show("crossTabsChooseOutFile")
+          show("crossTabsOpenOutput")
+          show("crossTabsSyntaxHead")
+          show("crossTabsSyntax")
+          show("crossTabsExecBtnHead")
+          show("execCrossTabs")
+          show("consoleCrossTabs")
+        }
+        if(is.null(file.crosstabs$default.weight) || length(file.crosstabs$default.weight) == 0) {
+          hide("crossTabsVariablesExplText")
+          hide("crossTabsAllAvailableVars")
+          hide("crossTabsArrowSelSplitVarRight")
+          hide("crossTabsArrowSelSplitVarLeft")
+          hide("crossTabsSplitVars")
+          hide("crossTabsInclMiss")
+          hide("crossTabsArrowSelBckgVarRight")
+          hide("crossTabsArrowSelBckgVarLeft")
+          hide("crossTabsBckgVars")
+          hide("crossTabsArrowSelWeightVarRight")
+          hide("crossTabsArrowSelWeightVarLeft")
+          hide("crossTabsWeightVar")
+        } else if(!is.null(file.crosstabs$default.weight) || length(file.crosstabs$default.weight) != 0) {
+          show("crossTabsVariablesExplText")
+          show("crossTabsAllAvailableVars")
+          show("crossTabsArrowSelSplitVarRight")
+          show("crossTabsArrowSelSplitVarLeft")
+          show("crossTabsSplitVars")
+          show("crossTabsInclMiss")
+          show("crossTabsArrowSelBckgVarRight")
+          show("crossTabsArrowSelBckgVarLeft")
+          show("crossTabsBckgVars")
+          show("crossTabsArrowSelWeightVarsRight")
+          show("crossTabsArrowSelWeightVarLeft")
+          show("crossTabsWeightVar")
+        }
+      })
+    }
+  })
+  observeEvent(input$execCrossTabs, {
+    showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
+    withCallingHandlers({html("consoleCrossTabs", "")
+      tryCatch({
+        expr = eval(parse(text = file.crosstabs$crosstabs.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
+    },
+    message = function(i) {
+      shinyjs::html(id = "consoleCrossTabs", html = i$message, add = TRUE)
+    },
+    warning = function(w) {
+      shinyjs::html(id = "consoleCrossTabs", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
+    })
+    session$sendCustomMessage(type = "scrollCallback", 1)
+  }, ignoreInit = TRUE)
   output$h1Corr <- renderText("Correlations")
   hide("corrChooseOutFile")
   output$corrIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -6022,7 +6664,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$corrSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$corrChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.corr$loaded) && file.corr$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -6063,7 +6705,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$corrType <- renderUI({
-        if(is.null(file.corr$PV.sets) || is.null(file.corr$resp.type)) {
+        if(is.null(file.corr$resp.type)) {
           return(NULL)
         } else {
           radioButtons(inputId = "corrType", label = "Select correlation type", choices = c("Pearson", "Spearman"), width = "200px", selected = "Pearson")
@@ -6238,7 +6880,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 768, scroller = TRUE
+        deferRender = TRUE, scrollY = 766, scroller = TRUE
       ))
       output$corrSplitVars <- renderDT({
         corrAllVars$corrSelectedSplitVars
@@ -6271,7 +6913,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       output$corrBckgVars <- renderDT({
         corrAllVars$corrSelectedBckgVars
       },
-      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Background continuous variables"),
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Background variables"),
       rownames = FALSE,
       colnames = c("Names", "Labels", "sortingcol"),
       class = "cell-border stripe;compact cell-border;",
@@ -6407,8 +7049,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         corrAllVars$corrSelectedBckgVars <- NULL
       }, ignoreInit = TRUE)
       output$corrShortcut <- renderUI({
-        if(file.corr$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.corr$study) && file.corr$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "corrShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
+        } else {
+          NULL
         }
       })
       shinyFileSave(input, "corrChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
@@ -6470,7 +7114,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$corrSyntax <- renderText({
-        if(length(parseSavePath(available.volumes, input$corrChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$corrChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) >= 2) {
           syntaxCorr()
         } else {
           return(NULL)
@@ -6491,7 +7135,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       observe({
-        if(nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) < 2 || is.null(file.corr$loaded) || any(corrAllVars$corrSelectedPVVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedSplitVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedBckgVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || is.null(file.corr$default.weight) || length(file.corr$default.weight) == 0) {
+        if(nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) < 2 || is.null(file.corr$loaded) || is.null(corrAllVars$corrSelectedPVVars) || any(corrAllVars$corrSelectedPVVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedSplitVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedBckgVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || is.null(file.corr$default.weight) || length(file.corr$default.weight) == 0) {
           hide("corrShortcut")
           hide("corrChooseOutFile")
           hide("corrOpenOutput")
@@ -6500,7 +7144,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("corrExecBtnHead")
           hide("execCorr")
           hide("consoleCorr")
-        } else if (nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) >= 2 || !is.null(file.corr$loaded) || any(corrAllVars$corrSelectedPVVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedSplitVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedBckgVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || !is.null(file.corr$default.weight) || length(file.corr$default.weight) != 0) {
+        } else if (nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) >= 2 || !is.null(file.corr$loaded) || !is.null(corrAllVars$corrSelectedPVVars) || any(corrAllVars$corrSelectedPVVars[ , Variables] %in% file.corr$PV.sets == TRUE) || any(corrAllVars$corrSelectedSplitVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedBckgVars[ , Variables] %in% file.corr$PV.sets == FALSE) || any(corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || !is.null(file.corr$default.weight) || length(file.corr$default.weight) != 0) {
           show("corrShortcut")
           show("corrChooseOutFile")
           show("corrOpenOutput")
@@ -6555,7 +7199,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execCorr, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleCorr", "")
-      expr = eval(parse(text = file.corr$corr.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.corr$corr.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consoleCorr", html = i$message, add = TRUE)
@@ -6564,8 +7214,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleCorr", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   hide("linRegChooseOutFile")
   output$h1LinReg <- renderText("Linear regression")
   output$linRegIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -6660,7 +7309,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$linRegSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$linRegChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.lin.reg$loaded) && file.lin.reg$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -6715,6 +7364,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       lin.reg.initial.selected.dep.bckg.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       lin.reg.initial.selected.dep.PV.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       lin.reg.initial.selected.weight.var <- file.lin.reg$loaded[Variables %in% file.lin.reg$default.weight, ]
+      lin.reg.initial.interactions <- data.table(Variable1 = as.character(), Check = as.character(), Variable2 = as.character())
       linRegAllVars <- reactiveValues(linRegAvailVars = lin.reg.initial.available.vars, linRegSelectedSplitVars = lin.reg.initial.selected.split.vars, linRegSelectedIndepCatBckgVars = lin.reg.initial.selected.indep.cat.bckg.vars, linRegSelectedIndepCntBckgVars = lin.reg.initial.selected.indep.cnt.bckg.vars, linRegSelectedIndepPVVars = lin.reg.initial.selected.indep.PV.vars, linRegSelectedDepBckgVars = lin.reg.initial.selected.dep.bckg.vars, linRegSelectedDepPVVars = lin.reg.initial.selected.dep.PV.vars, linRegSelectedWeightVar = lin.reg.initial.selected.weight.var)
       output$linRegArrowSelSplitVarsRight <- renderUI({
         if(is.null(file.lin.reg$resp.type)) {
@@ -6991,7 +7641,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               } else {
                 generate.lin.reg.refcat.new.inputs(FUN = selectInput, id = paste0("linregrefcat", i), choices = "PVs are added, check your input", width = "100%")
               }
-            }), # Very special case of indexing...
+            }),
             V6 = data.table(linRegAllVars$linRegSelectedIndepCatBckgVars[ , order_col])
           )
           if(nrow(lin.reg.contrasts$values)) {
@@ -7020,7 +7670,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 1294, scroller = TRUE
+        deferRender = TRUE, scrollY = 1541, scroller = TRUE
       ))
       output$linRegSplitVars <- renderDT({
         linRegAllVars$linRegSelectedSplitVars
@@ -7228,6 +7878,64 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
         deferRender = TRUE, scrollY = 100, scroller = TRUE
       ))
+      generate.interaction.checkboxes.lin.reg = function(FUN, len, id, ...) {
+        inputs <- character(len)
+        lapply(seq_len(len), function(i) {
+          inputs[i] <- as.character(FUN(paste0(id, len, i), label = NULL, ...))
+        })
+      }
+      gather.lin.reg.inter.inputs <- function(id, len) {
+        sapply(seq_len(len), function(i) {
+          value <- input[[paste0(id, len, i)]]
+          if(is.null(value)) {
+            NA
+          } else {
+            value
+          }
+        })
+      }
+      linRegPossibleInteractions <- reactive({
+        if(!is.null(file.lin.reg$resp.type) && nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) > 1) {
+          selected.vars <- c(linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables], linRegAllVars$linRegSelectedIndepCntBckgVars[ , Variables], linRegAllVars$linRegSelectedIndepPVVars[ , Variables])
+          tmp.interactions <- transpose(as.data.table(combn(x = selected.vars, m = 2)))
+          data.table(Variable1 = tmp.interactions[ , V1], Check = generate.interaction.checkboxes.lin.reg(FUN = checkboxInput, len = nrow(tmp.interactions), id = "cbox_", width = "5px"), Variable2 = tmp.interactions[ , V2])
+        } else {
+          lin.reg.initial.interactions
+        }
+      })
+      output$linRegInteractions <- renderDT({
+        linRegPossibleInteractions()
+      },
+      server = FALSE,
+      escape = FALSE,
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Define interactions"),
+      rownames = FALSE,
+      colnames = c("Variable 1", "", "Variable 2"),
+      extensions = list("Scroller"),
+      selection="none",
+      class = "row-border stripe;compact cell-border;",
+      options = list(
+        language = list(zeroRecords = "No variables available for interactions"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '20px', targets = 1), list(targets = 1, className = "small" ), list(className = 'dt-center', targets = c(0, 1, 2))),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
+        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } '),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      linRegSelectedInteractions <- reactive({
+        if(nrow(linRegPossibleInteractions()) > 0) {
+          linRegPossibleInteractions()[gather.lin.reg.inter.inputs(id = "cbox_", len = nrow(linRegPossibleInteractions())) == TRUE]
+        } else {
+          lin.reg.initial.interactions
+        }
+      })
       output$linRegWeightVar <- renderDT({
         linRegAllVars$linRegSelectedWeightVar
       },
@@ -7331,7 +8039,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         checkboxInput(inputId = "linRegStandardize", label = "Standardized coefficients", value = FALSE, width = "350px")
       })
       output$linRegShortcut <- renderUI({
-        if(file.lin.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(file.lin.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "linRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -7342,7 +8050,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$linRegShortcut <- renderUI({
-        if(!is.null(file.lin.reg$study) && file.lin.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.lin.reg$study) && file.lin.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "linRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -7399,6 +8107,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(linRegAllVars$linRegSelectedIndepPVVars) && length(linRegAllVars$linRegSelectedIndepPVVars[ , Variables]) > 1) {
             paste0(', PV.root.indep = c("', paste(linRegAllVars$linRegSelectedIndepPVVars[ , Variables], collapse = '", "'), '")')
           },
+          suppressWarnings(if(nrow(linRegSelectedInteractions() > 0)) {
+            paste0(', interactions = list(', paste(unlist(apply(X = linRegSelectedInteractions(), MARGIN = 1, FUN = function(i) {
+              paste0('c("', i[['Variable1']], '", "', i[['Variable2']], '")')
+            }, simplify = FALSE)), collapse = ', '), ')')
+          }),
           if(!is.null(input$linRegStandardize) && input$linRegStandardize == TRUE) {
             ", standardize = TRUE"
           },
@@ -7524,6 +8237,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("linRegDepBckgVars")
           hide("linRegDepPVVars")
           hide("linRegDepPVVarsDisbld")
+          hide("linRegInteractions")
           hide("linRegArrowSelWeightVarsRight")
           hide("linRegArrowSelWeightVarsLeft")
           hide("linRegWeightVar")
@@ -7553,6 +8267,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("linRegDepBckgVars")
           show("linRegDepPVVars")
           show("linRegDepPVVarsDisbld")
+          show("linRegInteractions")
           show("linRegArrowSelWeightVarsRight")
           show("linRegArrowSelWeightVarsLeft")
           show("linRegWeightVar")
@@ -7563,7 +8278,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execLinReg, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleLinReg", "")
-      expr = eval(parse(text = file.lin.reg$lin.reg.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.lin.reg$lin.reg.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consoleLinReg", html = i$message, add = TRUE)
@@ -7572,8 +8293,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleLinReg", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   hide("binLogRegChooseOutFile")
   output$h1binLogReg <- renderText("Binary logistic regression")
   output$binLogRegIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -7668,7 +8388,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     }
     output$binLogRegSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$binLogRegChooseSrcFile)$datapath})
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   observe({
     if(!is.null(file.bin.log.reg$loaded) && file.bin.log.reg$is.lsa.data == FALSE) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
@@ -7722,6 +8442,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       bin.log.reg.initial.selected.indep.PV.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       bin.log.reg.initial.selected.dep.bin.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
       bin.log.reg.initial.selected.weight.var <- file.bin.log.reg$loaded[Variables %in% file.bin.log.reg$default.weight, ]
+      bin.log.reg.initial.interactions <- data.table(Variable1 = as.character(), Check = as.character(), Variable2 = as.character())
       binLogRegAllVars <- reactiveValues(binLogRegAvailVars = bin.log.reg.initial.available.vars, binLogRegSelectedSplitVars = bin.log.reg.initial.selected.split.vars, binLogRegSelectedIndepCatBckgVars = bin.log.reg.initial.selected.indep.cat.bckg.vars, binLogRegSelectedIndepCntBckgVars = bin.log.reg.initial.selected.indep.cnt.bckg.vars, binLogRegSelectedIndepPVVars = bin.log.reg.initial.selected.indep.PV.vars, binLogRegSelectedDepBinVars = bin.log.reg.initial.selected.dep.bin.vars, binLogRegSelectedWeightVar = bin.log.reg.initial.selected.weight.var)
       output$binLogRegArrowSelSplitVarsRight <- renderUI({
         if(is.null(file.bin.log.reg$resp.type)) {
@@ -7946,7 +8667,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               } else {
                 generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = "PVs are added, check your input", width = "100%")
               }
-            }), # Very special case of indexing...
+            }),
             V6 = data.table(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , order_col])
           )
           if(nrow(bin.log.reg.contrasts$values)) {
@@ -7975,7 +8696,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         autoWidth = TRUE,
         columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        deferRender = TRUE, scrollY = 1214, scroller = TRUE
+        deferRender = TRUE, scrollY = 1461, scroller = TRUE
       ))
       output$binLogRegSplitVars <- renderDT({
         binLogRegAllVars$binLogRegSelectedSplitVars
@@ -8125,6 +8846,64 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
         deferRender = TRUE, scrollY = 100, scroller = TRUE
       ))
+      generate.interaction.checkboxes.bin.log.reg = function(FUN, len, id, ...) {
+        inputs <- character(len)
+        lapply(seq_len(len), function(i) {
+          inputs[i] <- as.character(FUN(paste0(id, len, i), label = NULL, ...))
+        })
+      }
+      gather.bin.log.reg.inter.inputs <- function(id, len) {
+        sapply(seq_len(len), function(i) {
+          value <- input[[paste0(id, len, i)]]
+          if(is.null(value)) {
+            NA
+          } else {
+            value
+          }
+        })
+      }
+      binLogRegPossibleInteractions <- reactive({
+        if(!is.null(file.bin.log.reg$resp.type) && nrow(rbindlist(l = list(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars, binLogRegAllVars$binLogRegSelectedIndepCntBckgVars, binLogRegAllVars$binLogRegSelectedIndepPVVars))) > 1) {
+          selected.vars <- c(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables], binLogRegAllVars$binLogRegSelectedIndepCntBckgVars[ , Variables], binLogRegAllVars$binLogRegSelectedIndepPVVars[ , Variables])
+          tmp.interactions <- transpose(as.data.table(combn(x = selected.vars, m = 2)))
+          data.table(Variable1 = tmp.interactions[ , V1], Check = generate.interaction.checkboxes.bin.log.reg(FUN = checkboxInput, len = nrow(tmp.interactions), id = "cbox_", width = "5px"), Variable2 = tmp.interactions[ , V2])
+        } else {
+          bin.log.reg.initial.interactions
+        }
+      })
+      output$binLogRegInteractions <- renderDT({
+        binLogRegPossibleInteractions()
+      },
+      server = FALSE,
+      escape = FALSE,
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Define interactions"),
+      rownames = FALSE,
+      colnames = c("Variable 1", "", "Variable 2"),
+      extensions = list("Scroller"),
+      selection="none",
+      class = "row-border stripe;compact cell-border;",
+      options = list(
+        language = list(zeroRecords = "No variables available for interactions"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '20px', targets = 1), list(targets = 1, className = "small" ), list(className = 'dt-center', targets = c(0, 1, 2))),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
+        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } '),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      binLogRegSelectedInteractions <- reactive({
+        if(nrow(binLogRegPossibleInteractions()) > 0) {
+          binLogRegPossibleInteractions()[gather.bin.log.reg.inter.inputs(id = "cbox_", len = nrow(binLogRegPossibleInteractions())) == TRUE]
+        } else {
+          bin.log.reg.initial.interactions
+        }
+      })
       output$binLogRegWeightVar <- renderDT({
         binLogRegAllVars$binLogRegSelectedWeightVar
       },
@@ -8222,7 +9001,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         checkboxInput(inputId = "binLogRegStandardize", label = "Standardized coefficients", value = FALSE, width = "350px")
       })
       output$binLogRegShortcut <- renderUI({
-        if(!is.null(file.bin.log.reg$study) && file.bin.log.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS", "preTIMSS", "TIMSS Advanced", "TiPi")) {
+        if(!is.null(file.bin.log.reg$study) && file.bin.log.reg$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "binLogRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
@@ -8274,6 +9053,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(binLogRegAllVars$binLogRegSelectedIndepPVVars) && length(binLogRegAllVars$binLogRegSelectedIndepPVVars[ , Variables]) > 1) {
             paste0(', PV.root.indep = c("', paste(binLogRegAllVars$binLogRegSelectedIndepPVVars[ , Variables], collapse = '", "'), '")')
           },
+          suppressWarnings(if(nrow(binLogRegSelectedInteractions() > 0)) {
+            paste0(', interactions = list(', paste(unlist(apply(X = binLogRegSelectedInteractions(), MARGIN = 1, FUN = function(i) {
+              paste0('c("', i[['Variable1']], '", "', i[['Variable2']], '")')
+            }, simplify = FALSE)), collapse = ', '), ')')
+          }),
           if(!is.null(input$binLogRegWgtNorm) && input$binLogRegWgtNorm == TRUE) {
             ", norm.weight = TRUE"
           },
@@ -8403,6 +9187,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("binLogRegDepBinVars")
           hide("binLogRegDepPVVars")
           hide("binLogRegDepPVVarsDisbld")
+          hide("binLogRegInteractions")
           hide("binLogRegArrowSelWeightVarsRight")
           hide("binLogRegArrowSelWeightVarsLeft")
           hide("binLogRegWeightVar")
@@ -8432,6 +9217,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("binLogRegDepBinVars")
           show("binLogRegDepPVVars")
           show("binLogRegDepPVVarsDisbld")
+          show("binLogRegInteractions")
           show("binLogRegArrowSelWeightVarsRight")
           show("binLogRegArrowSelWeightVarsLeft")
           show("binLogRegWeightVar")
@@ -8442,7 +9228,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   observeEvent(input$execBinLogReg, {
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleBinLogReg", "")
-      expr = eval(parse(text = file.bin.log.reg$bin.log.reg.syntax))
+      tryCatch({
+        expr = eval(parse(text = file.bin.log.reg$bin.log.reg.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
     },
     message = function(i) {
       shinyjs::html(id = "consoleBinLogReg", html = i$message, add = TRUE)
@@ -8451,8 +9243,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       shinyjs::html(id = "consoleBinLogReg", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
-    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
-  }, ignoreInit = TRUE) # Note the "ignoreInit = TRUE", this prevents crashing when reloading the data or loading different data set once data has been loaded and computations have been done.
+  }, ignoreInit = TRUE)
   output$helpHeading <- renderText("Help")
   output$helpOnRALSAWebsite <- renderText({
     HTML("Visit the user guide section at <a href = http://ralsa.ineri.org/user-guide/, target = '_blank'> RALSA's dedicated website</a> for the userguide or use the following links for help on speciffic functionality:<br/><br/>")
@@ -8469,8 +9260,9 @@ Prepare data for analysis:<br/>
 <ul><li><a href = http://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
 Perform analyses:<br/>
 <ul><li><a href = http://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages on variables of interest, per group</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of variables within groups of respondents</a></li></ul>
+<ul><li><a href = http://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
+<ul><li><a href = http://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"

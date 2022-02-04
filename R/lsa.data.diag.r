@@ -94,6 +94,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
+
 lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.var, cont.freq = FALSE, include.missing = FALSE, output.file, open.output = TRUE, ...) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -656,6 +657,21 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       })
     }
     export.workbook <- createWorkbook()
+    thousands.style <- createStyle(numFmt = "#,###0", valign = "center")
+    vertical.alignment <- createStyle(valign = "center")
+    percentages.style <- createStyle(numFmt = "0.0", valign = "center")
+    descriptives.style <- createStyle(numFmt = "0.00", valign = "center")
+    horizontal.alignment <- createStyle(halign = "center")
+    border.style <- createStyle(border = c("top", "bottom", "left", "right"))
+    grey.highlight.style <- createStyle(fgFill = "#eaeaea")
+    table.header.style <- createStyle(fgFill = "#000000", textDecoration = "bold", fontColour = "#ffffff", border = c("top", "bottom", "left", "right"), borderColour = "#ffffff", borderStyle = "double")
+    return.index.style <- createStyle(fgFill = "#ffff00", textDecoration = "bold")
+    addWorksheet(wb = export.workbook, sheetName = "Index", tabColour = "#FE001A")
+    setColWidths(wb = export.workbook, sheet = "Index", cols = 1, widths = (max(nchar(c("Variable names", variables))) + 5))
+    setColWidths(wb = export.workbook, sheet = "Index", cols = 2, widths = (max(nchar(c("Variable labels", names.and.labels[ , Labels]))) + 10))
+    setColWidths(wb = export.workbook, sheet = "Index", cols = 4:5, widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:(length(variables) +1), cols = 1:2, gridExpand = TRUE, stack = TRUE)
+    addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:2, cols = 4:5, gridExpand = TRUE, stack = TRUE)
     lapply(X = variables, FUN = function(i) {
       addWorksheet(wb = export.workbook, sheetName = i)
     })
@@ -671,15 +687,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     lapply(X = names(desc.tables), FUN = function(i) {
       setColWidths(wb = export.workbook, sheet = i, widths = "auto", cols = 1:ncol(desc.tables[[i]]))
     })
-    thousands.style <- createStyle(numFmt = "#,###0", valign = "center")
-    vertical.alignment <- createStyle(valign = "center")
-    percentages.style <- createStyle(numFmt = "0.0", valign = "center")
-    descriptives.style <- createStyle(numFmt = "0.00", valign = "center")
-    horizontal.alignment <- createStyle(halign = "center")
-    border.style <- createStyle(border = c("top", "bottom", "left", "right"))
-    grey.highlight.style <- createStyle(fgFill = "#eaeaea")
-    table.header.style <- createStyle(fgFill = "#000000", textDecoration = "bold", fontColour = "#ffffff", border = c("top", "bottom", "left", "right"), borderColour = "#ffffff", borderStyle = "double")
-    return.index.style <- createStyle(fgFill = "#ffff00", textDecoration = "bold")
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = vertical.alignment, cols = 1:ncol(desc.tables[[i]]), rows = c(3:4, 6:(nrow(desc.tables[[i]]) + 6)), gridExpand = TRUE, stack = TRUE)
     })
@@ -716,12 +723,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     lapply(X = names(desc.tables), FUN = function(i) {
       addStyle(wb = export.workbook, sheet = i, style = border.style, cols = 1:ncol(desc.tables[[i]]), rows = 7:(nrow(desc.tables[[i]]) + 6), gridExpand = TRUE, stack = TRUE)
     })
-    addWorksheet(wb = export.workbook, sheetName = "Index", tabColour = "#FE001A")
-    setColWidths(wb = export.workbook, sheet = "Index", cols = 1, widths = (max(nchar(c("Variable names", variables))) + 5))
-    setColWidths(wb = export.workbook, sheet = "Index", cols = 2, widths = (max(nchar(c("Variable labels", names.and.labels[ , Labels]))) + 10))
-    setColWidths(wb = export.workbook, sheet = "Index", cols = 4:5, widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:(length(variables) +1), cols = 1:2, gridExpand = TRUE, stack = TRUE)
-    addStyle(wb = export.workbook, sheet = "Index", style = vertical.alignment, rows = 1:2, cols = 4:5, gridExpand = TRUE, stack = TRUE)
     write.sheet.links <- function(table.names, names.seq.num) {
       writeFormula(wb = export.workbook, sheet = "Index", startCol = 1, startRow = names.seq.num, x = makeHyperlinkString(sheet = table.names, text = table.names))
     }
@@ -756,7 +757,6 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 4, style = table.header.style, stack = TRUE)
       addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
     }
-    worksheetOrder(wb = export.workbook) <- c(length(sheets(export.workbook)), 1:length(variables))
     lapply(X = variables, FUN = function(i) {
       writeFormula(wb = export.workbook, sheet = i, startCol = 1, startRow = 1, x = makeHyperlinkString(sheet = "Index", text = "<<Return to the 'Index' sheet"))
     })
