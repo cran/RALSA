@@ -25,9 +25,10 @@ Currently, RALSA works with data from \strong{all cycles} of the the following s
 \item IEA TIMSS Advanced;
 \item IEA SITES;
 \item IEA TEDS-M;
+\item IEA REDS;
 \item OECD PISA;
 \item OECD PISA for Development;
-\item OECD TALIS;
+\item OECD TALIS; and
 \item OECD TALIS Starting Strong Survey (a.k.a. TALIS 3S).
 }
 
@@ -41,14 +42,15 @@ Currently, RALSA provides the following functionality:
 \item Data preparation functions - prepare data for analysis
 \itemize{
 \item \code{lsa.convert.data} The studies provide their data in SPSS and SAS format. In addition, PISA cycles prior to 2015 provide the data in \code{.TXT} format, along with their SPSS and SAS import syntax files. This function takes the originally provided SPSS data (or \code{.TXT}, along with the import syntaxes) files and converts them into native \code{.RData} files. It also adds variable labels, user-defined missing codes (if requested) and identifiers of the study, cycle, and respondent types (i.e. student, parent, teacher, school principal).
+\item \code{lsa.select.countries.PISA} Utility function to select countries' data from a converted PISA file and save them as a new file or assign them to an object in memory. This makes it more convenient to work with PISA data files which contain data from all countries per respondent type.
 \item \code{lsa.merge.data} The studies provide data from different respondents (i.e. student, parent, teacher, school principal) which are sampled hierarchically (e.g. students are nested in classes, classes are nested in schools and taught by teachers) and linked between each other. The files in the databases are provided separately per country and respondent type. This function merges data sets from different respondents and/or countries assuring the links between the different types of respondents (i.e. linking students only to principals' data only for their school and to the teachers who teach them). This function merges data for all studies, except for PISA where the structure of the files does not allow (for now) merging data from different respondent types.
 \item \code{lsa.vars.dict} Prints and/or saves variable dictionaries in a file. Convenient when need to know the structure of the variables of interest.
 \item \code{lsa.data.diag} Helper function for quick frequency (for categorical variables) and descriptive (continuous variables) tables (weighted or unweighted). These can serve for initial exploration of the data and elaborating hypotheses. Not intended for actual analysis.
-\item \code{lsa.recode.vars} Recodes variables from large-scale assessments taking care of the user-defined missing values. Convenient for collapsing categories or cbanging their order.
+\item \code{lsa.recode.vars} Recodes variables from large-scale assessments taking care of the user-defined missing values. Convenient for collapsing categories or changing their order.
 }
 \item Analysis functions - estimates are on population level, taking into account the complex sampling and assessment design
 \itemize{
-\item \code{lsa.pcts.means} Computes percentages of respondents and means for continuous variables within groups
+\item \code{lsa.pcts.means} Computes percentages of respondents and means (arithmetic average, median or mode) for continuous variables within groups
 \item \code{lsa.prctls} Computes percentiles of continuous variables within groups
 \item \code{lsa.bench} Computes percentages of respondents reaching or surpassing benchmarks of achievement
 \item \code{lsa.crosstabs} Crosstabulations with Rao-Scott first- and second-order chi-square adjustments

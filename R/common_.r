@@ -233,7 +233,7 @@ get.analysis.and.design.vars <- function(x) {
 get.action.arguments <- function() {
   passed.args <- as.list(sys.call(which = -1))
   passed.args[["executed.analysis.function"]] <- as.character(Filter(is.symbol, passed.args))[[1]]
-  passed.args <- passed.args[c("include.missing", "shortcut", "output.file", "open.output", "executed.analysis.function", "prctls")]
+  passed.args <- passed.args[c("central.tendency", "include.missing", "shortcut", "output.file", "open.output", "executed.analysis.function", "prctls")]
   if(is.null(passed.args[["include.missing"]])) {
     passed.args[["include.missing"]] <- FALSE
   }
@@ -1036,6 +1036,11 @@ wgt.prctl <- function(variable, weight, prctls.values) {
     variable[ranked.variable[which.max(!is.na(all.person.prctls) & all.person.prctls >= i)]]
   })
 }
+wgt.MAD <- function(variable, weight, constant = 1.4826022185056) {
+  tmp.median <- wgt.prctl(variable = variable, weight = weight, prctls.values = 0.5)
+  person.diff <- abs(variable - tmp.median)
+  wgt.prctl(variable = person.diff, weight = weight, prctls.values = 0.5) * constant
+}
 wgt.pct <- function(variable, weight, na.rm = TRUE) {
   if(na.rm == FALSE & is.factor(variable) & any(is.na(variable))) {
     variable <- addNA(variable)
@@ -1081,6 +1086,30 @@ compute.multiple.means.all.repwgt <- function(data.object, vars.vector, weight.v
     tmp
   }
   return(tmp)
+}
+compute.multiple.modes.all.repwgt <- function(data.object, vars.vector, weight.var, keys) {
+  all.modes <- lapply(X = vars.vector, FUN = function(i) {
+    modes.tmp <- lapply(X = weight.var, FUN = function(j) {
+      tmp <- na.omit(data.object[ , .(Values = .N), by = mget(c(keys, i))])
+      tmp <- tmp[tmp[ , .I[Values == max(Values, na.rm = TRUE)], by = keys]$V1]
+      setkeyv(x = tmp, cols = c(keys, i))
+      if(any(tmp[ , .N, by = keys][ , N] > 1)) {
+        tmp <- tmp[tmp[ , .I[1], by = keys]$V1]
+        assign(x = "warnings.collector.multimodal", value = unique(as.character(tmp[ , get(keys[1])])), envir = parent.frame(n = 2))
+      }
+      tmp[ , Values := NULL]
+      setkeyv(x = tmp, cols = keys)
+    })
+    if(exists("warnings.collector.multimodal")) {
+      assign(x = "warnings.collector.multimodal", value = warnings.collector.multimodal, envir = parent.frame(n = 2))
+    }
+    modes.tmp <- Reduce(function(X, Y) X[Y], modes.tmp)
+    setnames(x = modes.tmp, c(keys, paste0("V", 1:length(weight.var))))
+  })
+  if(exists("warnings.collector.multimodal")) {
+    assign(x = paste0("warnings.collector.multimodal.", warnings.collector.multimodal), value = warnings.collector.multimodal, envir = parent.frame(n = 5))
+  }
+  return(all.modes)
 }
 compute.dispersion.all.repwgt <- function(data.object, vars.vector, dispersion.type, weight.var, keys, include.missing.arg) {
   if(all(is.na(data.object[ , mget(vars.vector)])) | include.missing.arg == TRUE) {
@@ -1569,11 +1598,11 @@ reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.va
     lapply(X = estimate.object, FUN = function(i) {
       setnames(x = i, grep(pattern = "V[[:digit:]]+", x = names(i), ignore.case = TRUE, value = TRUE), c(data.key.variables, weighting.variable, replication.weights))
     })
-  } else if(object.type %in% c("bckg.means", "bckg.variances", "bckg.SDs")) {
+  } else if(object.type %in% c("bckg.means", "bckg.variances", "bckg.SDs", "bckg.modes")) {
     lapply(X = estimate.object, FUN = function(i) {
       setnames(x = i, grep(pattern = "V[[:digit:]]+", x = names(i), ignore.case = TRUE, value = TRUE), c(weighting.variable, replication.weights))
     })
-  } else if(object.type == "bckg.prctls" && !is.null(bckg.vars.vector)) {
+  } else if(object.type %in% c("bckg.prctls", "bckg.medians", "bckg.MADs") && !is.null(bckg.vars.vector)) {
     split.estimate.object <- lapply(X = estimate.object, FUN = function(i) {
       V.columns <- grep(pattern = "V[[:digit:]]+", x = colnames(i), value = TRUE)
       split.V.columns <- split(x = V.columns, f = rep_len(1:(length(multiply.columns) * length(bckg.vars.vector)), length(V.columns)))
@@ -1620,29 +1649,57 @@ reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.va
   }
   mapply(assign.vars.names, list.of.data.tables = estimate.object, old.names = weighting.variable, new.names = new.names.vector, stat.name = estimate.name)
   mapply(assign.vars.names, list.of.data.tables = estimate.object, old.names = "_SE", new.names = paste0(new.names.vector, "_SE"), stat.name = estimate.name)
-  if(object.type == "bckg.prctls") {
+  if(object.type %in% c("bckg.prctls", "bckg.medians", "bckg.MADs")) {
     estimate.object <- lapply(X = estimate.object, FUN = function(i) {
       tmp <- split(x = i, by = c("Percentiles", "PRCTLS.VARS"))
-      tmp <- lapply(X = tmp, FUN = function(j) {
-        prctls.column <- grep(pattern = paste(paste0("Prctls_", bckg.vars.vector, "$"), collapse = "|"), x = colnames(j), value = TRUE)
-        setnames(x = j, old = prctls.column, new = paste0(j[ , Percentiles][1], "_", j[ , PRCTLS.VARS][1]))
-      })
-      tmp <- lapply(X = tmp, FUN = function(j) {
-        prctls.column <- grep(pattern = paste(paste0("Prctls_", bckg.vars.vector, "_SE$"), collapse = "|"), x = colnames(j), value = TRUE)
-        setnames(x = j, old = prctls.column, new = paste0(j[ , Percentiles][1], "_", j[ , PRCTLS.VARS][1], "_SE"))
-        j[ , c("Percentiles", "PRCTLS.VARS") := NULL]
-      })
+      if(object.type == "bckg.prctls") {
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          prctls.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = prctls.column, new = paste0(j[ , Percentiles][1], "_", j[ , PRCTLS.VARS][1]))
+        })
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          prctls.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "_SE$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = prctls.column, new = paste0(j[ , Percentiles][1], "_", j[ , PRCTLS.VARS][1], "_SE"))
+          j[ , c("Percentiles", "PRCTLS.VARS") := NULL]
+        })
+      } else if(object.type == "bckg.medians") {
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          medians.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = medians.column, new = paste0(estimate.name, j[ , PRCTLS.VARS][1]))
+        })
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          medians.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "_SE$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = medians.column, new = paste0(estimate.name, j[ , PRCTLS.VARS][1], "_SE"))
+          j[ , c("Percentiles", "PRCTLS.VARS") := NULL]
+        })
+      } else if(object.type == "bckg.MADs") {
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          medians.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = medians.column, new = paste0(estimate.name, j[ , PRCTLS.VARS][1]))
+        })
+        tmp <- lapply(X = tmp, FUN = function(j) {
+          medians.column <- grep(pattern = paste(paste0(estimate.name, bckg.vars.vector, "_SE$"), collapse = "|"), x = colnames(j), value = TRUE)
+          setnames(x = j, old = medians.column, new = paste0(estimate.name, j[ , PRCTLS.VARS][1], "_SE"))
+          j[ , c("Percentiles", "PRCTLS.VARS") := NULL]
+        })
+      }
       tmp <- Reduce(function(...) merge(..., all = TRUE, no.dups = FALSE), tmp)
       return(tmp)
     })
-    assign(x = "bckg.prctls", value = estimate.object, envir = parent.frame())
+    if(object.type == "bckg.prctls") {
+      assign(x = "bckg.prctls", value = estimate.object, envir = parent.frame())
+    } else if(object.type == "bckg.medians") {
+      assign(x = "bckg.medians", value = estimate.object, envir = parent.frame())
+    } else if(object.type == "bckg.MADs") {
+      assign(x = "bckg.MADs", value = estimate.object, envir = parent.frame())
+    }
   } else {
     return(estimate.object)
   }
 }
 reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.vector, weighting.variable, replication.weights, study.name, SE.design, multiply.columns = 1) {
   object.type <- deparse(substitute(estimate.object))
-  if(object.type == "PV.prctls" && !is.null(PV.vars.vector)) {
+  if(object.type %in% c("PV.prctls", "PV.medians", "PV.MADs") && !is.null(PV.vars.vector)) {
     estimate.object <- lapply(X = estimate.object, FUN = function(i) {
       lapply(X = i, FUN = function(j) {
         V.columns <- grep(pattern = "V[[:digit:]]+", x = colnames(j), value = TRUE)
@@ -1695,6 +1752,20 @@ reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.v
   mapply(FUN = assign.vars.names, list.of.data.tables = estimate.object, old.names = "sum.of.squares", new.names = PV.vars.vector, stat.name = estimate.name, append.string = "_SumSq")
   if(object.type == "PV.prctls") {
     assign(x = "PV.prctls", value = estimate.object, envir = parent.frame())
+  } else if(object.type == "PV.medians") {
+    lapply(X = estimate.object, FUN = function(i) {
+      lapply(X = i, FUN = function(j) {
+        j[ , Percentiles := NULL]
+      })
+    })
+    assign(x = "PV.medians", value = estimate.object, envir = parent.frame())
+  } else if(object.type == "PV.MADs") {
+    lapply(X = estimate.object, FUN = function(i) {
+      lapply(X = i, FUN = function(j) {
+        j[ , Percentiles := NULL]
+      })
+    })
+    assign(x = "PV.MADs", value = estimate.object, envir = parent.frame())
   }
 }
 aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.vars.vector, data.key.variables, study.name, SE.design) {
@@ -1753,7 +1824,7 @@ aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.v
   })
 }
 compute.table.average <- function(output.obj, object.variables, data.key.variables, data.properties) {
-  all.estimate.columns <- grep(pattern = "^Percentages$|Percentages_.*|Mean_.*|Prctl_.*|Variance_.*|SD_.*|Correlation_|Coefficients|Odds_|Wald_|t_value|p_value|Estimate|Crosstab_", x = names(output.obj), value = TRUE)
+  all.estimate.columns <- grep(pattern = "^Percentages$|Percentages_.*|Mean_.*|Median_.*|MAD_.*|Mode_.*|Prctl_.*|Variance_.*|SD_.*|Correlation_|Coefficients|Odds_|Wald_|t_value|p_value|Estimate|Crosstab_", x = names(output.obj), value = TRUE)
   all.estimate.columns <- grep(pattern = "_SVR$|_MVR$|_SE$", x = all.estimate.columns, value = TRUE, invert = TRUE)
   PV.estimate.root <- grep(pattern = "^PV.root", x = names(object.variables), value = TRUE)
   if(length(PV.estimate.root) != 0) {
@@ -1777,6 +1848,7 @@ compute.table.average <- function(output.obj, object.variables, data.key.variabl
   }
   SE.columns <- grep(pattern = "^[^Sum_].*_SE$|SD_.+_SE", x = names(output.obj), value = TRUE)
   if(length(data.key.variables) >= 2) {
+    output.obj <- na.omit(object = output.obj, cols = data.key.variables)
     estimates.by.split.vars <- split(x = output.obj, by = data.key.variables[2:length(data.key.variables)])
   } else {
     estimates.by.split.vars <- list(output.obj)
@@ -1937,7 +2009,7 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
   }
 }
 
-# Objects from global.r
+#################################################################
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

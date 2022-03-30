@@ -1,4 +1,24 @@
-# RALSA v.1.1.0 (2022-02-03)
+# RALSA v.1.1.5 (2022-03-30)
+## Bug fixes
+* GUI with `lsa.pcts.means` does not show the syntax when only splitting variables are chosen for the analysis and the GUI freezes when the analysis is ran.
+
+## New functionality
+* `lsa.pcts.means` received a new argument, `central.tendency`, which allows users to compute either the arithmetic mean (default and available so far), median (new) or mode (new) for continuous variables.
+
+* New function, `lsa.select.countries.PISA`, a utility function that allows the user to select countries of interest from a converted PISA data file (or PISA object residing in memory) and remove the rest of the countries' data. This is useful when the user does not want to analyze all countries data available in an original a PISA data file.
+
+## Miscellaneous
+* All analysis functions received a new argument, `save.output`. If `TRUE` (default), the output is written into MS Excel file, as it was so far. If `FALSE`, the output (a list of all different estimates) is printed on screen or can be assigned to an object. The argument is available in command-line use, but not in the GUI.
+
+* Multiple fixes in GUI for better workflow.
+
+* Improved documentation.
+
+
+
+
+
+# RALSA v.1.1.0 (2022-02-04)
 ## Bug fixes
 * All analysis functions. When "IDCNTRY" is added explicitly to the list of `split.vars` and `include.missing = TRUE`, the function crashes with the following error message. Thanks to Laura Ringiene.
 
@@ -12,7 +32,7 @@
 
 * GUI with `lsa.corr` function. When the loaded data file in "Correlations" analysis contains no PVs, the radio buttons for choosing between Pearson and Spearman correlation are not shown.
 
-* GUI with all functions. If any error occurs during a function execution (i.e. after pressing the “Execute syntax” button), the GUI crashes.
+* GUI with all functions. If any error occurs during a function execution (i.e. after pressing the "Execute syntax" button), the GUI crashes.
 
 ## New functionality
 * New analysis function, `lsa.crosstabs`. It computes a two-way table (crosstabulations) and Rao-Scott first- and second-order design corrected chi-square statistics. The Rao-Scott adjustment is needed because of the clustered design of the large-scale assessments and surveys data.

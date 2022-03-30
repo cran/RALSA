@@ -2,7 +2,7 @@
 % Please edit documentation in R/lsa.pcts.means.r
 \name{lsa.pcts.means}
 \alias{lsa.pcts.means}
-\title{Compute percentages of respondents in groups and/or means on continuous variables within specified groups}
+\title{Compute percentages of respondents in groups and/or means (arithmetic average, median or mode) on continuous variables within specified groups}
 \usage{
 lsa.pcts.means(
   data.file,
@@ -10,56 +10,71 @@ lsa.pcts.means(
   split.vars,
   bckg.avg.vars,
   PV.root.avg,
+  central.tendency,
   weight.var,
   include.missing = FALSE,
   shortcut = FALSE,
+  save.output = TRUE,
   output.file,
   open.output = TRUE
 )
 }
 \arguments{
-\item{data.file}{The file containing \code{lsa.data} object. Either this or \code{data.object}
-shall be specified, but not both. See details.}
+\item{data.file}{The file containing \code{lsa.data} object. Either this or
+\code{data.object} shall be specified, but not both.
+See details.}
 
-\item{data.object}{The object in the memory containing \code{lsa.data} object. Either this or
-\code{data.file} shall be specified, but not both. See details.}
+\item{data.object}{The object in the memory containing \code{lsa.data} object. Either
+this or \code{data.file} shall be specified, but not both.
+See details.}
 
-\item{split.vars}{Categorical variable(s) to split the results by. If no split variables are
-provided, the results will be for the overall countries' populations. If
-one or more variables are provided, the results will be split by all but
-the last variable and the percentages of respondents will be computed by
-the unique values of the last splitting variable.}
+\item{split.vars}{Categorical variable(s) to split the results by. If no split variables
+are provided, the results will be for the overall countries'
+populations. If one or more variables are provided, the results will
+be split by all but the last variable and the percentages of
+respondents will be computed by the unique values of the last splitting
+variable.}
 
-\item{bckg.avg.vars}{Name(s) of continuous background or contextual variable(s) to compute the
-means for. The results will be computed by all groups specified by the
-splitting variables. See details.}
+\item{bckg.avg.vars}{Name(s) of continuous background or contextual variable(s) to compute
+the means for. The results will be computed by all groups specified by
+the splitting variables. See details.}
 
 \item{PV.root.avg}{The root name(s) for the set(s) of plausible values. See details.}
 
-\item{weight.var}{The name of the variable containing the weights. If no name of a weight
-variable is provided, the function will automatically select the default
-weight variable for the provided data, depending on the respondent type.}
+\item{central.tendency}{Which measure of central tendency shall be computed - \code{mean}
+(default) \code{median} or \code{mode}. See details.}
 
-\item{include.missing}{Logical, shall the missing values of the splitting variables be included
-as categories to split by and all statistics produced for them? The
-default (\code{FALSE}) takes all cases on the splitting variables
-without missing values before computing any statistics. See details.}
+\item{weight.var}{The name of the variable containing the weights. If no name of a weight
+variable is provided, the function will automatically select the
+default weight variable for the provided data, depending on the
+respondent type.}
+
+\item{include.missing}{Logical, shall the missing values of the splitting variables be
+included as categories to split by and all statistics produced for
+them? The default (\code{FALSE}) takes all cases on the splitting
+variables without missing values before computing any statistics.
+See details.}
 
 \item{shortcut}{Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
 TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be
 applied? The default (\code{FALSE}) applies the "full" design when
-computing the variance components and the standard errors of the estimates.}
+computing the variance components and the standard errors of the
+estimates.}
 
-\item{output.file}{Full path to the output file including the file name. If omitted, a file
-with a default file name "Analysis.xlsx" will be written to the working
-directory (\code{getwd()}).}
+\item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
+(printed to the console or assigned to an object).}
+
+\item{output.file}{If \code{save.output = TRUE} (default), full path to the output file
+including the file name. If omitted, a file with a default file name
+"Analysis.xlsx" will be written to the working directory
+(\code{getwd()}). Ignored if \code{save.output = FALSE}.}
 
 \item{open.output}{Logical, shall the output be open after it has been written? The default
-(\code{TRUE}) opens the output in the default spreadsheet program installed
-on the computer.}
+(\code{TRUE}) opens the output in the default spreadsheet program
+installed on the computer. Ignored if \code{save.output = FALSE}.}
 }
 \value{
-A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -69,25 +84,37 @@ A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program),
 \item Sum_\verb{<}Weight variable\verb{>}\verb{_}SE - the standard error of the the estimated population number of elements per group. The actual name of the weight variable will depend on the weight variable used in the analysis.
 \item Percentages_\verb{<}Last split variable\verb{>} - the percentages of respondents (population estimates) per groups defined by the splitting variables in \code{split.vars}. The percentages will be for the last splitting variable which defines the final groups.
 \item Percentages_\verb{<}Last split variable\verb{>}\verb{_}SE - the standard errors of the percentages from above.
-\item Mean_\verb{<}Background variable\verb{>} - the average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the average estimate for each variable specified in \code{bckg.avg.vars}.
-\item Mean_\verb{<}Background variable\verb{>}\verb{_}SE - the standard error of the average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the SE of the average estimate for each variable specified in \code{bckg.avg.vars}.
-\item Variance_\verb{<}Background variable\verb{>} - the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the variance estimate for each variable specified in \code{bckg.avg.vars}.
-\item Variance_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the error of the variance estimate for each variable specified in \code{bckg.avg.vars}.
-\item SD_\verb{<}Background variable\verb{>} - the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the standard deviation estimate for each variable specified in \code{bckg.avg.vars}.
-\item SD_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the error of the standard deviation estimate for each variable specified in \code{bckg.avg.vars}.
+\item Mean_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "mean"}, the arithmetic average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the arithmetic average estimate for each variable specified in \code{bckg.avg.vars}.
+\item Mean_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the standard error of the arithmetic average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the SE of the average estimate for each variable specified in \code{bckg.avg.vars}.
+\item Variance_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "mean"}, the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the variance estimate for each variable specified in \code{bckg.avg.vars}.
+\item Variance_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the error of the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the error of the variance estimate for each variable specified in \code{bckg.avg.vars}.
+\item SD_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "mean"}, the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the standard deviation estimate for each variable specified in \code{bckg.avg.vars}.
+\item SD_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the error of the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the error of the standard deviation estimate for each variable specified in \code{bckg.avg.vars}.
+\item Median_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "median"}, the median of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the median estimate for each variable specified in \code{bckg.avg.vars}.
+\item Median_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "median"}, the standard error of the median of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the SE of the median estimate for each variable specified in \code{bckg.avg.vars}.
+\item MAD_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "median"}, the Median Absolute Deviation (MAD) for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the MAD estimate for each variable specified in \code{bckg.avg.vars}.
+\item MAD_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "median"}, the standard error of MAD for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the MAD SE estimate for each variable specified in \code{bckg.avg.vars}.
+\item Mode_\verb{<}Background variable\verb{>} - returned if \code{central.tendency = "mode"}, the mode of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the mode estimate for each variable specified in \code{bckg.avg.vars}.
+\item Mode_\verb{<}Background variable\verb{>}\verb{_}SE - returned if \code{central.tendency = "mode"}, the standard error of the mode of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the SE of the mode estimate for each variable specified in \code{bckg.avg.vars}.
 \item Percent_Missings_\verb{<}Background variable\verb{>} - the percentage of missing values for the \verb{<}Background variable\verb{>} specified in \code{bckg.avg.vars}. There will be one column with the percentage of missing values for each variable specified in \code{bckg.avg.vars}.
-\item Mean_\verb{<}root PV\verb{>} - the average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the average estimate for each set of PVs specified in \code{PV.root.avg}.
-\item Mean_\verb{<}root PV\verb{>}\verb{_}SE - the standard error of the average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of average estimate for each set of PVs specified in \code{PV.root.avg}.
-\item Mean_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling variance component for the average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling variance component for the average estimate for each set of PVs specified in \code{PV.root.avg}.
-\item Mean_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement variance component for the average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement variance component for the average estimate for each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>} - the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the total variance of each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>}\verb{_}SE - the standard error of the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the total variance of each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the variance of each set of PVs specified in \code{PV.root.avg}.
-\item Variance_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the variance of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>} - the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard deviation of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>}\verb{_}SE - the standard error of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>}\verb{_}SVR - the sampling component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
-\item SD_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item Mean_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "mean"}, the arithmetic average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the arithmetic average estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Mean_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the standard error of the arithmetic average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of arithmetic average estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Mean_\verb{<}root PV\verb{>}\verb{_}SVR - returned if \code{central.tendency = "mean"}, the sampling variance component for the arithmetic average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling variance component for the arithmetic average estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Mean_\verb{<}root PV\verb{>}\verb{_}MVR - returned if \code{central.tendency = "mean"}, the measurement variance component for the arithmetic average of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement variance component for the arithmetic average estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "mean"}, the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the total variance of each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the standard error of the total variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the total variance of each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>}\verb{_}SVR - returned if \code{central.tendency = "mean"}, the sampling component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the variance of each set of PVs specified in \code{PV.root.avg}.
+\item Variance_\verb{<}root PV\verb{>}\verb{_}MVR - returned if \code{central.tendency = "mean"}, the measurement component of the variance of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the variance of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "mean"}, the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "mean"}, the standard error of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>}\verb{_}SVR - returned if \code{central.tendency = "mean"}, the sampling component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the sampling component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item SD_\verb{<}root PV\verb{>}\verb{_}MVR - returned if \code{central.tendency = "mean"}, the measurement component of the standard deviation of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the measurement component of the standard deviation of each set of PVs specified in \code{PV.root.avg}.
+\item Median_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "median"}, the median of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the median estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Median_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "median"}, the standard error of the median of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of median estimate for each set of PVs specified in \code{PV.root.avg}.
+\item MAD_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "median"}, the Median Absolute Deviation (MAD) for a set of PVs specified in \code{PV.root.avg}. There will be one column with the MAD estimate for each set of PVs specified in \code{PV.root.avg}.
+\item MAD_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "median"}, the standard error of MAD for a set of PVs specified in \code{PV.root.avg}. There will be one column with the SE estimate of the MAD for each set of PVs specified in \code{PV.root.avg}.
+\item Mode_\verb{<}root PV\verb{>} - returned if \code{central.tendency = "mode"}, the mode of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the mode estimate for each set of PVs specified in \code{PV.root.avg}.
+\item Mode_\verb{<}root PV\verb{>}\verb{_}SE - returned if \code{central.tendency = "mode"}, the standard error of the mode of the PVs with the same \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the standard error of mode estimate for each set of PVs specified in \code{PV.root.avg}.
 \item Percent_Missings_\verb{<}root PV\verb{>} - the percentage of missing values for the \verb{<}root PV\verb{>} specified in \code{PV.root.avg}. There will be one column with the percentage of missing values for each set of PVs specified in \code{PV.root.avg}.
 }
 The second sheet contains some additional information related to the analysis per country in the following columns:
@@ -111,15 +138,15 @@ The third sheet contains the call to the function with values for all parameters
 \code{lsa.pcts.means} computes percentages of respondents within groups defined by one or more variables and the means for one or more variables.
 }
 \details{
-The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continuous variable(s) are provided (background or sets of plausible values), their means will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
+The function computes percentages of respondents specified by the categories of splitting variables. The percentages are computed within the groups specified by the last splitting variable. If a continuous variable(s) are provided (background or sets of plausible values), their means (as arithmetic means, medians or modes) will be computed by groups defined by one or more splitting variables. If no splitting variables are added, the results will be computed only by country.
 
 Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
 
-Multiple continuous background variables can be provided to compute their means. Please note that in this case the results will slightly differ compared to using each of the same background continuous variables in separate analyses. This is because the cases with the missing values on \code{bckg.avg.vars} are removed in advance and the more variables are provided to \code{bckg.avg.vars}, the more cases are likely to be removed.
+Multiple continuous background variables can be provided to compute their means (as arithmetic means, medians or modes). Please note that in this case the results will slightly differ compared to using each of the same background continuous variables in separate analyses. This is because the cases with the missing values on \code{bckg.avg.vars} are removed in advance and the more variables are provided to \code{bckg.avg.vars}, the more cases are likely to be removed.
 
 Computation of means involving plausible values requires providing a root of the plausible values names in \code{PV.root.avg}. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per construct (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.avg} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.avg} as "PV#CIV". More than one set of PVs can be added. Note, however, that providing continuous variable(s) for the \code{bckg.avg.vars} argument and root PV for the \code{PV.root.avg} argument will affect the results for the PVs because the cases with missing on \code{bckg.avg.vars} will be removed and this will also affect the results from the PVs. On the other hand, using more than one set of PVs at the same time should not affect the results on any PV estimates because PVs shall not have any missing values.
 
-If no variables are specified for \code{bckg.avg.vars}, and no PV root names for \code{PV.root.avg}, the output will contain only percentages of cases in groups specified by the splitting variables, if any.
+If no variables are specified for \code{bckg.avg.vars}, and no PV root names for \code{PV.root.avg}, the output will contain only percentages of cases in groups specified by the splitting variables, if any. If they are, their means will be computed either as arithmetic means, medians or modes. This can be controlled by setting the \code{central.tendency} argument to \code{mean} (default), \code{median} or \code{mode}. Note that if \code{central.tendency = "mode"} and the variables passed to \code{bckg.avg.vars} or the sets of PVs passed to \code{PV.root.avg} have more than one mode, the value for the lowest value will be included in the output. As a conseequence, the standard errors may be inflated.
 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
@@ -135,31 +162,39 @@ split.vars = "BSBG01", include.missing = FALSE,
 output.file = "C:/temp/test.xlsx", open.output = TRUE)
 }
 
-# Compute the average of the complex background scale "Students like learning mathematics" by
-# student sex and frequency of using computer or tablet at home using TIMSS 2015 grade 8 data
-# loaded in memory, using the shortcut, include the missing values in the splitting variables,
-# and use the senate weights
+# Compute the arithmetic average of the complex background scale "Students like learning
+# mathematics" by student sex and frequency of using computer or tablet at home using TIMSS
+# 2015 grade 8 data loaded in memory, using the shortcut, include the missing values in
+# the splitting variables, and use the senate weights
 \dontrun{
 lsa.pcts.means(data.object = T15_G8_student_data, split.vars = c("BSBG01", "BSBG13A"),
 bckg.avg.vars = "BSBGSLM", weight.var = "SENWGT", include.missing = FALSE, shortcut = TRUE,
 output.file = "C:/temp/test.xlsx", open.output = TRUE)
 }
 
-# Repeat the analysis from above, adding a second continuous variable to compute the mean for,
-# the "Students Like Learning Science" complex scale
+# Repeat the analysis from above, adding a second continuous variable to compute the arithmetic
+# average for, the "Students Like Learning Science" complex scale
 \dontrun{
 lsa.pcts.means(data.object = T15_G8_student_data, split.vars = c("BSBG01", "BSBG13A"),
 bckg.avg.vars = c("BSBGSLM", "BSBGSLS"), weight.var = "SENWGT", include.missing = FALSE,
 shortcut = TRUE, output.file = "C:/temp/test.xlsx", open.output = TRUE)
 }
 
-# Compute the average student overall reading achievement scores (i.e. using a set of PVs),
-# using PIRLS 2016 student data file, split the output by student sex, use the full design,
-# include the missing values od the splitting variable (i.e. student sex), and do not open the
-# output after the computations are finished
+# Compute the arithmetic average of student overall reading achievement scores
+# (i.e. using a set of PVs), using PIRLS 2016 student data file, split the output by student
+# sex, use the full design, include the missing values od the splitting variable
+# (i.e. student sex), and do not open the output after the computations are finished
 \dontrun{
 lsa.pcts.means(data.file = "C:/Data/PIRLS_2016_Student_Miss_to_NA.RData", split.vars = "ASBG01",
 PV.root.avg = "ASRREA", include.missing = TRUE,
+output.file = "C:/temp/test.xlsx", open.output = FALSE)
+}
+
+# Same as above, this time compute the median instead of the arithmetic average
+\dontrun{
+lsa.pcts.means(data.file = "C:/Data/PIRLS_2016_Student_Miss_to_NA.RData", split.vars = "ASBG01",
+PV.root.avg = "ASRREA", include.missing = TRUE,
+central.tendency = "median",
 output.file = "C:/temp/test.xlsx", open.output = FALSE)
 }
 

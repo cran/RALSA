@@ -1,631 +1,7 @@
 server <- function(input, output, session) {
   
-  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-  #$ Define common objects
-  country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
-  
-  PISA.data.files <- list(
-    PISA.pre2015.TXT.files = list(
-      "2000" = c("intcogn_v4.txt",
-                 "intscho.txt",
-                 "intstud_math_v3.txt",
-                 "intstud_read_v3.txt",
-                 "intstud_scie_v3.txt"),
-      "2003" = c("INT_cogn_2003_v2.txt",
-                 "INT_schi_2003.txt",
-                 "INT_stui_2003_v2.txt"),
-      "2006" = c("INT_Cogn06_S_Dec07.txt",
-                 "INT_Cogn06_T_Dec07.txt",
-                 "INT_Par06_Dec07.txt",
-                 "INT_Sch06_Dec07.txt",
-                 "INT_Stu06_Dec07.txt"),
-      "2009" = c("INT_COG09_S_DEC11.txt",
-                 "INT_COG09_TD_DEC11.txt",
-                 "INT_PAR09_DEC11.txt",
-                 "INT_SCQ09_Dec11.txt",
-                 "INT_STQ09_DEC11.txt"),
-      "2012" = c("INT_COG12_DEC03.txt",
-                 "INT_COG12_S_DEC03.txt",
-                 "INT_PAQ12_DEC03.txt",
-                 "INT_SCQ12_DEC03.txt",
-                 "INT_STU12_DEC03.txt")
-    ),
-    
-    PISA.pre2015.SPS.files = list(
-      "2000" = c("PISA2000_SPSS_cognitive_item.sps",
-                 "PISA2000_SPSS_school_questionnaire.sps",
-                 "PISA2000_SPSS_student_mathematics.sps",
-                 "PISA2000_SPSS_student_reading.sps",
-                 "PISA2000_SPSS_student_science.sps"),
-      "2003" = c("PISA2003_SPSS_cognitive_item.sps",
-                 "PISA2003_SPSS_school.sps",
-                 "PISA2003_SPSS_student.sps"),
-      "2006" = c("PISA2006_SPSS_scored_cognitive_item.sps",
-                 "PISA2006_SPSS_cognitive_item.sps",
-                 "PISA2006_SPSS_parent.sps",
-                 "PISA2006_SPSS_school.sps",
-                 "PISA2006_SPSS_student.sps"),
-      "2009" = c("PISA2009_SPSS_score_cognitive_item.sps",
-                 "PISA2009_SPSS_cognitive_item.sps",
-                 "PISA2009_SPSS_parent.sps",
-                 "PISA2009_SPSS_school.sps",
-                 "PISA2009_SPSS_student.sps"),
-      "2012" = c("PISA2012_SPSS_cognitive_item.sps",
-                 "PISA2012_SPSS_scored_cognitive_item.sps",
-                 "PISA2012_SPSS_parent.sps",
-                 "PISA2012_SPSS_school.sps",
-                 "PISA2012_SPSS_student.sps")
-    ),
-    
-    PISA.2015.plus.SPSS.files = list(
-      "2015" = c("CY6_MS_CM2_SCH_QQQ.sav",
-                 "CY6_MS_CM2_STU_COG.sav",
-                 "CY6_MS_CM2_STU_QQQ.sav",
-                 "CY6_MS_CM2_STU_QTM.sav",
-                 "CY6_MS_CM2_TCH_QQQ.sav",
-                 "CY6_MS_CMB_SCH_QQQ.sav",
-                 "Cy6_ms_cmb_stu_cog.sav",
-                 "CY6_MS_CMB_STU_CPS.sav",
-                 "CY6_MS_CMB_STU_FLT.sav",
-                 "CY6_MS_CMB_STU_QQ2.sav",
-                 "CY6_MS_CMB_STU_QQQ.sav",
-                 "Cy6_ms_cmb_stu_qtm.sav",
-                 "Cy6_ms_cmb_tch_qqq.sav"),
-      "2018" = c("CY07_MSU_SCH_QQQ.sav",
-                 "CY07_MSU_STU_COG.sav",
-                 "CY07_MSU_STU_QQQ.sav",
-                 "CY07_MSU_STU_TIM.sav",
-                 "CY07_MSU_TCH_QQQ.sav",
-                 "CY07_VNM_STU_COG.sav",
-                 "CY07_VNM_STU_PVS.sav")
-    )
-  )
-  
-  
-  
-  PISA.for.Development.data.files <- list(
-    PISA.for.Development.2019.files = list(
-      "2019" = c("CY1MDAI_SCH_QQQ.sav",
-                 "CY1MDAI_STU_COG.sav",
-                 "CY1MDAI_STU_QQQ.sav",
-                 "CY1MDAI_TCH_QQQ.sav",
-                 "CY1MDCI_COG.SAV",
-                 "CY1MDCI_QQQ.SAV",
-                 "CY1MDCI_TIM.SAV")
-    )
-  )
-  
-  
-  studies.and.cycles <- list(
-    TIMSS = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
-    ),
-    preTIMSS = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2015" = "n1"
-    ),
-    "eTIMSS PSI" = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "2019" = "z7", "2023" = "z8", "2027" = "z9"
-    ),
-    "TIMSS Advanced" = list(
-      first.chars = c("mcg", "msa", "msg", "msr", "mst", "mtg", "pcg", "psa", "psg", "psr", "pst", "ptg"), "1995" = "m1", "2008" = "m2", "2015" = "m3"
-    ),
-    PIRLS = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2001" = "r1", "2006" = "r2", "2011" = "r3", "2016" = "r4", "2021" = "r5", "2026" = "r6"
-    ),
-    prePIRLS = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2011" = "l1", "2016" = "l2"
-    ),
-    ePIRLS = list(
-      first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2016" = "e1"
-    ),
-    TiPi = list(
-      first.chars = c("acg", "asa", "asg", "ash", "ast", "atg"), "2011" = "b1"
-    ),
-    RLII = list(
-      first.chars = "asc", "1991" = "t1", "2001" = "t2"
-    ),
-    SITES = list(
-      first.chars = c("axg", "bxg", "cxg", "bcg", "btm", "bts"), "1998" = "s0", "2006" = "s1"
-    ),
-    CivED = list(
-      first.chars = c("bc_", "bl_", "bs_", "bt_", "cs_"), "1999" = "f2"
-    ),
-    ICCS = list(
-      first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg", "jsa", "jse", "jsg", "jsl", "jss", "jsr"), "2009" = "c2", "2016" = "c3"
-    ),
-    ICILS = list(
-      first.chars = c("bcg", "bsg", "btg"), "2013" = "i1", "2018" = "i2"
-    ),
-    REDS = list(
-      first.chars = c("bcg", "bsg", "btg"), "2021" = "v1"
-    ),
-    TALIS = list(
-      first.chars = c("acg", "atg", "bcg", "btg", "ccg", "ctg", "pcg", "ptg"), "2008" = "t1", "2013" = "t2", "2018" = "t3"
-    ),
-    "TALIS 3S" = list(
-      first.chars = c("alg", "asg", "blg", "bsg"), "2018" = "s1"
-    ),
-    "TEDS-M" = list(
-      first.chars = c("dig", "deg", "dpg", "dsg", "dpr", "dsr"), "2008" = "t1"
-    )
-  )
-  
-  
-  
-  respondents.and.cycles <- list(
-    
-    "Student background" = list(
-      resp.type = c("asc", "asg", "bsg", "isg", "jsg", "bs_", "cs_"),
-      round = c(
-        "b1",
-        "c2", "c3", "c4", "c5", "c6",
-        "e1", "e2", "e3", "e4", "e5", "e6",
-        "f2",
-        "i1", "i2", "i3", "i4", "i5", "i6",
-        "v1",
-        "l1", "l2", "l3", "l4", "l5", "l6",
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "n1", "n2", "n3", "n4", "n5", "n6",
-        "z7", "z8", "z9",
-        "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-        "t1", "t2"
-      )
-    ),
-    
-    "Mathematics student background" = list(
-      resp.type = "msg",
-      round = c("m1", "m2", "m3", "m4")
-    ),
-    
-    "Physics student background" = list(
-      resp.type = "psg",
-      round = c("m1", "m2", "m3", "m4")
-    ),
-    
-    "Student achievement items" = list(
-      resp.type = c("asa", "bsa", "isa", "jsa"),
-      round = c(
-        "c2", "c3", "c4", "c5", "c6",
-        "e1", "e2", "e3", "e4", "e5", "e6",
-        "l1", "l2", "l3", "l4", "l5", "l6",
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "n1", "n2", "n3", "n4", "n5", "n6",
-        "z7", "z8", "z9",
-        "r1", "r2", "r3", "r4", "r5", "r6", "r7"
-      )
-    ),
-    
-    "Student home" = list(
-      resp.type = "ash",
-      round = c(
-        "b1",
-        "e1", "e2", "e3", "e4", "e5", "e6",
-        "l1", "l2", "l3", "l4", "l5", "l6",
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "n1", "n2", "n3", "n4", "n5", "n6",
-        "z7", "z8", "z9",
-        "r1", "r2", "r3", "r4", "r5", "r6", "r7"
-      )
-    ),
-    
-    "European student module" = list(
-      resp.type = "ise",
-      round = c("c2", "c3", "c4", "c5", "c6")
-    ),
-    
-    "Latin American student module" = list(
-      resp.type = "isl",
-      round = c("c2", "c3", "c4", "c5", "c6")
-    ),
-    
-    "Asian student module" = list(
-      resp.type = "iss",
-      round = c("c2", "c3", "c4", "c5", "c6")
-    ),
-    
-    "Teacher background" = list(
-      resp.type = c("atg", "btg", "ctg", "ptg", "itg", "bt_"),
-      round = c(
-        "b1",
-        "c2", "c3", "c4", "c5", "c6",
-        "e1", "e2", "e3", "e4", "e5", "e6",
-        "f2",
-        "i1", "i2", "i3", "i4", "i5", "i6",
-        "v1",
-        "l1", "l2", "l3", "l4", "l5", "l6",
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "n1", "n2", "n3", "n4", "n5", "n6",
-        "z7", "z8", "z9",
-        "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-        "t1", "t2", "t3", "t4", "t5", "t6"
-      )
-    ),
-    
-    "Mathematics teacher background" = list(
-      resp.type = c("btm", "mtg"),
-      round = c(
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "z7", "z8", "z9",
-        "s1"
-      )
-    ),
-    
-    "Physics teacher background" = list(
-      resp.type = "ptg",
-      round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
-    ),
-    
-    "Science teacher background" = list(
-      resp.type = "bts",
-      round = c(
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "z7", "z8", "z9",
-        "s1"
-      )
-    ),
-    
-    "School background" = list(
-      resp.type = c("acg", "bcg", "ccg", "pcg", "icg", "bc_"),
-      round = c(
-        "f2",
-        "c2", "c3", "c4", "c5", "c6",
-        "i1", "i2", "i3", "i4", "i5", "i6",
-        "v1",
-        "e1", "e2", "e3", "e4", "e5", "e6",
-        "l1", "l2", "l3", "l4", "l5", "l6",
-        "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
-        "z7", "z8", "z9",
-        "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-        "s1",
-        "t1", "t2", "t3", "t4", "t5", "t6"
-      )
-    ),
-    
-    "Mathematics school background" = list(
-      resp.type = "mcg",
-      round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
-    ),
-    
-    "Physics school background" = list(
-      resp.type = "pcg",
-      round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
-    ),
-    
-    "Leader background data" = list(
-      resp.type = c("alg", "blg"),
-      round = c("s1", "s2", "s3", "s4")
-    ),
-    
-    "Staff background data" = list(
-      resp.type = c("asg", "bsg"),
-      round = c("s1", "s2", "s3", "s4")
-    ),
-    
-    "Institutional program background" = list(
-      resp.type = "dig",
-      round = "t1"
-    ),
-    
-    "Educator background" = list(
-      resp.type = "deg",
-      round = "t1"
-    ),
-    
-    "Future primary teacher background" = list(
-      resp.type = "dpg",
-      round = "t1"
-    ),
-    
-    "Future lower-secondary teacher background" = list(
-      resp.type = "dsg",
-      round = "t1"
-    )
-    
-  )
-  
-  
-  
-  
-  file.merged.respondents <- list(
-    "educ.bckg"                                     = "Educator background",
-    "inst.bckg"                                     = "Institutional background",
-    "inst.bckg.low-sec.tch.bckg"                    = "Institutional background<br/>Lower-secondary future teacher background",
-    "inst.bckg.prim.tch.bckg"                       = "Institutional background<br/>Primary future teacher background",
-    "leader.bckg"                                   = "Leader background",
-    "leader.bckg.staff.bckg"                        = "Leader background<br/>Staff background",
-    "low-sec.tch.bckg"                              = "Future lower-secondary teacher background",
-    "math.sch.bckg"                                 = "Advanced mathematics school background",
-    "math.std.ach"                                  = "Advanced mathematics student achievement",
-    "math.std.ach.math.sch.bckg"                    = "Advanced mathematics student achievement<br/>Advanced mathematics school background",
-    "math.std.ach.math.sch.bckg.math.tch.bckg"      = "Advanced mathematics student achievement<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
-    "math.std.ach.math.tch.bckg"                    = "Advanced mathematics student achievement<br/>Advanced mathematics teacher background",
-    "math.std.bckg"                                 = "Advanced mathematics student background",
-    "math.std.bckg.ach"                             = "Advanced mathematics student background<br/>Advanced mathematics student achievement",
-    "math.std.bckg.ach.math.sch.bckg"               = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics school background",
-    "math.std.bckg.ach.math.sch.bckg.math.tch.bckg" = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
-    "math.std.bckg.ach.math.tch.bckg"               = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics teacher background",
-    "math.std.bckg.math.sch.bckg"                   = "Advanced mathematics student background<br/>Advanced mathematics school background",
-    "math.std.bckg.math.sch.bckg.math.tch.bckg"     = "Advanced mathematics student background<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
-    "math.std.bckg.math.tch.bckg"                   = "Advanced mathematics student background<br/>Advanced mathematics teacher background",
-    "math.tch.bckg"                                 = "Advanced mathematics teacher background",
-    "math.tch.bckg.math.sch.bckg"                   = "Advanced mathematics teacher background<br/>Advanced mathematics school background",
-    "phys.sch.bckg"                                 = "Advanced physics school background",
-    "phys.std.ach"                                  = "Advanced physics student achievement",
-    "phys.std.ach.phys.sch.bckg"                    = "Advanced physics student achievement<br/>Advanced physics school background",
-    "phys.std.ach.phys.sch.bckg.phys.tch.bckg"      = "Advanced physics student achievement<br/>Advanced physics school background<br/>Advanced physics teacher background",
-    "phys.std.ach.phys.tch.bckg"                    = "Advanced physics student achievement<br/>Advanced physics teacher background",
-    "phys.std.bckg"                                 = "Advanced physics student background",
-    "phys.std.bckg.ach"                             = "Advanced physics student background<br/>Advanced physics student achievement",
-    "phys.std.bckg.ach.phys.sch.bckg"               = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics school background",
-    "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg" = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics school background<br/>Advanced physics teacher background",
-    "phys.std.bckg.ach.phys.tch.bckg"               = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics teacher background",
-    "phys.std.bckg.phys.sch.bckg"                   = "Advanced physics student background<br/>Advanced physics school background",
-    "phys.std.bckg.phys.sch.bckg.phys.tch.bckg"     = "Advanced physics student background<br/>Advanced physics school background<br/>Advanced physics teacher background",
-    "phys.std.bckg.phys.tch.bckg"                   = "Advanced physics student background<br/>Advanced physics teacher background",
-    "phys.tch.bckg.phys.sch.bckg"                   = "Advanced physics teacher background<br/>Advanced physics school background",
-    "prim.tch.bckg"                                 = "Future primary teacher background",
-    "sch.bckg"                                      = "School background",
-    "sch.bckg.math.tch.bckg"                        = "School background<br/>Mathematics teacher background",
-    "sch.bckg.sci.tch.bckg"                         = "School background<br/>Science teacher background",
-    "sch.bckg.tch.bckg"                             = "School background<br/>Teacher background",
-    "sci.tch.bckg"                                  = "Science teacher background",
-    "staff.bckg"                                    = "Staff background",
-    "std.AM"                                        = "Student Asian module",
-    "std.AM.sch.bckg"                               = "Student Asian module<br/>School background",
-    "std.EUM"                                       = "Student European module",
-    "std.EUM.sch.bckg"                              = "Student European module<br/>School background",
-    "std.LAM"                                       = "Student Latin American module",
-    "std.LAM.sch.bckg"                              = "Student Latin American module<br/>School background",
-    "std.ach"                                       = "Student achievement",
-    "std.ach.AM"                                    = "Student achievement<br/>Asian module",
-    "std.ach.AM.sch.bckg"                           = "Student achievement<br/>Asian module<br/>School background",
-    "std.ach.EUM"                                   = "Student achievement<br/>European module",
-    "std.ach.EUM.sch.bckg"                          = "Student achievement<br/>European module<br/>School background",
-    "std.ach.LAM"                                   = "Student achievement<br/>Latin American module",
-    "std.ach.LAM.sch.bckg "                         = "Student achievement<br/>Latin American module<br/>School background",
-    "std.ach.home"                                  = "Student achievement<br/>Student home background",
-    "std.ach.home.sch.bckg"                         = "Student achievement<br/>Student home background<br/>School background",
-    "std.ach.home.sch.bckg.tch.bckg"                = "Student achievement<br/>Student home background<br/>School background<br/>Teacher background",
-    "std.ach.home.tch.bckg"                         = "Student achievement<br/>Student home background<br/>Teacher background",
-    "std.ach.math.tch.bckg"                         = "Student achievement<br/>Mathematics teacher background",
-    "std.ach.sch.bckg"                              = "Student achievement<br/>School background",
-    "std.ach.sch.bckg.math.tch.bckg"                = "Student achievement<br/>School background<br/>Mathematics teacher background",
-    "std.ach.sch.bckg.sci.tch.bckg"                 = "Student achievement<br/>School background<br/>Science teacher background",
-    "std.ach.sch.bckg.tch.bck"                      = "Student achievement<br/>School background<br/>Teacher background",
-    "std.ach.sch.bckg.tch.bckg"                     = "Student achievement<br/>School background<br/>Teacher background",
-    "std.ach.sci.tch.bckg"                          = "Student achievement<br/>Science teacher background",
-    "std.ach.tch.bckg"                              = "Student achievement<br/>Teacher background",
-    "std.bckg"                                      = "Student background",
-    "std.bckg.AM"                                   = "Student background<br/>Asian module",
-    "std.bckg.AM.sch.bckg"                          = "Student background<br/>Asian module<br/>School background",
-    "std.bckg.EUM"                                  = "Student background<br/>European module",
-    "std.bckg.EUM.sch.bckg"                         = "Student background<br/>European module<br/>School background",
-    "std.bckg.LAM"                                  = "Student background<br/>Latin American module",
-    "std.bckg.LAM.sch.bckg"                         = "Student background<br/>Latin American module<br/>School background",
-    "std.bckg.ach"                                  = "Student background<br/>Student achievement",
-    "std.bckg.ach.AM"                               = "Student background<br/>Student achievement<br/>Asian module",
-    "std.bckg.ach.EUM"                              = "Student background<br/>Student achievement<br/>European module",
-    "std.bckg.ach.LAM"                              = "Student background<br/>Student achievement<br/>Latin American module",
-    "std.bckg.ach.home"                             = "Student background<br/>Student achievement<br/>Student home background",
-    "std.bckg.ach.home.sch.bckg"                    = "Student background<br/>Student achievement<br/>Student home background<br/>School background",
-    "std.bckg.ach.home.sch.bckg.tch.bckg"           = "Student background<br/>Student achievement<br/>Student home background<br/>School background<br/>Teacher background",
-    "std.bckg.ach.home.tch.bckg"                    = "Student background<br/>Student achievement<br/>Student home background<br/>Teacher background",
-    "std.bckg.ach.math.tch.bckg"                    = "Student background<br/>Student achievement<br/>Mathematics teacher background",
-    "std.bckg.ach.sch.bckg"                         = "Student background<br/>Student achievement<br/>School background",
-    "std.bckg.ach.sch.bckg.math.tch.bckg"           = "Student background<br/>Student achievement<br/>School background<br/>Mathematics teacher background",
-    "std.bckg.ach.sch.bckg.sci.tch.bckg"            = "Student background<br/>Student achievement<br/>School background<br/>Science teacher background",
-    "std.bckg.ach.sch.bckg.tch.bckg"                = "Student background<br/>Student achievement<br/>School background<br/>Teacher background",
-    "std.bckg.ach.sci.tch.bckg"                     = "Student background<br/>Student achievement<br/>Science teacher background",
-    "std.bckg.ach.tch.bckg"                         = "Student background<br/>Student achievement<br/>Teacher background",
-    "std.bckg.home"                                 = "Student background<br/>Student home background",
-    "std.bckg.home.sch.bckg"                        = "Student background<br/>Student home background<br/>School background",
-    "std.bckg.home.sch.bckg.tch.bckg"               = "Student background<br/>Student home background<br/>School background<br/>Teacher background",
-    "std.bckg.home.tch.bckg"                        = "Student background<br/>Student home background<br/>Teacher background",
-    "std.bckg.math.tch.bckg"                        = "Student background<br/>Mathematics teacher background",
-    "std.bckg.sch.bckg"                             = "Student background<br/>School background",
-    "std.bckg.sch.bckg.math.tch.bckg"               = "Student background<br/>School background<br/>Mathematics teacher background",
-    "std.bckg.sch.bckg.sci.tch.bckg"                = "Student background<br/>School background<br/>Science teacher background",
-    "std.bckg.sch.bckg.tch.bckg"                    = "Student background<br/>School background<br/>Teacher background",
-    "std.bckg.sci.tch.bckg"                         = "Student background<br/>Science teacher background",
-    "std.bckg.std.ach.AM.sch.bckg"                  = "Student background<br/>Student achievement<br/>Asian module<br/>School background",
-    "std.bckg.std.ach.EUM.sch.bckg"                 = "Student background<br/>Student achievement<br/>European module<br/>School background",
-    "std.bckg.std.ach.LAM.sch.bckg"                 = "Student background<br/>Student achievement<br/>Latin American module<br/>School background",
-    "std.bckg.tch.bckg"                             = "Student background<br/>Teacher background",
-    "std.home.sch.bckg"                             = "Student home background<br/>School background",
-    "std.home.sch.bckg.tch.bckg"                    = "Student home background<br/>School background<br/>Teacher background",
-    "std.home.tch.bckg"                             = "Student home background<br/>Teacher background",
-    "tch.bckg"                                      = "Teacher background",
-    "std.home"                                      = "Student home background"
-  )
-  
-  
-  extract.IEA.study.and.cycle <- function(list.abbrev, file.string) {
-    
-    tmp <- lapply(X = list.abbrev, FUN = function(i) {
-      
-      study.name <- file.string[1][file.string[1] %in% i[["first.chars"]]]
-      
-      study.cycle <- file.string[2][file.string[2] %in% i[names(i) != "first.chars"]]
-      
-      c(study.name, study.cycle)
-      
-    })
-    
-    tmp <- Filter(function(i) {length(i) > 1}, tmp)
-    
-    study.ID <- names(tmp)
-    
-    cycle.ID <- names(unlist(list.abbrev[[study.ID]])[unlist(list.abbrev[[study.ID]]) == tmp[[names(tmp)]][2]])
-    
-    list(study.ID, cycle.ID)
-  }
-  
-  
-  
-  
-  extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
-    
-    tmp <- Filter(length, lapply(list.abbrev, function(i) {
-      Filter(isTRUE, lapply(X = i, FUN = function(j) {
-        all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
-      }))
-    }))
-    
-    cycle.ID <- sapply(X = tmp, FUN = names)
-    
-    if(length(cycle.ID) == 1) {
-      cycle.ID <- cycle.ID
-    } else {
-      cycle.ID <- "Unknown"
-    }
-    
-    if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
-      study.ID <- "PISA"
-    } else {
-      study.ID <- "Unknown"
-    }
-    
-    list(study.ID, cycle.ID)
-  }
-  
-  
-  
-  extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
-    
-    tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
-      Filter(length, lapply(X = i, FUN = function(j) {
-        grep(pattern = file.string, x = j, ignore.case = TRUE, value = TRUE)
-      }))
-    })))
-    
-    study.ID <- unique(substr(x = unlist(tmp), start = 1, stop = 4))
-    cycle.ID <- unique(substr(x = unlist(tmp), start = 5, stop = 8))
-    
-    if(length(cycle.ID) == 1) {
-      cycle.ID <- cycle.ID
-    } else {
-      cycle.ID <- "Unknown"
-    }
-    
-    if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
-      study.ID <- "PISA"
-    } else {
-      study.ID <- "Unknown"
-    }
-    
-    list(study.ID, cycle.ID)
-  }
-  
-  
-  
-  extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
-    
-    tmp <- Filter(length, lapply(list.abbrev, function(i) {
-      Filter(isTRUE, lapply(X = i, FUN = function(j) {
-        all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
-      }))
-    }))
-    
-    cycle.ID <- sapply(X = tmp, FUN = names)
-    
-    if(length(cycle.ID) == 1) {
-      cycle.ID <- cycle.ID
-    } else {
-      cycle.ID <- "Unknown"
-    }
-    
-    if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
-      study.ID <- "PISA for Development"
-    } else {
-      study.ID <- "Unknown"
-    }
-    
-    list(study.ID, cycle.ID)
-  }
-  
-  
-  
-  all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
-  
-  
-  
-  collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
-    
-    if(length(PV.vector) > 0) {
-      tmp <- vars.object[get(colnames(vars.object)[1]) %in% PV.vector, ]
-    } else {
-      tmp <- NULL
-    }
-    
-    if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) > 0) {
-      tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+$", replacement = "", x = get(colnames(tmp)[1]))]
-    } else if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) == 0) {
-      tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+", replacement = "#", x = get(colnames(tmp)[1]))]
-    }
-    
-    
-    if(!is.null(tmp) && nrow(tmp) > 0) {
-      tmp <- split(x = tmp, by = "Variables")
-      lapply(X = tmp, FUN = function(i) {
-        i[ , colnames(i)[2] := paste0("1 to ", nrow(i), " PV: ", get(colnames(i)[2]))]
-      })
-      tmp <- rbindlist(l = tmp)
-      tmp <- unique(x = tmp, by = colnames(tmp)[1])
-      return(tmp)
-    }
-  }
-  
-  
-  
-  define.default.weight <- function(study, loaded.names.and.labels, respondent.type) {
-    
-    study.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.studies", "IEA.BRR.studies", "OECD.BRR.studies")], FUN = function(i) {
-      study %in% i
-    })))
-    
-    resp.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.dflt.std.bckg.types", "IEA.JK2.dflt.sch.bckg.types", "IEA.JK2.dflt.tch.bckg.types", "IEA.BRR.dflt.inst.bckg.types", "IEA.BRR.dflt.prim.tch.bckg.types", "IEA.BRR.dflt.low_sec.tch.bckg.types", "IEA.BRR.dflt.educ.bckg.types", "OECD.BRR.dflt.std.bckg", "OECD.BRR.dflt.sch.bckg", "OECD.BRR.dflt.tch.bckg", "OECD.BRR.dflt.lead.bckg", "OECD.BRR.dflt.staff.bckg")], FUN = function(i) {
-      respondent.type %in% i
-    })))
-    
-    org.and.design.resp.type <- str_extract(string = study.type, pattern = "^[[:alpha:]]+\\.[[:alpha:]]+[[:digit:]]*")
-    
-    resp.type <- grep(pattern = org.and.design.resp.type, x = resp.type, value = TRUE)
-    
-    if(length(resp.type) == 0) {
-      tmp.wgt <- NULL
-    } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.std.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.std.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.sch.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.sch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.tch.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.inst.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.inst.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.prim.tch.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.prim.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.low_sec.tch.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.low_sec.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.educ.bckg.types") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.educ.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.std.bckg") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.std.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.sch.bckg") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.sch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.tch.bckg") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.lead.bckg") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.lead.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.staff.bckg") {
-      tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.staff.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
-    }
-    
-  }
-  
-  
-  
-  all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
-
-  
+  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  # Define common objects
   studies.all.design.variables <- list(
     sampling.vars = list(
       bc_ = c("SCHWGT", "STDWGT"),
@@ -701,205 +77,6 @@ server <- function(input, output, session) {
         fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
       )
     )
-  )
-  design.weight.variables <- list(
-    IEA.JK2.studies = c("CivED",
-                        "ICCS",
-                        "ICILS",
-                        "PIRLS",
-                        "prePIRLS",
-                        "ePIRLS",
-                        "RLII",
-                        "SITES",
-                        "TIMSS",
-                        "preTIMSS",
-                        "eTIMSS PSI",
-                        "TIMSS Advanced",
-                        "TiPi",
-                        "REDS"),
-    IEA.JK2.dflt.std.bckg.types = c("std.bckg",
-                                    "std.bckg.sch.bckg",
-                                    "std.EUM",
-                                    "std.AM",
-                                    "std.LAM",
-                                    "std.ach.EUM",
-                                    "std.ach.AM",
-                                    "std.ach.LAM",
-                                    "std.EUM.sch.bckg",
-                                    "std.AM.sch.bckg",
-                                    "std.LAM.sch.bckg",
-                                    "std.bckg.EUM",
-                                    "std.bckg.AM",
-                                    "std.bckg.LAM",
-                                    "std.bckg.ach.EUM",
-                                    "std.bckg.ach.AM",
-                                    "std.bckg.ach.LAM",
-                                    "std.ach.sch.bckg",
-                                    "std.bckg.EUM",
-                                    "std.bckg.AM",
-                                    "std.bckg.LAM",
-                                    "std.ach",
-                                    "std.bckg.ach",
-                                    "std.bckg.ach.sch.bckg",
-                                    "std.bckg.EUM.sch.bckg",
-                                    "std.bckg.AM.sch.bckg",
-                                    "std.bckg.LAM.sch.bckg",
-                                    "std.ach.EUM.sch.bckg",
-                                    "std.ach.AM.sch.bckg",
-                                    "std.ach.LAM.sch.bckg",
-                                    "std.bckg.std.ach.EUM.sch.bckg",
-                                    "std.bckg.std.ach.AM.sch.bckg",
-                                    "std.bckg.std.ach.LAM.sch.bckg",
-                                    "std.bckg.home",
-                                    "std.bckg.ach.home",
-                                    "std.ach.home",
-                                    "std.ach.home.sch.bckg",
-                                    "std.bckg.home.sch.bckg",
-                                    "std.bckg.ach.home.sch.bckg",
-                                    "math.std.bckg",
-                                    "math.std.ach",
-                                    "math.std.bckg.ach",
-                                    "math.std.bckg.math.sch.bckg",
-                                    "math.std.ach.math.sch.bckg",
-                                    "math.std.bckg.ach.math.sch.bckg",
-                                    "phys.std.bckg",
-                                    "phys.std.ach",
-                                    "phys.std.bckg.ach",
-                                    "phys.std.bckg.phys.sch.bckg",
-                                    "phys.std.ach.phys.sch.bckg",
-                                    "phys.std.bckg.ach.phys.sch.bckg"),
-    IEA.JK2.dflt.std.bckg.wgts = c("TOTWGT",
-                                   "TOTWGTS"),
-    IEA.JK2.dflt.std.bckg.zones = c("JKZONE",
-                                    "JKZONES"),
-    IEA.JK2.dflt.std.bckg.rep.ind = c("JKREP",
-                                      "JKREPS",
-                                      "JKINDIC"),
-    IEA.JK2.dflt.sch.bckg.types = c("sch.bckg",
-                                    "sch.bckg.tch.bckg",
-                                    "sch.bckg.math.tch.bckg",
-                                    "sch.bckg.sci.tch.bckg",
-                                    "std.home.sch.bckg",
-                                    "math.sch.bckg",
-                                    "math.sch.bckg.math.tch.bckg",
-                                    "phys.sch.bckg",
-                                    "phys.sch.bckg.phys.tch.bckg"),
-    IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
-                                   "SCHWGT",
-                                   "TOTWGTT"),
-    IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
-                                    "JKCZONE",
-                                    "JKZONE",
-                                    "JKZONET"),
-    IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
-                                      "JKCREP",
-                                      "JKREPT"),
-    IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
-                                    "sch.bckg.tch.bckg",
-                                    "std.bckg.tch.bckg",
-                                    "std.bckg.sch.bckg.tch.bckg",
-                                    "std.ach.sch.bckg.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.tch.bckg",
-                                    "std.bckg.ach.home.tch.bckg",
-                                    "std.bckg.ach.home.sch.bckg.tch.bckg",
-                                    "std.ach.tch.bckg",
-                                    "std.home.tch.bckg",
-                                    "std.ach.home.tch.bckg",
-                                    "math.tch.bckg",
-                                    "math.tch.bckg.math.sch.bckg",
-                                    "math.std.bckg.math.tch.bckg",
-                                    "math.std.bckg.ach.math.tch.bckg",
-                                    "math.std.ach.math.tch.bckg",
-                                    "math.std.bckg.math.sch.bckg.math.tch.bckg",
-                                    "math.std.ach.math.sch.bckg.math.tch.bckg",
-                                    "math.std.bckg.ach.math.sch.bckg.math.tch.bckg",
-                                    "phys.tch.bckg.phys.sch.bckg",
-                                    "phys.std.bckg.phys.tch.bckg",
-                                    "phys.std.bckg.ach.phys.tch.bckg",
-                                    "phys.std.ach.phys.tch.bckg",
-                                    "phys.std.bckg.phys.sch.bckg.phys.tch.bckg",
-                                    "phys.std.ach.phys.sch.bckg.phys.tch.bckg",
-                                    "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg",
-                                    "sci.tch.bckg.sci.sch.bckg",
-                                    "sci.tch.bckg",
-                                    "std.bckg.ach.tch.bckg",
-                                    "std.bckg.home.tch.bckg",
-                                    "std.bckg.sch.bckg.math.tch.bckg",
-                                    "std.bckg.sch.bckg.sci.tch.bckg",
-                                    "std.ach.sch.bckg.math.tch.bckg",
-                                    "std.ach.sch.bckg.sci.tch.bckg",
-                                    "std.home.sch.bckg.tch.bckg",
-                                    "std.bckg.home.sch.bckg.tch.bckg",
-                                    "std.ach.home.sch.bckg.tch.bckg",
-                                    "std.bckg.math.tch.bckg",
-                                    "std.ach.math.tch.bckg",
-                                    "std.bckg.ach.math.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.math.tch.bckg",
-                                    "sch.bckg.math.tch.bckg",
-                                    "std.bckg.sci.tch.bckg",
-                                    "std.ach.sci.tch.bckg",
-                                    "std.bckg.ach.sci.tch.bckg",
-                                    "std.bckg.ach.sch.bckg.sci.tch.bckg",
-                                    "sch.bckg.sci.tch.bckg"),
-    IEA.JK2.dflt.tch.bckg.wgts = c("TOTWGT",
-                                   "TOTWGTT",
-                                   "TCHWGT",
-                                   "MTOTWGT",
-                                   "STOTWGT",
-                                   "MATWGT",
-                                   "SCIWGT"),
-    IEA.JK2.dflt.tch.bckg.zones = c("JKZONET",
-                                    "JKZONE"),
-    IEA.JK2.dflt.tch.bckg.rep.ind = c("JKREPT",
-                                      "JKREP",
-                                      "JKINDIC"),
-    IEA.BRR.studies = "TEDS-M",
-    IEA.BRR.dflt.inst.bckg.types = "inst.bckg",
-    IEA.BRR.dflt.inst.bckg.wgts = "FINWGTI",
-    IEA.BRR.dflt.inst.bckg.rep.wgts = paste0("FINRWI", 1:32),
-    IEA.BRR.other.inst.bckg.wgts = "INSWGTI",
-    IEA.BRR.other.inst.bckg.rep.wgts = paste0("INSRWI", 1:32),
-    IEA.BRR.dflt.prim.tch.bckg.types = c("prim.tch.bckg",
-                                         "inst.bckg.prim.tch.bckg"),
-    IEA.BRR.dflt.prim.tch.bckg.wgts = "FINWGTP",
-    IEA.BRR.dflt.prim.tch.bckg.rep.wgts = paste0("FINRWP", 1:32),
-    IEA.BRR.other.prim.tch.bckg.wgts = "INSWGTP",
-    IEA.BRR.other.prim.tch.bckg.rep.wgts = paste0("INSRWP", 1:32),
-    IEA.BRR.dflt.low_sec.tch.bckg.types = c("low-sec.tch.bckg",
-                                            "inst.bckg.low-sec.tch.bckg"),
-    IEA.BRR.dflt.low_sec.tch.bckg.wgts = "FINWGTS",
-    IEA.BRR.dflt.low_sec.tch.bckg.rep.wgts = paste0("FINRWS", 1:32),
-    IEA.BRR.other.low_sec.tch.bckg.wgts = "INSWGTS",
-    IEA.BRR.other.low_sec.tch.bckg.rep.wgts = paste0("INSRWS", 1:32),
-    IEA.BRR.dflt.educ.bckg.types = "educ.bckg",
-    IEA.BRR.dflt.educ.bckg.wgts = "FINWGTE",
-    IEA.BRR.dflt.educ.bckg.rep.wgts = paste0("FINRWE", 1:32),
-    IEA.BRR.other.educ.bckg.wgts = "INSWGTE",
-    IEA.BRR.other.educ.bckg.rep.wgts = paste0("INSRWE", 1:32),
-    OECD.BRR.studies = c("PISA",
-                         "PISA for Development",
-                         "TALIS",
-                         "TALIS 3S"),
-    OECD.BRR.dflt.std.bckg = "std.bckg",
-    OECD.BRR.dflt.std.bckg.wgts = "W_FSTUWT",
-    OECD.BRR.dflt.std.bckg.rep.wgts = c(paste0("W_FSTR", 1:80), paste0("W_FSTURWT", 1:80)),
-    OECD.BRR.dflt.out.of.school.bckg = "out.of.school.bckg",
-    OECD.BRR.dflt.out.of.school.bckg.wgts = "SPFWT0",
-    OECD.BRR.dflt.out.of.school.bckg.rep.wgts = paste0("SPFWT0", 1:30),
-    OECD.BRR.dflt.sch.bckg = "sch.bckg",
-    OECD.BRR.dflt.sch.bckg.wgts = "SCHWGT",
-    OECD.dflt.sch.bckg.rep.wgts = paste0("SRWGT", 1:100),
-    OECD.BRR.dflt.tch.bckg = c("tch.bckg",
-                               "sch.bckg.tch.bckg"),
-    OECD.BRR.dflt.tch.bckg.wgts = "TCHWGT",
-    OECD.BRR.dflt.tch.bckg.rep.wgts = paste0("TRWGT", 1:100),
-    OECD.BRR.dflt.lead.bckg = c("leader.bckg"),
-    OECD.BRR.dflt.lead.bckg.wgts = "CNTRWGT",
-    OECD.BRR.dflt.lead.bckg.rep.wgts = paste0("CRWGT", 1:92),
-    OECD.BRR.dflt.staff.bckg = c("staff.bckg",
-                                 "leader.bckg.staff.bckg"),
-    OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
-    OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
   )
   
   default.benchmarks <- list(
@@ -979,7 +156,6 @@ server <- function(input, output, session) {
       Mathematics.root.PVs = "PV#MATH"
     )
   )
-  
   
   merge.combinations <- list(
     CivED = list(
@@ -1378,13 +554,750 @@ server <- function(input, output, session) {
     )
   )
   
-  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  design.weight.variables <- list(
+    IEA.JK2.studies = c("CivED",
+                        "ICCS",
+                        "ICILS",
+                        "PIRLS",
+                        "prePIRLS",
+                        "ePIRLS",
+                        "RLII",
+                        "SITES",
+                        "TIMSS",
+                        "preTIMSS",
+                        "eTIMSS PSI",
+                        "TIMSS Advanced",
+                        "TiPi",
+                        "REDS"),
+    IEA.JK2.dflt.std.bckg.types = c("std.bckg",
+                                    "std.bckg.sch.bckg",
+                                    "std.EUM",
+                                    "std.AM",
+                                    "std.LAM",
+                                    "std.ach.EUM",
+                                    "std.ach.AM",
+                                    "std.ach.LAM",
+                                    "std.EUM.sch.bckg",
+                                    "std.AM.sch.bckg",
+                                    "std.LAM.sch.bckg",
+                                    "std.bckg.EUM",
+                                    "std.bckg.AM",
+                                    "std.bckg.LAM",
+                                    "std.bckg.ach.EUM",
+                                    "std.bckg.ach.AM",
+                                    "std.bckg.ach.LAM",
+                                    "std.ach.sch.bckg",
+                                    "std.bckg.EUM",
+                                    "std.bckg.AM",
+                                    "std.bckg.LAM",
+                                    "std.ach",
+                                    "std.bckg.ach",
+                                    "std.bckg.ach.sch.bckg",
+                                    "std.bckg.EUM.sch.bckg",
+                                    "std.bckg.AM.sch.bckg",
+                                    "std.bckg.LAM.sch.bckg",
+                                    "std.ach.EUM.sch.bckg",
+                                    "std.ach.AM.sch.bckg",
+                                    "std.ach.LAM.sch.bckg",
+                                    "std.bckg.std.ach.EUM.sch.bckg",
+                                    "std.bckg.std.ach.AM.sch.bckg",
+                                    "std.bckg.std.ach.LAM.sch.bckg",
+                                    "std.bckg.home",
+                                    "std.bckg.ach.home",
+                                    "std.ach.home",
+                                    "std.ach.home.sch.bckg",
+                                    "std.bckg.home.sch.bckg",
+                                    "std.bckg.ach.home.sch.bckg",
+                                    "math.std.bckg",
+                                    "math.std.ach",
+                                    "math.std.bckg.ach",
+                                    "math.std.bckg.math.sch.bckg",
+                                    "math.std.ach.math.sch.bckg",
+                                    "math.std.bckg.ach.math.sch.bckg",
+                                    "phys.std.bckg",
+                                    "phys.std.ach",
+                                    "phys.std.bckg.ach",
+                                    "phys.std.bckg.phys.sch.bckg",
+                                    "phys.std.ach.phys.sch.bckg",
+                                    "phys.std.bckg.ach.phys.sch.bckg"),
+    IEA.JK2.dflt.std.bckg.wgts = c("TOTWGT",
+                                   "TOTWGTS"),
+    IEA.JK2.dflt.std.bckg.zones = c("JKZONE",
+                                    "JKZONES"),
+    IEA.JK2.dflt.std.bckg.rep.ind = c("JKREP",
+                                      "JKREPS",
+                                      "JKINDIC"),
+    IEA.JK2.dflt.sch.bckg.types = c("sch.bckg",
+                                    "sch.bckg.tch.bckg",
+                                    "sch.bckg.math.tch.bckg",
+                                    "sch.bckg.sci.tch.bckg",
+                                    "std.home.sch.bckg",
+                                    "math.sch.bckg",
+                                    "math.sch.bckg.math.tch.bckg",
+                                    "phys.sch.bckg",
+                                    "phys.sch.bckg.phys.tch.bckg"),
+    IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
+                                   "SCHWGT",
+                                   "TOTWGTT"),
+    IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
+                                    "JKCZONE",
+                                    "JKZONE",
+                                    "JKZONET"),
+    IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
+                                      "JKCREP",
+                                      "JKREPT"),
+    IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
+                                    "sch.bckg.tch.bckg",
+                                    "std.bckg.tch.bckg",
+                                    "std.bckg.sch.bckg.tch.bckg",
+                                    "std.ach.sch.bckg.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.tch.bckg",
+                                    "std.bckg.ach.home.tch.bckg",
+                                    "std.bckg.ach.home.sch.bckg.tch.bckg",
+                                    "std.ach.tch.bckg",
+                                    "std.home.tch.bckg",
+                                    "std.ach.home.tch.bckg",
+                                    "math.tch.bckg",
+                                    "math.tch.bckg.math.sch.bckg",
+                                    "math.std.bckg.math.tch.bckg",
+                                    "math.std.bckg.ach.math.tch.bckg",
+                                    "math.std.ach.math.tch.bckg",
+                                    "math.std.bckg.math.sch.bckg.math.tch.bckg",
+                                    "math.std.ach.math.sch.bckg.math.tch.bckg",
+                                    "math.std.bckg.ach.math.sch.bckg.math.tch.bckg",
+                                    "phys.tch.bckg.phys.sch.bckg",
+                                    "phys.std.bckg.phys.tch.bckg",
+                                    "phys.std.bckg.ach.phys.tch.bckg",
+                                    "phys.std.ach.phys.tch.bckg",
+                                    "phys.std.bckg.phys.sch.bckg.phys.tch.bckg",
+                                    "phys.std.ach.phys.sch.bckg.phys.tch.bckg",
+                                    "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg",
+                                    "sci.tch.bckg.sci.sch.bckg",
+                                    "sci.tch.bckg",
+                                    "std.bckg.ach.tch.bckg",
+                                    "std.bckg.home.tch.bckg",
+                                    "std.bckg.sch.bckg.math.tch.bckg",
+                                    "std.bckg.sch.bckg.sci.tch.bckg",
+                                    "std.ach.sch.bckg.math.tch.bckg",
+                                    "std.ach.sch.bckg.sci.tch.bckg",
+                                    "std.home.sch.bckg.tch.bckg",
+                                    "std.bckg.home.sch.bckg.tch.bckg",
+                                    "std.ach.home.sch.bckg.tch.bckg",
+                                    "std.bckg.math.tch.bckg",
+                                    "std.ach.math.tch.bckg",
+                                    "std.bckg.ach.math.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.math.tch.bckg",
+                                    "sch.bckg.math.tch.bckg",
+                                    "std.bckg.sci.tch.bckg",
+                                    "std.ach.sci.tch.bckg",
+                                    "std.bckg.ach.sci.tch.bckg",
+                                    "std.bckg.ach.sch.bckg.sci.tch.bckg",
+                                    "sch.bckg.sci.tch.bckg"),
+    IEA.JK2.dflt.tch.bckg.wgts = c("TOTWGT",
+                                   "TOTWGTT",
+                                   "TCHWGT",
+                                   "MTOTWGT",
+                                   "STOTWGT",
+                                   "MATWGT",
+                                   "SCIWGT"),
+    IEA.JK2.dflt.tch.bckg.zones = c("JKZONET",
+                                    "JKZONE"),
+    IEA.JK2.dflt.tch.bckg.rep.ind = c("JKREPT",
+                                      "JKREP",
+                                      "JKINDIC"),
+    IEA.BRR.studies = "TEDS-M",
+    IEA.BRR.dflt.inst.bckg.types = "inst.bckg",
+    IEA.BRR.dflt.inst.bckg.wgts = "FINWGTI",
+    IEA.BRR.dflt.inst.bckg.rep.wgts = paste0("FINRWI", 1:32),
+    IEA.BRR.other.inst.bckg.wgts = "INSWGTI",
+    IEA.BRR.other.inst.bckg.rep.wgts = paste0("INSRWI", 1:32),
+    IEA.BRR.dflt.prim.tch.bckg.types = c("prim.tch.bckg",
+                                         "inst.bckg.prim.tch.bckg"),
+    IEA.BRR.dflt.prim.tch.bckg.wgts = "FINWGTP",
+    IEA.BRR.dflt.prim.tch.bckg.rep.wgts = paste0("FINRWP", 1:32),
+    IEA.BRR.other.prim.tch.bckg.wgts = "INSWGTP",
+    IEA.BRR.other.prim.tch.bckg.rep.wgts = paste0("INSRWP", 1:32),
+    IEA.BRR.dflt.low_sec.tch.bckg.types = c("low-sec.tch.bckg",
+                                            "inst.bckg.low-sec.tch.bckg"),
+    IEA.BRR.dflt.low_sec.tch.bckg.wgts = "FINWGTS",
+    IEA.BRR.dflt.low_sec.tch.bckg.rep.wgts = paste0("FINRWS", 1:32),
+    IEA.BRR.other.low_sec.tch.bckg.wgts = "INSWGTS",
+    IEA.BRR.other.low_sec.tch.bckg.rep.wgts = paste0("INSRWS", 1:32),
+    IEA.BRR.dflt.educ.bckg.types = "educ.bckg",
+    IEA.BRR.dflt.educ.bckg.wgts = "FINWGTE",
+    IEA.BRR.dflt.educ.bckg.rep.wgts = paste0("FINRWE", 1:32),
+    IEA.BRR.other.educ.bckg.wgts = "INSWGTE",
+    IEA.BRR.other.educ.bckg.rep.wgts = paste0("INSRWE", 1:32),
+    OECD.BRR.studies = c("PISA",
+                         "PISA for Development",
+                         "TALIS",
+                         "TALIS 3S"),
+    OECD.BRR.dflt.std.bckg = "std.bckg",
+    OECD.BRR.dflt.std.bckg.wgts = "W_FSTUWT",
+    OECD.BRR.dflt.std.bckg.rep.wgts = c(paste0("W_FSTR", 1:80), paste0("W_FSTURWT", 1:80)),
+    OECD.BRR.dflt.out.of.school.bckg = "out.of.school.bckg",
+    OECD.BRR.dflt.out.of.school.bckg.wgts = "SPFWT0",
+    OECD.BRR.dflt.out.of.school.bckg.rep.wgts = paste0("SPFWT0", 1:30),
+    OECD.BRR.dflt.sch.bckg = "sch.bckg",
+    OECD.BRR.dflt.sch.bckg.wgts = "SCHWGT",
+    OECD.dflt.sch.bckg.rep.wgts = paste0("SRWGT", 1:100),
+    OECD.BRR.dflt.tch.bckg = c("tch.bckg",
+                               "sch.bckg.tch.bckg"),
+    OECD.BRR.dflt.tch.bckg.wgts = "TCHWGT",
+    OECD.BRR.dflt.tch.bckg.rep.wgts = paste0("TRWGT", 1:100),
+    OECD.BRR.dflt.lead.bckg = c("leader.bckg"),
+    OECD.BRR.dflt.lead.bckg.wgts = "CNTRWGT",
+    OECD.BRR.dflt.lead.bckg.rep.wgts = paste0("CRWGT", 1:92),
+    OECD.BRR.dflt.staff.bckg = c("staff.bckg",
+                                 "leader.bckg.staff.bckg"),
+    OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
+    OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
+  )
   
-  
-  
-  
-  
-  
+  load.app.CSS.screen <- "
+#loading-content {
+position: absolute;
+background: #000000;
+opacity: 1;
+z-index: 100;
+left: 0;
+right: 0;
+height: 100%;
+text-align: center;
+color: #FFFFFF;
+}
+"
+jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
+jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}'
+country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
+PISA.data.files <- list(
+  PISA.pre2015.TXT.files = list(
+    "2000" = c("intcogn_v4.txt",
+               "intscho.txt",
+               "intstud_math_v3.txt",
+               "intstud_read_v3.txt",
+               "intstud_scie_v3.txt"),
+    "2003" = c("INT_cogn_2003_v2.txt",
+               "INT_schi_2003.txt",
+               "INT_stui_2003_v2.txt"),
+    "2006" = c("INT_Cogn06_S_Dec07.txt",
+               "INT_Cogn06_T_Dec07.txt",
+               "INT_Par06_Dec07.txt",
+               "INT_Sch06_Dec07.txt",
+               "INT_Stu06_Dec07.txt"),
+    "2009" = c("INT_COG09_S_DEC11.txt",
+               "INT_COG09_TD_DEC11.txt",
+               "INT_PAR09_DEC11.txt",
+               "INT_SCQ09_Dec11.txt",
+               "INT_STQ09_DEC11.txt"),
+    "2012" = c("INT_COG12_DEC03.txt",
+               "INT_COG12_S_DEC03.txt",
+               "INT_PAQ12_DEC03.txt",
+               "INT_SCQ12_DEC03.txt",
+               "INT_STU12_DEC03.txt")
+  ),
+  PISA.pre2015.SPS.files = list(
+    "2000" = c("PISA2000_SPSS_cognitive_item.sps",
+               "PISA2000_SPSS_school_questionnaire.sps",
+               "PISA2000_SPSS_student_mathematics.sps",
+               "PISA2000_SPSS_student_reading.sps",
+               "PISA2000_SPSS_student_science.sps"),
+    "2003" = c("PISA2003_SPSS_cognitive_item.sps",
+               "PISA2003_SPSS_school.sps",
+               "PISA2003_SPSS_student.sps"),
+    "2006" = c("PISA2006_SPSS_scored_cognitive_item.sps",
+               "PISA2006_SPSS_cognitive_item.sps",
+               "PISA2006_SPSS_parent.sps",
+               "PISA2006_SPSS_school.sps",
+               "PISA2006_SPSS_student.sps"),
+    "2009" = c("PISA2009_SPSS_score_cognitive_item.sps",
+               "PISA2009_SPSS_cognitive_item.sps",
+               "PISA2009_SPSS_parent.sps",
+               "PISA2009_SPSS_school.sps",
+               "PISA2009_SPSS_student.sps"),
+    "2012" = c("PISA2012_SPSS_cognitive_item.sps",
+               "PISA2012_SPSS_scored_cognitive_item.sps",
+               "PISA2012_SPSS_parent.sps",
+               "PISA2012_SPSS_school.sps",
+               "PISA2012_SPSS_student.sps")
+  ),
+  PISA.2015.plus.SPSS.files = list(
+    "2015" = c("CY6_MS_CM2_SCH_QQQ.sav",
+               "CY6_MS_CM2_STU_COG.sav",
+               "CY6_MS_CM2_STU_QQQ.sav",
+               "CY6_MS_CM2_STU_QTM.sav",
+               "CY6_MS_CM2_TCH_QQQ.sav",
+               "CY6_MS_CMB_SCH_QQQ.sav",
+               "Cy6_ms_cmb_stu_cog.sav",
+               "CY6_MS_CMB_STU_CPS.sav",
+               "CY6_MS_CMB_STU_FLT.sav",
+               "CY6_MS_CMB_STU_QQ2.sav",
+               "CY6_MS_CMB_STU_QQQ.sav",
+               "Cy6_ms_cmb_stu_qtm.sav",
+               "Cy6_ms_cmb_tch_qqq.sav"),
+    "2018" = c("CY07_MSU_SCH_QQQ.sav",
+               "CY07_MSU_STU_COG.sav",
+               "CY07_MSU_STU_QQQ.sav",
+               "CY07_MSU_STU_TIM.sav",
+               "CY07_MSU_TCH_QQQ.sav",
+               "CY07_VNM_STU_COG.sav",
+               "CY07_VNM_STU_PVS.sav")
+  )
+)
+PISA.for.Development.data.files <- list(
+  PISA.for.Development.2019.files = list(
+    "2019" = c("CY1MDAI_SCH_QQQ.sav",
+               "CY1MDAI_STU_COG.sav",
+               "CY1MDAI_STU_QQQ.sav",
+               "CY1MDAI_TCH_QQQ.sav",
+               "CY1MDCI_COG.SAV",
+               "CY1MDCI_QQQ.SAV",
+               "CY1MDCI_TIM.SAV")
+  )
+)
+studies.and.cycles <- list(
+  TIMSS = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
+  ),
+  preTIMSS = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2015" = "n1"
+  ),
+  "eTIMSS PSI" = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "2019" = "z7", "2023" = "z8", "2027" = "z9"
+  ),
+  "TIMSS Advanced" = list(
+    first.chars = c("mcg", "msa", "msg", "msr", "mst", "mtg", "pcg", "psa", "psg", "psr", "pst", "ptg"), "1995" = "m1", "2008" = "m2", "2015" = "m3"
+  ),
+  PIRLS = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2001" = "r1", "2006" = "r2", "2011" = "r3", "2016" = "r4", "2021" = "r5", "2026" = "r6"
+  ),
+  prePIRLS = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2011" = "l1", "2016" = "l2"
+  ),
+  ePIRLS = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2016" = "e1"
+  ),
+  TiPi = list(
+    first.chars = c("acg", "asa", "asg", "ash", "ast", "atg"), "2011" = "b1"
+  ),
+  RLII = list(
+    first.chars = "asc", "1991" = "t1", "2001" = "t2"
+  ),
+  SITES = list(
+    first.chars = c("axg", "bxg", "cxg", "bcg", "btm", "bts"), "1998" = "s0", "2006" = "s1"
+  ),
+  CivED = list(
+    first.chars = c("bc_", "bl_", "bs_", "bt_", "cs_"), "1999" = "f2"
+  ),
+  ICCS = list(
+    first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg", "jsa", "jse", "jsg", "jsl", "jss", "jsr"), "2009" = "c2", "2016" = "c3"
+  ),
+  ICILS = list(
+    first.chars = c("bcg", "bsg", "btg"), "2013" = "i1", "2018" = "i2"
+  ),
+  REDS = list(
+    first.chars = c("bcg", "bsg", "btg"), "2021" = "v1"
+  ),
+  TALIS = list(
+    first.chars = c("acg", "atg", "bcg", "btg", "ccg", "ctg", "pcg", "ptg"), "2008" = "t1", "2013" = "t2", "2018" = "t3"
+  ),
+  "TALIS 3S" = list(
+    first.chars = c("alg", "asg", "blg", "bsg"), "2018" = "s1"
+  ),
+  "TEDS-M" = list(
+    first.chars = c("dig", "deg", "dpg", "dsg", "dpr", "dsr"), "2008" = "t1"
+  )
+)
+respondents.and.cycles <- list(
+  "Student background" = list(
+    resp.type = c("asc", "asg", "bsg", "isg", "jsg", "bs_", "cs_"),
+    round = c(
+      "b1",
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "f2",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "t1", "t2"
+    )
+  ),
+  "Mathematics student background" = list(
+    resp.type = "msg",
+    round = c("m1", "m2", "m3", "m4")
+  ),
+  "Physics student background" = list(
+    resp.type = "psg",
+    round = c("m1", "m2", "m3", "m4")
+  ),
+  "Student achievement items" = list(
+    resp.type = c("asa", "bsa", "isa", "jsa"),
+    round = c(
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7"
+    )
+  ),
+  "Student home" = list(
+    resp.type = "ash",
+    round = c(
+      "b1",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7"
+    )
+  ),
+  "European student module" = list(
+    resp.type = "ise",
+    round = c("c2", "c3", "c4", "c5", "c6")
+  ),
+  "Latin American student module" = list(
+    resp.type = "isl",
+    round = c("c2", "c3", "c4", "c5", "c6")
+  ),
+  "Asian student module" = list(
+    resp.type = "iss",
+    round = c("c2", "c3", "c4", "c5", "c6")
+  ),
+  "Teacher background" = list(
+    resp.type = c("atg", "btg", "ctg", "ptg", "itg", "bt_"),
+    round = c(
+      "b1",
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "f2",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "t1", "t2", "t3", "t4", "t5", "t6"
+    )
+  ),
+  "Mathematics teacher background" = list(
+    resp.type = c("btm", "mtg"),
+    round = c(
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "s1"
+    )
+  ),
+  "Physics teacher background" = list(
+    resp.type = "ptg",
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
+  ),
+  "Science teacher background" = list(
+    resp.type = "bts",
+    round = c(
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "s1"
+    )
+  ),
+  "School background" = list(
+    resp.type = c("acg", "bcg", "ccg", "pcg", "icg", "bc_"),
+    round = c(
+      "f2",
+      "c2", "c3", "c4", "c5", "c6",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "s1",
+      "t1", "t2", "t3", "t4", "t5", "t6"
+    )
+  ),
+  "Mathematics school background" = list(
+    resp.type = "mcg",
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
+  ),
+  "Physics school background" = list(
+    resp.type = "pcg",
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
+  ),
+  "Leader background data" = list(
+    resp.type = c("alg", "blg"),
+    round = c("s1", "s2", "s3", "s4")
+  ),
+  "Staff background data" = list(
+    resp.type = c("asg", "bsg"),
+    round = c("s1", "s2", "s3", "s4")
+  ),
+  "Institutional program background" = list(
+    resp.type = "dig",
+    round = "t1"
+  ),
+  "Educator background" = list(
+    resp.type = "deg",
+    round = "t1"
+  ),
+  "Future primary teacher background" = list(
+    resp.type = "dpg",
+    round = "t1"
+  ),
+  "Future lower-secondary teacher background" = list(
+    resp.type = "dsg",
+    round = "t1"
+  )
+)
+file.merged.respondents <- list(
+  "educ.bckg"                                     = "Educator background",
+  "inst.bckg"                                     = "Institutional background",
+  "inst.bckg.low-sec.tch.bckg"                    = "Institutional background<br/>Lower-secondary future teacher background",
+  "inst.bckg.prim.tch.bckg"                       = "Institutional background<br/>Primary future teacher background",
+  "leader.bckg"                                   = "Leader background",
+  "leader.bckg.staff.bckg"                        = "Leader background<br/>Staff background",
+  "low-sec.tch.bckg"                              = "Future lower-secondary teacher background",
+  "math.sch.bckg"                                 = "Advanced mathematics school background",
+  "math.std.ach"                                  = "Advanced mathematics student achievement",
+  "math.std.ach.math.sch.bckg"                    = "Advanced mathematics student achievement<br/>Advanced mathematics school background",
+  "math.std.ach.math.sch.bckg.math.tch.bckg"      = "Advanced mathematics student achievement<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
+  "math.std.ach.math.tch.bckg"                    = "Advanced mathematics student achievement<br/>Advanced mathematics teacher background",
+  "math.std.bckg"                                 = "Advanced mathematics student background",
+  "math.std.bckg.ach"                             = "Advanced mathematics student background<br/>Advanced mathematics student achievement",
+  "math.std.bckg.ach.math.sch.bckg"               = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics school background",
+  "math.std.bckg.ach.math.sch.bckg.math.tch.bckg" = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
+  "math.std.bckg.ach.math.tch.bckg"               = "Advanced mathematics student background<br/>Advanced mathematics student achievement<br/>Advanced mathematics teacher background",
+  "math.std.bckg.math.sch.bckg"                   = "Advanced mathematics student background<br/>Advanced mathematics school background",
+  "math.std.bckg.math.sch.bckg.math.tch.bckg"     = "Advanced mathematics student background<br/>Advanced mathematics school background<br/>Advanced mathematics teacher background",
+  "math.std.bckg.math.tch.bckg"                   = "Advanced mathematics student background<br/>Advanced mathematics teacher background",
+  "math.tch.bckg"                                 = "Advanced mathematics teacher background",
+  "math.tch.bckg.math.sch.bckg"                   = "Advanced mathematics teacher background<br/>Advanced mathematics school background",
+  "phys.sch.bckg"                                 = "Advanced physics school background",
+  "phys.std.ach"                                  = "Advanced physics student achievement",
+  "phys.std.ach.phys.sch.bckg"                    = "Advanced physics student achievement<br/>Advanced physics school background",
+  "phys.std.ach.phys.sch.bckg.phys.tch.bckg"      = "Advanced physics student achievement<br/>Advanced physics school background<br/>Advanced physics teacher background",
+  "phys.std.ach.phys.tch.bckg"                    = "Advanced physics student achievement<br/>Advanced physics teacher background",
+  "phys.std.bckg"                                 = "Advanced physics student background",
+  "phys.std.bckg.ach"                             = "Advanced physics student background<br/>Advanced physics student achievement",
+  "phys.std.bckg.ach.phys.sch.bckg"               = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics school background",
+  "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg" = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics school background<br/>Advanced physics teacher background",
+  "phys.std.bckg.ach.phys.tch.bckg"               = "Advanced physics student background<br/>Advanced physics student achievement<br/>Advanced physics teacher background",
+  "phys.std.bckg.phys.sch.bckg"                   = "Advanced physics student background<br/>Advanced physics school background",
+  "phys.std.bckg.phys.sch.bckg.phys.tch.bckg"     = "Advanced physics student background<br/>Advanced physics school background<br/>Advanced physics teacher background",
+  "phys.std.bckg.phys.tch.bckg"                   = "Advanced physics student background<br/>Advanced physics teacher background",
+  "phys.tch.bckg.phys.sch.bckg"                   = "Advanced physics teacher background<br/>Advanced physics school background",
+  "prim.tch.bckg"                                 = "Future primary teacher background",
+  "sch.bckg"                                      = "School background",
+  "sch.bckg.math.tch.bckg"                        = "School background<br/>Mathematics teacher background",
+  "sch.bckg.sci.tch.bckg"                         = "School background<br/>Science teacher background",
+  "sch.bckg.tch.bckg"                             = "School background<br/>Teacher background",
+  "sci.tch.bckg"                                  = "Science teacher background",
+  "staff.bckg"                                    = "Staff background",
+  "std.AM"                                        = "Student Asian module",
+  "std.AM.sch.bckg"                               = "Student Asian module<br/>School background",
+  "std.EUM"                                       = "Student European module",
+  "std.EUM.sch.bckg"                              = "Student European module<br/>School background",
+  "std.LAM"                                       = "Student Latin American module",
+  "std.LAM.sch.bckg"                              = "Student Latin American module<br/>School background",
+  "std.ach"                                       = "Student achievement",
+  "std.ach.AM"                                    = "Student achievement<br/>Asian module",
+  "std.ach.AM.sch.bckg"                           = "Student achievement<br/>Asian module<br/>School background",
+  "std.ach.EUM"                                   = "Student achievement<br/>European module",
+  "std.ach.EUM.sch.bckg"                          = "Student achievement<br/>European module<br/>School background",
+  "std.ach.LAM"                                   = "Student achievement<br/>Latin American module",
+  "std.ach.LAM.sch.bckg "                         = "Student achievement<br/>Latin American module<br/>School background",
+  "std.ach.home"                                  = "Student achievement<br/>Student home background",
+  "std.ach.home.sch.bckg"                         = "Student achievement<br/>Student home background<br/>School background",
+  "std.ach.home.sch.bckg.tch.bckg"                = "Student achievement<br/>Student home background<br/>School background<br/>Teacher background",
+  "std.ach.home.tch.bckg"                         = "Student achievement<br/>Student home background<br/>Teacher background",
+  "std.ach.math.tch.bckg"                         = "Student achievement<br/>Mathematics teacher background",
+  "std.ach.sch.bckg"                              = "Student achievement<br/>School background",
+  "std.ach.sch.bckg.math.tch.bckg"                = "Student achievement<br/>School background<br/>Mathematics teacher background",
+  "std.ach.sch.bckg.sci.tch.bckg"                 = "Student achievement<br/>School background<br/>Science teacher background",
+  "std.ach.sch.bckg.tch.bck"                      = "Student achievement<br/>School background<br/>Teacher background",
+  "std.ach.sch.bckg.tch.bckg"                     = "Student achievement<br/>School background<br/>Teacher background",
+  "std.ach.sci.tch.bckg"                          = "Student achievement<br/>Science teacher background",
+  "std.ach.tch.bckg"                              = "Student achievement<br/>Teacher background",
+  "std.bckg"                                      = "Student background",
+  "std.bckg.AM"                                   = "Student background<br/>Asian module",
+  "std.bckg.AM.sch.bckg"                          = "Student background<br/>Asian module<br/>School background",
+  "std.bckg.EUM"                                  = "Student background<br/>European module",
+  "std.bckg.EUM.sch.bckg"                         = "Student background<br/>European module<br/>School background",
+  "std.bckg.LAM"                                  = "Student background<br/>Latin American module",
+  "std.bckg.LAM.sch.bckg"                         = "Student background<br/>Latin American module<br/>School background",
+  "std.bckg.ach"                                  = "Student background<br/>Student achievement",
+  "std.bckg.ach.AM"                               = "Student background<br/>Student achievement<br/>Asian module",
+  "std.bckg.ach.EUM"                              = "Student background<br/>Student achievement<br/>European module",
+  "std.bckg.ach.LAM"                              = "Student background<br/>Student achievement<br/>Latin American module",
+  "std.bckg.ach.home"                             = "Student background<br/>Student achievement<br/>Student home background",
+  "std.bckg.ach.home.sch.bckg"                    = "Student background<br/>Student achievement<br/>Student home background<br/>School background",
+  "std.bckg.ach.home.sch.bckg.tch.bckg"           = "Student background<br/>Student achievement<br/>Student home background<br/>School background<br/>Teacher background",
+  "std.bckg.ach.home.tch.bckg"                    = "Student background<br/>Student achievement<br/>Student home background<br/>Teacher background",
+  "std.bckg.ach.math.tch.bckg"                    = "Student background<br/>Student achievement<br/>Mathematics teacher background",
+  "std.bckg.ach.sch.bckg"                         = "Student background<br/>Student achievement<br/>School background",
+  "std.bckg.ach.sch.bckg.math.tch.bckg"           = "Student background<br/>Student achievement<br/>School background<br/>Mathematics teacher background",
+  "std.bckg.ach.sch.bckg.sci.tch.bckg"            = "Student background<br/>Student achievement<br/>School background<br/>Science teacher background",
+  "std.bckg.ach.sch.bckg.tch.bckg"                = "Student background<br/>Student achievement<br/>School background<br/>Teacher background",
+  "std.bckg.ach.sci.tch.bckg"                     = "Student background<br/>Student achievement<br/>Science teacher background",
+  "std.bckg.ach.tch.bckg"                         = "Student background<br/>Student achievement<br/>Teacher background",
+  "std.bckg.home"                                 = "Student background<br/>Student home background",
+  "std.bckg.home.sch.bckg"                        = "Student background<br/>Student home background<br/>School background",
+  "std.bckg.home.sch.bckg.tch.bckg"               = "Student background<br/>Student home background<br/>School background<br/>Teacher background",
+  "std.bckg.home.tch.bckg"                        = "Student background<br/>Student home background<br/>Teacher background",
+  "std.bckg.math.tch.bckg"                        = "Student background<br/>Mathematics teacher background",
+  "std.bckg.sch.bckg"                             = "Student background<br/>School background",
+  "std.bckg.sch.bckg.math.tch.bckg"               = "Student background<br/>School background<br/>Mathematics teacher background",
+  "std.bckg.sch.bckg.sci.tch.bckg"                = "Student background<br/>School background<br/>Science teacher background",
+  "std.bckg.sch.bckg.tch.bckg"                    = "Student background<br/>School background<br/>Teacher background",
+  "std.bckg.sci.tch.bckg"                         = "Student background<br/>Science teacher background",
+  "std.bckg.std.ach.AM.sch.bckg"                  = "Student background<br/>Student achievement<br/>Asian module<br/>School background",
+  "std.bckg.std.ach.EUM.sch.bckg"                 = "Student background<br/>Student achievement<br/>European module<br/>School background",
+  "std.bckg.std.ach.LAM.sch.bckg"                 = "Student background<br/>Student achievement<br/>Latin American module<br/>School background",
+  "std.bckg.tch.bckg"                             = "Student background<br/>Teacher background",
+  "std.home.sch.bckg"                             = "Student home background<br/>School background",
+  "std.home.sch.bckg.tch.bckg"                    = "Student home background<br/>School background<br/>Teacher background",
+  "std.home.tch.bckg"                             = "Student home background<br/>Teacher background",
+  "tch.bckg"                                      = "Teacher background",
+  "std.home"                                      = "Student home background"
+)
+extract.IEA.study.and.cycle <- function(list.abbrev, file.string) {
+  tmp <- lapply(X = list.abbrev, FUN = function(i) {
+    study.name <- file.string[1][file.string[1] %in% i[["first.chars"]]]
+    study.cycle <- file.string[2][file.string[2] %in% i[names(i) != "first.chars"]]
+    c(study.name, study.cycle)
+  })
+  tmp <- Filter(function(i) {length(i) > 1}, tmp)
+  study.ID <- names(tmp)
+  cycle.ID <- names(unlist(list.abbrev[[study.ID]])[unlist(list.abbrev[[study.ID]]) == tmp[[names(tmp)]][2]])
+  list(study.ID, cycle.ID)
+}
+extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
+  tmp <- Filter(length, lapply(list.abbrev, function(i) {
+    Filter(isTRUE, lapply(X = i, FUN = function(j) {
+      all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
+    }))
+  }))
+  cycle.ID <- sapply(X = tmp, FUN = names)
+  if(length(cycle.ID) == 1) {
+    cycle.ID <- cycle.ID
+  } else {
+    cycle.ID <- "Unknown"
+  }
+  if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
+    study.ID <- "PISA"
+  } else {
+    study.ID <- "Unknown"
+  }
+  list(study.ID, cycle.ID)
+}
+extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
+  tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
+    Filter(length, lapply(X = i, FUN = function(j) {
+      grep(pattern = file.string, x = j, ignore.case = TRUE, value = TRUE)
+    }))
+  })))
+  study.ID <- unique(substr(x = unlist(tmp), start = 1, stop = 4))
+  cycle.ID <- unique(substr(x = unlist(tmp), start = 5, stop = 8))
+  if(length(cycle.ID) == 1) {
+    cycle.ID <- cycle.ID
+  } else {
+    cycle.ID <- "Unknown"
+  }
+  if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
+    study.ID <- "PISA"
+  } else {
+    study.ID <- "Unknown"
+  }
+  list(study.ID, cycle.ID)
+}
+extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
+  tmp <- Filter(length, lapply(list.abbrev, function(i) {
+    Filter(isTRUE, lapply(X = i, FUN = function(j) {
+      all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
+    }))
+  }))
+  cycle.ID <- sapply(X = tmp, FUN = names)
+  if(length(cycle.ID) == 1) {
+    cycle.ID <- cycle.ID
+  } else {
+    cycle.ID <- "Unknown"
+  }
+  if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
+    study.ID <- "PISA for Development"
+  } else {
+    study.ID <- "Unknown"
+  }
+  list(study.ID, cycle.ID)
+}
+all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
+  if(length(PV.vector) > 0) {
+    tmp <- vars.object[get(colnames(vars.object)[1]) %in% PV.vector, ]
+  } else {
+    tmp <- NULL
+  }
+  if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) > 0) {
+    tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+$", replacement = "", x = get(colnames(tmp)[1]))]
+  } else if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) == 0) {
+    tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+", replacement = "#", x = get(colnames(tmp)[1]))]
+  }
+  if(!is.null(tmp) && nrow(tmp) > 0) {
+    tmp <- split(x = tmp, by = "Variables")
+    lapply(X = tmp, FUN = function(i) {
+      i[ , colnames(i)[2] := paste0("1 to ", nrow(i), " PV: ", get(colnames(i)[2]))]
+    })
+    tmp <- rbindlist(l = tmp)
+    tmp <- unique(x = tmp, by = colnames(tmp)[1])
+    return(tmp)
+  }
+}
+define.default.weight <- function(study, loaded.names.and.labels, respondent.type) {
+  study.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.studies", "IEA.BRR.studies", "OECD.BRR.studies")], FUN = function(i) {
+    study %in% i
+  })))
+  resp.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.dflt.std.bckg.types", "IEA.JK2.dflt.sch.bckg.types", "IEA.JK2.dflt.tch.bckg.types", "IEA.BRR.dflt.inst.bckg.types", "IEA.BRR.dflt.prim.tch.bckg.types", "IEA.BRR.dflt.low_sec.tch.bckg.types", "IEA.BRR.dflt.educ.bckg.types", "OECD.BRR.dflt.std.bckg", "OECD.BRR.dflt.sch.bckg", "OECD.BRR.dflt.tch.bckg", "OECD.BRR.dflt.lead.bckg", "OECD.BRR.dflt.staff.bckg")], FUN = function(i) {
+    respondent.type %in% i
+  })))
+  org.and.design.resp.type <- str_extract(string = study.type, pattern = "^[[:alpha:]]+\\.[[:alpha:]]+[[:digit:]]*")
+  resp.type <- grep(pattern = org.and.design.resp.type, x = resp.type, value = TRUE)
+  if(length(resp.type) == 0) {
+    tmp.wgt <- NULL
+  } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.std.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.std.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.sch.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.sch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.tch.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.JK2.dflt.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.inst.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.inst.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.prim.tch.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.prim.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.low_sec.tch.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.low_sec.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "IEA.BRR.studies" && resp.type == "IEA.BRR.dflt.educ.bckg.types") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["IEA.BRR.dflt.educ.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.std.bckg") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.std.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.sch.bckg") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.sch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.tch.bckg") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.tch.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.lead.bckg") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.lead.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.staff.bckg") {
+    tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.staff.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
+  }
+}
+all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
+
+  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   
   Sys.sleep(2)
   hide(id = "loading-content", anim = TRUE, animType = "fade", time = 2)
@@ -1414,8 +1327,9 @@ Use the menu on the left to:<br/><br/>
 <ul><ul><li>View variable properties (name, class, variable label, response categories/unique values, user-defined missing values)</li></ul></ul>
 <ul><ul><li>Data diagnostic tables (quick weighted or unweighted frequencies and descriptives for inspecting the data and elaborate hypotheses)</li></ul></ul>
 <ul><ul><li>Recode variables</li></ul></ul>
+<ul><ul><li>Select PISA countries for analysis</li></ul></ul>
 <ul><li>Perform analyses (more analysis types will be added in future)</li></ul>
-<ul><ul><li>Percentages of respondents in certain groups and averages on variables of interest, per group</li></ul></ul>
+<ul><ul><li>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</li></ul></ul>
 <ul><ul><li>Percentiles of continuous variables within groups of respondents</li></ul></ul>
 <ul><ul><li>Percentages of respondents reaching or surpassing benchmarks of achievement</li></ul></ul>
 <ul><ul><li>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</li></ul></ul>
@@ -3987,6 +3901,254 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
   }, ignoreInit = TRUE)
+  output$h1selectPISACountries <- renderText("Select PISA countries' data")
+  hide("selectPISACountriesChooseOutFile")
+  output$selectPISACountriesIntro <- renderText({HTML("Select  PISA .RData file to load.")})
+  file.select.PISA <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, default.weight = NULL, select.PISA.syntax = NULL)
+  shinyFileChoose(input, "selectPISACountriesChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
+  observeEvent(eventExpr = input$selectPISACountriesChooseSrcFile, {
+    file.select.PISA$loaded <- NULL
+    file.select.PISA$study <- NULL
+    file.select.PISA$cycle <- NULL
+    file.select.PISA$resp.type <- NULL
+    if(length(parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath) > 104857600) {
+      showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
+    }
+    if(length(parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath) > 0) {
+      file.select.PISA$loaded <- get(load(parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath))
+      if(!"lsa.data" %in% class(file.select.PISA$loaded)) {
+        file.select.PISA$loaded <- NULL
+        showNotification(ui = HTML('The loaded data file<br/>does not contain "lsa.data".<br/>All operations stop<br/>here.<br/>Check your input.'), type = "error")
+      } else if(attr(x = file.select.PISA$loaded, which = "study") != "PISA") {
+        file.select.PISA$loaded <- NULL
+        showNotification(ui = HTML('The loaded data file does<br/>not contain PISA data.<br/>All operations stop here.<br/>Check your input.'), type = "error")
+      } else {
+        if("lsa.data" %in% class(file.select.PISA$loaded)) {
+          file.select.PISA$is.lsa.data <- TRUE
+        } else {
+          file.select.PISA$is.lsa.data <- FALSE
+        }
+        file.select.PISA$study <- attr(x = file.select.PISA$loaded, which = "study")
+        file.select.PISA$cycle <- attr(x = file.select.PISA$loaded, which = "cycle")
+        file.select.PISA$resp.type <- attr(x = file.select.PISA$loaded, which = "file.type")
+        file.select.PISA$loaded <- data.table(CNT = sort(levels(file.select.PISA$loaded[ , CNT])), order_col = 1:length(levels(file.select.PISA$loaded[ , CNT])))
+      }
+    }
+    output$selectPISACountriesSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath})
+  }, ignoreInit = TRUE)
+  observe({
+    if(!is.null(file.select.PISA$loaded) && file.select.PISA$is.lsa.data == FALSE) {
+      showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
+    } else if (!is.null(file.select.PISA$loaded) && file.select.PISA$is.lsa.data == TRUE) {
+      output$selectPISACountriesStudyName <- renderText({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Study: ', file.select.PISA$study))
+        }
+      })
+      output$selectPISACountriesStudyCycle <- renderText({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Cycle: ', file.select.PISA$cycle))
+        }
+      })
+      output$selectPISACountriesRespHead <- renderText({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('<u>The file contains data from the following respondents:</u>')
+        }
+      })
+      output$selectPISACountriesRespAvailable <- renderText({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(file.merged.respondents[[file.select.PISA$resp.type]])
+        }
+      })
+      output$selectPISACountriesExplText <- renderText({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('Use the panels below to select the countries whose data shall be kept in the new file.')
+        }
+      })
+      select.PISA.initial.available.countries <- file.select.PISA$loaded
+      select.PISA.selected.countries <- data.table(CNT = as.character(), order_col = as.numeric())
+      selectPISAAllCnt <- reactiveValues(selectPISAAvailCnt = select.PISA.initial.available.countries, selectPISASelCnt = select.PISA.selected.countries)
+      output$selectPISACountriesArrowSelCntRight <- renderUI({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "selectPISACountriesArrowSelCntRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$selectPISACountriesArrowSelCntLeft <- renderUI({
+        if(is.null(file.select.PISA$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "selectPISACountriesArrowSelCntLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      observeEvent(input$selectPISACountriesArrowSelCntRight, {
+        req(input$selectPISACountriesAvailableCountries_rows_selected)
+        selectPISAAllCnt$selectPISASelCnt <- rbind(isolate(selectPISAAllCnt$selectPISASelCnt), selectPISAAllCnt$selectPISAAvailCnt[input$selectPISACountriesAvailableCountries_rows_selected, , drop = FALSE])
+        selectPISAAllCnt$selectPISASelCnt <- selectPISAAllCnt$selectPISASelCnt[complete.cases(selectPISAAllCnt$selectPISASelCnt), , drop = FALSE]
+        selectPISAAllCnt$selectPISAAvailCnt <- isolate(selectPISAAllCnt$selectPISAAvailCnt[-input$selectPISACountriesAvailableCountries_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$selectPISACountriesArrowSelCntLeft, {
+        req(input$selectPISASelectedCountries_rows_selected)
+        selectPISAAllCnt$selectPISAAvailCnt <- rbind(isolate(selectPISAAllCnt$selectPISAAvailCnt),        selectPISAAllCnt$selectPISASelCnt[input$selectPISASelectedCountries_rows_selected, , drop = FALSE])
+        selectPISAAllCnt$selectPISAAvailCnt <- selectPISAAllCnt$selectPISAAvailCnt[complete.cases(selectPISAAllCnt$selectPISAAvailCnt), , drop = FALSE]
+        selectPISAAllCnt$selectPISASelCnt <- isolate(selectPISAAllCnt$selectPISASelCnt[-input$selectPISASelectedCountries_rows_selected, , drop = FALSE])
+      })
+      output$selectPISACountriesAvailableCountries <- renderDT({
+        setkeyv(x = selectPISAAllCnt$selectPISAAvailCnt, cols = "order_col")
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Available countries"),
+      rownames = FALSE,
+      filter = "top",
+      colnames = c("Names", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No countries available"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(visible = FALSE, targets = 1)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 350, scroller = TRUE
+      ))
+      output$selectPISASelectedCountries <- renderDT({
+        setkeyv(x = selectPISAAllCnt$selectPISASelCnt, cols = "order_col")
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Selected countries"),
+      rownames = FALSE,
+      colnames = c("Names", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No countries have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(visible = FALSE, targets = 1)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 405, scroller = TRUE
+      ))
+      shinyFileSave(input, "selectPISACountriesChooseOutFile", filetype = list(RData = "RData"), roots = available.volumes, updateFreq = 100000)
+      observe({
+        if(is.null(file.select.PISA$loaded) || length(parseSavePath(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath) > 0 && nrow(selectPISAAllCnt$selectPISASelCnt) == 0) {
+          hide("selectPISACountriesChooseOutFile")
+        } else {
+          show("selectPISACountriesChooseOutFile")
+        }
+        if(is.null(file.select.PISA$loaded)) {
+          hide("h1selectPISACountries")
+          hide("selectPISACountriesStudyName")
+          hide("selectPISACountriesStudyCycle")
+          hide("selectPISACountriesRespHead")
+          hide("selectPISACountriesRespAvailable")
+          hide("selectPISACountriesExplText")
+          hide("selectPISACountriesAvailableCountries")
+          hide("selectPISACountriesArrowSelCntRight")
+          hide("selectPISACountriesArrowSelCntLeft")
+          hide("selectPISASelectedCountries")
+          hide("selectPISACountriesSyntaxHead")
+          hide("selectPISACountriesSyntax")
+          hide("selectPISACountriesExecBtnHead")
+          hide("execSelectPISACountries")
+        } else {
+          show("h1selectPISACountries")
+          show("selectPISACountriesStudyName")
+          show("selectPISACountriesStudyCycle")
+          show("selectPISACountriesRespHead")
+          show("selectPISACountriesRespAvailable")
+          show("selectPISACountriesExplText")
+          show("selectPISACountriesAvailableCountries")
+          show("selectPISACountriesArrowSelCntRight")
+          show("selectPISACountriesArrowSelCntLeft")
+          show("selectPISASelectedCountries")
+          show("selectPISACountriesSyntaxHead")
+          show("selectPISACountriesSyntax")
+          show("selectPISACountriesExecBtnHead")
+          show("execSelectPISACountries")
+        }
+      })
+      syntaxSelectPISA <- reactive({
+        file.select.PISA$select.PISA.syntax <- paste0(
+          'lsa.select.countries.PISA(data.file = "', parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath, '", ',
+          if(nrow(selectPISAAllCnt$selectPISASelCnt) > 0) {
+            if(nrow(selectPISAAllCnt$selectPISASelCnt) == 1) {
+              paste0('cnt.names = "', paste(selectPISAAllCnt$selectPISASelCnt[ , CNT], collapse = '", "'), '"')
+            } else if(nrow(selectPISAAllCnt$selectPISASelCnt) > 1) {
+              paste0('cnt.names = c("', paste(selectPISAAllCnt$selectPISASelCnt[ , CNT], collapse = '", "'), '")')
+            }
+          },
+          paste0(', output.file = "', parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath, '"'),
+          ')'
+        )
+      })
+      output$selectPISACountriesSyntaxHead <- renderText({
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+          HTML("Syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$selectPISACountriesSyntax <- renderText({
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(selectPISAAllCnt$selectPISASelCnt))) >= 1) {
+          syntaxSelectPISA()
+        } else {
+          return(NULL)
+        }
+      })
+      output$selectPISACountriesExecBtnHead <- renderText({
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+          HTML("Press the button below to execute the syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$execSelectPISACountries <- renderUI({
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+          actionButton(inputId = "execSelectPISACountries", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        } else {
+          return(NULL)
+        }
+      })
+    }
+  })
+  observeEvent(input$execSelectPISACountries, {
+    showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
+    withCallingHandlers({html("consoleSelectPISACountries", "")
+      tryCatch({
+        expr = eval(parse(text = file.select.PISA$select.PISA.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
+    },
+    message = function(i) {
+      shinyjs::html(id = "consoleSelectPISACountries", html = i$message, add = TRUE)
+    },
+    warning = function(w) {
+      shinyjs::html(id = "consoleSelectPISACountries", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
+    })
+    session$sendCustomMessage(type = "scrollCallback", 1)
+  }, ignoreInit = TRUE)
   output$h1PctsMeans <- renderText("Percentages and means")
   hide("pctsMeansChooseOutFile")
   output$pctsMeansIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
@@ -4264,7 +4426,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         deferRender = TRUE, scrollY = 100, scroller = TRUE
       ))
       output$pctsMeansInclMiss <- renderUI({
-        if(nrow(pctsMeansAllVars$pctsMeansSelectedSplitVars) == 0) {
+        if(!is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) && nrow(pctsMeansAllVars$pctsMeansSelectedSplitVars) == 0) {
           return(NULL)
         } else {
           checkboxInput(inputId = "pctsMeansInclMiss", label = "Compute statistics for the missing values of the split variables", value = FALSE, width = "400px")
@@ -4367,7 +4529,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$pctsMeansSplitArePVs <- renderText({
-        if(any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE)) {
+        if(!is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) && any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE)) {
           HTML('Warning: One or more of the selected variables in "Split variables" are sets of PVs. Please check the added variables.')
         } else {
           return(NULL)
@@ -4403,12 +4565,31 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       observeEvent(eventExpr = input$pctsMeansChooseSrcFile, {
+        pctsMeansAllVars$pctsMeansSelectedSplitVars <- NULL
         pctsMeansAllVars$pctsMeansSelectedPVVars <- NULL
         pctsMeansAllVars$pctsMeansSelectedBckgVars <- NULL
       }, ignoreInit = TRUE)
       output$pctsMeansShortcut <- renderUI({
         if(!is.null(file.pct.means$loaded) && file.pct.means$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "pctsMeansShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
+        }
+      })
+      output$centralTendencyType <- renderUI({
+        if(is.null(file.pct.means$resp.type)) {
+          return(NULL)
+        } else {
+          radioButtons(inputId = "centralTendencyType", label = "Measure of central tendency", choices = c("Mean", "Median", "Mode"), width = "200px", selected = "Mean")
+        }
+      })
+      output$centralTendencyTypeExpl <- renderText({
+        if(is.null(file.pct.means$PV.sets) && is.null(file.pct.means$resp.type)) {
+          return(NULL)
+        } else if(!is.null(file.pct.means$PV.sets) && !is.null(file.pct.means$resp.type) && !is.null(input$centralTendencyType) && input$centralTendencyType == "Mean") {
+          HTML('<br/><br/>Computes the mean (arithmetic average) of continuous variables.')
+        } else if(!is.null(file.pct.means$PV.sets) && !is.null(file.pct.means$resp.type) && !is.null(input$centralTendencyType) && input$centralTendencyType == "Median") {
+          HTML('<br/><br/>Computes the median of continuous or ordinal variables.')
+        } else if(!is.null(file.pct.means$PV.sets) && !is.null(file.pct.means$resp.type) && !is.null(input$centralTendencyType) && input$centralTendencyType == "Mode") {
+          HTML('<br/><br/>Computes the mode of continuous or ordinal variables.')
         }
       })
       shinyFileSave(input, "pctsMeansChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
@@ -4434,6 +4615,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             paste0(', PV.root.avg = "', pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables], '"')
           } else if(nrow(pctsMeansAllVars$pctsMeansSelectedPVVars) > 1) {
             paste0(', PV.root.avg = c("', paste(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables], collapse = '", "'), '")')
+          },
+          if(!is.null(input$centralTendencyType) && input$centralTendencyType == "Mean") {
+            NULL
+          } else if(!is.null(input$centralTendencyType) && input$centralTendencyType == "Median") {
+            ', central.tendency = "median"'
+          } else if(!is.null(input$centralTendencyType) && input$centralTendencyType == "Mode") {
+            ', central.tendency = "mode"'
           },
           if(nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 1 && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] == file.pct.means$default.weight) {
             NULL
@@ -4465,7 +4653,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$pctsMeansSyntax <- renderText({
-        if(length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedSplitVars, pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars))) >= 1) {
           syntaxPctsMeans()
         } else {
           return(NULL)
@@ -4486,7 +4674,14 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       observe({
-        if(is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) || is.null(file.pct.means$loaded) || any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) || any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) || any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) || any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || is.null(file.pct.means$default.weight) || length(file.pct.means$default.weight) == 0) {
+        if(is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
+           is.null(file.pct.means$loaded) ||
+           any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+           is.null(file.pct.means$default.weight) ||
+           length(file.pct.means$default.weight) == 0) {
           hide("pctsMeansShortcut")
           hide("pctsMeansChooseOutFile")
           hide("pctsMeansOpenOutput")
@@ -4495,7 +4690,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("pctsMeansExecBtnHead")
           hide("execPctsMeans")
           hide("consolePctsMeans")
-        } else if (!is.null(file.pct.means$loaded) || any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) || any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) || any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) || any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || !is.null(file.pct.means$default.weight) || length(file.pct.means$default.weight) != 0) {
+        } else if (!is.null(file.pct.means$loaded) ||
+                   all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+                   all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+                   all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+                   all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+                   !is.null(file.pct.means$default.weight) ||
+                   length(file.pct.means$default.weight) != 0) {
           show("pctsMeansShortcut")
           show("pctsMeansChooseOutFile")
           show("pctsMeansOpenOutput")
@@ -4543,6 +4744,27 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("pctsMeansArrowSelWeightVarsRight")
           show("pctsMeansArrowSelWeightVarsLeft")
           show("pctsMeansWeightVar")
+        }
+        if(nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) == 0 ||
+           is.null(file.pct.means$loaded) ||
+           any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+           any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+           is.null(file.pct.means$default.weight) ||
+           length(file.pct.means$default.weight) == 0) {
+          hide("centralTendencyType")
+          hide("centralTendencyTypeExpl")
+        } else if(nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) > 0 ||
+                  all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+                  all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+                  all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+                  all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+                  !is.null(file.pct.means$default.weight) ||
+                  length(file.pct.means$default.weight) != 0
+        ) {
+          show("centralTendencyType")
+          show("centralTendencyTypeExpl")
         }
       })
     }
@@ -5130,7 +5352,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$prctlsSyntax <- renderText({
-        if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedPVVars, prctlsAllVars$prctlsSelectedBckgVars))) >= 1) {
           syntaxPrctls()
         } else {
           return(NULL)
@@ -5917,7 +6139,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$benchSyntax <- renderText({
-        if(length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(benchAllVars$benchSelectedPVVars, benchAllVars$benchSelectedBckgVars))) >= 1) {
           syntaxBench()
         } else {
           return(NULL)
@@ -6514,7 +6736,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       output$crossTabsSyntax <- renderText({
-        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(crossTabsAllVars$crossTabsSelectedBckgRowVar, crossTabsAllVars$crossTabsSelectedBckgColVar))) >= 1) {
           syntaxCrossTabs()
         } else {
           return(NULL)
@@ -6715,9 +6937,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         if(is.null(file.corr$PV.sets) && is.null(file.corr$resp.type)) {
           return(NULL)
         } else if(!is.null(file.corr$PV.sets) && !is.null(file.corr$resp.type) && !is.null(input$corrType) && input$corrType == "Pearson") {
-          HTML('<br/>Computes a Pearson product-moment linear correlation coefficient between two continuous variables.')
+          HTML('<br/><br/>Computes a Pearson product-moment linear correlation coefficient between two continuous variables.')
         } else if(!is.null(file.corr$PV.sets) && !is.null(file.corr$resp.type) && !is.null(input$corrType) && input$corrType == "Spearman") {
-          HTML('<br/>Computes a Spearman rank-order monotonic correlation between continuous or ordinal variables.')
+          HTML('<br/><br/>Computes a Spearman rank-order monotonic correlation between continuous or ordinal variables.')
         }
       })
       output$corrVariablesExplText <- renderText({
@@ -9253,13 +9475,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       "<a href = http://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a><br/>
 <a href = http://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a><br/><br/>
 Prepare data for analysis:<br/>
-<ul><li><a href = http://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015)</a></li></ul>
+<ul><li><a href = http://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
 Perform analyses:<br/>
-<ul><li><a href = http://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages on variables of interest, per group</a></li></ul>
+<ul><li><a href = http://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
 <ul><li><a href = http://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>

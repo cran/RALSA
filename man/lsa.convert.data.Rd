@@ -3,6 +3,7 @@
 \name{lsa.convert.data}
 \alias{lsa.convert.data}
 \alias{print.lsa.data}
+\alias{lsa.select.countries.PISA}
 \title{Convert Large-Scale Assessments' Datasets to .RData Format}
 \usage{
 lsa.convert.data(
@@ -14,52 +15,89 @@ lsa.convert.data(
 )
 
 \method{print}{lsa.data}(x, col.nums, ...)
+
+lsa.select.countries.PISA(data.file, data.object, cnt.names, output.file)
 }
 \arguments{
 \item{inp.folder}{The folder containing the IEA-like SPSS data files or ASCII text files and
-\code{.sps} import files for OECD PISA data from cycles prior to 2015 (see the details).
+\code{.sps} import files for OECD PISA data from cycles prior to 2015.
+See details.
 If blank, the working directory (\code{getwd()}) is used.}
 
 \item{PISApre15}{When converting PISA files, set to \code{TRUE} if the input files are from
 PISA cycles prior 2015 (ASCII text format with \code{.sps} control files)
 or to \code{FALSE} (default) if they are in SPSS \code{.sav} format, as in
-the case of IEA studies and the like and OECD PISA 2015 or later. Ignored if
-the input folder contains IEA-like studies.}
+the case of IEA studies and the like and OECD PISA 2015 or later. Ignored
+if the input folder contains IEA-like studies.}
 
-\item{ISO}{Vector containing character ISO codes of the countries' data files to convert
-(e.g. \code{ISO = c("aus", "svn")}). If none of the files contain the
-specified ISO codes in their names, the codes are ignored and a warning is
-shown. Ignored when converting PISA files (both for cycles prior 2015 and
-2015 and later). This argument is case-insensitive, i.e. the ISO codes can be
-passed as lower- or upper-case.
+\item{ISO}{Vector containing character ISO codes of the countries' data files to
+convert (e.g. \code{ISO = c("aus", "svn")}). If none of the files contain
+the specified ISO codes in their names, the codes are ignored and a warning
+is shown. Ignored when converting PISA files (both for cycles prior 2015
+and 2015 and later). This argument is case-insensitive, i.e. the ISO codes
+can be passed as lower- or upper-case.
 (lower or upper) as the original SPSS \code{.sav} files.}
 
-\item{missing.to.NA}{Should the user-defined missing values be recoded to \code{NA}? If \code{TRUE},
-all user-defined missing values from the SPSS files (or specified in the OECD PISA
-import syntax files) are all imported as \code{NA}. If \code{FALSE} (default),
-they are converted to valid values and the missing codes are assigned to
-an attribute \code{missings} for each variable.}
+\item{missing.to.NA}{Should the user-defined missing values be recoded to \code{NA}? If
+\code{TRUE}, all user-defined missing values from the SPSS files (or
+specified in the OECD PISA import syntax files) are all imported as
+\code{NA}. If \code{FALSE} (default), they are converted to valid values
+and the missing codes are assigned to an attribute \code{missings} for
+each variable. See details.}
 
-\item{out.folder}{Path to the folder where the converted files will be stored. If blank, same
-as the \code{inp.folder}, and if the \code{inp.folder} is missing as well,
-this will be \code{getwd()}.}
+\item{out.folder}{Path to the folder where the converted files will be stored. If blank,
+same as the \code{inp.folder}, and if the \code{inp.folder} is missing as
+well, this will be \code{getwd()}.}
 
-\item{x}{\code{lsa.data} object.}
+\item{x}{(\code{print} only) \code{lsa.data} object.}
 
-\item{col.nums}{Which columns to print, positions by number.}
+\item{col.nums}{(\code{print} only) Which columns to print, positions by number.}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{(\code{print} only) Further arguments passed to or from other methods.}
+
+\item{data.file}{(\code{lsa.select.countries.PISA} only) Converted PISA data file to select
+countries' data from. Either this one or \code{data.object} must be
+provided, but not both. See details.}
+
+\item{data.object}{(\code{lsa.select.countries.PISA} only) PISA object in memory to filter.
+Either this one or \code{data.file} must be provided, but not both.
+See details.}
+
+\item{cnt.names}{(\code{lsa.select.countries.PISA} only) Character vector containing the
+names of the countries, as they exist in the data, which should stay in the
+PISA exported file or object in memory.}
+
+\item{output.file}{(\code{lsa.select.countries.PISA} only) Full path to the file with the filtered
+countries' data to be written on disk. If not provided, the PISA object
+will be written to memory.}
 }
 \value{
+\itemize{
+
+\item \strong{\code{lsa.convert.data}}
+
 \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class. The \code{data.table} object has the same name as the \code{.RData} file it is saved in. The object has additional attributes: study name (\code{study}), study cycle (\code{cycle}), and respondent file type (\code{file.type}). Each variable has its own additional attributes: its own label attached to it, if it existed in the source SPSS file. If the \code{missing.to.NA} was set to \code{TRUE}, each variable has an attribute \code{missings}, containing the user-defined missing values from the SPSS files.
 
 The object in the \code{.RData} file is keyed on the country ID variable.
+
+\item \strong{\code{print}}
+
+Prints the information of an \code{lsa.data} object (study, cycle, respondent type, number of countries, key -- country ID, and if the variables have user-defined missing values) and a preview of the data. The default preview (when no \code{col.nums}) are specified will include the first six columns.
+
+\item \strong{\code{lsa.select.countries.PISA}}
+
+Writes a file containing an \code{lsa.object} with the data for the countries passed to the \code{cnt.names} argument, if the \code{output.file} argument is used. If the \code{output.file} argument is not used, the \code{lsa.object} will be written to the memory with the same name as the file name in \code{inp.file}.
+}
 }
 \description{
-\code{lsa.convert.data} converts datasets from large-scale assessments from their original formats (SPSS or ASCII text) into \code{.RData} files. \code{print} prints the properties of an \code{lsa.data} objects on screen.
+\code{lsa.convert.data} converts datasets from large-scale assessments from their original formats (SPSS or ASCII text) into \code{.RData} files. \code{print} prints the properties of an \code{lsa.data} objects on screen. \code{lsa.select.countries.PISA} lets selecting PISA data from specific countries for analysis.
 }
 \details{
-The \code{lsa.convert.data} function converts the originally provided data files into \code{.RData} sets. The \code{print} function adds its own printing method on how to print \code{lsa.data} objects on screen.
+The \code{lsa.convert.data} function converts the originally provided data files into \code{.RData} sets. RALSA adds its own method for printing \code{lsa.data} objects on screen. The \code{lsa.select.countries.PISA} is a utility function that allows the user to select countries of interest from a converted PISA data file (or PISA object residing in memory) and remove the rest of the countries' data. This is useful when the user does not want to analyze all countries data in a PISA file.
+
+\itemize{
+\item \strong{\code{lsa.convert.data}}
+
 IEA studies, as well as some OECD ones and those conducted by multiple organizations, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. Cycles of OECD PISA prior to 2015, on the other hand, do not provide SPSS \code{.sav} or other binary files, but ASCII text files, accompanied with SPSS syntax (\code{.sps}) files that are used to import the text files into SPSS. These files are per each type of respondent containing all countries' data. The \code{lsa.convert.data} function converts the data from either source assuring that the structure of the output \code{.RData} files is the same, although the structure of the input files is the different (SPSS binary files vs. ASCII text files plus import \code{.sps} files). The data from PISA 2015 and later, on the other hand, is provided in SPSS format (all countries in one file per type of respondent). Thus, the \code{PISApre15} argument needs to be specified as \code{TRUE} when converting data sets from PISA prior to its 2015 cycle. The default for the \code{PISApre15} argument is \code{FALSE} which means that the function expects to find IEA-like SPSS binary files per country and type of respondent in the directory in \code{inp.folder} or OECD PISA 2015 (or later) SPSS \code{.sav} files. If \code{PISApre15 = TRUE} and country codes are provided to \code{ISO}, they will be ignored because PISA files contain data from all countries together.
 
 The files to be converted must be in a folder on their own, from a single study, single cycle and single population. In addition, if there are more than one file types per study, cycle and population, these also must be in different folders. For example, in TIMSS 2019 the grade 8 data files are main (end with "m7", electronic version of the paper administered items), bridge (end with "b7", paper administration with trend items for countries participating in previous TIMSS cycles) and Problem Solving and Inquiry (PSI) tasks (end with "z7", electronic administration only, optional for countries). These different types must be in separate folders. In case of OECD PISA prior 2015, the folder must contain both the ASCII text files and the SPSS \code{.sps} import syntax files. If the folder contains data sets from more than one study or cycle, the operation will break with error messages.
@@ -67,6 +105,15 @@ The files to be converted must be in a folder on their own, from a single study,
 If the path for the \code{inp.folder} argument is not specified, the function will search for files in the working directory (i.e. as returned by \code{getwd()}). If folder path for the the \code{out.folder} is not specified, it will take the one from the \code{inp.folder} and the files will be stored there. If both the \code{inp.folder} and \code{out.folder} arguments are missing, the directory from \code{getwd()} will be used to search, convert and store files.
 
 If \code{missing.to.NA} is set to \code{TRUE}, all user-defined missing values from the SPSS will be imported as \code{NA} which is \code{R}'s only kind of missing value. This will be the most often case when analyzing these data since the reason why the response is missing will be irrelevant most of the times. However, if it is needed to know why the reasons for missing responses, as when analyzing achievement items (i.e. not administered vs. omitted or not reached), the argument shall be set to \code{FALSE} (default for this argument) which will convert all user-defined missing values as valid ones.
+
+\item \strong{\code{print}}
+
+RALSA uses its own method for printing objects of class \code{lsa.data} on screen. Passing just the object name to the console will print summarized information about the study's data and the first six columns of the dataset (see the Value section). If \code{col.nums} specifies which columns from the dataset shall be included in the output (see examples).
+
+\item \strong{\code{lsa.select.countries.PISA}}
+
+\code{lsa.select.countries.PISA} lets the user to take a PISA dataset, either a converted file or \code{lsa.data} object in the memory and reduce the number of countries in it by passing the names of the countries which need to be kept as a character vector to the \code{cnt.names} argument. If full path (including the file name) to the resulting file is specified in the \code{output.file} argument, it will be written on disk. If not, the data will be written to an \code{lsa.object} in memory with the same name as the input file. See the examples.
+}
 }
 \note{
 When downloading the \code{.sps} files (ASCII text and control \code{.sps}) for OECD PISA files prior to the 2015 cycle (say http://www.oecd.org/pisa/pisaproducts/pisa2009database-downloadabledata.htm), save them \strong{without changing their names and without modifying the file contents}. The function will look for the files as they were named originally.
@@ -94,6 +141,20 @@ out.folder = "C:/Data")
 lsa.convert.data(inp.folder = "/media/PISA_2009", PISApre15 = TRUE, missing.to.NA = TRUE,
 out.folder = "/tmp")
 }
+
+# Print 20th to 25th column in PISA 2018 student questionnaire dataset loaded into memory
+\dontrun{
+print(x = cy07_msu_stu_qqq, col.nums = 20:25)
+}
+
+# Select data from Albania and Slovenia from PISA 2018 student questionnaire dataset
+# and save it under the same file name in a different folder
+\dontrun{
+lsa.select.countries.PISA(data.file = "C:/PISA/cy07_msu_stu_qqq.RData",
+cnt.names = c("Albania", "Slovenia"),
+output.file = "C:/PISA/Reduced/cy07_msu_stu_qqq.RData")
+}
+
 
 }
 \seealso{

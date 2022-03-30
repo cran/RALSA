@@ -13,6 +13,7 @@ suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyjs
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyFiles, warn.conflicts = FALSE, quietly = TRUE))))
 
 ui <- tagList(
+  
   load.app.CSS.screen <- "
 #loading-content {
   position: absolute;
@@ -29,7 +30,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-
+  
   useShinyjs(),
   inlineCSS(load.app.CSS.screen),
   div(
@@ -74,7 +75,8 @@ background-color: #000000;")
                                               menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
                                               menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
                                               menuSubItem(text = "Data diagnostics", icon = icon("table"), tabName = "dataDiag"),
-                                              menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars")
+                                              menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars"),
+                                              menuSubItem(text = "Select PISA countries", icon = icon("filter"), tabName = "selectPISACountries")
                                      )
                          ),
                          sidebarMenu(id = "analysisMenu",
@@ -751,6 +753,86 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                      br()
                     )
             ),
+            tabItem(tabName = "selectPISACountries", class = "active",
+                    h1(textOutput(outputId = "h1selectPISACountries")),
+                    htmlOutput(outputId = "selectPISACountriesIntro"),
+                    fluidRow(
+                      column(width = 2, shinyFilesButton(id = "selectPISACountriesChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                      ),
+                      column(width = 9, offset = 1,
+                             conditionalPanel(condition = "input.selectPISACountriesChooseSrcFile",
+                                              verbatimTextOutput(outputId = "selectPISACountriesSrcPathDisplay"),
+                                              tags$head(tags$style("#selectPISACountriesSrcPathDisplay {background-color: white;}"))
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      br(), br(),
+                      column(width = 2,
+                             htmlOutput(outputId = "selectPISACountriesStudyName"),
+                             htmlOutput(outputId = "selectPISACountriesStudyCycle"),
+                      ),
+                      column(width = 10,
+                             htmlOutput(outputId = "selectPISACountriesRespHead"),
+                             htmlOutput(outputId = "selectPISACountriesRespAvailable"),
+                             br(), br()
+                      )
+                    ),
+                    htmlOutput(outputId = "selectPISACountriesExplText"),
+                    fluidRow(
+                      column(width = 6, align = "center",
+                             DTOutput(outputId = "selectPISACountriesAvailableCountries"),
+                             tags$head(tags$style("#selectPISACountriesAvailableCountries {white-space: nowrap;}"))
+                      ),
+                      column(width = 6,
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "selectPISACountriesArrowSelCntRight"),
+                                      uiOutput(outputId = "selectPISACountriesArrowSelCntLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "selectPISASelectedCountries"),
+                                      tags$head(tags$style("#selectPISASelectedCountries {white-space: nowrap;}")),
+                                      br()
+                               )
+                             ),
+                      ),
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(style="display:inline-block", shinySaveButton(id = "selectPISACountriesChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"))
+                      ),
+                      br(), br(), br(), br()
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "selectPISACountriesSyntaxHead"),
+                             verbatimTextOutput(outputId = "selectPISACountriesSyntax"),
+                             tags$head(tags$style(HTML("#selectPISACountriesSyntax {background-color: white; white-space: pre-wrap;}")))
+                      ),
+                      br(), br(), br(), br(), br(), br()
+                    ),
+                    conditionalPanel(condition = "output.selectPISACountriesSyntax",
+                                     textOutput(outputId = "selectPISACountriesExecBtnHead"),
+                                     uiOutput(outputId = "execSelectPISACountries"),
+                                     br(), br(), br()
+                    ),
+                    conditionalPanel(condition = "selectPISACountriesSyntax",
+                                     verbatimTextOutput(outputId = "consoleSelectPISACountries"),
+                                     tags$head(tags$style("#consoleSelectPISACountries {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$script(
+                                       '
+Shiny.addCustomMessageHandler("scrollCallback",
+function(color) {
+var objDiv = document.getElementById("consoleSelectPISACountries"); /* Here we point to "console" output, adapt in other cases */
+objDiv.scrollTop = objDiv.scrollHeight;
+}
+);'
+                                     ),
+                                     br()
+                    )
+            ),
             tabItem(tabName = "pctsMeans", class = "active",
                     h1(textOutput(outputId = "h1PctsMeans")),
                     htmlOutput(outputId = "pctsMeansIntro"),
@@ -856,6 +938,15 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              htmlOutput(outputId = "pctsMeansWarnMoreVars"),
                              br()
                       )
+                    ),
+                    fluidRow(
+                      column(width = 3,
+                             uiOutput(outputId = "centralTendencyType")
+                      ),
+                      column(width = 9,
+                             htmlOutput(outputId = "centralTendencyTypeExpl")
+                      ),
+                      br(), br(), br(), br(), br(), br()
                     ),
                     fluidRow(
                       column(width = 6,
@@ -1107,10 +1198,10 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      column(width = 2,
+                      column(width = 3,
                              uiOutput(outputId = "benchType")
                       ),
-                      column(width = 10,
+                      column(width = 9,
                              htmlOutput(outputId = "benchTypeExpl")
                       ),
                       br(), br(), br(), br(), br(), br()
@@ -1447,10 +1538,10 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      column(width = 2,
+                      column(width = 3,
                              uiOutput(outputId = "corrType")
                       ),
-                      column(width = 10,
+                      column(width = 9,
                              htmlOutput(outputId = "corrTypeExpl")
                       ),
                       br(), br(), br(), br(), br(), br()

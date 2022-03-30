@@ -14,6 +14,7 @@ lsa.prctls(
   weight.var,
   include.missing = FALSE,
   shortcut = FALSE,
+  save.output = TRUE,
   output.file,
   open.output = TRUE
 )
@@ -55,16 +56,20 @@ applied when using PVs? The default (\code{FALSE}) applies the "full"
 design when computing the variance components and the standard errors of
 the PV estimates.}
 
-\item{output.file}{Full path to the output file including the file name. If omitted, a file
-with a default file name "Analysis.xlsx" will be written to the working
-directory (\code{getwd()}).}
+\item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
+(printed to the console or assigned to an object).}
+
+\item{output.file}{If \code{save.output = TRUE} (default), full path to the output file
+including the file name. If omitted, a file with a default file name
+"Analysis.xlsx" will be written to the working directory
+(\code{getwd()}). Ignored if \code{save.output = FALSE}.}
 
 \item{open.output}{Logical, shall the output be open after it has been written? The default
 (\code{TRUE}) opens the output in the default spreadsheet program
-installed on the computer.}
+installed on the computer. Ignored if \code{save.output = FALSE}.}
 }
 \value{
-A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.

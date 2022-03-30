@@ -29,12 +29,15 @@
 #'                         applied when using PVs? The default (\code{FALSE}) applies the "full"
 #'                         design when computing the variance components and the standard errors of
 #'                         the PV estimates.
-#' @param output.file      Full path to the output file including the file name. If omitted, a file
-#'                         with a default file name "Analysis.xlsx" will be written to the working
-#'                         directory (\code{getwd()}).
+#' @param save.output      Logical, shall the output be saved in MS Excel file (default) or not
+#'                         (printed to the console or assigned to an object).
+#' @param output.file      If \code{save.output = TRUE} (default), full path to the output file
+#'                         including the file name. If omitted, a file with a default file name
+#'                         "Analysis.xlsx" will be written to the working directory
+#'                         (\code{getwd()}). Ignored if \code{save.output = FALSE}.
 #' @param open.output      Logical, shall the output be open after it has been written? The default
 #'                         (\code{TRUE}) opens the output in the default spreadsheet program
-#'                         installed on the computer.
+#'                         installed on the computer. Ignored if \code{save.output = FALSE}.
 #'
 #' @details
 #' Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
@@ -50,7 +53,7 @@
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
 #' @return
-#' A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 #'
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -132,7 +135,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, output.file, open.output = TRUE) {
+lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   prctls <- sort(prctls/100)
@@ -144,6 +147,9 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     }
     if(missing(bckg.prctls.vars) & missing(PV.root.prctls)) {
       stop('No background variables in "bckg.prctls.vars" or PV roots in "PV.root.prctls" are provided. All operations stop here. Check your input.\n\n', call. = FALSE)
+    }
+    if(!is.logical(save.output) || !save.output %in% c(TRUE, FALSE)) {
+      stop('\nThe "save.output" argument can take only logical values (TRUE or FALSE). All operations stop here. Check your input.', call. = FALSE)
     }
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
@@ -420,7 +426,11 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = key.vars, data.properties = file.attributes)
     message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-    export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
+    if(isTRUE(save.output)) {
+      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
+    } else if(isFALSE(save.output)) {
+      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+    }
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
     }

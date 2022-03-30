@@ -308,7 +308,7 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     }
     eval(parse(text = unlist(missings.attr.statements)))
     check.missings.in.values <- function(input1, input2) {
-      if(class(data[ , get(input1)]) == "factor"){
+      if(is.factor(data[ , get(input1)]) == TRUE){
         any(input2 %in% levels(data[ , get(input1)]) == FALSE)
       } else {
         any(input2 %in% unique(data[ , get(input1)]) == FALSE)

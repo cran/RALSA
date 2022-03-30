@@ -20,6 +20,7 @@ lsa.bin.log.reg(
   norm.weight = FALSE,
   include.missing = FALSE,
   shortcut = FALSE,
+  save.output = TRUE,
   output.file,
   open.output = TRUE
 )
@@ -29,67 +30,81 @@ lsa.bin.log.reg(
 \code{data.object} shall be specified, but not both. See details.}
 
 \item{data.object}{The object in the memory containing \code{lsa.data} object. Either
-this or \code{data.file} shall be specified, but not both. See details.}
+this or \code{data.file} shall be specified, but not both. See
+details.}
 
-\item{split.vars}{Categorical variable(s) to split the results by. If no split variables
-are provided, the results will be for the overall countries' populations.
-If one or more variables are provided, the results will be split by all
-but the last variable and the percentages of respondents will be computed
-by the unique values of the last splitting variable.}
+\item{split.vars}{Categorical variable(s) to split the results by. If no split
+variables are provided, the results will be for the overall
+countries' populations. If one or more variables are provided, the
+results will be split by all but the last variable and the
+percentages of respondents will be computed by the unique values of
+the last splitting variable.}
 
-\item{bin.dep.var}{Name of a binary (i.e. just two distinct values) background or contextual
-variable used as a dependent variable in the model. See details.}
+\item{bin.dep.var}{Name of a binary (i.e. just two distinct values) background or
+contextual variable used as a dependent variable in the model. See
+details.}
 
-\item{bckg.indep.cont.vars}{Names of continuous independent background or contextual variables used
-as predictors in the model. See details.}
+\item{bckg.indep.cont.vars}{Names of continuous independent background or contextual variables
+used as predictors in the model. See details.}
 
-\item{bckg.indep.cat.vars}{Names of categorical independent background or contextual variables used
-as predictors in the model to compute contrasts for (see
+\item{bckg.indep.cat.vars}{Names of categorical independent background or contextual variables
+used as predictors in the model to compute contrasts for (see
 \code{bckg.cat.contrasts} and \code{bckg.ref.cats}). See details.}
 
-\item{bckg.cat.contrasts}{String vector with the same length as the length of \code{bckg.indep.cat.vars}
-specifying the type of contrasts to compute in case \code{bckg.indep.cat.vars}
-are provided. See details.}
+\item{bckg.cat.contrasts}{String vector with the same length as the length of
+\code{bckg.indep.cat.vars} specifying the type of contrasts to
+compute in case \code{bckg.indep.cat.vars} are provided. See
+details.}
 
-\item{bckg.ref.cats}{Vector of integers with the same length as the length of \code{bckg.indep.cat.vars}
-and \code{bckg.cat.contrasts} specifying the reference categories for the
-contrasts to compute in case \code{bckg.indep.cat.vars} are provided. See details.}
+\item{bckg.ref.cats}{Vector of integers with the same length as the length of
+\code{bckg.indep.cat.vars} and \code{bckg.cat.contrasts} specifying
+the reference categories for the contrasts to compute in case
+\code{bckg.indep.cat.vars} are provided. See details.}
 
-\item{PV.root.indep}{The root names for a set of plausible values used as a independent variables in
-the model. See details.}
+\item{PV.root.indep}{The root names for a set of plausible values used as a independent
+variables in the model. See details.}
 
-\item{interactions}{Interaction terms - a list containing vectors of length of two. See details.}
-
-\item{standardize}{Shall the dependent and independent variables be standardized to produce beta
-coefficients? The default is \code{FALSE}. See details.}
-
-\item{weight.var}{The name of the variable containing the weights. If no name of a weight
-variable is provide, the function will automatically select the default
-weight variable for the provided data, depending on the respondent type.}
-
-\item{norm.weight}{Shall the weights be normalized before applying them, default is \code{FALSE}.
+\item{interactions}{Interaction terms - a list containing vectors of length of two.
 See details.}
 
-\item{include.missing}{Logical, shall the missing values of the splitting variables be included as
-categories to split by and all statistics produced for them? The default
-(\code{FALSE}) takes all cases on the splitting variables without missing
-values before computing any statistics. See details.}
+\item{standardize}{Shall the dependent and independent variables be standardized to
+produce beta coefficients? The default is \code{FALSE}. See details.}
+
+\item{weight.var}{The name of the variable containing the weights. If no name of a
+weight variable is provide, the function will automatically select
+the default weight variable for the provided data, depending on the
+respondent type.}
+
+\item{norm.weight}{Shall the weights be normalized before applying them, default is
+\code{FALSE}. See details.}
+
+\item{include.missing}{Logical, shall the missing values of the splitting variables be
+included as categories to split by and all statistics produced for
+them? The default (\code{FALSE}) takes all cases on the splitting
+variables without missing values before computing any statistics.
+See details.}
 
 \item{shortcut}{Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be
-applied? The default (\code{FALSE}) applies the "full" design when
-computing the variance components and the standard errors of the estimates.}
+TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII
+be applied? The default (\code{FALSE}) applies the "full" design
+when computing the variance components and the standard errors of
+the estimates.}
 
-\item{output.file}{Full path to the output file including the file name. If omitted, a file with
-a default file name "Analysis.xlsx" will be written to the working directory
-(\code{getwd()}).}
+\item{save.output}{Logical, shall the output be saved in MS Excel file (default) or
+not (printed to the console or assigned to an object).}
 
-\item{open.output}{Logical, shall the output be open after it has been written? The default
-(\code{TRUE}) opens the output in the default spreadsheet program installed
-on the computer.}
+\item{output.file}{If \code{save.output = TRUE} (default), full path to the output file
+including the file name. If omitted, a file with a default file name
+"Analysis.xlsx" will be written to the working directory
+(\code{getwd()}). Ignored if \code{save.output = FALSE}.}
+
+\item{open.output}{Logical, shall the output be open after it has been written? The
+default (\code{TRUE}) opens the output in the default spreadsheet
+program installed on the computer. Ignored if
+\code{save.output = FALSE}.}
 }
 \value{
-A MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
