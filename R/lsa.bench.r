@@ -1,6 +1,6 @@
 #' @title Compute percentages of respondents reaching or surpassing certain ability cut-off scores
 #'
-#' @description \code{lsa.pcts.means} computes percentages of respondents reaching or surpassing certain ability cut-off scores (benchmarks/performance levels). The cut-off scores are points in the distributions of PVs defined differently in different studies and, sometimes, in different study cycles. The percentages can also be computed as cumulative percentages. There is an option to compute an average of continuous contextual/background variable.
+#' @description \code{lsa.bench} computes percentages of respondents reaching or surpassing certain ability cut-off scores (benchmarks/performance levels). The cut-off scores are points in the distributions of PVs defined differently in different studies and, sometimes, in different study cycles. The percentages can also be computed as cumulative percentages. There is an option to compute an average of continuous contextual/background variable.
 #'
 #' @param data.file       The file containing \code{lsa.data} object. Either this or \code{data.object}
 #'                        shall be specified, but not both. See details.
@@ -21,8 +21,8 @@
 #'                        groups defined by the \code{split.vars} (\code{TRUE}) or not (\code{FALSE},
 #'                        default). See details.
 #' @param bckg.var        Name of continuous background or contextual variable to compute the mean
-#'                        for. The results will be computed by all groups specified by the splitting
-#'                        variables and per performance group. See details.
+#'                        for. The results will be computed by all groups specified by the
+#'                        splitting variables and per performance group. See details.
 #' @param weight.var      The name of the variable containing the weights. If no name of a weight
 #'                        variable is provide, the function will automatically select the default
 #'                        weight variable for the provided data, depending on the respondent type.
@@ -31,15 +31,17 @@
 #'                        default (\code{FALSE}) takes all cases on the splitting variables
 #'                        without missing values before computing any statistics. See details.
 #' @param shortcut        Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-#'                        TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
-#'                        The default (\code{FALSE}) applies the "full" design when computing the
-#'                        variance components and the standard errors of the estimates.
+#'                        TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be
+#'                        applied? The default (\code{FALSE}) applies the "full" design when
+#'                        computing the variance components and the standard errors of the
+#'                        estimates.
+#' @param graphs          Logical, shall graphs be produced? Default is \code{FALSE}. See details.
 #' @param save.output     Logical, shall the output be saved in MS Excel file (default) or not
 #'                        (printed to the console or assigned to an object).
-#' @param output.file     If \code{save.output = TRUE} (default), full path to the output file including the
-#'                        file name. If omitted, a file with a default file name "Analysis.xlsx"
-#'                        will be written to the working directory (\code{getwd()}). Ignored if
-#'                        \code{save.output = FALSE}.
+#' @param output.file     If \code{save.output = TRUE} (default), full path to the output file
+#'                        including the file name. If omitted, a file with a default file name
+#'                        "Analysis.xlsx" will be written to the working directory (\code{getwd()}).
+#'                        Ignored if \code{save.output = FALSE}.
 #' @param open.output     Logical, shall the output be open after it has been written? The default
 #'                        (\code{TRUE}) opens the output in the default spreadsheet program installed
 #'                        on the computer. Ignored if \code{save.output = FALSE}.
@@ -59,14 +61,18 @@
 #'
 #' If the \code{pcts.within} if \code{FALSE} (default), the function will compute the percentages of respondents reaching or surpassing each of the cut-off scores defined by \code{bench.vals}. In this case the percentages of all respondents across the performance levels will add to 100 in each group defined by the splitting variables. On the contrary, if \code{pcts.within = TRUE}, the function will compute the percentages of respondents at each of the performance levels across groups defined by the splitting variables. Then the sum of percentages within a specific performance level will sum up to 100 across the groups defined by the splitting variables. For example, we can compute what is the ratio (i.e. percentages) of female and male students performing between 475 and 550 points in PIRLS -- say 55 of all students performing at this level are female and 45 are male. If no split variables are provided, the percentages will be 100 for each performance level within a country. The argument is ignored if \code{bench.type = "cumulative"}.
 #'
-#' If no variables are specified for \code{bckg.vars}, the output will contain only percentages of cases in groups specified by the splitting variables and the cut-off scores.
+#' If no variables are specified for \code{bckg.var}, the output will contain only percentages of cases in groups specified by the splitting variables and the cut-off scores.
 #'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Numeracy, TIMSS Advanced, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
+#' If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95% confidence intervals of the average for this variable will be produced. All plots are produced per country.
+#'
 #' @return
-#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+#'
+#' If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 #'
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -81,7 +87,7 @@
 #'   \item Mean_\verb{<}Background variable\verb{>}\verb{_}SE - the standard error of the average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 #'   \item Variance_\verb{<}Background variable\verb{>} - the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 #'   \item Variance_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
-#'   \item SD_\verb{<}Background variable\verb{>} - the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.vars}.
+#'   \item SD_\verb{<}Background variable\verb{>} - the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 #'   \item SD_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.var}.
 #'   \item Percent_Missings_\verb{<}Background variable\verb{>} - the percentage of missing values for the \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 #' }
@@ -102,6 +108,10 @@
 #' }
 #'
 #' The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+#'
+#' If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+#'
+#' If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 #'
 #' @examples
 #' # Compute percentages of female and male students reaching or surpassing the "Intermediate"
@@ -153,7 +163,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -172,11 +182,11 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     bench.type <- bench.type
   }
   if(bench.type == "cumulative" && pcts.within == TRUE) {
-    warnings.collector[["cumulative.pcts.within"]] <- TRUE
+    warnings.collector[["cumulative.pcts.within"]] <- 'The argument "bench.type" was set to "cumulative" and the argument "pcts.within" was set to "TRUE". Statistics with these two arguments is not possible to compute. The value of "pcts.within" was ignored.'
     pcts.within <- FALSE
   }
   if(bench.type == "cumulative" && !missing(bckg.var)) {
-    warnings.collector[["cumulative.bckg.var"]] <- TRUE
+    warnings.collector[["cumulative.bckg.var"]] <- 'The argument "bench.type" was set to "cumulative" and a background variable name was passed to "bckg.var". Statistics with these two arguments is not possible to compute. The value of "bckg.var" was ignored.'
   }
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -214,6 +224,12 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.var", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   if(missing(bench.vals)) {
     if(intersect(file.attributes[["lsa.study"]], names(default.benchmarks)) == "ICCS") {
       tmp.benchmarks <- default.benchmarks[["ICCS"]]
@@ -278,6 +294,9 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
     analysis.info <- list()
@@ -890,31 +909,107 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     }
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Performance_Group"), data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-    if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-    } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
+    if(isFALSE(graphs)) {
+      message("")
     }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+    if(isTRUE(graphs)) {
+      ptm.add.graphs <- proc.time()
+      graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average", mget(c(key.vars, "Performance_Group", grep(pattern = "^Percentages_|^Mean_", x = colnames(estimates), value = TRUE)))])
+      graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
+      if(length(key.vars) > 1) {
+        lapply(X = graphs.object, FUN = function(i) {
+          i[ , perf_group := str_extract(string = Performance_Group, pattern = "^[[:digit:]]+\\.")]
+        })
+        lapply(X = graphs.object, FUN = function(i) {
+          i[ , collapsed_split := factor(do.call(paste, c(.SD, sep = " // "))), .SDcols = c("perf_group", key.vars[2:length(key.vars)])]
+          i[ , collapsed_split := factor(x = str_wrap(string = collapsed_split, width = 40), levels = str_wrap(string = collapsed_split, width = 40))]
+          i[ , perf_group := NULL]
+        })
+      }
+      if(!is.null(vars.list[["bckg.var"]])) {
+        mean.NAs.only.vars.cnt <- lapply(X = graphs.object, FUN = function(i) {
+          mean.cols <- grep(pattern = vars.list[["bckg.var"]], x = colnames(i), value = TRUE)
+          mean.cols <- grep(pattern = "_SE$", x = mean.cols, value = TRUE, invert = TRUE)
+          any.NAs.cnt.mean <- lapply(X = mean.cols, FUN = function(j) {
+            if(any(is.na(i[ , get(j)])) == TRUE) {
+              unique(i[ , get(key.vars[1])])
+            }
+          })
+        })
+        mean.NAs.only.vars.cnt <- unique(unlist(mean.NAs.only.vars.cnt))
+        if(length(mean.NAs.only.vars.cnt)) {
+          if(graphs == FALSE) {
+            warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries the computed mean for the background variable resulted in missing values, no statistics are computed. Check if the variable contained only missings: ", paste(unique(unlist(mean.NAs.only.vars.cnt)), collapse = ", "), ".")
+          } else {
+            warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries the computed mean for the background variable resulted in missing values, no statistics are computed and no graph is produced. Check if the variable contained only missings: ", paste(unique(unlist(mean.NAs.only.vars.cnt)), collapse = ", "), ".")
+          }
+        }
+      }
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "bench")
+      if(!is.null(vars.list[["bckg.var"]]) && bench.type != "cumulative") {
+        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "bench")
+      }
+    }
+    if(isTRUE(save.output)) {
+      if(isFALSE(graphs)) {
+        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+      } else {
+        save.graphs(out.path = action.args.list[["output.file"]])
+        if(exists("means.plots.files")) {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, non.perc.graphs = means.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        } else {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        }
+        delete.graphs(out.path = action.args.list[["output.file"]])
+      }
+      if(exists("perc.graphs.list") || exists("means.graphs.list")) {
+        message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+      }
+    } else if(isFALSE(save.output)) {
+      if(missing(graphs) || graphs == FALSE) {
+        if(length(warnings.collector) == 0) {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+        } else {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+        }
+      } else if(graphs == TRUE) {
+        if(exists("perc.graphs.list") || exists("means.graphs.list")) {
+          message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+        }
+        if(length(vars.list[["bckg.var"]]) > 0 && bench.type != "cumulative") {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Means graphs` = means.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Means graphs` = means.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        } else {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        }
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
   if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
     if(!is.null(warnings.collector[["cumulative.pcts.within"]])) {
-      warning('The argument "bench.type" was set to "cumulative" and the argument "pcts.within" was set to "TRUE". Statistics with these two arguments is not possible to compute. The value of "pcts.within" was ignored.', call. = FALSE)
-      message("\n\n")
+      warning(warnings.collector[["cumulative.pcts.within"]], call. = FALSE)
     }
     if(!is.null(warnings.collector[["cumulative.bckg.var"]])) {
-      warning('The argument "bench.type" was set to "cumulative" and a background variable name was passed to "bckg.var". Statistics with these two arguments is not possible to compute. The value of "bckg.var" was ignored.', call. = FALSE)
+      warning(warnings.collector[["cumulative.bckg.var"]], call. = FALSE)
     }
-  }
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.var", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
+    if(length(warnings.collector[["cnt.NAs.on.analysis.vars"]]) > 0) {
+      warning(warnings.collector[["cnt.NAs.on.analysis.vars"]], call. = FALSE)
+    }
   }
 }

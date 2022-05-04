@@ -144,6 +144,7 @@
 lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
+  warnings.collector <- list()
   if(missing(corr.type)) {
     corr.type <- "Pearson"
   } else if(corr.type == "Spearman") {
@@ -193,12 +194,21 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.corr.vars", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.corr.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   tryCatch({
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- data[get(vars.list[["weight.var"]]) > 0, ]
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     if(length(key.vars) > 1) {
       data <- lapply(X = data, FUN = function(i) {
         tmp.colnames <- colnames(i)[!colnames(i) %in% c(key.vars, unlist(vars.list[c("split.vars", "bckg.corr.vars", "jk.zones", "rep.ind", "PV.names")]))]
@@ -502,20 +512,23 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
     message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
     if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
+      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
     } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
-    }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+      if(length(warnings.collector) == 0) {
+        return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+      } else {
+        return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.corr.vars", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.corr.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
+  if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
   }
 }

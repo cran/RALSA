@@ -16,6 +16,7 @@ lsa.bench(
   weight.var,
   include.missing = FALSE,
   shortcut = FALSE,
+  graphs = FALSE,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -48,8 +49,8 @@ groups defined by the \code{split.vars} (\code{TRUE}) or not (\code{FALSE},
 default). See details.}
 
 \item{bckg.var}{Name of continuous background or contextual variable to compute the mean
-for. The results will be computed by all groups specified by the splitting
-variables and per performance group. See details.}
+for. The results will be computed by all groups specified by the
+splitting variables and per performance group. See details.}
 
 \item{weight.var}{The name of the variable containing the weights. If no name of a weight
 variable is provide, the function will automatically select the default
@@ -61,24 +62,29 @@ default (\code{FALSE}) takes all cases on the splitting variables
 without missing values before computing any statistics. See details.}
 
 \item{shortcut}{Logical, shall the "shortcut" method for IEA TIMSS, TIMSS Advanced,
-TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be applied?
-The default (\code{FALSE}) applies the "full" design when computing the
-variance components and the standard errors of the estimates.}
+TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII be
+applied? The default (\code{FALSE}) applies the "full" design when
+computing the variance components and the standard errors of the
+estimates.}
+
+\item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
 
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
 
-\item{output.file}{If \code{save.output = TRUE} (default), full path to the output file including the
-file name. If omitted, a file with a default file name "Analysis.xlsx"
-will be written to the working directory (\code{getwd()}). Ignored if
-\code{save.output = FALSE}.}
+\item{output.file}{If \code{save.output = TRUE} (default), full path to the output file
+including the file name. If omitted, a file with a default file name
+"Analysis.xlsx" will be written to the working directory (\code{getwd()}).
+Ignored if \code{save.output = FALSE}.}
 
 \item{open.output}{Logical, shall the output be open after it has been written? The default
 (\code{TRUE}) opens the output in the default spreadsheet program installed
 on the computer. Ignored if \code{save.output = FALSE}.}
 }
 \value{
-If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+
+If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -93,7 +99,7 @@ If \code{save.output = FALSE}, a list containing the estimates and analysis info
 \item Mean_\verb{<}Background variable\verb{>}\verb{_}SE - the standard error of the average of the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 \item Variance_\verb{<}Background variable\verb{>} - the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 \item Variance_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the variance for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
-\item SD_\verb{<}Background variable\verb{>} - the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.vars}.
+\item SD_\verb{<}Background variable\verb{>} - the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 \item SD_\verb{<}Background variable\verb{>}\verb{_}SE - the error of the standard deviation for the continuous \verb{<}Background variable\verb{>} specified in \code{bckg.avg.var}.
 \item Percent_Missings_\verb{<}Background variable\verb{>} - the percentage of missing values for the \verb{<}Background variable\verb{>} specified in \code{bckg.var}.
 }
@@ -114,9 +120,13 @@ The second sheet contains some additional information related to the analysis pe
 }
 
 The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+
+If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+
+If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 }
 \description{
-\code{lsa.pcts.means} computes percentages of respondents reaching or surpassing certain ability cut-off scores (benchmarks/performance levels). The cut-off scores are points in the distributions of PVs defined differently in different studies and, sometimes, in different study cycles. The percentages can also be computed as cumulative percentages. There is an option to compute an average of continuous contextual/background variable.
+\code{lsa.bench} computes percentages of respondents reaching or surpassing certain ability cut-off scores (benchmarks/performance levels). The cut-off scores are points in the distributions of PVs defined differently in different studies and, sometimes, in different study cycles. The percentages can also be computed as cumulative percentages. There is an option to compute an average of continuous contextual/background variable.
 }
 \details{
 Either \code{data.file} or \code{data.object} shall be provided as source of data. If both of them are provided, the function will stop with an error message.
@@ -133,11 +143,13 @@ The \code{bench.type} argument has two different options: \code{"discrete"} (def
 
 If the \code{pcts.within} if \code{FALSE} (default), the function will compute the percentages of respondents reaching or surpassing each of the cut-off scores defined by \code{bench.vals}. In this case the percentages of all respondents across the performance levels will add to 100 in each group defined by the splitting variables. On the contrary, if \code{pcts.within = TRUE}, the function will compute the percentages of respondents at each of the performance levels across groups defined by the splitting variables. Then the sum of percentages within a specific performance level will sum up to 100 across the groups defined by the splitting variables. For example, we can compute what is the ratio (i.e. percentages) of female and male students performing between 475 and 550 points in PIRLS -- say 55 of all students performing at this level are female and 45 are male. If no split variables are provided, the percentages will be 100 for each performance level within a country. The argument is ignored if \code{bench.type = "cumulative"}.
 
-If no variables are specified for \code{bckg.vars}, the output will contain only percentages of cases in groups specified by the splitting variables and the cut-off scores.
+If no variables are specified for \code{bckg.var}, the output will contain only percentages of cases in groups specified by the splitting variables and the cut-off scores.
 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Numeracy, TIMSS Advanced, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+
+If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95\% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95\% confidence intervals of the average for this variable will be produced. All plots are produced per country.
 }
 \examples{
 # Compute percentages of female and male students reaching or surpassing the "Intermediate"

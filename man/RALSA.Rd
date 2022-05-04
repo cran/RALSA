@@ -60,6 +60,8 @@ Currently, RALSA provides the following functionality:
 }
 }
 
+The \code{lsa.pcts.means}, \code{lsa.prctls} and \code{lsa.bench} also have the option to produce graphs from the estimates.
+
 More studies and analysis types will be added in future, and the existing ones will be updated, adding more features.
 
 RALSA also has a Graphical User Interface (GUI) for the less technical users. The GUI incorporates all aspects of the data preparation and analysis functions.

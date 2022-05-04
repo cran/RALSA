@@ -14,6 +14,7 @@ lsa.prctls(
   weight.var,
   include.missing = FALSE,
   shortcut = FALSE,
+  graphs = FALSE,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -26,11 +27,11 @@ shall be specified, but not both. See details.}
 \item{data.object}{The object in the memory containing \code{lsa.data} object. Either this or
 \code{data.file} shall be specified, but not both. See details.}
 
-\item{split.vars}{Categorical variable(s) to split the results by. If no split variables are
-provided, the results will be for the overall countries' populations. If
-one or more variables are provided, the results will be split by all but
-the last variable and the percentages of respondents will be computed by
-the unique values of the last splitting variable.}
+\item{split.vars}{Categorical variable(s) to split the results by. If no split variables
+are provided, the results will be for the overall countries'
+populations. If one or more variables are provided, the results will
+be split by all but the last variable and the percentages of respondents
+will be computed by the unique values of the last splitting variable.}
 
 \item{bckg.prctls.vars}{Name(s) of continuous background or contextual variable(s) to compute
 the percentiles for. The results will be computed by all groups specified
@@ -56,6 +57,8 @@ applied when using PVs? The default (\code{FALSE}) applies the "full"
 design when computing the variance components and the standard errors of
 the PV estimates.}
 
+\item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
 
@@ -69,7 +72,9 @@ including the file name. If omitted, a file with a default file name
 installed on the computer. Ignored if \code{save.output = FALSE}.}
 }
 \value{
-If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+
+If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -104,6 +109,10 @@ The second sheet contains some additional information related to the analysis pe
 }
 
 The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+
+If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+
+If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 }
 \description{
 \code{lsa.prctls} computes percentiles of continuous variables within groups defined by one or more variables.
@@ -120,6 +129,8 @@ Computation of percentiles involving plausible values requires providing a root 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways using the \code{lsa.convert.data}: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} in \code{lsa.prctls} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+
+If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95\% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95\% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together.
 }
 \examples{
 # Compute the 5th, 25th and 50th percentiles of the complex background scale "Students like

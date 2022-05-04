@@ -168,15 +168,15 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
   }
   tryCatch({
     further.args <- list(...)
-    if(!missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
+    if(!missing(split.vars) && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       split.vars <- unique(c(key(data.object), split.vars))
-    } else if(!missing(split.vars) && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
+    } else if(!missing(split.vars) && is(data.object, "lsa.data") && !"no.CNT.split" %in% names(further.args)) {
       split.vars <- unique(c(key(data.object), split.vars))
-    } else if(missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
+    } else if(missing(split.vars) && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       split.vars <- unique(key(data.object))
-    } else if(missing(split.vars) && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
+    } else if(missing(split.vars) && is(data.object, "lsa.data") && !"no.CNT.split" %in% names(further.args)) {
       split.vars <- unique(key(data.object))
-    } else if(!missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
+    } else if(!missing(split.vars) && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
       split.vars <- split.vars
     }
     if(missing(split.vars)) {
@@ -192,21 +192,21 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       setkeyv(x = data.object, split.vars)
     }
     message("\nTables for a total of ", length(variables), " variables will be produced.")
-    if(!missing(split.vars) && length(split.vars) > 1 && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
+    if(!missing(split.vars) && length(split.vars) > 1 && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       message("The tables for each variable will be split by country ID and ", length(split.vars) - 1, " other variables.\n")
-    } else if(!missing(split.vars) && length(split.vars) > 1 && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
+    } else if(!missing(split.vars) && length(split.vars) > 1 && is(data.object, "lsa.data") && !"no.CNT.split" %in% names(further.args)) {
       message("The tables for each variable will be split by country ID and ", length(split.vars) - 1, " other variables.\n")
-    } else if(!missing(split.vars) && length(split.vars[!key(data.object) %in% split.vars]) == 0 && class(data.object) == "lsa.data" && !"no.CNT.split" %in% names(further.args)) {
+    } else if(!missing(split.vars) && length(split.vars[!key(data.object) %in% split.vars]) == 0 && is(data.object, "lsa.data") && !"no.CNT.split" %in% names(further.args)) {
       message("The tables for each variable will be split by country ID.\n")
-    } else if(!missing(split.vars) && length(split.vars[!key(data.object) %in% split.vars]) == 0 && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
+    } else if(!missing(split.vars) && length(split.vars[!key(data.object) %in% split.vars]) == 0 && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] != TRUE) {
       message("The tables for each variable will be split by country ID.\n")
-    } else if(missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
+    } else if(missing(split.vars) && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
       message("Tables will not be split by any variables.\n")
-    } else if(!missing(split.vars) && class(data.object) == "lsa.data" && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
+    } else if(!missing(split.vars) && is(data.object, "lsa.data") && "no.CNT.split" %in% names(further.args) && further.args[["no.CNT.split"]] == TRUE) {
       message("The tables for each variable will be split by ", length(split.vars), " variables.\n")
-    } else if(!missing(split.vars) && class(data.object) != "lsa.data") {
+    } else if(!missing(split.vars) && !is(data.object, "lsa.data")) {
       message("The tables for each variable will be split by ", length(split.vars), " variables.\n")
-    } else if(missing(split.vars) && class(data.object) != "lsa.data") {
+    } else if(missing(split.vars) && !is(data.object, "lsa.data")) {
       message("Tables will not be split by any variables.\n")
     }
     message("Some computations can be rather intensive. Please be patient.\n")
@@ -236,7 +236,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     }
     if(cont.freq == FALSE) {
       data.object[ , (variables) := lapply(.SD, function(i) {
-        if(class(i) == "numeric" && !is.null(attr(x = i, which = "missings"))) {
+        if(is.numeric(i) && !is.null(attr(x = i, which = "missings"))) {
           i <- ifelse(test = i %in% attr(x = i, which = "missings"), yes = NA, no = i)
         } else {
           i

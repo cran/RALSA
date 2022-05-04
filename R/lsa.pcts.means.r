@@ -34,6 +34,7 @@
 #'                          applied? The default (\code{FALSE}) applies the "full" design when
 #'                          computing the variance components and the standard errors of the
 #'                          estimates.
+#' @param graphs            Logical, shall graphs be produced? Default is \code{FALSE}. See details.
 #' @param save.output       Logical, shall the output be saved in MS Excel file (default) or not
 #'                          (printed to the console or assigned to an object).
 #' @param output.file       If \code{save.output = TRUE} (default), full path to the output file
@@ -59,8 +60,12 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
+#' If \code{graphs = TRUE}, the function will produce graphs. If only \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, plots with 95% confidence intervals of the averages (means, medians or modes) will be produced for each average analysis variable. All plots are produced per country. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, but no \code{split.vars} at the end there will be plots for each of the analysis average variables for all countries together.
+#'
 #' @return
-#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+#'
+#' If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 #'
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -120,6 +125,10 @@
 #'
 #' The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
 #'
+#' If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+#'
+#' If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
+#'
 #' @examples
 #' # Compute percentages of female and male students in TIMSS 2015 grade 8 using data file, omit
 #' # missing from the splitting variable (female and male as answered by the students), without
@@ -173,7 +182,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV.root.avg, central.tendency, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV.root.avg, central.tendency, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -213,6 +222,12 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.avg.vars", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   tryCatch({
     if(missing(central.tendency)) {
       action.args.list[["central.tendency"]] <- "mean"
@@ -224,6 +239,9 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     missing.JKZONES <- lapply(X = data, FUN = function(i) {
       jk.zone.col <- intersect(unique(unname(unlist(design.weight.variables[c("IEA.JK2.dflt.std.bckg.zones", "IEA.JK2.dflt.sch.bckg.zones", "IEA.JK2.dflt.tch.bckg.zones")]))), colnames(i))
       if(length(jk.zone.col) > 0) {
@@ -642,6 +660,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
+    estimates <- unique(x = estimates, fromLast = TRUE, by = key.vars)
     estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
     setkeyv(x = estimates, cols = key.vars)
     total.exec.time <- rbindlist(analysis.info)[ , DURATION]
@@ -654,24 +673,123 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     }
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = key.vars, data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-    if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-    } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
+    if(isFALSE(graphs)) {
+      message("")
     }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+    if(isTRUE(graphs)) {
+      ptm.add.graphs <- proc.time()
+      graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average", mget(c(key.vars, grep(pattern = "^Percentages_|^Mean_|^Median_|^Mode_", x = colnames(estimates), value = TRUE)))])
+      if(length(unlist(vars.list[["PV.root.avg"]])) > 0) {
+        graphs.object[ , grep(pattern = "_SVR$|_MVR$|_SVR_SE$|_MVR_SE$", x = colnames(graphs.object), value = TRUE) := NULL]
+      }
+      graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
+      if(length(key.vars) > 2) {
+        lapply(X = graphs.object, FUN = function(i) {
+          i[ , collapsed_split := factor(do.call(paste, c(.SD, sep = " // "))), .SDcols = key.vars[2:length(key.vars)]]
+          i[ , collapsed_split := factor(x = str_wrap(string = collapsed_split, width = 50), levels = str_wrap(string = collapsed_split, width = 50))]
+        })
+      }
+      means.NAs.only.vars.cnt <- lapply(X = graphs.object, FUN = function(i) {
+        means.cols <- grep(pattern = paste(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]]), collapse = "|"), x = colnames(i), value = TRUE)
+        means.cols <- grep(pattern = "_SE$", x = means.cols, value = TRUE, invert = TRUE)
+        any.NAs.cnt.means <- lapply(X = means.cols, FUN = function(j) {
+          if(any(is.na(i[ , get(j)])) == TRUE) {
+            unique(i[ , get(key.vars[1])])
+          }
+        })
+      })
+      means.NAs.only.vars.cnt <- unique(unlist(means.NAs.only.vars.cnt))
+      if(length(means.NAs.only.vars.cnt)) {
+        if(graphs == FALSE) {
+          warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed means resulted in missing values for one or more variable, no statistics are computed. Check if the variables contained only missings: ", paste(unique(unlist(means.NAs.only.vars.cnt)), collapse = ", "), ".")
+        } else {
+          warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed means resulted in missing values for one or more variable, no statistics are computed and no graphs are produced. Check if the variables contained only missings: ", paste(unique(unlist(means.NAs.only.vars.cnt)), collapse = ", "), ".")
+        }
+      }
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary")
+      if(length(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])) > 0) {
+        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "ordinary")
+        if(length(key.vars) == 1) {
+          graphs.object <- rbindlist(l = graphs.object)
+          x.var <- sym(key.vars)
+          graphs.avg.vars <- c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])
+          graphs.avg.vars <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = graphs.avg.vars, fixed = TRUE)
+          y.var <- lapply(X = graphs.avg.vars, FUN = function(i) {
+            mean.names <- grep(pattern = i, x = colnames(graphs.object), value = TRUE)
+            sym(mean.names[!mean.names %in% grep(pattern = "_SE$", x = mean.names, value = TRUE)])
+          })
+          int.means <- lapply(X = y.var, FUN = function(i) {
+            cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i))
+            cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
+                                                 width = 0.3,
+                                                 size = 1.3,
+                                                 position = position_dodge(.9))
+            cnt.plot <- cnt.plot + geom_point(size = 3)
+            cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                         panel.grid.major.x = element_blank(),
+                                         panel.grid.major = element_line(colour = "black"),
+                                         panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                         plot.background = element_rect(fill = "#e2e2e2"),
+                                         legend.background = element_rect(fill = "#e2e2e2"),
+                                         plot.title = element_text(hjust = 0.5))
+            cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
+              str_wrap(k, width = 20)
+            })
+            cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+              sprintf("%.2f", k)
+            })
+            cnt.plot + labs(title = "", x = x.var, y = gsub(pattern = "_", replacement = " ", x = i))
+          })
+          names(int.means) <- unlist(as.character(y.var))
+          means.graphs.list[["International"]] <- int.means
+        }
+      }
+    }
+    if(isTRUE(save.output)) {
+      save.graphs(out.path = action.args.list[["output.file"]])
+      if(isFALSE(graphs)) {
+        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+      } else {
+        if(exists("means.plots.files")) {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, non.perc.graphs = means.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        } else {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        }
+        delete.graphs(out.path = action.args.list[["output.file"]])
+      }
+      if(exists("perc.graphs.list") || exists("means.graphs.list")) {
+        message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+      }
+    } else if(isFALSE(save.output)) {
+      if(missing(graphs) || graphs == FALSE) {
+        if(length(warnings.collector) == 0) {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+        } else {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+        }
+      } else if(graphs == TRUE) {
+        if(exists("perc.graphs.list") || exists("means.graphs.list")) {
+          message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+        }
+        if(length(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])) > 0) {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Means graphs` = means.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Means graphs` = means.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        } else {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        }
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.avg.vars", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
-  }
   which.cnt.multimode <- names(which(sapply(X = paste0("warnings.collector.multimodal.", rbindlist(l = analysis.info)[ , COUNTRY]), FUN = function(i) {
     exists(i)
   })))
@@ -680,11 +798,20 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     warnings.collector[["multimodal.warning"]] <- paste0('One or more of the variables passed for analysis with "central.tendency == \'mode\'" have multiple modes. The smallest value(s) are cohosen in: ', paste(which.cnt.multimode, collapse = ", "), ".")
   }
   if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
     if(!is.null(warnings.collector[["data.no.JKZONE.JKREP"]])) {
       warning(warnings.collector[["data.no.JKZONE.JKREP"]], call. = FALSE)
     }
     if(!is.null(warnings.collector[["multimodal.warning"]])) {
       warning(warnings.collector[["multimodal.warning"]], call. = FALSE)
+    }
+    if(length(warnings.collector[["cnt.NAs.on.analysis.vars"]]) > 0) {
+      warning(warnings.collector[["cnt.NAs.on.analysis.vars"]], call. = FALSE)
     }
   }
 }

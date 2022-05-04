@@ -281,11 +281,20 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.dep.var|bckg.indep.cont.vars|bckg.indep.cat.vars", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or background variables - dependent or independent) are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   tryCatch({
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list[names(vars.list) != "interactions"], action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     max.two.cats <- sapply(X = data, FUN = function(i) {
       length(unique(na.omit(i[ , get(bin.dep.var)])))
     })
@@ -784,23 +793,24 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic %in% c("Null Deviance (-2LL)", "Deviance (-2LL)", "DF Null", "DF Residual"), Estimate_SE := NaN]
     message('\nModel statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.model.stats}[[3]], "%H:%M:%OS3"), "\n")
     if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], model.stats.obj = model.stats, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
+      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], model.stats.obj = model.stats, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
     } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Model statistics` = model.stats, `Analysis information` = rbindlist(l = analysis.info)))
-    }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+      if(length(warnings.collector) == 0) {
+        return(list(Estimates = estimates, `Model statistics` = model.stats, `Analysis information` = rbindlist(l = analysis.info)))
+      } else{
+        return(list(Estimates = estimates, `Model statistics` = model.stats, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.dep.var|bckg.indep.cont.vars|bckg.indep.cat.vars", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or background variables - dependent or independent) are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
-  }
   if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
     if(!is.null(warnings.collector[["ref.cat.set.default"]])) {
       warning(warnings.collector[["ref.cat.set.default"]], call. = FALSE)
     }

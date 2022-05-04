@@ -67,14 +67,14 @@
 #' RALSA uses its own method for printing objects of class \code{lsa.data} on screen. Passing just the object name to the console will print summarized information about the study's data and the first six columns of the dataset (see the Value section). If \code{col.nums} specifies which columns from the dataset shall be included in the output (see examples).
 #'
 #' \item \strong{\code{lsa.select.countries.PISA}}
-#' 
+#'
 #' \code{lsa.select.countries.PISA} lets the user to take a PISA dataset, either a converted file or \code{lsa.data} object in the memory and reduce the number of countries in it by passing the names of the countries which need to be kept as a character vector to the \code{cnt.names} argument. If full path (including the file name) to the resulting file is specified in the \code{output.file} argument, it will be written on disk. If not, the data will be written to an \code{lsa.object} in memory with the same name as the input file. See the examples.
 #' }
 #'
 #' @return
 #'
 #' \itemize{
-#' 
+#'
 #' \item \strong{\code{lsa.convert.data}}
 #'
 #' \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class. The \code{data.table} object has the same name as the \code{.RData} file it is saved in. The object has additional attributes: study name (\code{study}), study cycle (\code{cycle}), and respondent file type (\code{file.type}). Each variable has its own additional attributes: its own label attached to it, if it existed in the source SPSS file. If the \code{missing.to.NA} was set to \code{TRUE}, each variable has an attribute \code{missings}, containing the user-defined missing values from the SPSS files.
@@ -332,13 +332,13 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           if(length(x = missing.labels) > 0) {
             miss.statements.left <- paste0("attr(tmp[['", names(missing.labels), "']], 'missings') <- ")
             miss.statements.right <- lapply(X = missing.labels, FUN = function(i) {
-              if(class(i) == "character" && length(i) == 1) {
+              if(is.character(i) && length(i) == 1) {
                 paste0("'", i, "'")
-              } else if(class(i) == "character" && length(i) > 1) {
+              } else if(is.character(i) && length(i) > 1) {
                 paste0("c('", paste(i, collapse = "', '"), "')")
-              } else if(class(i) == "numeric" && length(i) == 1) {
+              } else if(is.numeric(i) && length(i) == 1) {
                 paste(i)
-              } else if(class(i) == "numeric" && length(i) > 1) {
+              } else if(is.numeric(i) && length(i) > 1) {
                 paste0("c(", paste(i, collapse = ", "), ")")
               }
             })

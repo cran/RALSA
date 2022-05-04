@@ -51,6 +51,8 @@
 #'             \item \code{lsa.bin.log.reg} Computes binary logistic regression with or without contrast coding of categorical variables
 #'   }
 #' }
+#' 
+#' The \code{lsa.pcts.means}, \code{lsa.prctls} and \code{lsa.bench} also have the option to produce graphs from the estimates.
 #'
 #' More studies and analysis types will be added in future, and the existing ones will be updated, adding more features.
 #'
@@ -86,7 +88,9 @@
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
 #' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames model.frame model.matrix pchisq pf xtabs
 #' @importFrom utils head tail menu
+#' @importFrom methods is
+#' @importFrom ggplot2 ggplot ggsave geom_line geom_point geom_bar geom_vline scale_fill_manual sym aes geom_errorbar position_dodge theme element_rect element_blank element_line element_text scale_x_discrete scale_y_continuous labs scale_color_manual guides guide_legend expansion
 NULL
 #> NULL
 
-globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT"))
+globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT", "perf_group", "Performance_Group", "collapsed_split", "percentage.plots.files", "means.plots.files", "percentiles.plots.files"))

@@ -167,6 +167,12 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.row.var|bckg.col.var", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   tryCatch({
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
@@ -179,6 +185,9 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       bckg.vars.levels[["col.levels"]] <- levels(data[ , get(vars.list[["bckg.col.var"]])])
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     bckg.crosstabs.vars.all.NA <- names(Filter(length,
                                                lapply(X = data, FUN = function(i) {
                                                  names(Filter(function(j) {all(is.na(j))}, i[ , mget(unlist(vars.list[c("bckg.row.var", "bckg.col.var")]))]))
@@ -499,25 +508,30 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     setnames(x = estimates, old = Total.cols, new = c("Total", "Total_SE"))
     ptm.add.RS.chi.square <- proc.time()
     Rao.Scott.adj.chi.sq <- rbindlist(l = Rao.Scott.adj.chi.sq)
-    message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"), "\n")
-    if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-    } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
+    if(!is.null(warnings.collector[["insufficient.cases"]])) {
+      warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the Rao-Scott first- and second-order chi-square adjustments: ', paste(warnings.collector[["insufficient.cases"]], collapse = ", "), '.\n These split combinations were removed and the statistics for them are not to be found in the output.')
     }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+    message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"), "\n")
+    warnings.collector[["insufficient.cases"]] <- Filter(Negate(is.null), warnings.collector[["insufficient.cases"]])
+    if(isTRUE(save.output)) {
+      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+    } else if(isFALSE(save.output)) {
+      if(length(warnings.collector) == 0) {
+        return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
+      } else {
+        return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.row.var|bckg.col.var", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.avg.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
-  }
   if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
     if(!is.null(warnings.collector[["data.no.JKZONE.JKREP"]])) {
       warning(warnings.collector[["data.no.JKZONE.JKREP"]], call. = FALSE)
     }
@@ -525,7 +539,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       warning(warnings.collector[["removed.countries.row.col.vars"]], call. = FALSE)
     }
     if(!is.null(warnings.collector[["insufficient.cases"]])) {
-      warning(paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the Rao-Scott first- and second-order chi-square adjustments: ', paste(warnings.collector[["insufficient.cases"]], collapse = ", "), '.\n These split combinations were removed and the statistics for them are not to be found in the output.'), call. = FALSE)
+      warning(warnings.collector[["insufficient.cases"]], call. = FALSE)
     }
   }
 }

@@ -1,3 +1,23 @@
+# RALSA v.1.2.0 (2022-05-04)
+## Bug fixes
+* `lsa.pcts.means` - when many split variables are added, in some countries some of the rows in the estimates are repeated multiple times by the categories of the split variables.
+
+## New functionality
+* The `lsa.pcts.means`, `lsa.bench` and `lsa.prctls` functions now have the possibility to produce graphs (optional). The graphs are included in a separate sheet in the MS Excel output file if `save.output = TRUE`. If `save.output = FALSE`, the graphs are added to the list output object in memory and can be printed in R's graphic device.
+
+* The MS Excel output files from all analysis functions received an additional sheet with warnings (if any) related with the computations. So far these warnings were just printed on screen.
+
+## Miscellaneous
+* Internal reorganization of the code producing warnings related with the computations and the way they are issued.
+
+* Improved documentation.
+
+* Various code changes following the update of R to version 4.2.0.
+
+
+
+
+
 # RALSA v.1.1.5 (2022-03-30)
 ## Bug fixes
 * GUI with `lsa.pcts.means` does not show the syntax when only splitting variables are chosen for the analysis and the GUI freezes when the analysis is ran.

@@ -754,22 +754,35 @@ server <- function(input, output, session) {
     OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
   )
   
+  
+  ######################################################
+  # From Global
   load.app.CSS.screen <- "
 #loading-content {
-position: absolute;
-background: #000000;
-opacity: 1;
-z-index: 100;
-left: 0;
-right: 0;
-height: 100%;
-text-align: center;
-color: #FFFFFF;
+  position: absolute;
+  background: #000000;
+  opacity: 1;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  height: 100%;
+  text-align: center;
+  color: #FFFFFF;
 }
 "
+
+
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
+
+
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}'
+
+
 country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
+
+
+
+
 PISA.data.files <- list(
   PISA.pre2015.TXT.files = list(
     "2000" = c("intcogn_v4.txt",
@@ -796,6 +809,7 @@ PISA.data.files <- list(
                "INT_SCQ12_DEC03.txt",
                "INT_STU12_DEC03.txt")
   ),
+  
   PISA.pre2015.SPS.files = list(
     "2000" = c("PISA2000_SPSS_cognitive_item.sps",
                "PISA2000_SPSS_school_questionnaire.sps",
@@ -821,6 +835,7 @@ PISA.data.files <- list(
                "PISA2012_SPSS_school.sps",
                "PISA2012_SPSS_student.sps")
   ),
+  
   PISA.2015.plus.SPSS.files = list(
     "2015" = c("CY6_MS_CM2_SCH_QQQ.sav",
                "CY6_MS_CM2_STU_COG.sav",
@@ -844,6 +859,9 @@ PISA.data.files <- list(
                "CY07_VNM_STU_PVS.sav")
   )
 )
+
+
+
 PISA.for.Development.data.files <- list(
   PISA.for.Development.2019.files = list(
     "2019" = c("CY1MDAI_SCH_QQQ.sav",
@@ -855,6 +873,10 @@ PISA.for.Development.data.files <- list(
                "CY1MDCI_TIM.SAV")
   )
 )
+
+
+
+
 studies.and.cycles <- list(
   TIMSS = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
@@ -908,7 +930,12 @@ studies.and.cycles <- list(
     first.chars = c("dig", "deg", "dpg", "dsg", "dpr", "dsr"), "2008" = "t1"
   )
 )
+
+
+
+
 respondents.and.cycles <- list(
+  
   "Student background" = list(
     resp.type = c("asc", "asg", "bsg", "isg", "jsg", "bs_", "cs_"),
     round = c(
@@ -926,14 +953,17 @@ respondents.and.cycles <- list(
       "t1", "t2"
     )
   ),
+  
   "Mathematics student background" = list(
     resp.type = "msg",
     round = c("m1", "m2", "m3", "m4")
   ),
+  
   "Physics student background" = list(
     resp.type = "psg",
     round = c("m1", "m2", "m3", "m4")
   ),
+  
   "Student achievement items" = list(
     resp.type = c("asa", "bsa", "isa", "jsa"),
     round = c(
@@ -946,6 +976,7 @@ respondents.and.cycles <- list(
       "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
+  
   "Student home" = list(
     resp.type = "ash",
     round = c(
@@ -958,18 +989,22 @@ respondents.and.cycles <- list(
       "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
+  
   "European student module" = list(
     resp.type = "ise",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
+  
   "Latin American student module" = list(
     resp.type = "isl",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
+  
   "Asian student module" = list(
     resp.type = "iss",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
+  
   "Teacher background" = list(
     resp.type = c("atg", "btg", "ctg", "ptg", "itg", "bt_"),
     round = c(
@@ -987,6 +1022,7 @@ respondents.and.cycles <- list(
       "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
+  
   "Mathematics teacher background" = list(
     resp.type = c("btm", "mtg"),
     round = c(
@@ -995,10 +1031,12 @@ respondents.and.cycles <- list(
       "s1"
     )
   ),
+  
   "Physics teacher background" = list(
     resp.type = "ptg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
+  
   "Science teacher background" = list(
     resp.type = "bts",
     round = c(
@@ -1007,6 +1045,7 @@ respondents.and.cycles <- list(
       "s1"
     )
   ),
+  
   "School background" = list(
     resp.type = c("acg", "bcg", "ccg", "pcg", "icg", "bc_"),
     round = c(
@@ -1023,39 +1062,53 @@ respondents.and.cycles <- list(
       "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
+  
   "Mathematics school background" = list(
     resp.type = "mcg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
+  
   "Physics school background" = list(
     resp.type = "pcg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
+  
   "Leader background data" = list(
     resp.type = c("alg", "blg"),
     round = c("s1", "s2", "s3", "s4")
   ),
+  
   "Staff background data" = list(
     resp.type = c("asg", "bsg"),
     round = c("s1", "s2", "s3", "s4")
   ),
+  
   "Institutional program background" = list(
     resp.type = "dig",
     round = "t1"
   ),
+  
   "Educator background" = list(
     resp.type = "deg",
     round = "t1"
   ),
+  
   "Future primary teacher background" = list(
     resp.type = "dpg",
     round = "t1"
   ),
+  
   "Future lower-secondary teacher background" = list(
     resp.type = "dsg",
     round = "t1"
   )
+  
 )
+
+
+
+
+
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",
@@ -1167,87 +1220,140 @@ file.merged.respondents <- list(
   "tch.bckg"                                      = "Teacher background",
   "std.home"                                      = "Student home background"
 )
+
+
+
+
+
 extract.IEA.study.and.cycle <- function(list.abbrev, file.string) {
+  
   tmp <- lapply(X = list.abbrev, FUN = function(i) {
+    
     study.name <- file.string[1][file.string[1] %in% i[["first.chars"]]]
+    
     study.cycle <- file.string[2][file.string[2] %in% i[names(i) != "first.chars"]]
+    
     c(study.name, study.cycle)
+    
   })
+  
   tmp <- Filter(function(i) {length(i) > 1}, tmp)
+  
   study.ID <- names(tmp)
+  
   cycle.ID <- names(unlist(list.abbrev[[study.ID]])[unlist(list.abbrev[[study.ID]]) == tmp[[names(tmp)]][2]])
+  
   list(study.ID, cycle.ID)
 }
+
+
+
+
+
 extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
+  
   tmp <- Filter(length, lapply(list.abbrev, function(i) {
     Filter(isTRUE, lapply(X = i, FUN = function(j) {
       all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
     }))
   }))
+  
   cycle.ID <- sapply(X = tmp, FUN = names)
+  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
+  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA"
   } else {
     study.ID <- "Unknown"
   }
+  
   list(study.ID, cycle.ID)
 }
+
+
+
+
 extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
+  
   tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
     Filter(length, lapply(X = i, FUN = function(j) {
       grep(pattern = file.string, x = j, ignore.case = TRUE, value = TRUE)
     }))
   })))
+  
   study.ID <- unique(substr(x = unlist(tmp), start = 1, stop = 4))
   cycle.ID <- unique(substr(x = unlist(tmp), start = 5, stop = 8))
+  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
+  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA"
   } else {
     study.ID <- "Unknown"
   }
+  
   list(study.ID, cycle.ID)
 }
+
+
+
 extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
+  
   tmp <- Filter(length, lapply(list.abbrev, function(i) {
     Filter(isTRUE, lapply(X = i, FUN = function(j) {
       all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
     }))
   }))
+  
   cycle.ID <- sapply(X = tmp, FUN = names)
+  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
+  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA for Development"
   } else {
     study.ID <- "Unknown"
   }
+  
   list(study.ID, cycle.ID)
 }
+
+
+
+
 all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+
+
+
+
 collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
+  
   if(length(PV.vector) > 0) {
     tmp <- vars.object[get(colnames(vars.object)[1]) %in% PV.vector, ]
   } else {
     tmp <- NULL
   }
+  
   if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) > 0) {
     tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+$", replacement = "", x = get(colnames(tmp)[1]))]
   } else if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) == 0) {
     tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+", replacement = "#", x = get(colnames(tmp)[1]))]
   }
+  
+  
   if(!is.null(tmp) && nrow(tmp) > 0) {
     tmp <- split(x = tmp, by = "Variables")
     lapply(X = tmp, FUN = function(i) {
@@ -1258,15 +1364,26 @@ collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
     return(tmp)
   }
 }
+
+
+
+
+
 define.default.weight <- function(study, loaded.names.and.labels, respondent.type) {
+  
+  
   study.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.studies", "IEA.BRR.studies", "OECD.BRR.studies")], FUN = function(i) {
     study %in% i
   })))
+  
   resp.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.dflt.std.bckg.types", "IEA.JK2.dflt.sch.bckg.types", "IEA.JK2.dflt.tch.bckg.types", "IEA.BRR.dflt.inst.bckg.types", "IEA.BRR.dflt.prim.tch.bckg.types", "IEA.BRR.dflt.low_sec.tch.bckg.types", "IEA.BRR.dflt.educ.bckg.types", "OECD.BRR.dflt.std.bckg", "OECD.BRR.dflt.sch.bckg", "OECD.BRR.dflt.tch.bckg", "OECD.BRR.dflt.lead.bckg", "OECD.BRR.dflt.staff.bckg")], FUN = function(i) {
     respondent.type %in% i
   })))
+  
   org.and.design.resp.type <- str_extract(string = study.type, pattern = "^[[:alpha:]]+\\.[[:alpha:]]+[[:digit:]]*")
+  
   resp.type <- grep(pattern = org.and.design.resp.type, x = resp.type, value = TRUE)
+  
   if(length(resp.type) == 0) {
     tmp.wgt <- NULL
   } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.std.bckg.types") {
@@ -1294,10 +1411,20 @@ define.default.weight <- function(study, loaded.names.and.labels, respondent.typ
   } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.staff.bckg") {
     tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.staff.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
   }
+  
 }
+
+
+
+
 all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
 
+  
+  
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  
+  
+  
   
   Sys.sleep(2)
   hide(id = "loading-content", anim = TRUE, animType = "fade", time = 2)
@@ -1336,6 +1463,7 @@ Use the menu on the left to:<br/><br/>
 <ul><ul><li>Correlations (Pearson or Spearman)</li></ul></ul>
 <ul><ul><li>Linear regression</li></ul></ul>
 <ul><ul><li>Binary logistic regression</li></ul></ul>
+<br/>The percentages and means, percentiles and benchmarks functions are also capable producing graphs for the estimates.<br>
 <br/>All data preparation and analysis functions automatically recognize the study design and apply the appropriate techniques to handle the complex sampling assessment design issues, while giving freedom to tweak the analysis (e.g. change the default weight, apply the \"shortcut\" method in TIMSS and PIRLS and so on).<br><br>
 Currently, RALSA can work with data for all cycles of the following studies (more will be added in future):<br/><br/>
 <ul><li>CivED</li></ul>
@@ -4574,6 +4702,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "pctsMeansShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
+      output$pctsMeansGraphs <- renderUI({
+        if(!is.null(file.pct.means$loaded)) {
+          checkboxInput(inputId = "pctsMeansGraphs", label = "Produce graphs", value = FALSE, width = "350px")
+        }
+      })
       output$centralTendencyType <- renderUI({
         if(is.null(file.pct.means$resp.type)) {
           return(NULL)
@@ -4635,6 +4768,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           },
           if(!is.null(input$pctsMeansShortcut) && input$pctsMeansShortcut == TRUE) {
             ", shortcut = TRUE"
+          },
+          if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE) {
+            ", graphs = TRUE"
           },
           paste0(', output.file = "', parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath, '"'),
           if(!is.null(input$pctsMeansOpenOutput) && input$pctsMeansOpenOutput == FALSE) {
@@ -5282,6 +5418,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "prctlsShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
+      output$prctlsGraphs <- renderUI({
+        if(!is.null(file.prctls$loaded)) {
+          checkboxInput(inputId = "prctlsGraphs", label = "Produce graphs", value = FALSE, width = "350px")
+        }
+      })
       shinyFileSave(input, "prctlsChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       output$prctlsOpenOutput <- renderUI({
         if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) > 0) {
@@ -5335,6 +5476,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$prctlsShortcut) || input$prctlsShortcut == TRUE) {
             ', shortcut = TRUE'
           },
+          if(is.null(input$prctlsGraphs) || input$prctlsGraphs == FALSE) {
+            NULL
+          } else if(!is.null(input$prctlsGraphs) || input$prctlsGraphs == TRUE) {
+            ', graphs = TRUE'
+          },
           paste0(', output.file = "', parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath, '"'),
           if(is.null(input$prctlsOpenOutput) || input$prctlsOpenOutput == FALSE) {
             NULL
@@ -5386,6 +5532,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
         if(is.null(file.prctls$loaded) || is.null(prctlsAllVars$prctlsSelectedPVVars) || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || is.null(prctlsAllVars$prctlsSelectedSplitVars) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || is.null(prctlsAllVars$prctlsSelectedWeightVar) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 || input$prctlsValues == "" || prctls.not.numbers() == TRUE || prctls.out.of.bounds() == TRUE || any(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
           hide("prctlsShortcut")
+          hide("prctlsGraphs")
           hide("prctlsChooseOutFile")
           hide("prctlsOpenOutput")
           hide("prctlsSyntaxHead")
@@ -5395,6 +5542,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("consolePrctls")
         } else if (!is.null(file.prctls$loaded) || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0 || input$prctlsValues != "" || prctls.not.numbers() == FALSE || prctls.out.of.bounds() == FALSE || all(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
           show("prctlsShortcut")
+          show("prctlsGraphs")
           show("prctlsChooseOutFile")
           show("prctlsOpenOutput")
           show("prctlsSyntaxHead")
@@ -6042,7 +6190,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         if(is.null(file.bench$resp.type)) {
           return(NULL)
         } else {
-          checkboxInput(inputId = "benchComputeWithin", label = "Compute percentages within benchmarks", width = "200px", value = FALSE)
+          checkboxInput(inputId = "benchComputeWithin", label = "Compute percentages within benchmarks", width = "350px", value = FALSE)
         }
       })
       output$benchComputeWithinExpl <- renderText({
@@ -6057,6 +6205,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       output$benchShortcut <- renderUI({
         if(!is.null(file.bench$loaded) && file.bench$study %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi")) {
           checkboxInput(inputId = "benchShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
+        }
+      })
+      output$benchGraphs <- renderUI({
+        if(!is.null(file.bench$loaded)) {
+          checkboxInput(inputId = "benchGraphs", label = "Produce graphs", value = FALSE, width = "350px")
         }
       })
       shinyFileSave(input, "benchChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
@@ -6122,6 +6275,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$benchShortcut) || input$benchShortcut == TRUE) {
             ', shortcut = TRUE'
           },
+          if(is.null(input$benchGraphs) || input$benchGraphs == FALSE) {
+            NULL
+          } else if(!is.null(input$benchGraphs) || input$benchGraphs == TRUE) {
+            ', graphs = TRUE'
+          },
           paste0(', output.file = "', parseSavePath(available.volumes, input$benchChooseOutFile)$datapath, '"'),
           if(is.null(input$benchOpenOutput) || input$benchOpenOutput == FALSE) {
             NULL
@@ -6176,6 +6334,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             hide("benchComputeWithin")
             hide("benchComputeWithinExpl")
             hide("benchShortcut")
+            hide("benchGraphs")
             hide("benchChooseOutFile")
             hide("benchOpenOutput")
             hide("benchSyntaxHead")
@@ -6186,6 +6345,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             show("benchComputeWithin")
             show("benchComputeWithinExpl")
             show("benchShortcut")
+            show("benchGraphs")
             show("benchChooseOutFile")
             show("benchOpenOutput")
             show("benchSyntaxHead")

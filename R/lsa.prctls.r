@@ -6,11 +6,11 @@
 #'                         shall be specified, but not both. See details.
 #' @param data.object      The object in the memory containing \code{lsa.data} object. Either this or
 #'                         \code{data.file} shall be specified, but not both. See details.
-#' @param split.vars       Categorical variable(s) to split the results by. If no split variables are
-#'                         provided, the results will be for the overall countries' populations. If
-#'                         one or more variables are provided, the results will be split by all but
-#'                         the last variable and the percentages of respondents will be computed by
-#'                         the unique values of the last splitting variable.
+#' @param split.vars       Categorical variable(s) to split the results by. If no split variables
+#'                         are provided, the results will be for the overall countries'
+#'                         populations. If one or more variables are provided, the results will
+#'                         be split by all but the last variable and the percentages of respondents
+#'                         will be computed by the unique values of the last splitting variable.
 #' @param bckg.prctls.vars Name(s) of continuous background or contextual variable(s) to compute
 #'                         the percentiles for. The results will be computed by all groups specified
 #'                         by the splitting variables. See details.
@@ -29,6 +29,7 @@
 #'                         applied when using PVs? The default (\code{FALSE}) applies the "full"
 #'                         design when computing the variance components and the standard errors of
 #'                         the PV estimates.
+#' @param graphs           Logical, shall graphs be produced? Default is \code{FALSE}. See details.
 #' @param save.output      Logical, shall the output be saved in MS Excel file (default) or not
 #'                         (printed to the console or assigned to an object).
 #' @param output.file      If \code{save.output = TRUE} (default), full path to the output file
@@ -52,8 +53,12 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
+#' If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together.
+#'
 #' @return
-#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+#'
+#' If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains three spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 #'
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -88,6 +93,10 @@
 #' }
 #'
 #' The third sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+#'
+#' If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+#'
+#' If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 #'
 #' @examples
 #' # Compute the 5th, 25th and 50th percentiles of the complex background scale "Students like
@@ -135,9 +144,10 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
+  warnings.collector <- list()
   prctls <- sort(prctls/100)
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -181,11 +191,20 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
   }
   action.args.list <- get.action.arguments()
   file.attributes <- get.file.attributes(imported.object = data)
+  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.prctls.vars", x = names(vars.list), value = TRUE)
+  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
+  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
+  if(length(vars.list.analysis.vars) > 0) {
+    warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.prctls.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
+  }
   tryCatch({
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
+      warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
     analysis.info <- list()
@@ -425,22 +444,170 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     }
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = key.vars, data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-    if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output)
-    } else if(isFALSE(save.output)) {
-      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
+    if(isFALSE(graphs)) {
+      message("")
     }
-    if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
-      warning('Some of the countries had one or more splitting variables which contains only missing values. These countries are: "', paste(removed.countries.where.any.split.var.is.all.NA, collapse = '", "'), '".', call. = FALSE)
+    if(isTRUE(graphs)) {
+      ptm.add.graphs <- proc.time()
+      graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average", mget(c(key.vars, grep(pattern = "^Percentages_|^Prctl_", x = colnames(estimates), value = TRUE)))])
+      if(length(unlist(vars.list[["PV.root.prctls"]])) > 0) {
+        graphs.object[ , grep(pattern = "_SVR$|_MVR$", x = colnames(graphs.object), value = TRUE) := NULL]
+      }
+      graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
+      if(length(key.vars) > 2) {
+        lapply(X = graphs.object, FUN = function(i) {
+          i[ , collapsed_split := factor(do.call(paste, c(.SD, sep = " // "))), .SDcols = key.vars[2:length(key.vars)]]
+          i[ , collapsed_split := factor(x = str_wrap(string = collapsed_split, width = 50), levels = str_wrap(string = collapsed_split, width = 50))]
+        })
+      }
+      prctls.NAs.only.vars.cnt <- lapply(X = graphs.object, FUN = function(i) {
+        prctls.cols <- grep(pattern = paste(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]]), collapse = "|"), x = colnames(i), value = TRUE)
+        prctls.cols <- grep(pattern = "_SE$", x = prctls.cols, value = TRUE, invert = TRUE)
+        any.NAs.cnt.prctls <- lapply(X = prctls.cols, FUN = function(j) {
+          if(any(is.na(i[ , get(j)])) == TRUE) {
+            unique(i[ , get(key.vars[1])])
+          }
+        })
+      })
+      prctls.NAs.only.vars.cnt <- unique(unlist(prctls.NAs.only.vars.cnt))
+      if(length(prctls.NAs.only.vars.cnt)) {
+        if(graphs == FALSE) {
+          warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed percentiles resulted in missing values for one or more variable, no statistics are computed. Check if the variables contained only missings: ", paste(unique(unlist(prctls.NAs.only.vars.cnt)), collapse = ", "), ".")
+        } else {
+          warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed percentiles resulted in missing values for one or more variable, no statistics are computed and no graphs are produced. Check if the variables contained only missings: ", paste(unique(unlist(prctls.NAs.only.vars.cnt)), collapse = ", "), ".")
+        }
+      }
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary")
+      graphs.object <- lapply(X = graphs.object, FUN = function(i) {
+        perc.vars <- grep(pattern = "^Percentages_", x = colnames(i), value = TRUE)
+        prctl.value.cols <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]]), fixed = TRUE)
+        prctl.value.cols <- lapply(X = prctl.value.cols, FUN = function(j) {
+          all.cols <- grep(pattern = paste0("^Prctl_[[:digit:]]+\\_", j), x = colnames(i), value = TRUE)
+          value.cols <- grep(pattern = "_SE$", x = all.cols, value = TRUE, invert = TRUE)
+          SE.cols <- grep(pattern = "_SE$", x = all.cols, value = TRUE)
+          list(value.cols, SE.cols)
+        })
+        prctl.value.cols <- unlist(prctl.value.cols, recursive = FALSE)
+        tmp <- melt(data = i, id.vars = c(key.vars, perc.vars), measure.vars = prctl.value.cols)
+        tmp[ , (perc.vars) := NULL]
+      })
+      graphs.object <- lapply(X = graphs.object, FUN = function(i) {
+        i[ , variable := factor(x = variable, labels = paste0("Prctl_", eval(action.args.list[["prctls"]])))]
+        new.names <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]]), fixed = TRUE)
+        new.names <- unlist(lapply(X = new.names, FUN = function(j) {
+          c(j, paste0(j, "_SE"))
+        }))
+        setnames(x = i, old = grep(pattern = "^value[[:digit:]]+$", x = colnames(i), value = TRUE), new = new.names)
+        if(length(key.vars) > 1) {
+          i[ , collapsed_split := factor(do.call(paste, c(.SD, sep = " // "))), .SDcols = c("variable", key.vars[2:length(key.vars)])]
+          i[ , collapsed_split := gsub(pattern = "Prctl_", replacement = "P", x = collapsed_split)]
+          i[ , collapsed_split := factor(x = str_wrap(string = collapsed_split, width = 50), levels = str_wrap(string = collapsed_split, width = 50))]
+        } else {
+          i
+        }
+      })
+      if(length(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])) > 0) {
+        percentiles.graphs.list <- produce.percentiles.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars)
+        if(length(key.vars) == 1) {
+          graphs.object <- rbindlist(l = graphs.object)
+          x.var <- sym("variable")
+          group.var <- sym(key.vars[1])
+          graphs.prctl.cols <- c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])
+          graphs.prctl.cols <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = graphs.prctl.cols, fixed = TRUE)
+          y.var <- unlist(lapply(X = graphs.prctl.cols, FUN = function(i) {
+            grep(pattern = i, x = colnames(graphs.object), value = TRUE)
+          }))
+          y.var <- grep(pattern = "_SE$", x = y.var, value = TRUE, invert = TRUE)
+          y.var <- lapply(X = y.var, FUN = function(i) {
+            sym(i[!i %in% grep(pattern = "_SE$", x = i, value = TRUE)])
+          })
+          int.percentiles <- lapply(X = y.var, FUN = function(i) {
+            cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i, group = !!group.var, color = !!group.var))
+            cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
+                                                 width = 0.5,
+                                                 size = 1.3,
+                                                 position = position_dodge(0.01))
+            cnt.plot <- cnt.plot + geom_line(size = 1)
+            cnt.plot <- cnt.plot + geom_point(size = 3)
+            cnt.plot <- cnt.plot + scale_color_manual(values = graph.custom.colors)
+            cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                         panel.grid.major.x = element_blank(),
+                                         panel.grid.major = element_line(colour = "black"),
+                                         panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                         plot.background = element_rect(fill = "#e2e2e2"),
+                                         legend.background = element_rect(fill = "#e2e2e2"),
+                                         legend.key = element_blank(),
+                                         plot.title = element_text(hjust = 0.5))
+            cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
+              str_wrap(k, width = 20)
+            })
+            cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+              sprintf("%.2f", k)
+            })
+            cnt.plot <- cnt.plot + guides(color=guide_legend(title="Legend"))
+            suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = gsub(pattern = "Prctl_", replacement = "P", x = unique(graphs.object[ , variable]))))
+            cnt.plot <- cnt.plot + labs(x = "Percentiles", y = i)
+            cnt.plot <- cnt.plot + guides(color = guide_legend(title = "Legend", override.aes = list(linetype = 0, size = 3.5)))
+          })
+          names(int.percentiles) <- unlist(as.character(y.var))
+          percentiles.graphs.list[["International"]] <- int.percentiles
+        }
+      }
+    }
+    if(isTRUE(save.output)) {
+      save.graphs(out.path = action.args.list[["output.file"]])
+      if(isFALSE(graphs)) {
+        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+      } else {
+        if(exists("percentiles.plots.files")) {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, non.perc.graphs = percentiles.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        } else {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, perc.graphs = percentage.plots.files, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        }
+        delete.graphs(out.path = action.args.list[["output.file"]])
+      }
+      if(exists("perc.graphs.list") || exists("percentiles.graphs.list")) {
+        message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+      }
+    } else if(isFALSE(save.output)) {
+      if(missing(graphs) || graphs == FALSE) {
+        if(length(warnings.collector) == 0) {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+        } else {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+        }
+      } else if(graphs == TRUE) {
+        if(exists("perc.graphs.list") || exists("percentiles.graphs.list")) {
+          message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+        }
+        if(length(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])) > 0) {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Percentiles graphs` = percentiles.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, `Percentiles graphs` = percentiles.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        } else {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Percentage graphs` = perc.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        }
+      }
     }
   }, interrupt = function(f) {
     message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
   })
-  vars.list.analysis.vars <- grep(pattern = "split.vars|bckg.prctls.vars", x = names(vars.list), value = TRUE)
-  vars.list.analysis.vars <- unlist(vars.list[vars.list.analysis.vars])
-  vars.list.analysis.vars <- grep(pattern = paste(unique(unlist(studies.all.design.variables)), collapse = "|"), x = vars.list.analysis.vars, value = TRUE)
-  if(length(vars.list.analysis.vars) > 0) {
-    warning('Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.prctls.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.', call. = FALSE)
+  if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
+    if(length(warnings.collector[["cnt.NAs.on.analysis.vars"]]) > 0) {
+      warning(warnings.collector[["cnt.NAs.on.analysis.vars"]], call. = FALSE)
+    }
   }
 }

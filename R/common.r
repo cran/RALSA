@@ -2,6 +2,456 @@ import.data <- function(path) {
   tmp <- load(path)
   return(get(tmp))
 }
+graph.custom.colors <- c("#F40040", "#72F842", "#4F45FA", "#877A77", "#E83BD1", "#FEBF32", "#00D1F8", "#32DBAB", "#BE4B3D", "#B898EC", "#B3C865", "#EC168E", "#F995BB", "#BB26EF", "#00622A", "#459AFB", "#8B600D", "#C2E7F7", "#8A0D7A", "#4B7DA8", "#F5D2A3", "#F4C9EA", "#C7EBC7", "#3D40B0", "#F79BF0", "#56F6F3", "#EEDE22", "#E69782", "#F85171", "#8FE98D", "#F0751C", "#697216", "#C33D75", "#AA77FE", "#9D69A3", "#CC5DE0", "#BDE635", "#F665C2", "#65BDAC", "#FE5635", "#A3687E", "#4F407C", "#CDC9FC", "#5C9600", "#F516F6", "#DDC1BB", "#6AB9FB", "#2ABE38", "#71AA79", "#A34F4B", "#F9A763", "#DBBB58", "#979EB6", "#53B1C9", "#49F695", "#949B78", "#F1AEB8", "#ECBBFE", "#FC7A89", "#C85CA7", "#D88DBD", "#53654B", "#4265DF", "#7276BD", "#927858", "#A0F268", "#ADA862", "#1CC072", "#C22A55", "#1C8C38", "#DDE4DC", "#D04235", "#96E6AF", "#DBD7B4", "#BE78D1", "#9B5CD1", "#8A2EE5", "#D20032", "#EBE47F", "#A53B6E", "#699294", "#F93DB7", "#865AB0", "#E78356", "#FA76E4", "#8CF2D7", "#C5E6A1", "#C09FCB", "#93E8FB", "#0DA876", "#3B8E71", "#8EA9E7", "#C70D9B", "#F54D8B", "#AEAEB0", "#E6AD7F", "#88BE0D", "#8391FC", "#CE9EB2", "#42C0C2")
+produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
+  if(type == "ordinary") {
+    if(length(split.vars.vector) == 1) {
+      x.var <- sym(split.vars.vector)
+      y.var <- sym(paste0("Percentages_", split.vars.vector))
+      y.var.SE <- sym(paste0("Percentages_", split.vars.vector, "_SE"))
+      fill.var <- y.var
+    } else if(length(split.vars.vector) == 2) {
+      x.var <- sym(split.vars.vector[2])
+      y.var <- sym(paste0("Percentages_", split.vars.vector[2]))
+      y.var.SE <- sym(paste0("Percentages_", split.vars.vector[2], "_SE"))
+      fill.var <- y.var
+    } else if(length(split.vars.vector) > 2) {
+      x.var <- sym(split.vars.vector[2])
+      y.var <- sym(paste0("Percentages_", split.vars.vector[length(split.vars.vector)]))
+      y.var.SE <- sym(paste0("Percentages_", split.vars.vector[length(split.vars.vector)], "_SE"))
+      fill.var <- sym("collapsed_split")
+    }
+  } else if(type == "bench") {
+    x.var <- sym("Performance_Group")
+    y.var.SE <- sym(grep(pattern = "^Percentages_.+_SE$", x = colnames(data.obj[[1]]), value = TRUE))
+    y.var <- sym(gsub(pattern = "_SE$", replacement = "", x = y.var.SE))
+    if(length(split.vars.vector) == 1) {
+      fill.var <- y.var
+    } else if(length(split.vars.vector) > 1) {
+      fill.var <- sym("collapsed_split")
+    }
+  }
+  if(length(split.vars.vector) <= 2) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.percentages <- ggplot(data = i, aes(x = !! x.var, y = !! y.var, fill = factor(x = make.unique(as.character(!! fill.var)), levels = make.unique(as.character(!! fill.var)))))
+      if(type == "ordinary" || type == "bench" & length(split.vars.vector) == 1) {
+        tmp.percentages <- tmp.percentages + geom_bar(stat="identity", color="black",
+                                                      position=position_dodge(),
+                                                      show.legend = FALSE)
+        if(nrow(i) <= 100) {
+          tmp.percentages <- tmp.percentages + scale_fill_manual(labels = i[ , get(as.character(x.var))], values = graph.custom.colors)
+        }
+      } else if(type == "bench" && length(split.vars.vector) > 1) {
+        tmp.percentages <- tmp.percentages + geom_bar(stat="identity", color="black",
+                                                      position=position_dodge())
+        tmp.percentages <- tmp.percentages + labs(fill = "Legend")
+        tmp.percentages <- tmp.percentages + geom_vline(xintercept = 1:(length(unique(i[ , get("Performance_Group")])) - 1) + 0.5, colour = "#e2e2e2")
+        tmp.percentages <- tmp.percentages + scale_fill_manual(labels = i[ , get(as.character(fill.var))], values = graph.custom.colors)
+      }
+      tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
+                                                 panel.grid.major.x = element_blank(),
+                                                 panel.grid.major = element_line(colour = "black"),
+                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 plot.background = element_rect(fill = "#e2e2e2"),
+                                                 legend.background = element_rect(fill = "#e2e2e2"),
+                                                 plot.title = element_text(hjust = 0.5))
+      tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
+                                                         width = 0.2,
+                                                         size = 1,
+                                                         position = position_dodge(0.9))
+      tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
+        str_wrap(string = j, width = 15)
+      })
+      tmp.percentages <- tmp.percentages + scale_y_continuous(labels = function(j) {
+        paste0(j, "%")
+      },
+      limits = c(0, 100),
+      expand = expansion(mult = c(0, 0)),
+      n.breaks = 10, minor_breaks = NULL)
+      if(type == "ordinary") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var))
+      } else if(type == "bench") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var))
+      }
+      return(tmp.percentages)
+    })
+  } else if(length(split.vars.vector) > 2 && length(split.vars.vector) < 5) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.percentages <- ggplot(data = i, aes(x = !! x.var, y = !! y.var, fill = factor(x = make.unique(as.character(!! fill.var)), levels = make.unique(as.character(!! fill.var)))))
+      tmp.percentages <- tmp.percentages + geom_bar(stat="identity", color="black",
+                                                    position=position_dodge())
+      if(nrow(i) <= 100) {
+        tmp.percentages <- tmp.percentages + scale_fill_manual(labels = i[ , get(as.character(fill.var))], values = graph.custom.colors)
+      }
+      if(type == "ordinary") {
+        tmp.percentages <- tmp.percentages + geom_vline(xintercept = 1:(length(unique(i[ , get(split.vars.vector[2])])) - 1) + 0.5, colour = "#e2e2e2")
+      } else if(type == "bench") {
+        tmp.percentages <- tmp.percentages + geom_vline(xintercept = 1:(length(unique(i[ , get("Performance_Group")])) - 1) + 0.5, colour = "#e2e2e2")
+      }
+      tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
+                                                 panel.grid.major.x = element_blank(),
+                                                 panel.grid.major = element_line(colour = "black"),
+                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 plot.background = element_rect(fill = "#e2e2e2"),
+                                                 legend.background = element_rect(fill = "#e2e2e2"),
+                                                 plot.title = element_text(hjust = 0.5))
+      tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
+                                                         width = 0.2,
+                                                         size = 1,
+                                                         position = position_dodge(0.9))
+      tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
+        str_wrap(string = j, width = 20)
+      })
+      tmp.percentages <- tmp.percentages + scale_y_continuous(labels = function(j) {
+        paste0(j, "%")
+      },
+      limits = c(0, 100),
+      expand = expansion(mult = c(0, 0)),
+      n.breaks = 10, minor_breaks = NULL)
+      if(type == "ordinary") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var), fill = "Legend")
+      } else if(type == "bench") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var), fill = "Legend")
+      }
+      return(tmp.percentages)
+    })
+  } else if(length(split.vars.vector) >= 5) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.percentages <- ggplot(data = i, aes(x = !! x.var, y = !! y.var, fill = factor(x = make.unique(as.character(!! fill.var)), levels = make.unique(as.character(!! fill.var)))))
+      tmp.percentages <- tmp.percentages + geom_bar(stat="identity", color="black",
+                                                    position=position_dodge(),
+                                                    show.legend = FALSE)
+      scale_fill_manual(labels = i[ , get(as.character(x.var))], values = graph.custom.colors)
+      tmp.percentages <- tmp.percentages + geom_vline(xintercept = 1:(length(unique(i[ , get(split.vars.vector[2])])) - 1) + 0.5, colour = "#e2e2e2")
+      tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
+                                                 panel.grid.major.x = element_blank(),
+                                                 panel.grid.major = element_line(colour = "black"),
+                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 plot.background = element_rect(fill = "#e2e2e2"),
+                                                 legend.background = element_rect(fill = "#e2e2e2"),
+                                                 plot.title = element_text(hjust = 0.5))
+      tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
+                                                         width = 0.2,
+                                                         size = 1,
+                                                         position = position_dodge(0.9))
+      tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
+        str_wrap(string = j, width = 20)
+      })
+      tmp.percentages <- tmp.percentages + scale_y_continuous(labels = function(j) {
+        paste0(j, "%")
+      },
+      limits = c(0, 100),
+      expand = expansion(mult = c(0, 0)),
+      n.breaks = 10, minor_breaks = NULL)
+      if(type == "ordinary") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var))
+      } else if(type == "bench") {
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var))
+      }
+      return(tmp.percentages)
+    })
+  }
+}
+produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type) {
+  if(type == "ordinary") {
+    if(length(split.vars.vector) == 1) {
+      x.var <- sym(split.vars.vector)
+    } else if(length(split.vars.vector) == 2) {
+      x.var <- sym(split.vars.vector[2])
+    } else if(length(split.vars.vector) == 2) {
+      x.var <- sym(split.vars.vector[2])
+    } else if(length(split.vars.vector) > 2) {
+      x.var <- sym(split.vars.vector[length(split.vars.vector)])
+      color.var <- sym("collapsed_split")
+    }
+  } else if(type == "bench") {
+    x.var <- sym("Performance_Group")
+    if(length(split.vars.vector) == 1) {
+      color.var <- x.var
+    } else if(length(split.vars.vector) > 1) {
+      color.var <- sym("collapsed_split")
+    }
+  }
+  y.var <- grep(pattern = "^Mean_[[:alnum:]]|^Median_[[:alnum:]]|^Mode_[[:alnum:]]", x = colnames(estimates.obj), value = TRUE)
+  y.var <- y.var[!y.var %in% grep(pattern = "_SE$|_SVR$|_MVR$|_SVR_SE$|_MVR_SE$", x = y.var, value = TRUE)]
+  y.var <- lapply(X = y.var, FUN = sym)
+  if(length(split.vars.vector) <= 2) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.means <- lapply(X = y.var, FUN = function(j) {
+        if(type == "ordinary" || type == "bench" & length(split.vars.vector) == 1) {
+          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j))
+        } else if(type == "bench" && length(split.vars.vector) > 1) {
+          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = factor(x = !!color.var, levels = !!color.var)))
+        }
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+                                             width = 0.3,
+                                             size = 1.3,
+                                             position = position_dodge(.9))
+        if(type == "ordinary" || type == "bench" & length(split.vars.vector) == 1) {
+          cnt.plot <- cnt.plot + geom_point(size = 3)
+        } else if(type == "bench" && length(split.vars.vector) > 1) {
+          cnt.plot <- cnt.plot + geom_point(size = 3, position = position_dodge(0.9))
+          cnt.plot <- cnt.plot + geom_vline(xintercept = 1:(length(unique(i[ , get(as.character(x.var))])) - 1) + 0.5, colour = "#e2e2e2")
+          cnt.plot <- cnt.plot + guides(color = guide_legend(title="Legend", override.aes = list(linetype = 0, size = 3.5)))
+          cnt.plot <- cnt.plot + scale_color_manual(labels = i[ , get(as.character(color.var))], values = graph.custom.colors)
+        }
+        cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                     panel.grid.major.x = element_blank(),
+                                     panel.grid.major = element_line(colour = "black"),
+                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     plot.background = element_rect(fill = "#e2e2e2"),
+                                     legend.background = element_rect(fill = "#e2e2e2"),
+                                     legend.key = element_blank(),
+                                     plot.title = element_text(hjust = 0.5))
+        cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
+          str_wrap(k, width = 20)
+        })
+        cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+          sprintf("%.2f", k)
+        })
+        if(type == "ordinary") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+        } else if(type == "bench") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+        }
+      })
+      names(tmp.means) <- unlist(as.character(y.var))
+      return(tmp.means)
+    })
+  } else if(length(split.vars.vector) > 2 && length(split.vars.vector) < 5) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.means <- lapply(X = y.var, FUN = function(j) {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = factor(x = !!color.var, levels = !!color.var)))
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+                                             width = 0.3,
+                                             size = 1.3,
+                                             position = position_dodge(.9),
+                                             show.legend = FALSE)
+        if(type == "ordinary") {
+          cnt.plot <- cnt.plot + geom_vline(xintercept = 1:(length(unique(i[ , get(split.vars.vector[length(split.vars.vector)])])) - 1) + 0.5, colour = "#e2e2e2")
+        } else if(type == "bench") {
+          cnt.plot <- cnt.plot + geom_vline(xintercept = 1:(length(unique(i[ , get("Performance_Group")])) - 1) + 0.5, colour = "#e2e2e2")
+        }
+        cnt.plot <- cnt.plot + geom_point(position = position_dodge(0.9), size = 4)
+        cnt.plot <- cnt.plot + scale_color_manual(labels = i[ , get(as.character(color.var))], values = graph.custom.colors)
+        cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                     panel.grid.major.y = element_line(colour = "black"),
+                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     plot.background = element_rect(fill = "#e2e2e2"),
+                                     legend.background = element_rect(fill = "#e2e2e2"),
+                                     legend.key = element_blank(),
+                                     plot.title = element_text(hjust = 0.5),
+                                     panel.grid.major.x = element_blank())
+        cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
+          str_wrap(k, width = 20)
+        })
+        cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+          sprintf("%.2f", k)
+        })
+        cnt.plot <- cnt.plot + guides(color = guide_legend(title="Legend"))
+        if(type == "ordinary") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+        } else if(type == "bench") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+        }
+      })
+      names(tmp.means) <- unlist(as.character(y.var))
+      return(tmp.means)
+    })
+  } else if(length(split.vars.vector) >= 5) {
+    lapply(X = data.obj, FUN = function(i) {
+      tmp.means <- lapply(X = y.var, FUN = function(j) {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = !!color.var))
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+                                             width = 0.3,
+                                             size = 1.3,
+                                             position = position_dodge(.9),
+                                             show.legend = FALSE)
+        if(nrow(i) <= 100) {
+          cnt.plot <- cnt.plot + scale_color_manual(labels = i[ , get(as.character(color.var))], values = graph.custom.colors)
+        }
+        cnt.plot <- cnt.plot + geom_vline(xintercept = 1:(length(unique(i[ , get(split.vars.vector[length(split.vars.vector)])])) - 1) + 0.5, colour = "#e2e2e2")
+        cnt.plot <- cnt.plot + geom_point(position = position_dodge(0.9), size = 4,
+                                          show.legend = FALSE)
+        cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                     panel.grid.major.y = element_line(colour = "black"),
+                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     plot.background = element_rect(fill = "#e2e2e2"),
+                                     legend.background = element_rect(fill = "#e2e2e2"),
+                                     legend.key = element_blank(),
+                                     plot.title = element_text(hjust = 0.5),
+                                     panel.grid.major.x = element_blank())
+        cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
+          str_wrap(k, width = 20)
+        })
+        cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+          sprintf("%.2f", k)
+        })
+        cnt.plot <- cnt.plot + guides(color=guide_legend(title="Legend"))
+        if(type == "ordinary") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+        } else if(type == "bench") {
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+        }
+      })
+      names(tmp.means) <- unlist(as.character(y.var))
+      return(tmp.means)
+    })
+  }
+}
+produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector) {
+  y.var <- grep(pattern = "_SE$", x = colnames(data.obj[[1]]), value = TRUE)
+  y.var <- gsub(pattern = "_SE$", replacement = "", x = y.var)
+  y.var <- lapply(X = y.var, FUN = sym)
+  lapply(X = data.obj, FUN = function(i) {
+    if(length(split.vars.vector) <= 2) {
+      x.var <- sym("variable")
+      group.var <- sym(split.vars.vector[length(split.vars.vector)])
+      color.var <- sym(split.vars.vector[length(split.vars.vector)])
+    } else if(length(split.vars.vector) > 2) {
+      x.var <- sym("collapsed_split")
+      group.var <- sym(split.vars.vector[length(split.vars.vector)])
+      color.var <- sym("collapsed_split")
+    }
+    tmp.prctls <- lapply(X = y.var, FUN = function(j) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var, color = !!color.var))
+      cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+                                           width = 0.3,
+                                           size = 1.3)
+      cnt.plot <- cnt.plot + geom_point(size = 3, position = position_dodge(0.1))
+      cnt.plot <- cnt.plot + geom_line(size = 1)
+      cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                   panel.grid.major.x = element_blank(),
+                                   panel.grid.major = element_line(colour = "black"),
+                                   panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                   plot.background = element_rect(fill = "#e2e2e2"),
+                                   legend.background = element_rect(fill = "#e2e2e2"),
+                                   legend.key = element_blank(),
+                                   plot.title = element_text(hjust = 0.5))
+      if(length(split.vars.vector) == 1) {
+        cnt.plot <- cnt.plot + theme(legend.position = "none")
+      }
+      if(length(split.vars.vector) > 1) {
+        cnt.plot <- cnt.plot + scale_color_manual(values = graph.custom.colors)
+      } else {
+        cnt.plot <- cnt.plot + scale_color_manual(values = "#000000")
+      }
+      cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
+        sprintf("%.2f", k)
+      })
+      if(length(split.vars.vector) < 2) {
+        suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = gsub(pattern = "Prctl_", replacement = "P", x = unique(i[ , variable]))))
+      } else {
+        suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = str_extract(string = i[ , collapsed_split], pattern = "^P[[:digit:]]+")))
+      }
+      cnt.plot <- cnt.plot + guides(color = guide_legend(title = "Legend", override.aes = list(linetype = 0, size = 3.5)))
+      cnt.plot <- cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = "Percentiles", y = j)
+    })
+    names(tmp.prctls) <- unlist(as.character(y.var))
+    return(tmp.prctls)
+  })
+}
+save.graphs <- function(out.path) {
+  if(exists("perc.graphs.list", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.percentages <- getwd()
+    } else {
+      out.dir.percentages <- dirname(out.path)
+    }
+    percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
+    assign(x = "percentage.plots.files", value = percentage.plots.files, pos = parent.frame())
+    write.percentage.plots.files <- function(input1, input2) {
+      ggsave(filename = as.list(input1), plot = input2, width = 250, height = 125, units = "mm", device = "png", path = out.dir.percentages)
+    }
+    Map(write.percentage.plots.files, input1 = percentage.plots.files, input2 = get("perc.graphs.list", pos = parent.frame()))
+  }
+  if(exists("means.graphs.list", where = parent.frame())) {
+    means.obj.copy <- get("means.graphs.list", pos = parent.frame())
+    means.plots.files <- lapply(X = names(means.obj.copy), function(i) {
+      means.plot.name <- unlist(lapply(X = i, FUN = function(j) {
+        names(means.obj.copy[[j]])
+      }))
+      means.plot.name <- lapply(X = means.plot.name, FUN = function(k) {
+        paste0(paste(i, k, sep = "_"), ".png")
+      })
+    })
+    assign(x = "means.plots.files", value = means.plots.files, pos = parent.frame())
+    write.means.plots.files <- function(input1, input2) {
+      if(is.null(out.path)) {
+        out.dir.means <- getwd()
+      } else {
+        out.dir.means <- dirname(out.path)
+      }
+      lapply(X = 1:length(input1), FUN = function(i) {
+        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = 250, height = 125, units = "mm", device = "png", path = out.dir.means))
+      })
+    }
+    Map(write.means.plots.files, input1 = means.plots.files, input2 = get("means.graphs.list", pos = parent.frame()))
+  }
+  if(exists("percentiles.graphs.list", where = parent.frame())) {
+    percentiles.obj.copy <- get("percentiles.graphs.list", pos = parent.frame())
+    percentiles.plots.files <- lapply(X = names(percentiles.obj.copy), function(i) {
+      percentiles.plot.name <- unlist(lapply(X = i, FUN = function(j) {
+        names(percentiles.obj.copy[[j]])
+      }))
+      percentiles.plot.name <- lapply(X = percentiles.plot.name, FUN = function(k) {
+        paste0(paste(i, "Percentiles", k, sep = "_"), ".png")
+      })
+    })
+    assign(x = "percentiles.plots.files", value = percentiles.plots.files, pos = parent.frame())
+    write.percentiles.plots.files <- function(input1, input2) {
+      if(is.null(out.path)) {
+        out.dir.percentiles <- getwd()
+      } else {
+        out.dir.percentiles <- dirname(out.path)
+      }
+      lapply(X = 1:length(input1), FUN = function(i) {
+        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = 250, height = 125, units = "mm", device = "png", path = out.dir.percentiles))
+      })
+    }
+    Map(write.percentiles.plots.files, input1 = percentiles.plots.files, input2 = percentiles.obj.copy)
+  }
+}
+delete.graphs <- function(out.path) {
+  if(is.null(out.path)) {
+    out.dir.percentages <- getwd()
+  } else {
+    out.dir.percentages <- dirname(out.path)
+  }
+  percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
+  lapply(X = percentage.plots.files, FUN = function(i) {
+    file.remove(file.path(out.dir.percentages, i))
+  })
+  if(exists("means.graphs.list", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.means <- getwd()
+    } else {
+      out.dir.means <- dirname(out.path)
+    }
+    means.obj.copy <- get("means.graphs.list", pos = parent.frame())
+    means.plots.files <- lapply(X = names(means.obj.copy), function(i) {
+      means.plot.name <- unlist(lapply(X = i, FUN = function(j) {
+        names(means.obj.copy[[j]])
+      }))
+      means.plot.name <- lapply(X = means.plot.name, FUN = function(k) {
+        paste0(paste(i, k, sep = "_"), ".png")
+      })
+    })
+    lapply(X = means.plots.files, FUN = function(i) {
+      file.remove(file.path(out.dir.means, i))
+    })
+  }
+  if(exists("percentiles.plots.files", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.percentiles <- getwd()
+    } else {
+      out.dir.percentiles <- dirname(out.path)
+    }
+    lapply(X = get("percentiles.plots.files", pos = parent.frame()), FUN = function(i) {
+      file.remove(file.path(out.dir.percentiles, i))
+    })
+  }
+}
 produce.analysis.data.table <- function(data.object, object.variables, action.arguments, imported.file.attributes) {
   if(imported.file.attributes[["lsa.study"]] %in% design.weight.variables[["IEA.JK2.studies"]]) {
     DESIGN <- "JRR"
@@ -233,7 +683,7 @@ get.analysis.and.design.vars <- function(x) {
 get.action.arguments <- function() {
   passed.args <- as.list(sys.call(which = -1))
   passed.args[["executed.analysis.function"]] <- as.character(Filter(is.symbol, passed.args))[[1]]
-  passed.args <- passed.args[c("central.tendency", "include.missing", "shortcut", "output.file", "open.output", "executed.analysis.function", "prctls")]
+  passed.args <- passed.args[c("central.tendency", "include.missing", "graphs", "shortcut", "output.file", "open.output", "executed.analysis.function", "prctls")]
   if(is.null(passed.args[["include.missing"]])) {
     passed.args[["include.missing"]] <- FALSE
   }
@@ -1940,7 +2390,11 @@ produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, r
     gsub(pattern = "^[[:digit:]]+\\-[[:digit:]]+\\-[[:digit:]]+[[:space:]]|\\.[[:digit:]]+$", replacement = "", x = i)
   }), .SDcols = c("START_TIME", "END_TIME")]
 }
-export.results <- function(output.object, analysis.type, analysis.info.obj, model.stats.obj, Rao.Scott.adj.chi.sq.obj, destination.file, open.exported.file) {
+export.results <- function(output.object, analysis.type, add.graphs = FALSE, perc.graphs = NULL, non.perc.graphs = NULL, analysis.info.obj, model.stats.obj, Rao.Scott.adj.chi.sq.obj, destination.file, warns.list, open.exported.file) {
+  if(missing(destination.file)) {
+    destination.file <- file.path(getwd(), "Analysis.xlsx")
+  }
+  does.file.exist <- file.exists(destination.file)
   export.workbook <- createWorkbook(title = "Analysis created using RALSA (www.ralsa.ineri.org) provided by INERI (www.ineri.org)")
   header.row.style <- createStyle(fontColour = "#FFFFFF", bgFill = "#000000", border = c("left", "right"), borderColour = "#FFFFFF")
   call.cell.style <- createStyle(valign = "top", wrapText = TRUE)
@@ -1977,10 +2431,30 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
     addStyle(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", style = three.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(Rao.Scott.adj.chi.sq.obj) + 1), gridExpand = TRUE)
     setColWidths(wb = export.workbook, sheet = "Rao-Scott Adjusted Chi-Square", cols = 1:ncol(Rao.Scott.adj.chi.sq.obj), widths = "auto")
   }
+  if(!missing(add.graphs) && add.graphs == TRUE) {
+    addWorksheet(wb = export.workbook, sheetName = "Graphs")
+    file.to.import <- file.path(dirname(destination.file), perc.graphs)
+    lapply(X = 1:length(file.to.import), FUN = function(i) {
+      insertImage(wb = export.workbook, sheet = "Graphs", file = file.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
+    })
+    if(!is.null(non.perc.graphs)) {
+      files.to.import <- file.path(dirname(destination.file), unlist(non.perc.graphs))
+      lapply(X = 1:length(files.to.import), FUN = function(i) {
+        insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 13)
+      })
+    }
+  }
   addWorksheet(wb = export.workbook, sheetName = "Analysis information")
   writeData(wb = export.workbook, sheet = "Analysis information", x = analysis.info.obj)
   addStyle(wb = export.workbook, sheet = "Analysis information", style = header.row.style, rows = 1, cols = 1:ncol(analysis.info.obj))
   setColWidths(wb = export.workbook, sheet = "Analysis information", cols = 1:ncol(analysis.info.obj), widths = "auto")
+  if(!is.null(warns.list)) {
+    addWorksheet(wb = export.workbook, sheetName = "Warnings")
+    setColWidths(wb = export.workbook, sheet = "Warnings", cols = 1, widths = 100)
+    warnings.style <- createStyle(wrapText = TRUE)
+    addStyle(wb = export.workbook, sheet = "Warnings", style = warnings.style, cols = 1, rows = 1:1000)
+    writeData(wb = export.workbook, sheet = "Warnings", x = warns.list)
+  }
   called.analysis.function <- paste0(gsub(pattern = "\\s+", replacement = " ", x = deparse(sys.call(1))))
   addWorksheet(wb = export.workbook, "Calling syntax")
   setRowHeights(wb = export.workbook, sheet = "Calling syntax", rows = 2, heights = 75)
@@ -1988,10 +2462,6 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
   addStyle(wb = export.workbook, sheet = "Calling syntax", style = call.cell.style, rows = 2, cols = 1)
   writeData(wb = export.workbook, sheet = "Calling syntax", x = "The following call can be used in R/Rstudio to perform the same analysis again:", startCol = 1, startRow = 1)
   writeData(wb = export.workbook, sheet = "Calling syntax", x = paste(called.analysis.function, collapse = ""), startCol = 1, startRow = 2)
-  if(missing(destination.file)) {
-    destination.file <- file.path(getwd(), "Analysis.xlsx")
-  }
-  does.file.exist <- file.exists(destination.file)
   withCallingHandlers(
     saveWorkbook(wb = export.workbook, file = destination.file, overwrite = TRUE),
     warning = function(w){
@@ -2009,7 +2479,8 @@ export.results <- function(output.object, analysis.type, analysis.info.obj, mode
   }
 }
 
-#################################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Global objects
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

@@ -11,6 +11,7 @@ suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyda
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(DT, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyjs, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyFiles, warn.conflicts = FALSE, quietly = TRUE))))
+suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(ggplot2, warn.conflicts = FALSE, quietly = TRUE))))
 
 ui <- tagList(
   
@@ -30,7 +31,8 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-  
+
+
   useShinyjs(),
   inlineCSS(load.app.CSS.screen),
   div(
@@ -950,7 +952,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     fluidRow(
                       column(width = 6,
-                             uiOutput(outputId = "pctsMeansShortcut")
+                             uiOutput(outputId = "pctsMeansShortcut"),
+                             br(),
+                             uiOutput(outputId = "pctsMeansGraphs")
                       ),
                       br(), br(), br(), br()
                     ),
@@ -1121,7 +1125,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     fluidRow(
                       column(width = 6,
-                             uiOutput(outputId = "prctlsShortcut")
+                             uiOutput(outputId = "prctlsShortcut"),
+                             uiOutput(outputId = "prctlsGraphs"),
+                             br()
                       ),
                       br(), br(), br(), br()
                     ),
@@ -1304,17 +1310,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       br(), br(), br(), br(), br()
                     ),
                     fluidRow(
-                      column(width = 2,
+                      column(width = 4,
                              uiOutput(outputId = "benchComputeWithin")
                       ),
-                      column(width = 10,
+                      column(width = 8,
                              htmlOutput(outputId = "benchComputeWithinExpl")
                       ),
                       br(), br(), br(), br(), br()
                     ),
                     fluidRow(
                       column(width = 6,
-                             uiOutput(outputId = "benchShortcut")
+                             uiOutput(outputId = "benchShortcut"),
+                             uiOutput(outputId = "benchGraphs"),
+                             br()
                       ),
                       br(), br(), br(), br()
                     ),
