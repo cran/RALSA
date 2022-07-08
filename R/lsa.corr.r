@@ -171,7 +171,7 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    if(!exists(all.vars(match.call()))) {
+    if(!exists(all.vars(as.list(match.call())[["data.object"]]))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     data <- copy(data.object)
@@ -208,6 +208,19 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
+    }
+    if(!is.null(vars.list[["bckg.corr.vars"]])) {
+      cnt.with.NA.on.bckg.cor.vars <- lapply(X = data, FUN = function(i) {
+        tmp <- i[ , lapply(.SD, function(j) {
+          all(is.na(j))
+        }), .SDcols = vars.list[["bckg.corr.vars"]]]
+        tmp <- sum(as.numeric(unlist(tmp)))
+      })
+      cnt.with.NA.on.bckg.cor.vars <- names(Filter(f = function(i) {i > 0}, x = cnt.with.NA.on.bckg.cor.vars))
+      data[which(names(data) %in% cnt.with.NA.on.bckg.cor.vars)] <- NULL
+      if(length(cnt.with.NA.on.bckg.cor.vars) > 0) {
+        warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]] <- paste0('One or more countries had one or more "bckg.corr.vars" which contain only missing values. These countries are: ', paste(cnt.with.NA.on.bckg.cor.vars, collapse = ', '), '.')
+      }
     }
     if(length(key.vars) > 1) {
       data <- lapply(X = data, FUN = function(i) {
@@ -529,6 +542,9 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     }
     if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
       warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]])) {
+      warning(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]], call. = FALSE)
     }
   }
 }

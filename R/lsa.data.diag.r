@@ -132,7 +132,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    if(!exists(all.vars(match.call()))) {
+    if(!exists(all.vars(as.list(match.call())[["data.object"]]))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     message('\nUsing data from object "', deparse(substitute(data.object)), '".')

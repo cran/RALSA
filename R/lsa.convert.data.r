@@ -1553,38 +1553,52 @@ print.lsa.data <- function(x, col.nums, ...) {
   if(missing(col.nums)) {
     col.nums <- colnames(x)[1:6]
   } else {
-    col.nums <- colnames(x)[col.nums]
+    if(is.numeric(col.nums)) {
+      col.nums <- colnames(x)[col.nums]
+    } else {
+      col.nums <- col.nums
+    }
   }
-  user.def.miss <- any(sapply(X = x, FUN = function(i) {
-    length(attr(x = i, "missings")) > 0
-  }))
-  tmp.data <- setDT(copy(x[ , mget(col.nums)]))
-  if(length(col.nums) < length(colnames(x))) {
-    tmp.data[ , ".../..." := ".../..."]
+  col.nums <- na.omit(col.nums)
+  attr(x = col.nums, which = "na.action") <- NULL
+  print.obj <- names(which(sapply(X = ls(envir = parent.frame(2)), FUN = function(v) {
+    identical(x, get(v, envir = parent.frame(2)))
+  })))
+  print.call <- match.call(expand.dots=FALSE)
+  if(length(print.obj) != 0 & print.call != "print.lsa.data(x = x)" || length(print.obj) != 0 & print.call == "print.lsa.data(x = x)") {
+    user.def.miss <- any(sapply(X = x, FUN = function(i) {
+      length(attr(x = i, "missings")) > 0
+    }))
+    tmp.data <- setDT(copy(x[ , mget(col.nums)]))
+    if(length(col.nums) < length(colnames(x))) {
+      tmp.data[ , ".../..." := ".../..."]
+    }
+    list.of.components <- list(
+      attr(x = x, which = "study"),
+      attr(x = x, which = "cycle"),
+      attr(x = x, which = "file.type"),
+      length(unique(x[ , mget(key(x))])),
+      attr(x = x, which = "sorted"),
+      user.def.miss
+    )
+    message("\nLarge-scale assessment/survey data")
+    message("==================================")
+    message("Study:                 ", list.of.components[[1]])
+    message("Study cycle:           ", list.of.components[[2]])
+    message("Respondent type:       ", list.of.components[[3]])
+    message("Number of countries:   ", list.of.components[[4]])
+    message("Key:                   ", list.of.components[[5]])
+    message("User defined missings: ", list.of.components[[6]])
+    message("")
+    if(length(col.nums) < length(colnames(x))) {
+      message("\nData (omitted ", length(colnames(x)) - length(col.nums), " columns):\n")
+    } else {
+      message("\nData:\n")
+    }
+    message(paste0(capture.output(tmp.data), collapse = "\n"))
+  } else if(length(print.obj) == 0 && print.call == "print.lsa.data(x = x)") {
+    message(paste0(capture.output(data.table(x)), collapse = "\n"))
   }
-  list.of.components <- list(
-    attr(x = x, which = "study"),
-    attr(x = x, which = "cycle"),
-    attr(x = x, which = "file.type"),
-    length(unique(x[ , mget(key(x))])),
-    attr(x = x, which = "sorted"),
-    user.def.miss
-  )
-  message("\nLarge-scale assessment/survey data")
-  message("==================================")
-  message("Study:                 ", list.of.components[[1]])
-  message("Study cycle:           ", list.of.components[[2]])
-  message("Respondent type:       ", list.of.components[[3]])
-  message("Number of countries:   ", list.of.components[[4]])
-  message("Key:                   ", list.of.components[[5]])
-  message("User defined missings: ", list.of.components[[6]])
-  message("")
-  if(length(col.nums) < length(colnames(x))) {
-    message("\nData (omitted ", length(colnames(x)) - length(col.nums), " columns):\n")
-  } else {
-    message("\nData:\n")
-  }
-  message(paste0(capture.output(tmp.data), collapse = "\n"))
 }
 #' @rdname lsa.convert.data
 #' @export

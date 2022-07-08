@@ -1,5 +1,10 @@
 server <- function(input, output, session) {
   
+  
+  
+  
+  
+  
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   # Define common objects
   studies.all.design.variables <- list(
@@ -1419,9 +1424,13 @@ define.default.weight <- function(study, loaded.names.and.labels, respondent.typ
 
 all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
 
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
   
   
-  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  
   
   
   
@@ -1486,6 +1495,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   hide("convertMissToNA")
   hide("convertChooseOutDir")
   hide("consoleConvertData")
+  hide("saveConvertSyntax")
+  hide("copyConvertSyntax")
   output$h1ConvertData <- renderText("Convert data")
   output$convertIntro <- renderText({HTML("Select and convert data from SPSS or text files (in case of PISA prior its 2015 cycle) into LSA \".RData\" data files.")})
   shinyDirChoose(input, "convertChooseSrcDir", roots = available.volumes, filetype = list(sav = "sav", txt = "txt", sps = "sps"), updateFreq = 1000)
@@ -1888,35 +1899,58 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("convertMissToNA")
           show("convertChooseOutDir")
           show("convertOutPathDisplay")
+          show("saveConvertSyntax")
+          show("copyConvertSyntax")
         } else if(nrow(convertAllCountries$convertSelectionIEA) == 0) {
           hide("convertMissToNA")
           hide("convertChooseOutDir")
           hide("convertOutPathDisplay")
+          hide("saveConvertSyntax")
+          hide("copyConvertSyntax")
         }
       } else if(exists("final.data.and.syntaxes")) {
         if(nrow(final.data.and.syntaxes) > 0) {
           show("convertMissToNA")
           show("convertChooseOutDir")
           show("convertOutPathDisplay")
+          show("saveConvertSyntax")
+          show("copyConvertSyntax")
         } else if(nrow(final.data.and.syntaxes) == 0) {
           hide("convertMissToNA")
           hide("convertChooseOutDir")
           hide("convertOutPathDisplay")
+          hide("saveConvertSyntax")
+          hide("copyConvertSyntax")
         }
       } else if(exists("convertPISASAVFiles")) {
         if(length(convertPISASAVFiles$convertAvailPISASAVFiles) > 0) {
           show("convertMissToNA")
           show("convertChooseOutDir")
           show("convertOutPathDisplay")
+          show("saveConvertSyntax")
+          show("copyConvertSyntax")
         } else if(length(convertPISASAVFiles$convertAvailPISASAVFiles) == 0) {
           hide("convertMissToNA")
           hide("convertChooseOutDir")
           hide("convertOutPathDisplay")
+          hide("saveConvertSyntax")
+          hide("copyConvertSyntax")
         }
       } else if(!exists("convertAllCountries") && !exists("final.data.and.syntaxes") && !exists("convertPISASAVFiles")) {
         hide("convertMissToNA")
         hide("convertChooseOutDir")
         hide("convertOutPathDisplay")
+        hide("saveConvertSyntax")
+      }
+      if(
+        length(parseDirPath(available.volumes, input$convertChooseSrcDir)) == 0 ||
+        is.null(full.file.list$convertSyntax)
+      ) {
+        hide("saveConvertSyntax")
+        hide("copyConvertSyntax")
+      } else {
+        show("saveConvertSyntax")
+        show("copyConvertSyntax")
       }
     })
     syntaxConvertData <- reactive({
@@ -1926,9 +1960,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           parseSavePath(available.volumes, input$convertChooseSrcDir)$datapath,
           if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
             '"'
+          } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
+            '"'
           } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
             paste0('", ISO = "', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '"')
-          } else if (exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
+          } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
             paste0('", ISO = c("', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '")')
           } else if(!exists("convertAllCountries")) {
             '"'
@@ -1980,6 +2016,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         return(NULL)
       }
     })
+    shinyFileSave(input, "saveConvertSyntax", roots = available.volumes, updateFreq = 100000)
+    observe({
+      tmp.syntax <- syntaxConvertData()
+      fileinfo.convert <- parseSavePath(available.volumes, input$saveConvertSyntax)
+      if(nrow(fileinfo.convert) > 0) {
+        cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.convert$datapath)
+      }
+    })
+    output$copyConvertSyntax <- renderUI({
+      rclipButton(inputId = "copyConvertSyntax", label = "Copy syntax", clipText = syntaxConvertData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+    })
     output$convertSyntax <- renderText({
       if(study.type.loaded$IEA == TRUE ||
          study.type.loaded$PISA.2015.plus == TRUE ||
@@ -2030,6 +2077,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
   hide("mergeChooseOutFile")
+  hide("saveMergeSyntax")
   output$h1MergeData <- renderText("Merge data")
   output$mergeIntro <- renderText({HTML("Select and merge large-scale assessment .RData files. This works with all supported studies, except for PISA.")})
   shinyDirChoose(input, "mergeChooseSrcDir", roots = available.volumes, filetype = list(RData = "RData"), updateFreq = 1000)
@@ -2461,6 +2509,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               show("mergeExecBtnHead")
               show("execMergeData")
             }
+            if(is.null(input$mergeAvailRespCheckboxes) ||
+               length(parseSavePath(available.volumes, input$mergeChooseOutFile)$datapath) == 0 ||
+               length(full.file.list.merge$RData.files) == 0 || nrow(mergeAllVars$mergeSelectedVars) == 0) {
+              hide("saveMergeSyntax")
+              hide("copyMergeSyntax")
+            } else {
+              show("saveMergeSyntax")
+              show("copyMergeSyntax")
+            }
           })
           syntaxMergeData <- reactive({
             if(exists("mergeAllVars") && nrow(mergeAllVars$mergeSelectedVars) > 0) {
@@ -2497,6 +2554,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
                   paste0('), ISO = c("', paste(tolower(mergeAllCountries$mergeSelectionIEA[["ISOs"]]), collapse = '", "'), '")')
                 } else if(exists("mergeAllCountries") && nrow(mergeAllCountries$mergeSelectionIEA) != 0 && length(mergeAllCountries$mergeSelectionIEA[["ISOs"]]) > 1 && nrow(mergeAllCountries$mergeAvailCntIEAFiles) == 0) {
                   ")"
+                } else if(exists("mergeAllCountries") && nrow(mergeAllCountries$mergeSelectionIEA) != 0 && length(mergeAllCountries$mergeSelectionIEA[["ISOs"]]) == 1 && nrow(mergeAllCountries$mergeAvailCntIEAFiles) == 0) {
+                  ")"
                 } else if(exists("mergeAllCountries") && nrow(mergeAllCountries$mergeAvailCntIEAFiles) == 0) {
                   ""
                 },
@@ -2512,11 +2571,22 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               return(NULL)
             }
           })
+          output$copyMergeSyntax <- renderUI({
+            rclipButton(inputId = "copyMergeSyntax", label = "Copy syntax", clipText = syntaxMergeData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+          })
           output$mergeSyntax <- renderText({
             if(length(full.file.list.merge$RData.files) > 0 &merge.render.vars.condition() == TRUE) {
               syntaxMergeData()
             } else {
               return(NULL)
+            }
+          })
+          shinyFileSave(input, "saveMergeSyntax", roots = available.volumes, updateFreq = 100000)
+          observe({
+            tmp.syntax <- syntaxMergeData()
+            fileinfo.merge <- parseSavePath(available.volumes, input$saveMergeSyntax)
+            if(nrow(fileinfo.merge) > 0) {
+              cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.merge$datapath)
             }
           })
           output$mergeExecBtnHead <- renderText({
@@ -2564,6 +2634,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   hide("varPropsSaveOutput")
   hide("varPropsOpenOutput")
   hide("varPropsChooseOutFile")
+  hide("saveVarPropsSyntax")
+  show("copyVarPropsSyntax")
   shinyFileChoose(input, "varPropsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
   observeEvent(eventExpr = input$varPropsChooseSrcFile, {
     file.var.properties$loaded <- NULL
@@ -2784,6 +2856,21 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("varPropsExecBtnHead")
           hide("execVarProps")
         }
+        if(
+          nrow(varPropsAllVars$varPropsAvailVars) == 0 && nrow(varPropsAllVars$varPropsSelectedVars) == 0 ||
+          nrow(varPropsAllVars$varPropsAvailVars) > 0 && nrow(varPropsAllVars$varPropsSelectedVars) == 0 ||
+          input$varPropsSaveOutput == TRUE && length(parseSavePath(available.volumes, input$varPropsChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveVarPropsSyntax")
+          hide("copyVarPropsSyntax")
+        } else if(
+          nrow(varPropsAllVars$varPropsAvailVars) == 0 && nrow(varPropsAllVars$varPropsSelectedVars) > 0 ||
+          nrow(varPropsAllVars$varPropsSelectedVars) > 0 ||
+          input$varPropsSaveOutput == TRUE && length(parseSavePath(available.volumes, input$varPropsChooseOutFile)$datapath) > 0
+        ) {
+          show("saveVarPropsSyntax")
+          show("copyVarPropsSyntax")
+        }
       })
       observeEvent(input$execVarProps, {
         show("consoleVarProps")
@@ -2819,6 +2906,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else {
           return(NULL)
         }
+      })
+      shinyFileSave(input, "saveVarPropsSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxVarProps()
+        fileinfo.varprops <- parseSavePath(available.volumes, input$saveVarPropsSyntax)
+        if(nrow(fileinfo.varprops) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.varprops$datapath)
+        }
+      })
+      output$copyVarPropsSyntax <- renderUI({
+        rclipButton(inputId = "copyVarPropsSyntax", label = "Copy syntax", clipText = syntaxVarProps(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
       output$varPropsSyntax <- renderText({
         if(nrow(varPropsAllVars$varPropsSelectedVars) > 0) {
@@ -2859,6 +2957,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1DataDiag <- renderText("Data diagnostics")
   hide("dataDiagChooseOutFile")
+  hide("saveDataDiagSyntax")
+  hide("copyDataDiagSyntax")
   output$dataDiagIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.data.diag <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, default.weight = NULL, data.diag.syntax = NULL)
   shinyFileChoose(input, "dataDiagChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -3168,11 +3268,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(nrow(dataDiagAllVars$dataDiagSelectedAnalVars) > 1) {
             paste0(', variables = c("', paste(dataDiagAllVars$dataDiagSelectedAnalVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 1 && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] == file.data.diag$default.weight) {
+          if(exists("dataDiagAllVars$dataDiagSelectedWeightVar") && nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 1 && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] == file.data.diag$default.weight) {
             NULL
-          } else if(nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 1 && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] %in% all.studies.available.weights && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] != file.data.diag$default.weight) {
+          } else if(exists("dataDiagAllVars$dataDiagSelectedWeightVar") && nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 1 && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] %in% all.studies.available.weights && dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables] != file.data.diag$default.weight) {
             paste0(', weight.var = "', dataDiagAllVars$dataDiagSelectedWeightVar[ , Variables], '"')
-          } else if(nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 0) {
+          } else if(exists("dataDiagAllVars$dataDiagSelectedWeightVar") && nrow(dataDiagAllVars$dataDiagSelectedWeightVar) == 0) {
             paste0(', weight.var = "none"')
           },
           if(!is.null(input$dataDiagContFreq) && input$dataDiagContFreq == TRUE) {
@@ -3196,6 +3296,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else {
           return(NULL)
         }
+      })
+      shinyFileSave(input, "saveDataDiagSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxDataDiag()
+        fileinfo.data.diag <- parseSavePath(available.volumes, input$saveDataDiagSyntax)
+        if(nrow(fileinfo.data.diag) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.data.diag$datapath)
+        }
+      })
+      output$copyDataDiagSyntax <- renderUI({
+        rclipButton(inputId = "copyDataDiagSyntax", label = "Copy syntax", clipText = syntaxDataDiag(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
       output$dataDiagSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$dataDiagChooseOutFile)$datapath) == 1) {
@@ -3265,6 +3376,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("dataDiagArrowSelWeightVarsLeft")
           show("dataDiagWeightVar")
         }
+        if(nrow(dataDiagAllVars$dataDiagAvailVars) == 0 ||
+           nrow(dataDiagAllVars$dataDiagSelectedAnalVars) == 0 ||
+           length(parseSavePath(available.volumes, input$dataDiagChooseSrcFile)$datapath) == 0 ||
+           length(parseSavePath(available.volumes, input$dataDiagChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveDataDiagSyntax")
+          hide("copyDataDiagSyntax")
+        } else {
+          show("saveDataDiagSyntax")
+          show("copyDataDiagSyntax")
+        }
       })
     }
   })
@@ -3290,6 +3412,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   hide("recodeInNewVars")
   hide("recodeNewMissings")
   hide("recodeChooseOutFile")
+  hide("saveRecodeSyntax")
+  hide("recodeExecBtnHead")
+  hide("execRecode")
   output$h1RecodeVars <- renderText("Recode variables")
   output$recodeIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.var.recode <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, var.levels = NULL, var.num.values = NULL, var.char.values = NULL, var.missings = NULL, var.classes = NULL, recode.syntax = NULL)
@@ -3301,13 +3426,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     file.var.recode$study <- NULL
     file.var.recode$cycle <- NULL
     file.var.recode$var.classes <- NULL
+    file.var.recode$recodeSyntax <- NULL
     if(length(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) > 104857600) {
       showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
     }
     session$sendCustomMessage("unbindDT", "recodeSchemeFAC")
     session$sendCustomMessage("unbindDT", "recodeSchemeNUM")
     session$sendCustomMessage("unbindDT", "recodeSchemeCHAR")
-    session$sendCustomMessage("unbindDT", "recodeNewVarLabels")
     session$sendCustomMessage("unbindDT", "recodeNewVarNames")
     if(length(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) > 0) {
       file.var.recode$loaded <- get(load(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath))
@@ -3486,7 +3611,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         session$sendCustomMessage("unbindDT", "recodeSchemeFAC")
         session$sendCustomMessage("unbindDT", "recodeSchemeNUM")
         session$sendCustomMessage("unbindDT", "recodeSchemeCHAR")
-        session$sendCustomMessage("unbindDT", "recodeNewVarLabels")
         session$sendCustomMessage("unbindDT", "recodeNewVarNames")
       })
       observeEvent(input$recodeArrowSelVarsLeft, {
@@ -3497,7 +3621,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         session$sendCustomMessage("unbindDT", "recodeSchemeFAC")
         session$sendCustomMessage("unbindDT", "recodeSchemeNUM")
         session$sendCustomMessage("unbindDT", "recodeSchemeCHAR")
-        session$sendCustomMessage("unbindDT", "recodeNewVarLabels")
         session$sendCustomMessage("unbindDT", "recodeNewVarNames")
       })
       output$recodeMissingsWarn <- renderText({
@@ -3724,7 +3847,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           session$sendCustomMessage("unbindDT", "recodeSchemeFAC")
           session$sendCustomMessage("unbindDT", "recodeSchemeNUM")
           session$sendCustomMessage("unbindDT", "recodeSchemeCHAR")
-          session$sendCustomMessage("unbindDT", "recodeNewVarLabels")
           session$sendCustomMessage("unbindDT", "recodeNewVarNames")
         }
       })
@@ -3735,7 +3857,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         entered.new.var.names$names <- data.table(
           V1 = recodeAllVars$recodeSelectedVars[ , Variables],
           V2 = rep(x = as.character(icon(name = "arrow-right")), times = length(recodeAllVars$recodeSelectedVars[ , Variables])),
-          V3 = generate.recode.new.inputs(obj = recodeAllVars$recodeSelectedVars[ , Variables], input.type = "newvarnames", pix.width = "100%")
+          V3 = generate.recode.new.inputs(obj = recodeAllVars$recodeSelectedVars[ , Variables], input.type = "newvarnames", pix.width = "100%"),
+          V4 = generate.recode.new.inputs(obj = recodeAllVars$recodeSelectedVars[ , Variables], input.type = "newvarlabels", pix.width = "100%")
         )
         new.recoded.var.names$names <- gather.recode.new.inputs.data(id = "newvarnames", len = length(recodeAllVars$recodeSelectedVars[ , Variables]))
         if(nrow(recodeAllVars$recodeSelectedVars) == 0) {
@@ -3744,7 +3867,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       })
       observeEvent(input$recodeInNewVars, {
         session$sendCustomMessage("unbindDT", "recodeNewVarNames")
-        session$sendCustomMessage("unbindDT", "recodeNewVarLabels")
       })
       output$recodeOverwriteWarn <- renderText({
         if(!is.null(file.var.recode$loaded) && input$recodeInNewVars == FALSE) {
@@ -3761,7 +3883,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       },
       rownames = FALSE,
-      colnames = c("Old variable names", as.character(icon(name = "arrow-right")), "New variable names"),
+      colnames = c("Old variable names", as.character(icon(name = "arrow-right")), "New variable names", "New variable labels (optional)"),
       class = "cell-border stripe;compact cell-border;",
       selection="none",
       escape = FALSE,
@@ -3784,34 +3906,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         )
         new.recoded.var.labels$labels <- gather.recode.new.inputs.data(id = "newvarlabels", len = length(recodeAllVars$recodeSelectedVars[ , Variables]))
       })
-      output$recodeVarLabExpl <- renderText({
-        if(input$recodeInNewVars == TRUE && !is.null(unlist(unique(file.var.recode$var.levels[recodeAllVars$recodeSelectedVars[ , Variables]]))) | !is.null(unlist(unique(file.var.recode$var.num.values[recodeAllVars$recodeSelectedVars[ , Variables]]))) | !is.null(unlist(unique(file.var.recode$var.char.values[recodeAllVars$recodeSelectedVars[ , Variables]]))) && recode.sel.vars.mismatch$value == TRUE) {
-          HTML('Optional: Variable labels for the new recoded variables can be defined below.')
-        } else {
-          return(NULL)
-        }
-      })
-      output$recodeNewVarLabels <- renderDT({
-        if(input$recodeInNewVars == TRUE && !is.null(unlist(unique(file.var.recode$var.levels[recodeAllVars$recodeSelectedVars[ , Variables]]))) | !is.null(unlist(unique(file.var.recode$var.num.values[recodeAllVars$recodeSelectedVars[ , Variables]]))) | !is.null(unlist(unique(file.var.recode$var.char.values[recodeAllVars$recodeSelectedVars[ , Variables]]))) && recode.sel.vars.mismatch$value == TRUE) {
-          entered.new.var.labels$labels
-        } else {
-          return(NULL)
-        }
-      },
-      rownames = FALSE,
-      colnames = c("New variable names", "New variable labels"),
-      class = "cell-border stripe;compact cell-border;",
-      selection="none",
-      escape = FALSE,
-      options = list(
-        pageLength = 5000,
-        dom = 'BRrt',
-        autoWidth = TRUE,
-        columnDefs = list(list(width = '190px', targets = 0), list(className = 'dt-center', targets = 1)),
-        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
-        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
-        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
-      ))
       new.values.and.labels.mismatch <- reactiveValues(value = FALSE, label = FALSE, diff.count = FALSE, diff.missings = FALSE)
       observe({
         any.recode.values.NULL <- all(is.null(new.recoding.values.FAC$values), is.null(new.recoding.values.NUM$values), is.null(new.recoding.values.CHAR$values))
@@ -3911,32 +4005,40 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("recodeInNewVars")
           hide("recodeOverwriteWarn")
           hide("recodeNewVarNames")
-          hide("recodeVarLabExpl")
           hide("recodeNewVarLabels")
-          hide("recodeSyntaxHead")
-          hide("recodeSyntax")
-          hide("recodeExecBtnHead")
-          hide("execRecode")
         } else if(!is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == FALSE || nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE) {
           show("recodeInNewVars")
           show("recodeOverwriteWarn")
           show("recodeNewVarNames")
-          show("recodeVarLabExpl")
           show("recodeNewVarLabels")
+        }
+        if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE || input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "")) {
+          hide("recodeChooseOutFile")
+          hide("recodeSyntaxHead")
+          hide("recodeSyntax")
+          hide("recodeExecBtnHead")
+          hide("execRecode")
+        } else if(!is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == FALSE || nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE || input$recodeInNewVars == FALSE) {
+          show("recodeChooseOutFile")
           show("recodeSyntaxHead")
           show("recodeSyntax")
           show("recodeExecBtnHead")
           show("execRecode")
         }
-        if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE || input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "")) {
-          hide("recodeChooseOutFile")
-        } else if(!is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == FALSE || nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE || input$recodeInNewVars == FALSE) {
-          show("recodeChooseOutFile")
+        if(is.null(file.var.recode$recodeSyntax) ||
+           input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "") ||
+           input$recodeInNewVars == TRUE & is.null(new.recoded.var.names$names) ||
+           length(parseSavePath(available.volumes, input$recodeChooseOutFile)$datapath) == 0) {
+          hide("saveRecodeSyntax")
+          hide("copyRecodeSyntax")
+        } else {
+          show("saveRecodeSyntax")
+          show("copyRecodeSyntax")
         }
       })
-      shinyFileSave(input, "recodeChooseOutFile", filetype = list(RData = "RData"), roots = available.volumes, updateFreq = 100000)
+      shinyFileSave(input, "recodeChooseOutFile", filetype = list(RData = "RData"), session = session, roots = available.volumes, updateFreq = 100000)
       syntaxRecodeVars <- reactive({
-        file.var.recode$recode.syntax <- paste0(
+        file.var.recode$recodeSyntax <- paste0(
           'lsa.recode.vars(data.file = "', parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath,
           if(nrow(recodeAllVars$recodeSelectedVars) == 1) {
             paste0(paste0('", src.variables = "', recodeAllVars$recodeSelectedVars[ , Variables]), '"')
@@ -3968,7 +4070,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           if(input$recodeNewMissings != "") {
             paste0(', missings.attr = list("', paste(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]), collapse = '", "'), '")')
           },
-          if(!is.null(new.recoded.var.labels$labels) && new.recoded.var.labels$labels != "" && input$recodeInNewVars == 1) {
+          if(!is.null(new.recoded.var.labels$labels) && any(new.recoded.var.labels$labels != "") && input$recodeInNewVars == 1) {
             if(length(new.recoded.var.labels$labels) == 1) {
               paste0(', variable.labels = "', paste(new.recoded.var.labels$labels, collapse = '", "'), '"')
             } else if(length(new.recoded.var.labels$labels) > 1) {
@@ -3987,11 +4089,22 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      output$copyRecodeSyntax <- renderUI({
+        rclipButton(inputId = "copyRecodeSyntax", label = "Copy syntax", clipText = syntaxRecodeVars(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$recodeSyntax <- renderText({
         if(!is.null(file.var.recode$loaded) && length(parseSavePath(available.volumes, input$recodeChooseOutFile)$datapath) == 1) {
           syntaxRecodeVars()
         } else {
           return(NULL)
+        }
+      })
+      shinyFileSave(input, "saveRecodeSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxRecodeVars()
+        fileinfo.recode <- parseSavePath(available.volumes, input$saveRecodeSyntax)
+        if(nrow(fileinfo.recode) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.recode$datapath)
         }
       })
       output$recodeExecBtnHead <- renderText({
@@ -4014,7 +4127,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleRecode", "")
       tryCatch({
-        expr = eval(parse(text = file.var.recode$recode.syntax))
+        expr = eval(parse(text = file.var.recode$recodeSyntax))
         showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
       }, error = function(e) {
         message("", e)
@@ -4031,6 +4144,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1selectPISACountries <- renderText("Select PISA countries' data")
   hide("selectPISACountriesChooseOutFile")
+  hide("saveSelectPISACountriesSyntax")
+  hide("copySelectPISACountriesSyntax")
   output$selectPISACountriesIntro <- renderText({HTML("Select  PISA .RData file to load.")})
   file.select.PISA <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, default.weight = NULL, select.PISA.syntax = NULL)
   shinyFileChoose(input, "selectPISACountriesChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -4213,6 +4328,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("selectPISACountriesExecBtnHead")
           show("execSelectPISACountries")
         }
+        if(length(parseFilePaths(available.volumes, input$selectPISACountriesChooseSrcFile)$datapath) == 0 ||
+           length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 0 ||
+           nrow(selectPISAAllCnt$selectPISASelCnt) == 0) {
+          hide("saveSelectPISACountriesSyntax")
+          hide("copySelectPISACountriesSyntax")
+        } else {
+          show("saveSelectPISACountriesSyntax")
+          show("copySelectPISACountriesSyntax")
+        }
       })
       syntaxSelectPISA <- reactive({
         file.select.PISA$select.PISA.syntax <- paste0(
@@ -4229,7 +4353,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         )
       })
       output$selectPISACountriesSyntaxHead <- renderText({
-        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(selectPISAAllCnt$selectPISASelCnt))) >= 1) {
           HTML("Syntax")
         } else {
           return(NULL)
@@ -4242,15 +4366,26 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      shinyFileSave(input, "saveSelectPISACountriesSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxSelectPISA()
+        fileinfo.select.PISA <- parseSavePath(available.volumes, input$saveSelectPISACountriesSyntax)
+        if(nrow(fileinfo.select.PISA) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.select.PISA$datapath)
+        }
+      })
+      output$copySelectPISACountriesSyntax <- renderUI({
+        rclipButton(inputId = "copySelectPISACountriesSyntax", label = "Copy syntax", clipText = syntaxSelectPISA(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$selectPISACountriesExecBtnHead <- renderText({
-        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(selectPISAAllCnt$selectPISASelCnt))) >= 1) {
           HTML("Press the button below to execute the syntax")
         } else {
           return(NULL)
         }
       })
       output$execSelectPISACountries <- renderUI({
-        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1) {
+        if(length(parseSavePath(available.volumes, input$selectPISACountriesChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(selectPISAAllCnt$selectPISASelCnt))) >= 1) {
           actionButton(inputId = "execSelectPISACountries", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
         } else {
           return(NULL)
@@ -4279,6 +4414,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1PctsMeans <- renderText("Percentages and means")
   hide("pctsMeansChooseOutFile")
+  hide("savePctsMeansSyntax")
+  hide("copyPctsMeansSyntax")
   output$pctsMeansIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.pct.means <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, pct.means.syntax = NULL)
   shinyFileChoose(input, "pctsMeansChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -4734,19 +4871,19 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       syntaxPctsMeans <- reactive({
         file.pct.means$pct.means.syntax <- paste0(
           'lsa.pcts.means(data.file = "', parseFilePaths(available.volumes, input$pctsMeansChooseSrcFile)$datapath, '", ',
-          if(length(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables]) == 1) {
+          if(!is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) && length(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables]) == 1) {
             paste0('split.vars = "', pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables], '"')
-          } else if(length(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables]) > 1) {
+          } else if(!is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) && length(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables]) > 1) {
             paste0('split.vars = c("', paste(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(pctsMeansAllVars$pctsMeansSelectedBckgVars) == 1) {
+          if(!is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) && nrow(pctsMeansAllVars$pctsMeansSelectedBckgVars) == 1) {
             paste0(', bckg.avg.vars = "', pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables], '"')
-          } else if(nrow(pctsMeansAllVars$pctsMeansSelectedBckgVars) > 1) {
+          } else if(!is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) && nrow(pctsMeansAllVars$pctsMeansSelectedBckgVars) > 1) {
             paste0(', bckg.avg.vars = c("', paste(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(pctsMeansAllVars$pctsMeansSelectedPVVars) == 1) {
+          if(!is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) && nrow(pctsMeansAllVars$pctsMeansSelectedPVVars) == 1) {
             paste0(', PV.root.avg = "', pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables], '"')
-          } else if(nrow(pctsMeansAllVars$pctsMeansSelectedPVVars) > 1) {
+          } else if(!is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) && nrow(pctsMeansAllVars$pctsMeansSelectedPVVars) > 1) {
             paste0(', PV.root.avg = c("', paste(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables], collapse = '", "'), '")')
           },
           if(!is.null(input$centralTendencyType) && input$centralTendencyType == "Mean") {
@@ -4756,11 +4893,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$centralTendencyType) && input$centralTendencyType == "Mode") {
             ', central.tendency = "mode"'
           },
-          if(nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 1 && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] == file.pct.means$default.weight) {
+          if(!is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) && nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 1 && !is.null(file.pct.means$default.weight) && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] == file.pct.means$default.weight) {
             NULL
-          } else if(nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 1 && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] != file.pct.means$default.weight) {
+          } else if(!is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) && nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 1 && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights && !is.null(file.pct.means$default.weight) && pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] != file.pct.means$default.weight) {
             paste0(', weight.var = "', pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables], '"')
-          } else if(nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 0) {
+          } else if(!is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) && nrow(pctsMeansAllVars$pctsMeansSelectedWeightVar) == 0) {
             NULL
           },
           if(!is.null(input$pctsMeansInclMiss) && input$pctsMeansInclMiss == TRUE) {
@@ -4788,6 +4925,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      shinyFileSave(input, "savePctsMeansSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxPctsMeans()
+        fileinfo.pcts.means <- parseSavePath(available.volumes, input$savePctsMeansSyntax)
+        if(nrow(fileinfo.pcts.means) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.pcts.means$datapath)
+        }
+      })
+      output$copyPctsMeansSyntax <- renderUI({
+        rclipButton(inputId = "copyPctsMeansSyntax", label = "Copy syntax", clipText = syntaxPctsMeans(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$pctsMeansSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedSplitVars, pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars))) >= 1) {
           syntaxPctsMeans()
@@ -4810,14 +4958,19 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       observe({
-        if(is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
-           is.null(file.pct.means$loaded) ||
-           any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
-           is.null(file.pct.means$default.weight) ||
-           length(file.pct.means$default.weight) == 0) {
+        if(
+          is.null(file.pct.means$loaded) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) ||
+          any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+          is.null(file.pct.means$default.weight) ||
+          length(file.pct.means$default.weight) == 0
+        ) {
           hide("pctsMeansShortcut")
           hide("pctsMeansChooseOutFile")
           hide("pctsMeansOpenOutput")
@@ -4826,13 +4979,19 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("pctsMeansExecBtnHead")
           hide("execPctsMeans")
           hide("consolePctsMeans")
-        } else if (!is.null(file.pct.means$loaded) ||
-                   all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-                   all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-                   all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-                   all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
-                   !is.null(file.pct.means$default.weight) ||
-                   length(file.pct.means$default.weight) != 0) {
+        } else if(
+          !is.null(file.pct.means$loaded) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) ||
+          all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+          !is.null(file.pct.means$default.weight) ||
+          length(file.pct.means$default.weight) != 0
+        ) {
           show("pctsMeansShortcut")
           show("pctsMeansChooseOutFile")
           show("pctsMeansOpenOutput")
@@ -4881,26 +5040,46 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("pctsMeansArrowSelWeightVarsLeft")
           show("pctsMeansWeightVar")
         }
-        if(nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) == 0 ||
-           is.null(file.pct.means$loaded) ||
-           any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-           any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
-           is.null(file.pct.means$default.weight) ||
-           length(file.pct.means$default.weight) == 0) {
+        if(
+          is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) ||
+          is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) ||
+          nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) == 0 ||
+          is.null(file.pct.means$loaded) ||
+          any(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          any(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+          is.null(file.pct.means$default.weight) ||
+          length(file.pct.means$default.weight) == 0) {
           hide("centralTendencyType")
           hide("centralTendencyTypeExpl")
-        } else if(nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) > 0 ||
-                  all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
-                  all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-                  all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
-                  all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
-                  !is.null(file.pct.means$default.weight) ||
-                  length(file.pct.means$default.weight) != 0
+        } else if(
+          !is.null(pctsMeansAllVars$pctsMeansSelectedPVVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedBckgVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedSplitVars) ||
+          !is.null(pctsMeansAllVars$pctsMeansSelectedWeightVar) ||
+          nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedPVVars, pctsMeansAllVars$pctsMeansSelectedBckgVars), fill = TRUE)) > 0 ||
+          all(pctsMeansAllVars$pctsMeansSelectedPVVars[ , Variables] %in% file.pct.means$PV.sets == TRUE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedSplitVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedBckgVars[ , Variables] %in% file.pct.means$PV.sets == FALSE) ||
+          all(pctsMeansAllVars$pctsMeansSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+          !is.null(file.pct.means$default.weight) ||
+          length(file.pct.means$default.weight) != 0
         ) {
           show("centralTendencyType")
           show("centralTendencyTypeExpl")
+        }
+        if(
+          is.null(file.pct.means$loaded) ||
+          length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 0
+        ) {
+          hide("savePctsMeansSyntax")
+          hide("copyPctsMeansSyntax")
+        } else {
+          show("savePctsMeansSyntax")
+          show("copyPctsMeansSyntax")
         }
       })
     }
@@ -4926,6 +5105,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1Prctls <- renderText("Percentiles")
   hide("prctlsChooseOutFile")
+  hide("savePrctlstSyntax")
+  hide("copyPrctlstSyntax")
   output$prctlsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.prctls <- reactiveValues(loaded = NULL, is.lsa.data = NULL, vars.classes = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, prctls.values = "5 25 50 75 95", prctls.syntax = NULL)
   shinyFileChoose(input, "prctlsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -5438,18 +5619,18 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(nrow(prctlsAllVars$prctlsSelectedSplitVars) > 1) {
             paste0(', split.vars = c("', paste(prctlsAllVars$prctlsSelectedSplitVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(prctlsAllVars$prctlsSelectedBckgVars) == 0) {
+          if(!is.null(prctlsAllVars$prctlsSelectedBckgVars) && nrow(prctlsAllVars$prctlsSelectedBckgVars) == 0) {
             NULL
-          } else if(nrow(prctlsAllVars$prctlsSelectedBckgVars) == 1) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedBckgVars) && nrow(prctlsAllVars$prctlsSelectedBckgVars) == 1) {
             paste0(', bckg.prctls.vars = "', prctlsAllVars$prctlsSelectedBckgVars[ , Variables], '"')
-          } else if(nrow(prctlsAllVars$prctlsSelectedBckgVars) > 1) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedBckgVars) && nrow(prctlsAllVars$prctlsSelectedBckgVars) > 1) {
             paste0(', bckg.prctls.vars = c("', paste(prctlsAllVars$prctlsSelectedBckgVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(prctlsAllVars$prctlsSelectedPVVars) == 0) {
+          if(!is.null(prctlsAllVars$prctlsSelectedPVVars) && nrow(prctlsAllVars$prctlsSelectedPVVars) == 0) {
             NULL
-          } else if(nrow(prctlsAllVars$prctlsSelectedPVVars) == 1) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedPVVars) && nrow(prctlsAllVars$prctlsSelectedPVVars) == 1) {
             paste0(', PV.root.prctls = "', prctlsAllVars$prctlsSelectedPVVars[ , Variables], '"')
-          } else if(nrow(prctlsAllVars$prctlsSelectedPVVars) > 1) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedPVVars) && nrow(prctlsAllVars$prctlsSelectedPVVars) > 1) {
             paste0(', PV.root.prctls = c("', paste(prctlsAllVars$prctlsSelectedPVVars[ , Variables], collapse = '", "'), '")')
           },
           if(length(tmp.prctls.values) == 1) {
@@ -5459,11 +5640,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else {
             NULL
           },
-          if(nrow(prctlsAllVars$prctlsSelectedWeightVar) == 0) {
+          if(!is.null(prctlsAllVars$prctlsSelectedWeightVar) && nrow(prctlsAllVars$prctlsSelectedWeightVar) == 0) {
             NULL
-          } else if(nrow(prctlsAllVars$prctlsSelectedWeightVar) == 1 && prctlsAllVars$prctlsSelectedWeightVar[ , Variables] == file.prctls$default.weight) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedWeightVar) && nrow(prctlsAllVars$prctlsSelectedWeightVar) == 1 && !is.null(file.prctls$default.weight) && prctlsAllVars$prctlsSelectedWeightVar[ , Variables] == file.prctls$default.weight) {
             NULL
-          } else if(nrow(prctlsAllVars$prctlsSelectedWeightVar) == 1 && prctlsAllVars$prctlsSelectedWeightVar[ , Variables] != file.prctls$default.weight) {
+          } else if(!is.null(prctlsAllVars$prctlsSelectedWeightVar) && nrow(prctlsAllVars$prctlsSelectedWeightVar) == 1 && !is.null(file.prctls$default.weight) && prctlsAllVars$prctlsSelectedWeightVar[ , Variables] != file.prctls$default.weight) {
             paste0(', weight.var = "', prctlsAllVars$prctlsSelectedWeightVar[ , Variables], '"')
           },
           if(is.null(input$prctlsInclMiss) || input$prctlsInclMiss == FALSE) {
@@ -5497,6 +5678,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      shinyFileSave(input, "savePrctlstSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxPrctls()
+        fileinfo.prctls <- parseSavePath(available.volumes, input$savePrctlsSyntax)
+        if(nrow(fileinfo.prctls) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.prctls$datapath)
+        }
+      })
+      output$copyPrctlsSyntax <- renderUI({
+        rclipButton(inputId = "copyPrctlsSyntax", label = "Copy syntax", clipText = syntaxPrctls(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$prctlsSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedPVVars, prctlsAllVars$prctlsSelectedBckgVars))) >= 1) {
           syntaxPrctls()
@@ -5519,18 +5711,55 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
       })
       observe({
-        if(is.null(file.prctls$loaded) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || is.null(file.prctls$default.weight) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || any(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
+        if(
+          is.null(file.prctls$loaded) ||
+          is.null(prctlsAllVars$prctlsSelectedBckgVars) ||
+          is.null(prctlsAllVars$prctlsSelectedPVVars) ||
+          nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 ||
+          any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          is.null(file.prctls$default.weight) ||
+          any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+          any(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")
+        ) {
           hide("prctlsValuesExpl")
           hide("prctlsValues")
           hide("prctlsValuesReset")
           hide("prctlsWarnMoreVars")
-        } else if(!is.null(file.prctls$loaded) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0 || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || !is.null(file.prctls$default.weight) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || all(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
+        } else if(
+          !is.null(file.prctls$loaded) ||
+          !is.null(prctlsAllVars$prctlsSelectedBckgVars) ||
+          !is.null(prctlsAllVars$prctlsSelectedPVVars) ||
+          nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0 ||
+          any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          !is.null(file.prctls$default.weight) ||
+          any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+          all(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")
+        ) {
           show("prctlsValuesExpl")
           show("prctlsValues")
           show("prctlsValuesReset")
           show("prctlsWarnMoreVars")
         }
-        if(is.null(file.prctls$loaded) || is.null(prctlsAllVars$prctlsSelectedPVVars) || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || is.null(prctlsAllVars$prctlsSelectedSplitVars) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || is.null(prctlsAllVars$prctlsSelectedWeightVar) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 || input$prctlsValues == "" || prctls.not.numbers() == TRUE || prctls.out.of.bounds() == TRUE || any(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
+        if(
+          is.null(file.prctls$loaded) ||
+          is.null(prctlsAllVars$prctlsSelectedBckgVars) ||
+          is.null(prctlsAllVars$prctlsSelectedPVVars) ||
+          any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          is.null(prctlsAllVars$prctlsSelectedSplitVars) ||
+          any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          is.null(prctlsAllVars$prctlsSelectedWeightVar) ||
+          any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+          nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 ||
+          input$prctlsValues == "" ||
+          prctls.not.numbers() == TRUE ||
+          prctls.out.of.bounds() == TRUE ||
+          any(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")
+        ) {
           hide("prctlsShortcut")
           hide("prctlsGraphs")
           hide("prctlsChooseOutFile")
@@ -5540,7 +5769,20 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("prctlsExecBtnHead")
           hide("execPrctls")
           hide("consolePrctls")
-        } else if (!is.null(file.prctls$loaded) || any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == TRUE) || any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == FALSE) || any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) || nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0 || input$prctlsValues != "" || prctls.not.numbers() == FALSE || prctls.out.of.bounds() == FALSE || all(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")) {
+        } else if(
+          !is.null(file.prctls$loaded) ||
+          !is.null(prctlsAllVars$prctlsSelectedBckgVars) ||
+          !is.null(prctlsAllVars$prctlsSelectedPVVars) ||
+          any(prctlsAllVars$prctlsSelectedPVVars[ , Variables] %in% file.prctls$PV.sets == TRUE) ||
+          any(prctlsAllVars$prctlsSelectedSplitVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          any(prctlsAllVars$prctlsSelectedBckgVars[ , Variables] %in% file.prctls$PV.sets == FALSE) ||
+          any(prctlsAllVars$prctlsSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+          nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0 ||
+          input$prctlsValues != "" ||
+          prctls.not.numbers() == FALSE ||
+          prctls.out.of.bounds() == FALSE ||
+          all(unlist(file.prctls$vars.classes[prctlsAllVars$prctlsSelectedBckgVars[ , Variables]]) != "numeric")
+        ) {
           show("prctlsShortcut")
           show("prctlsGraphs")
           show("prctlsChooseOutFile")
@@ -5590,6 +5832,19 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("prctlsArrowSelWeightVarsLeft")
           show("prctlsWeightVar")
         }
+        if(
+          is.null(file.prctls$loaded) ||
+          is.null(prctlsAllVars$prctlsSelectedBckgVars) ||
+          is.null(prctlsAllVars$prctlsSelectedPVVars) ||
+          !is.null(prctlsAllVars$prctlsSelectedBckgVars) & !is.null(prctlsAllVars$prctlsSelectedPVVars) & nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == 0 ||
+          length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 0
+        ) {
+          hide("savePrctlstSyntax")
+          hide("copyPrctlsSyntax")
+        } else {
+          show("savePrctlstSyntax")
+          show("copyPrctlsSyntax")
+        }
       })
     }
   })
@@ -5614,6 +5869,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1Bench <- renderText("Benchmarks")
   hide("benchChooseOutFile")
+  hide("saveBenchSyntax")
+  hide("copyBenchSyntax")
   output$benchIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.bench <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, bench.values = NULL, bench.syntax = NULL)
   shinyFileChoose(input, "benchChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -6222,47 +6479,47 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         tmp.bench.values <- unlist(str_split(string = trimws(input$benchValues), pattern = "[[:space:]]+"))
         file.bench$bench.syntax <- paste0(
           paste0('lsa.bench(data.file = "', parseFilePaths(available.volumes, input$benchChooseSrcFile)$datapath, '"'),
-          if(nrow(benchAllVars$benchSelectedSplitVars) == 1) {
+          if(!is.null(benchAllVars$benchSelectedSplitVars) && nrow(benchAllVars$benchSelectedSplitVars) == 1) {
             paste0(', split.vars = "', benchAllVars$benchSelectedSplitVars[ , Variables], '"')
-          } else if(nrow(benchAllVars$benchSelectedSplitVars) > 1) {
+          } else if(!is.null(benchAllVars$benchSelectedSplitVars) && nrow(benchAllVars$benchSelectedSplitVars) > 1) {
             paste0(', split.vars = c("', paste(benchAllVars$benchSelectedSplitVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(benchAllVars$benchSelectedPVVars) == 0) {
+          if(!is.null(benchAllVars$benchSelectedPVVars) && nrow(benchAllVars$benchSelectedPVVars) == 0) {
             NULL
-          } else if(nrow(benchAllVars$benchSelectedPVVars) == 1) {
+          } else if(!is.null(benchAllVars$benchSelectedPVVars) && nrow(benchAllVars$benchSelectedPVVars) == 1) {
             paste0(', PV.root.bench = "', benchAllVars$benchSelectedPVVars[ , Variables], '"')
-          } else if(nrow(benchAllVars$benchSelectedPVVars) > 1) {
+          } else if(!is.null(benchAllVars$benchSelectedPVVars) && nrow(benchAllVars$benchSelectedPVVars) > 1) {
             paste0(', PV.root.bench = c("', paste(benchAllVars$benchSelectedPVVars[ , Variables], collapse = '", "'), '")')
           },
-          if(length(tmp.bench.values) == 1) {
+          if(exists("tmp.bench.values") && length(tmp.bench.values) == 1) {
             paste0(', bench.vals = ', gsub(pattern = "[[:space:]]+", replacement = "", x = tmp.bench.values))
-          } else if(length(tmp.bench.values) > 1) {
+          } else if(exists("tmp.bench.values") && length(tmp.bench.values) > 1) {
             paste0(', bench.vals = c(', paste(tmp.bench.values, collapse = ', '), ')')
           } else {
             NULL
           },
-          if(input$benchType == "Discrete") {
+          if(!is.null(input$benchType) && input$benchType == "Discrete") {
             NULL
-          } else if(input$benchType == "Cumulative") {
+          } else if(!is.null(input$benchType) && input$benchType == "Cumulative") {
             paste0(', bench.type = "cumulative"')
           },
-          if(input$benchComputeWithin == FALSE) {
+          if(!is.null(input$benchComputeWithin) && input$benchComputeWithin == FALSE) {
             NULL
-          } else if(input$benchComputeWithin == TRUE) {
+          } else if(!is.null(input$benchComputeWithin) && input$benchComputeWithin == TRUE) {
             ' , pcts.within = TRUE'
           },
-          if(nrow(benchAllVars$benchSelectedBckgVars) == 0) {
+          if(!is.null(benchAllVars$benchSelectedBckgVars) && nrow(benchAllVars$benchSelectedBckgVars) == 0) {
             NULL
-          } else if(nrow(benchAllVars$benchSelectedBckgVars) == 1) {
+          } else if(!is.null(benchAllVars$benchSelectedBckgVars) && nrow(benchAllVars$benchSelectedBckgVars) == 1) {
             paste0(', bckg.var = "', benchAllVars$benchSelectedBckgVars[ , Variables], '"')
-          } else if(nrow(benchAllVars$benchSelectedBckgVars) > 1) {
+          } else if(!is.null(benchAllVars$benchSelectedBckgVars) && nrow(benchAllVars$benchSelectedBckgVars) > 1) {
             paste0(', bckg.var = c("', paste(benchAllVars$benchSelectedBckgVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(benchAllVars$benchSelectedWeightVar) == 0) {
+          if(!is.null(benchAllVars$benchSelectedWeightVar) && nrow(benchAllVars$benchSelectedWeightVar) == 0) {
             NULL
-          } else if(nrow(benchAllVars$benchSelectedWeightVar) == 1 && benchAllVars$benchSelectedWeightVar[ , Variables] == file.bench$default.weight) {
+          } else if(!is.null(benchAllVars$benchSelectedWeightVar) && nrow(benchAllVars$benchSelectedWeightVar) == 1 && benchAllVars$benchSelectedWeightVar[ , Variables] == file.bench$default.weight) {
             NULL
-          } else if(nrow(benchAllVars$benchSelectedWeightVar) == 1 && benchAllVars$benchSelectedWeightVar[ , Variables] != file.bench$default.weight) {
+          } else if(!is.null(benchAllVars$benchSelectedWeightVar) && nrow(benchAllVars$benchSelectedWeightVar) == 1 && benchAllVars$benchSelectedWeightVar[ , Variables] != file.bench$default.weight) {
             paste0(', weight.var = "', benchAllVars$benchSelectedWeightVar[ , Variables], '"')
           },
           if(is.null(input$benchInclMiss) || input$benchInclMiss == FALSE) {
@@ -6295,6 +6552,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else {
           return(NULL)
         }
+      })
+      shinyFileSave(input, "saveBenchSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxBench()
+        fileinfo.bench <- parseSavePath(available.volumes, input$saveBenchSyntax)
+        if(nrow(fileinfo.bench) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.bench$datapath)
+        }
+      })
+      output$copyBenchSyntax <- renderUI({
+        rclipButton(inputId = "copyBenchSyntax", label = "Copy syntax", clipText = syntaxBench(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
       output$benchSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(benchAllVars$benchSelectedPVVars, benchAllVars$benchSelectedBckgVars))) >= 1) {
@@ -6397,6 +6665,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("benchArrowSelWeightVarsLeft")
           show("benchWeightVar")
         }
+        if(
+          is.null(benchAllVars$benchSelectedPVVars) ||
+          nrow(benchAllVars$benchSelectedPVVars) == 0 ||
+          length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveBenchSyntax")
+          hide("copyBenchSyntax")
+        } else {
+          show("saveBenchSyntax")
+          show("copyBenchSyntax")
+        }
       })
     }
   })
@@ -6421,6 +6700,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1CrossTabs <- renderText("Crosstabulations")
   hide("crossTabsChooseOutFile")
+  hide("saveCrosstabsSyntax")
+  hide("copyCrosstabsSyntax")
   output$crossTabsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.crosstabs <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, crosstabs.syntax = NULL)
   shinyFileChoose(input, "crossTabsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -6834,6 +7115,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "crossTabsShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
+      output$crossTabsGraphs <- renderUI({
+        if(!is.null(file.crosstabs$loaded)) {
+          checkboxInput(inputId = "crossTabsGraphs", label = "Produce graphs", value = FALSE, width = "350px")
+        }
+      })
       shinyFileSave(input, "crossTabsChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       output$crossTabsOpenOutput <- renderUI({
         if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) > 0) {
@@ -6848,17 +7134,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(length(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables]) > 1) {
             paste0('split.vars = c("', paste(crossTabsAllVars$crossTabsSelectedSplitVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 1) {
+          if(!is.null(crossTabsAllVars$crossTabsSelectedBckgRowVar) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 1) {
             paste0(', bckg.row.var = "', crossTabsAllVars$crossTabsSelectedBckgRowVar[ , Variables], '"')
           },
-          if(nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 1) {
+          if(!is.null(crossTabsAllVars$crossTabsSelectedBckgColVar) && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 1) {
             paste0(', bckg.col.var = "', crossTabsAllVars$crossTabsSelectedBckgColVar[ , Variables], '"')
           },
-          if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] == file.crosstabs$default.weight) {
+          if(!is.null(crossTabsAllVars$crossTabsSelectedWeightVar) && nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && !is.null(file.crosstabs$default.weight) && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] == file.crosstabs$default.weight) {
             NULL
-          } else if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] != file.crosstabs$default.weight) {
+          } else if(!is.null(crossTabsAllVars$crossTabsSelectedWeightVar) && nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 1 && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] %in% all.studies.available.weights && !is.null(file.crosstabs$default.weight) && crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables] != file.crosstabs$default.weight) {
             paste0(', weight.var = "', crossTabsAllVars$crossTabsSelectedWeightVar[ , Variables], '"')
-          } else if(nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 0) {
+          } else if(!is.null(crossTabsAllVars$crossTabsSelectedWeightVar) && nrow(crossTabsAllVars$crossTabsSelectedWeightVar) == 0) {
             NULL
           },
           if(!is.null(input$crossTabsInclMiss) && input$crossTabsInclMiss == TRUE) {
@@ -6875,6 +7161,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           },
           if(!is.null(input$crossTabsTotPcts) && input$crossTabsTotPcts == TRUE) {
             ", total.pcts = TRUE"
+          },
+          if(!is.null(input$crossTabsGraphs) && input$crossTabsGraphs == TRUE) {
+            ", graphs = TRUE"
           },
           if(!is.null(input$crossTabsShortcut) && input$crossTabsShortcut == TRUE) {
             ", shortcut = TRUE"
@@ -6894,6 +7183,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else {
           return(NULL)
         }
+      })
+      shinyFileSave(input, "saveCrosstabsSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxCrossTabs()
+        fileinfo.crosstabs <- parseSavePath(available.volumes, input$saveCrosstabsSyntax)
+        if(nrow(fileinfo.crosstabs) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.crosstabs$datapath)
+        }
+      })
+      output$copyCrosstabsSyntax <- renderUI({
+        rclipButton(inputId = "copyCrosstabstSyntax", label = "Copy syntax", clipText = syntaxCrossTabs(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
       output$crossTabsSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(crossTabsAllVars$crossTabsSelectedBckgRowVar, crossTabsAllVars$crossTabsSelectedBckgColVar))) >= 1) {
@@ -6923,6 +7223,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("crossTabsColPcts")
           hide("crossTabsTotPcts")
           hide("crossTabsShortcut")
+          hide("crossTabsGraphs")
           hide("crossTabsChooseOutFile")
           hide("crossTabsOpenOutput")
           hide("crossTabsSyntaxHead")
@@ -6936,6 +7237,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("crossTabsColPcts")
           show("crossTabsTotPcts")
           show("crossTabsShortcut")
+          show("crossTabsGraphs")
           show("crossTabsChooseOutFile")
           show("crossTabsOpenOutput")
           show("crossTabsSyntaxHead")
@@ -6971,6 +7273,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("crossTabsArrowSelWeightVarLeft")
           show("crossTabsWeightVar")
         }
+        if(
+          is.null(crossTabsAllVars$crossTabsSelectedBckgRowVar) || nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 0 ||
+          is.null(crossTabsAllVars$crossTabsSelectedBckgColVar) || nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 0 ||
+          length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveCrosstabsSyntax")
+          hide("copyCrosstabsSyntax")
+        } else {
+          show("saveCrosstabsSyntax")
+          show("copyCrosstabsSyntax")
+        }
       })
     }
   })
@@ -6995,6 +7308,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$h1Corr <- renderText("Correlations")
   hide("corrChooseOutFile")
+  hide("saveCorrSyntax")
+  hide("copyCorrSyntax")
   output$corrIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.corr <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, default.weight = NULL, corr.syntax = NULL)
   shinyFileChoose(input, "corrChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
@@ -7451,14 +7766,14 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(length(corrAllVars$corrSelectedSplitVars[ , Variables]) > 1) {
             paste0('split.vars = c("', paste(corrAllVars$corrSelectedSplitVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(corrAllVars$corrSelectedBckgVars) == 1) {
+          if(!is.null(corrAllVars$corrSelectedBckgVars) && nrow(corrAllVars$corrSelectedBckgVars) == 1) {
             paste0(', bckg.corr.vars = "', corrAllVars$corrSelectedBckgVars[ , Variables], '"')
-          } else if(nrow(corrAllVars$corrSelectedBckgVars) > 1) {
+          } else if(!is.null(corrAllVars$corrSelectedBckgVars) && nrow(corrAllVars$corrSelectedBckgVars) > 1) {
             paste0(', bckg.corr.vars = c("', paste(corrAllVars$corrSelectedBckgVars[ , Variables], collapse = '", "'), '")')
           },
-          if(nrow(corrAllVars$corrSelectedPVVars) == 1) {
+          if(!is.null(corrAllVars$corrSelectedPVVars) && nrow(corrAllVars$corrSelectedPVVars) == 1) {
             paste0(', PV.root.corr = "', corrAllVars$corrSelectedPVVars[ , Variables], '"')
-          } else if(nrow(corrAllVars$corrSelectedPVVars) > 1) {
+          } else if(!is.null(corrAllVars$corrSelectedPVVars) && nrow(corrAllVars$corrSelectedPVVars) > 1) {
             paste0(', PV.root.corr = c("', paste(corrAllVars$corrSelectedPVVars[ , Variables], collapse = '", "'), '")')
           },
           if(!is.null(input$corrType) && input$corrType == "Pearson") {
@@ -7466,11 +7781,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$corrType) && input$corrType == "Spearman") {
             ', corr.type = "Spearman"'
           },
-          if(nrow(corrAllVars$corrSelectedWeightVar) == 1 && corrAllVars$corrSelectedWeightVar[ , Variables] == file.corr$default.weight) {
+          if(!is.null(corrAllVars$corrSelectedWeightVar) && nrow(corrAllVars$corrSelectedWeightVar) == 1 && !is.null(file.corr$default.weight) && corrAllVars$corrSelectedWeightVar[ , Variables] == file.corr$default.weight) {
             NULL
-          } else if(nrow(corrAllVars$corrSelectedWeightVar) == 1 && corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights && corrAllVars$corrSelectedWeightVar[ , Variables] != file.corr$default.weight) {
+          } else if(!is.null(corrAllVars$corrSelectedWeightVar) && nrow(corrAllVars$corrSelectedWeightVar) == 1 && corrAllVars$corrSelectedWeightVar[ , Variables] %in% all.studies.available.weights && !is.null(file.corr$default.weight) && corrAllVars$corrSelectedWeightVar[ , Variables] != file.corr$default.weight) {
             paste0(', weight.var = "', corrAllVars$corrSelectedWeightVar[ , Variables], '"')
-          } else if(nrow(corrAllVars$corrSelectedWeightVar) == 0) {
+          } else if(!is.null(corrAllVars$corrSelectedWeightVar) && nrow(corrAllVars$corrSelectedWeightVar) == 0) {
             NULL
           },
           if(!is.null(input$corrInclMiss) && input$corrInclMiss == TRUE) {
@@ -7494,6 +7809,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else {
           return(NULL)
         }
+      })
+      shinyFileSave(input, "saveCorrSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxCorr()
+        fileinfo.corr <- parseSavePath(available.volumes, input$saveCorrSyntax)
+        if(nrow(fileinfo.corr) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.corr$datapath)
+        }
+      })
+      output$copyCorrSyntax <- renderUI({
+        rclipButton(inputId = "copyCrrtSyntax", label = "Copy syntax", clipText = syntaxCorr(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
       output$corrSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$corrChooseOutFile)$datapath) == 1 && nrow(rbindlist(l = list(corrAllVars$corrSelectedPVVars, corrAllVars$corrSelectedBckgVars))) >= 2) {
@@ -7575,6 +7901,16 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("corrArrowSelWeightVarsLeft")
           show("corrWeightVar")
         }
+        if(
+          nrow(rbindlist(l = list(corrAllVars$corrSelectedBckgVars, corrAllVars$corrSelectedPVVars))) == 0 ||
+          length(parseSavePath(available.volumes, input$corrChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveCorrSyntax")
+          hide("copyCorrSyntax")
+        } else {
+          show("saveCorrSyntax")
+          show("copyCorrSyntax")
+        }
       })
     }
   })
@@ -7598,6 +7934,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     session$sendCustomMessage(type = "scrollCallback", 1)
   }, ignoreInit = TRUE)
   hide("linRegChooseOutFile")
+  hide("saveLinRegSyntax")
+  hide("copyLinRegSyntax")
   output$h1LinReg <- renderText("Linear regression")
   output$linRegIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.lin.reg <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, var.levels = NULL, var.num.values = NULL, var.char.values = NULL, var.missings = NULL, var.unique.values = NULL, default.weight = NULL, lin.reg.syntax = NULL)
@@ -8277,7 +8615,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         })
       }
       linRegPossibleInteractions <- reactive({
-        if(!is.null(file.lin.reg$resp.type) && nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) > 1) {
+        if(
+          !is.null(file.lin.reg$resp.type) &&
+          !is.null(linRegAllVars$linRegSelectedIndepCatBckgVars) &&
+          !is.null(linRegAllVars$linRegSelectedIndepCntBckgVars) &&
+          !is.null(linRegAllVars$linRegSelectedIndepPVVars) &&
+          nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) > 1
+        ) {
           selected.vars <- c(linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables], linRegAllVars$linRegSelectedIndepCntBckgVars[ , Variables], linRegAllVars$linRegSelectedIndepPVVars[ , Variables])
           tmp.interactions <- transpose(as.data.table(combn(x = selected.vars, m = 2)))
           data.table(Variable1 = tmp.interactions[ , V1], Check = generate.interaction.checkboxes.lin.reg(FUN = checkboxInput, len = nrow(tmp.interactions), id = "cbox_", width = "5px"), Variable2 = tmp.interactions[ , V2])
@@ -8526,6 +8870,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      shinyFileSave(input, "saveLinRegSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxLinReg()
+        fileinfo.lin.reg <- parseSavePath(available.volumes, input$saveLinRegSyntax)
+        if(nrow(fileinfo.lin.reg) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.lin.reg$datapath)
+        }
+      })
+      output$copyLinRegSyntax <- renderUI({
+        rclipButton(inputId = "copyLinRegSyntax", label = "Copy syntax", clipText = syntaxLinReg(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$linRegSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$linRegChooseOutFile)$datapath) == 1) {
           syntaxLinReg()
@@ -8553,13 +8908,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) == 0 && nrow(rbindlist(l = list(linRegAllVars$linRegSelectedDepBckgVars, linRegAllVars$linRegSelectedDepPVVars))) > 0 ||
           nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) == 0 && nrow(rbindlist(l = list(linRegAllVars$linRegSelectedDepBckgVars, linRegAllVars$linRegSelectedDepPVVars))) == 0 ||
           is.null(file.lin.reg$loaded) ||
-          any(linRegAllVars$linRegSelectedIndepPVVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedIndepPVVars) && any(linRegAllVars$linRegSelectedIndepPVVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
           !is.null(linRegAllVars$linRegSelectedDepPVVars) && nrow(linRegAllVars$linRegSelectedDepPVVars) > 0 && any(linRegAllVars$linRegSelectedDepPVVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
-          any(linRegAllVars$linRegSelectedDepBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
-          any(linRegAllVars$linRegSelectedSplitVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
-          any(linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
-          any(linRegAllVars$linRegSelectedIndepCntBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
-          any(linRegAllVars$linRegSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedDepBckgVars) && any(linRegAllVars$linRegSelectedDepBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
+          !is.null(linRegAllVars$linRegSelectedSplitVars) && any(linRegAllVars$linRegSelectedSplitVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
+          !is.null(linRegAllVars$linRegSelectedIndepCatBckgVars) && any(linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
+          !is.null(linRegAllVars$linRegSelectedIndepCntBckgVars) && any(linRegAllVars$linRegSelectedIndepCntBckgVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
+          !is.null(linRegAllVars$linRegSelectedWeightVar) && any(linRegAllVars$linRegSelectedWeightVar[ , Variables] %in% all.studies.available.weights == FALSE) ||
           is.null(file.lin.reg$default.weight) ||
           length(file.lin.reg$default.weight) == 0) {
           hide("linRegShortcut")
@@ -8574,13 +8929,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         } else if (
           nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars))) > 0 && nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepPVVars, linRegAllVars$linRegSelectedDepPVVars))) > 0 ||
           !is.null(file.lin.reg$loaded) ||
-          any(linRegAllVars$linRegSelectedIndepPVVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
+          !is.null(inRegAllVars$linRegSelectedIndepPVVars) && any(linRegAllVars$linRegSelectedIndepPVVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
           !is.null(linRegAllVars$linRegSelectedDepPVVars) && nrow(linRegAllVars$linRegSelectedDepPVVars) > 0 && any(linRegAllVars$linRegSelectedDepPVVars[ , Variables] %in% file.lin.reg$PV.sets == TRUE) ||
-          any(linRegAllVars$linRegSelectedDepBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
-          any(linRegAllVars$linRegSelectedSplitVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
-          any(linRegAllVars$linRegSelectedCatBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
-          any(linRegAllVars$linRegSelectedCntBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
-          any(linRegAllVars$linRegSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
+          !is.null(linRegAllVars$linRegSelectedDepBckgVars) && any(linRegAllVars$linRegSelectedDepBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedSplitVars) && any(linRegAllVars$linRegSelectedSplitVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedCatBckgVars) && any(linRegAllVars$linRegSelectedCatBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedCntBckgVars) && any(linRegAllVars$linRegSelectedCntBckgVars[ , Variables] %in% file.lin.reg$PV.sets == FALSE) ||
+          !is.null(linRegAllVars$linRegSelectedWeightVar) && any(linRegAllVars$linRegSelectedWeightVar[ , Variables] %in% all.studies.available.weights == TRUE) ||
           !is.null(file.lin.reg$default.weight) ||
           length(file.lin.reg$default.weight) != 0) {
           show("linRegShortcut")
@@ -8654,6 +9009,16 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("linRegArrowSelWeightVarsLeft")
           show("linRegWeightVar")
         }
+        if(
+          nrow(rbindlist(l = list(linRegAllVars$linRegSelectedIndepCatBckgVars, linRegAllVars$linRegSelectedIndepCntBckgVars, linRegAllVars$linRegSelectedIndepPVVars))) == 0 || nrow(rbindlist(l = list(linRegAllVars$linRegSelectedDepBckgVars, linRegAllVars$linRegSelectedDepPVVars))) == 0 ||
+          length(parseSavePath(available.volumes, input$linRegChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveLinRegSyntax")
+          hide("copyLinRegSyntax")
+        } else {
+          show("saveLinRegSyntax")
+          show("copyLinRegSyntax")
+        }
       })
     }
   })
@@ -8677,6 +9042,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     session$sendCustomMessage(type = "scrollCallback", 1)
   }, ignoreInit = TRUE)
   hide("binLogRegChooseOutFile")
+  hide("saveBinLogRegSyntax")
+  hide("copyBinLogRegSyntax")
   output$h1binLogReg <- renderText("Binary logistic regression")
   output$binLogRegIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.bin.log.reg <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, PV.sets = NULL, var.levels = NULL, var.num.values = NULL, var.char.values = NULL, var.missings = NULL, var.unique.values = NULL, default.weight = NULL, bin.log.reg.syntax = NULL)
@@ -9245,7 +9612,13 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         })
       }
       binLogRegPossibleInteractions <- reactive({
-        if(!is.null(file.bin.log.reg$resp.type) && nrow(rbindlist(l = list(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars, binLogRegAllVars$binLogRegSelectedIndepCntBckgVars, binLogRegAllVars$binLogRegSelectedIndepPVVars))) > 1) {
+        if(
+          !is.null(file.bin.log.reg$resp.type) &&
+          !is.null(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars) &&
+          !is.null(binLogRegAllVars$binLogRegSelectedIndepCntBckgVars) &&
+          !is.null(binLogRegAllVars$binLogRegSelectedIndepPVVars) &&
+          nrow(rbindlist(l = list(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars, binLogRegAllVars$binLogRegSelectedIndepCntBckgVars, binLogRegAllVars$binLogRegSelectedIndepPVVars))
+          ) > 1) {
           selected.vars <- c(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables], binLogRegAllVars$binLogRegSelectedIndepCntBckgVars[ , Variables], binLogRegAllVars$binLogRegSelectedIndepPVVars[ , Variables])
           tmp.interactions <- transpose(as.data.table(combn(x = selected.vars, m = 2)))
           data.table(Variable1 = tmp.interactions[ , V1], Check = generate.interaction.checkboxes.bin.log.reg(FUN = checkboxInput, len = nrow(tmp.interactions), id = "cbox_", width = "5px"), Variable2 = tmp.interactions[ , V2])
@@ -9475,6 +9848,17 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
+      shinyFileSave(input, "saveBinLogRegSyntax", roots = available.volumes, updateFreq = 100000)
+      observe({
+        tmp.syntax <- syntaxBinLogReg()
+        fileinfo.bin.log.reg <- parseSavePath(available.volumes, input$saveBinLogRegSyntax)
+        if(nrow(fileinfo.bin.log.reg) > 0) {
+          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.bin.log.reg$datapath)
+        }
+      })
+      output$copyBinLogRegSyntax <- renderUI({
+        rclipButton(inputId = "copyBinLogRegSyntax", label = "Copy syntax", clipText = syntaxBinLogReg(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
       output$binLogRegSyntax <- renderText({
         if(length(parseSavePath(available.volumes, input$binLogRegChooseOutFile)$datapath) == 1) {
           syntaxBinLogReg()
@@ -9603,6 +9987,20 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("binLogRegArrowSelWeightVarsRight")
           show("binLogRegArrowSelWeightVarsLeft")
           show("binLogRegWeightVar")
+        }
+        if(
+          is.null(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars) ||
+          is.null(binLogRegAllVars$binLogRegSelectedIndepCntBckgVars) ||
+          is.null(binLogRegAllVars$binLogRegSelectedIndepPVVars) ||
+          is.null(binLogRegAllVars$binLogRegSelectedDepBinVars) ||
+          nrow(rbindlist(l = list(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars, binLogRegAllVars$binLogRegSelectedIndepCntBckgVars, binLogRegAllVars$binLogRegSelectedIndepPVVars))) == 0 || nrow(binLogRegAllVars$binLogRegSelectedDepBinVars) == 0 ||
+          length(parseSavePath(available.volumes, input$binLogRegChooseOutFile)$datapath) == 0
+        ) {
+          hide("saveBinLogRegSyntax")
+          hide("copyBinLogRegSyntax")
+        } else {
+          show("saveBinLogRegSyntax")
+          show("copyBinLogRegSyntax")
         }
       })
     }

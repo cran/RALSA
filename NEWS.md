@@ -1,4 +1,62 @@
-# RALSA v.1.2.0 (2022-05-04)
+# RALSA v1.3.0 (2022-07-08)
+
+This update focuses mainly on bugfixes and improvements in the GUI and its workflow, but also introduces some new features.
+
+## Bug fixes
+* All analysis functions, as well `lsa.data.diag`, `lsa.recode.vars` and `lsa.vars.dict` crash with an error message `Error in exists(all.vars(match.call())) : first argument has length > 1` when any of the arguments specifying analysis variables point to objects which contain character vectors containing them. Thanks to Rodolfo Ilizaliturri.
+
+* `lsa.prctls` - The percentiles on the x-axis are not properly added for every percentile computed. Thanks to Cecilia Bjorkhammer.
+
+* `print.lsa.data` - The custom print method for `lsa.data` blocks some common `data.table` operations.
+
+* `lsa.corr` - The function crashes when one of the countries has all missing values for one or more variables passed to the `bckg.corr.vars`. A warning when this occurs was added.
+
+* GUI with `lsa.convert.data` - When data files only from one country are available in the source folder, the quote at the end of the path passed to `inp.folder` in the syntax is not closed and the syntax cannot be executed properly. Thanks to Gasper Cankar.
+
+* GUI with `lsa.merge.data` - When data files only from one country are available in the source folder, the bracket at the end of the list passed to `file.types` is not closed and the syntax cannot be executed properly. Thanks to multiple teachers during series of workshops delivered in Slovenia.
+
+* GUI with `lsa.recode.vars` - When new variable names are defined, the table for the new variable labels still displays the old variable names, as shown below. Thanks to Cecilia Bjorkhammer.
+
+* GUI with `lsa.data.diag` - When the working data set is changed, series of errors are dropped in the R console (`missing value where TRUE/FALSE is needed`).
+
+* GUI with `lsa.pcts.means` - When the working data set is changed, an error is dropped in the R console (`Error in paste0: object 'Variables' not found`) and shown in the interface.
+
+* GUI with `lsa.prctls` - When the working data set is changed, an error is dropped in the R console (`Error in if: argument is of length zero`) and shown in the interface.
+
+* GUI with `lsa.bench` - When a data set is loaded or the working data set is changed, an error is dropped in the R console (`Error in paste0: object 'Variables' not found`).
+
+* GUI with `lsa.crosstabs` - When a data set is loaded or the working data set is changed, an error is dropped in the R console (`Error in if: argument is of length zero`).
+
+* GUI with `lsa.corr` - When the working data set is changed, an error is dropped in the R console (`Error in if: argument is of length zero`) and shown in the GUI.
+
+* GUI with `lsa.lin.reg` - When the working data set is changed, errors are dropped in the R console (`Error in if: argument is of length zero` and `Warning: object 'Variables' not found`) and shown in the GUI.
+
+* GUI with `lsa.bin.log.reg` - When the working data set is changed, errors are dropped in the R console (`Error in if: argument is of length zero` and `Warning: object 'Variables' not found`).
+
+## New functionality
+* The `lsa.crosstabs` function now has the possibility to produce heatmap graphs (optional). The graphs are included in a separate sheet in the MS Excel output file if `save.output = TRUE`. If `save.output = FALSE`, the graphs are added to the list output object in memory and can be printed in R's graphic device.
+
+* All GUI tabs for data preparation and analysis functions received “Save syntax” and “Copy syntax” buttons, as suggested by Erika Majoros.
+
+## Miscellaneous
+* Further work on graphics (`lsa.crosstabs`, `lsa.bench`, `lsa.pcts.means`, `lsa.prctls`):
+
+  * All functions producing graphical representation of the results now have controlled dpi depending on the number of `split.vars` to better fit the plots and their labels in space;
+  
+  * The `lsa.prctls` function now adds facets when the number of `split.vars` is greater than two to fix the issue of dot, line and error bar positioning and overlapping on the plot and improve readability.
+
+* Multiple fixes in GUI for better workflow.
+
+* In GUI with `lsa.recode.vars` the “Old/New variable names” table was merged with the “New variable labels” table. This change was provoked by fixing the bug that the “New variable labels” table was still showing the old variable names, as discovered by Cecilia Björkhammer. Now the workflow is more intuitive.
+
+* Improved documentation.
+
+
+
+
+
+# RALSA v1.2.0 (2022-05-04)
+
 ## Bug fixes
 * `lsa.pcts.means` - when many split variables are added, in some countries some of the rows in the estimates are repeated multiple times by the categories of the split variables.
 
@@ -18,7 +76,8 @@
 
 
 
-# RALSA v.1.1.5 (2022-03-30)
+# RALSA v1.1.5 (2022-03-30)
+
 ## Bug fixes
 * GUI with `lsa.pcts.means` does not show the syntax when only splitting variables are chosen for the analysis and the GUI freezes when the analysis is ran.
 
@@ -38,7 +97,8 @@
 
 
 
-# RALSA v.1.1.0 (2022-02-04)
+# RALSA v1.1.0 (2022-02-04)
+
 ## Bug fixes
 * All analysis functions. When "IDCNTRY" is added explicitly to the list of `split.vars` and `include.missing = TRUE`, the function crashes with the following error message. Thanks to Laura Ringiene.
 
@@ -77,8 +137,9 @@
 
 
 
-# RALSA v.1.0.2 (2021-10-21)
-This is a maintenance version fixing some bugs and removing package dependency
+# RALSA v1.0.2 (2021-10-21)
+
+This is a maintenance version fixing some bugs and removing package dependency.
 
 ## Bug fixes
 * `lsa.pcts.means` function crashes with an error message when no split variables are added and both background variables and PVs are added to compute means for. Thanks to an anonymous RALSA user.
@@ -98,8 +159,9 @@ This is a maintenance version fixing some bugs and removing package dependency
 
 
 
-# RALSA v.1.0.1 (2021-05-28)
-This is a maintenance version following the update of base R to v4.1.0 where some functions' behavior has changed and cause crashes in the analysis functions
+# RALSA v1.0.1 (2021-05-28)
+
+This is a maintenance version following the update of base R to v4.1.0 where some functions' behavior has changed and cause crashes in the analysis functions.
 
 ## Bug fixes
 * All analysis functions. Some functions in base R were updated and their behavior has changed causing crashes in the analysis functions with `first argument has length \> 1` error messages.
@@ -117,7 +179,8 @@ This is a maintenance version following the update of base R to v4.1.0 where som
 
 
 
-# RALSA v.1.0.0 (2021-04-28)
+# RALSA v1.0.0 (2021-04-28)
+
 ## Bug fixes
 * All analysis functions. Any analysis function crashes when TALIS 3S data is used and the weight variable is specified explicitly.
 
@@ -149,7 +212,7 @@ This is a maintenance version following the update of base R to v4.1.0 where som
 
 
 
-# RALSA v.0.90.3 (2021-03-15)
+# RALSA v0.90.3 (2021-03-15)
 
 ## Bug fixes
 * `lsa.convert.data` function. The function crashes when the different cycles of the study change the case of the file names and their extensions. Thanks to Yuan-Ling (Linda) Liaw.
@@ -176,7 +239,7 @@ This is a maintenance version following the update of base R to v4.1.0 where som
 
 
 
-# RALSA v.0.90.2 (2021-01-02)
+# RALSA v0.90.2 (2021-01-02)
 
 ## Bug fixes
 * `lsa.convert.data` function. Unrecognized characters in factor levels are now fixed. Such were, for example the levels of the number of books variable in PIRLS 2016 and other cycles which displayed unrecognized characters instead of instead of "-".
@@ -205,7 +268,7 @@ PISA for Development is now supported, as requested by David Joseph Rutkowski.
 
 
 
-# RALSA v.0.90.1 (2020-10-26)
+# RALSA v0.90.1 (2020-10-26)
 
 The first version of the R Analyzer for Large-Scale Assessments (`RALSA`) is released. `RALSA` targets both the experienced R users, as well as those less technical skills. Thus, along with the traditional command-line R interface, a Graphical User Interface is featured.
 
@@ -218,16 +281,27 @@ Note that this is a "first release" version, so some bugs are expected.
 Currently, `RALSA` supports the following functionality:
 
 * Prepare data for analysis
+
     * Convert data (SPSS, or text in case of PISA prior 2015)
+    
     * Merge study data files from different countries and/or respondents
+    
     * View variable properties (name, class, variable label, response categories/unique values, user-defined missing values)
+    
     * Recode variables
+    
 * Perform analyses (more analysis types will be added in future)
+    
     * Percentages of respondents in certain groups and averages on variables of interest, per group
+    
     * Percentiles of variables within groups of respondents
+    
     * Percentages of respondents reaching or surpassing benchmarks of achievement
+    
     * Correlations (Pearson or Spearman)
+    
     * Linear regression
+    
     * Binary logistic regression
 
 All data preparation and analysis functions automatically recognize the study design and apply the appropriate techniques to handle the complex sampling assessment design issues, while giving freedom to tweak the analysis (e.g. change the default weight, apply the "shortcut" method in TIMSS and PIRLS, and so on).
@@ -235,15 +309,27 @@ All data preparation and analysis functions automatically recognize the study de
 Currently, `RALSA` can work with data from all cycles of the following studies (more will be added in future):
 
 * CivED
+
 * ICCS
+
 * ICILS
+
 * RLII
+
 * PIRLS (including PIRLS Literacy and ePIRLS)
+
 * TIMSS (including TIMSS Numeracy, eTIMSS will be added with the upcoming release of TIMSS 2019)
+
 * TiPi (TIMSS and PIRLS joint study)
+
 * TIMSS Advanced
+
 * SITES
+
 * TEDS-M
+
 * PISA
+
 * TALIS
+
 * TALIS Starting Strong Survey (a.k.a. TALIS 3S)

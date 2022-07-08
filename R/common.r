@@ -311,10 +311,15 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
     } else if(length(split.vars.vector) > 2) {
       x.var <- sym("collapsed_split")
       group.var <- sym(split.vars.vector[length(split.vars.vector)])
-      color.var <- sym("collapsed_split")
+      facet.var <- split.vars.vector[length(split.vars.vector)]
     }
     tmp.prctls <- lapply(X = y.var, FUN = function(j) {
-      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var, color = !!color.var))
+      if(length(split.vars.vector) <= 2) {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var, color = !!color.var))
+      } else {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var))
+        cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - "), scales = "free_x", labeller = function(df) {list(str_wrap(string = as.character(df[ , 2]), width = 25))})
+      }
       cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
                                            width = 0.3,
                                            size = 1.3)
@@ -325,6 +330,7 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
                                    panel.grid.major = element_line(colour = "black"),
                                    panel.border = element_rect(colour = "black", fill = NA, size = 1),
                                    plot.background = element_rect(fill = "#e2e2e2"),
+                                   strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
                                    legend.background = element_rect(fill = "#e2e2e2"),
                                    legend.key = element_blank(),
                                    plot.title = element_text(hjust = 0.5))
@@ -342,7 +348,7 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
       if(length(split.vars.vector) < 2) {
         suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = gsub(pattern = "Prctl_", replacement = "P", x = unique(i[ , variable]))))
       } else {
-        suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = str_extract(string = i[ , collapsed_split], pattern = "^P[[:digit:]]+")))
+        suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = unique(str_extract(string = i[ , collapsed_split], pattern = "^P[[:digit:]]+"))))
       }
       cnt.plot <- cnt.plot + guides(color = guide_legend(title = "Legend", override.aes = list(linetype = 0, size = 3.5)))
       cnt.plot <- cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = "Percentiles", y = j)
@@ -351,7 +357,56 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
     return(tmp.prctls)
   })
 }
+produce.crosstabs.plots <- function(data.obj, split.vars.vector, row.var, col.var, name.col.var, name.row.var) {
+  x.var <- sym(col.var)
+  y.var <- sym(row.var)
+  color.var <- sym("value")
+  facet.var <- split.vars.vector[length(split.vars.vector)]
+  tmp.crosstabs <- lapply(X = data.obj, FUN = function(i) {
+    if(length(split.vars.vector) == 1) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var))
+    } else if(length(split.vars.vector) == 2) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var, group = i[ , get(split.vars.vector[length(split.vars.vector)])]))
+      cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ .)
+    } else if(length(split.vars.vector) > 2) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var, group = interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - ")))
+      cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - "), labeller = function(df) {list(str_wrap(string = as.character(df[ , 2]), width = 25))})
+    }
+    cnt.plot <- cnt.plot + geom_tile(color = "grey")
+    cnt.plot <- cnt.plot + scale_fill_gradient(low = "white", high = "red")
+    cnt.plot <- cnt.plot + ggtitle(unique(i[ , get(split.vars.vector[1])]))
+    cnt.plot <- cnt.plot + xlab(label = name.col.var)
+    cnt.plot <- cnt.plot + ylab(label = name.row.var)
+    cnt.plot <- cnt.plot + geom_text(aes(label = round(x = value, digits = 0)))
+    cnt.plot <- cnt.plot + scale_x_discrete(expand = c(0,0), position = "top", labels = str_wrap(string = i[ , get(as.character(x.var))], width = 10))
+    cnt.plot <- cnt.plot + scale_y_discrete(expand = c(0,0), labels = str_wrap(string = rev(levels(droplevels(i[ , get(as.character(y.var))]))), width = 10))
+    cnt.plot <- cnt.plot + coord_equal()
+    cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                 panel.grid.major.x = element_blank(),
+                                 panel.grid.major = element_line(colour = "black"),
+                                 panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                 plot.background = element_rect(fill = "#e2e2e2"),
+                                 strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
+                                 legend.background = element_rect(fill = "#e2e2e2"),
+                                 legend.key = element_blank(),
+                                 plot.title = element_text(hjust = 0.5))
+    cnt.plot <- cnt.plot + labs(fill="Observed\ncounts")
+  })
+  names(tmp.crosstabs) <- paste0(names(tmp.crosstabs), "_Crosstabs")
+  return(tmp.crosstabs)
+}
 save.graphs <- function(out.path) {
+  key.vars.length <- length(get(x = "key.vars", envir = parent.frame()))
+  if(key.vars.length <= 2) {
+    plot.width <- 250
+    plot.height <- 125
+  } else if(key.vars.length > 2 && key.vars.length <= 4) {
+    plot.width <- 350
+    plot.height <- 175
+  } else if(key.vars.length > 4) {
+    plot.width <- 450
+    plot.height <- 225
+  }
   if(exists("perc.graphs.list", where = parent.frame())) {
     if(is.null(out.path)) {
       out.dir.percentages <- getwd()
@@ -361,7 +416,7 @@ save.graphs <- function(out.path) {
     percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
     assign(x = "percentage.plots.files", value = percentage.plots.files, pos = parent.frame())
     write.percentage.plots.files <- function(input1, input2) {
-      ggsave(filename = as.list(input1), plot = input2, width = 250, height = 125, units = "mm", device = "png", path = out.dir.percentages)
+      ggsave(filename = as.list(input1), plot = input2, width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.percentages)
     }
     Map(write.percentage.plots.files, input1 = percentage.plots.files, input2 = get("perc.graphs.list", pos = parent.frame()))
   }
@@ -383,7 +438,7 @@ save.graphs <- function(out.path) {
         out.dir.means <- dirname(out.path)
       }
       lapply(X = 1:length(input1), FUN = function(i) {
-        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = 250, height = 125, units = "mm", device = "png", path = out.dir.means))
+        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.means))
       })
     }
     Map(write.means.plots.files, input1 = means.plots.files, input2 = get("means.graphs.list", pos = parent.frame()))
@@ -406,10 +461,23 @@ save.graphs <- function(out.path) {
         out.dir.percentiles <- dirname(out.path)
       }
       lapply(X = 1:length(input1), FUN = function(i) {
-        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = 250, height = 125, units = "mm", device = "png", path = out.dir.percentiles))
+        suppressWarnings(ggsave(filename = unlist(input1[[i]], recursive = FALSE), plot = input2[[i]], width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.percentiles))
       })
     }
     Map(write.percentiles.plots.files, input1 = percentiles.plots.files, input2 = percentiles.obj.copy)
+  }
+  if(exists("crosstabs.graphs.list", where = parent.frame())) {
+    crosstabs.obj.copy <- get("crosstabs.graphs.list", pos = parent.frame())
+    crosstabs.plots.files <- paste0(names(crosstabs.obj.copy), ".png")
+    assign(x = "crosstabs.plots.files", value = crosstabs.plots.files, pos = parent.frame())
+    if(is.null(out.path)) {
+      out.dir.crosstabs <- getwd()
+    } else {
+      out.dir.crosstabs <- dirname(out.path)
+    }
+    lapply(X = names(crosstabs.obj.copy), FUN = function(i) {
+      ggsave(filename = paste0(i, ".png"), plot = crosstabs.obj.copy[[i]], width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.crosstabs)
+    })
   }
 }
 delete.graphs <- function(out.path) {
@@ -418,10 +486,12 @@ delete.graphs <- function(out.path) {
   } else {
     out.dir.percentages <- dirname(out.path)
   }
-  percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
-  lapply(X = percentage.plots.files, FUN = function(i) {
-    file.remove(file.path(out.dir.percentages, i))
-  })
+  if(exists("perc.graphs.list", where = parent.frame())) {
+    percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
+    lapply(X = percentage.plots.files, FUN = function(i) {
+      file.remove(file.path(out.dir.percentages, i))
+    })
+  }
   if(exists("means.graphs.list", where = parent.frame())) {
     if(is.null(out.path)) {
       out.dir.means <- getwd()
@@ -449,6 +519,16 @@ delete.graphs <- function(out.path) {
     }
     lapply(X = get("percentiles.plots.files", pos = parent.frame()), FUN = function(i) {
       file.remove(file.path(out.dir.percentiles, i))
+    })
+  }
+  if(exists("crosstabs.plots.files", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.crosstabs <- getwd()
+    } else {
+      out.dir.crosstabs <- dirname(out.path)
+    }
+    lapply(X = get("crosstabs.plots.files", pos = parent.frame()), FUN = function(i) {
+      file.remove(file.path(out.dir.crosstabs, i))
     })
   }
 }
@@ -2433,14 +2513,20 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
   }
   if(!missing(add.graphs) && add.graphs == TRUE) {
     addWorksheet(wb = export.workbook, sheetName = "Graphs")
-    file.to.import <- file.path(dirname(destination.file), perc.graphs)
-    lapply(X = 1:length(file.to.import), FUN = function(i) {
-      insertImage(wb = export.workbook, sheet = "Graphs", file = file.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
-    })
+    files.to.import <- file.path(dirname(destination.file), perc.graphs)
+    if(length(files.to.import) > 0) {
+      lapply(X = 1:length(files.to.import), FUN = function(i) {
+        insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
+      })
+    }
     if(!is.null(non.perc.graphs)) {
       files.to.import <- file.path(dirname(destination.file), unlist(non.perc.graphs))
       lapply(X = 1:length(files.to.import), FUN = function(i) {
-        insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 13)
+        if(length(grep(pattern = "_Crosstab", x = files.to.import[i])) == 0) {
+          insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 13)
+        } else {
+          insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 1)
+        }
       })
     }
   }
@@ -2479,8 +2565,9 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
   }
 }
 
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# Global objects
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Objects from global
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

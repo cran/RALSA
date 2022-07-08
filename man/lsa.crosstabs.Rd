@@ -17,6 +17,7 @@ lsa.crosstabs(
   weight.var,
   include.missing = FALSE,
   shortcut = FALSE,
+  graphs = FALSE,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -69,6 +70,8 @@ applied? The default (\code{FALSE}) applies the "full" design when
 computing the variance components and the standard errors of the
 estimates.}
 
+\item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
 
@@ -82,7 +85,9 @@ including the file name. If omitted, a file with a default file name
 installed on the computer. Ignored if \code{save.output = FALSE}.}
 }
 \value{
-If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+
+If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -105,6 +110,7 @@ The second sheet contains some additional information related to the analysis pe
 \item Statistics - contains the names of the different statistics types: chi-squares, degrees of freedom (sample and design), and p-values.
 \item Value - the estimated values for the statistics from above.
 }
+
 The third sheet contains some additional information related to the analysis per country in the following columns:
 \itemize{
 \item DATA - used \code{data.file} or \code{data.object}.
@@ -121,6 +127,10 @@ The third sheet contains some additional information related to the analysis per
 }
 
 The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+
+If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+
+If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 }
 \description{
 \code{lsa.crosstabs} computes two-way tables and estimates the Rao-Scott first- and second-order adjusted chi-square.
@@ -135,6 +145,8 @@ Only two (row and column) categorical variables can be provided. The function al
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017).
+
+If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together.
 
 The function also computes chi-square statistics with Rao-Scott first- and second-order design corrections because of the clustering in complex survey designs. For more details, see Rao & Scott (1984, 1987) and Skinner (2019).
 }

@@ -163,6 +163,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
+
 lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -205,7 +206,7 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    if(!exists(all.vars(match.call()))) {
+    if(!exists(all.vars(as.list(match.call())[["data.object"]]))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     data <- copy(data.object)

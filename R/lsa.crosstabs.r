@@ -36,6 +36,7 @@
 #'                        applied? The default (\code{FALSE}) applies the "full" design when
 #'                        computing the variance components and the standard errors of the
 #'                        estimates.
+#' @param graphs          Logical, shall graphs be produced? Default is \code{FALSE}. See details.
 #' @param save.output     Logical, shall the output be saved in MS Excel file (default) or not
 #'                        (printed to the console or assigned to an object).
 #' @param output.file     If \code{save.output = TRUE} (default), full path to the output file
@@ -57,10 +58,14 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017).
 #'
+#' If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together.
+#'
 #' The function also computes chi-square statistics with Rao-Scott first- and second-order design corrections because of the clustering in complex survey designs. For more details, see Rao & Scott (1984, 1987) and Skinner (2019).
 #'
 #' @return
-#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
+#' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
+#'
+#' If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which can be opened in any spreadsheet program), as specified with the full path in the \code{output.file}. If the argument is missing, an Excel file with the generic file name "Analysis.xlsx" will be saved in the working directory (\code{getwd()}). The workbook contains four spreadsheets. The first one ("Estimates") contains a table with the results by country and the final part of the table contains averaged results from all countries' statistics. The following columns can be found in the table, depending on the specification of the analysis:
 #'
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
@@ -83,6 +88,7 @@
 #'   \item Statistics - contains the names of the different statistics types: chi-squares, degrees of freedom (sample and design), and p-values.
 #'   \item Value - the estimated values for the statistics from above.
 #' }
+#'
 #' The third sheet contains some additional information related to the analysis per country in the following columns:
 #' \itemize{
 #'   \item DATA - used \code{data.file} or \code{data.object}.
@@ -99,6 +105,10 @@
 #' }
 #'
 #' The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+#'
+#' If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
+#'
+#' If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 #'
 #' @examples
 #' # Compute two-way table between student sex and how much they proud they are proud to go to
@@ -126,7 +136,7 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 
-lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg.col.var, expected.cnts = TRUE, row.pcts = FALSE, column.pcts = FALSE, total.pcts = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg.col.var, expected.cnts = TRUE, row.pcts = FALSE, column.pcts = FALSE, total.pcts = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -148,7 +158,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     if(length(all.vars(match.call())) == 0) {
       stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
     }
-    if(!exists(all.vars(match.call()))) {
+    if(!exists(all.vars(as.list(match.call())[["data.object"]]))) {
       stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     data <- copy(data.object)
@@ -493,7 +503,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     ptm.add.table.average <- proc.time()
     estimates <- estimates[!is.na(Type), ]
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, vars.list[["bckg.row.var"]], "Type"), data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
+    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
     SE.cols.num.pos <- grep(pattern = "Crosstab_SE_", x = colnames(estimates))
     SE.cols <- grep(pattern = "Crosstab_SE_", x = colnames(estimates), value = TRUE)
     setnames(x = estimates, old = SE.cols, new = paste0(SE.cols, "_SE"))
@@ -511,15 +521,80 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     if(!is.null(warnings.collector[["insufficient.cases"]])) {
       warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the Rao-Scott first- and second-order chi-square adjustments: ', paste(warnings.collector[["insufficient.cases"]], collapse = ", "), '.\n These split combinations were removed and the statistics for them are not to be found in the output.')
     }
-    message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"), "\n")
+    message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"))
     warnings.collector[["insufficient.cases"]] <- Filter(Negate(is.null), warnings.collector[["insufficient.cases"]])
+    if(isFALSE(graphs)) {
+      message("")
+    }
+    if(isTRUE(graphs)) {
+      ptm.add.graphs <- proc.time()
+      graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average" & get(vars.list[["bckg.row.var"]]) != "Total" & Type == "Observed count", mget(grep(pattern = paste0("^n_Cases$|^Sum_|^Percentages_|^Total$|^", paste0("^", vars.list[["bckg.col.var"]], ".+_SE"), "|^Total_SE$"), x = colnames(estimates), value = TRUE, invert = TRUE))])
+      graphs.object[ , Type := NULL]
+      old.graph.colnames <- grep(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), x = colnames(graphs.object), value = TRUE)
+      new.graph.colnames <- gsub(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), replacement = "", x = old.graph.colnames)
+      new.graph.colnames <- gsub(pattern = "\\_", replacement = " ", x = new.graph.colnames)
+      setnames(x = graphs.object, old = old.graph.colnames, new = new.graph.colnames)
+      graphs.object <- melt(data = graphs.object, id.vars = c(key.vars, vars.list[["bckg.row.var"]]))
+      setkeyv(x = graphs.object, cols = c(key.vars, vars.list[["bckg.row.var"]]))
+      if(length(key.vars) > 1) {
+        graphs.object[ , key.vars[2:length(key.vars)] := lapply(names(.SD), function(i) {
+          factor(x = get(i), labels = str_wrap(paste0("(", i, ") ", levels(droplevels(get(i)))), width = 30))
+        }), .SDcols = key.vars[2:length(key.vars)]]
+      }
+      graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
+      crosstabs.graphs.list <- produce.crosstabs.plots(data.obj = graphs.object, row.var = vars.list[["bckg.row.var"]], split.vars.vector = key.vars, col.var = "variable", name.col.var = vars.list[["bckg.col.var"]], name.row.var = vars.list[["bckg.row.var"]])
+      if(length(key.vars) == 1) {
+        graphs.object <- rbindlist(l = graphs.object)
+        x.var <- sym("variable")
+        y.var <- sym(vars.list[["bckg.row.var"]])
+        color.var <- sym("value")
+        facet.var <- key.vars
+        int.crosstabs <- ggplot(data = graphs.object, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var))
+        int.crosstabs <- int.crosstabs + facet_wrap(graphs.object[ , get(facet.var)] ~ .)
+        int.crosstabs <- int.crosstabs + geom_tile(color = "grey")
+        int.crosstabs <- int.crosstabs + scale_fill_gradient(low = "white", high = "red")
+        int.crosstabs <- int.crosstabs + xlab(label = vars.list[["bckg.col.var"]])
+        int.crosstabs <- int.crosstabs + ylab(label = vars.list[["bckg.row.var"]])
+        int.crosstabs <- int.crosstabs + geom_text(aes(label = round(x = value, digits = 0)))
+        int.crosstabs <- int.crosstabs + scale_x_discrete(expand = c(0,0), position = "top", labels = str_wrap(string = graphs.object[ , get(as.character(x.var))], width = 10))
+        int.crosstabs <- int.crosstabs + scale_y_discrete(expand = c(0,0), labels = str_wrap(string = rev(levels(droplevels(graphs.object[ , get(as.character(y.var))]))), width = 10))
+        int.crosstabs <- int.crosstabs + coord_equal()
+        int.crosstabs <- int.crosstabs + theme(panel.background = element_rect(fill = "white"),
+                                               panel.grid.major.x = element_blank(),
+                                               panel.grid.major = element_line(colour = "black"),
+                                               panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                               plot.background = element_rect(fill = "#e2e2e2"),
+                                               strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
+                                               legend.background = element_rect(fill = "#e2e2e2"),
+                                               legend.key = element_blank(),
+                                               plot.title = element_text(hjust = 0.5))
+        int.crosstabs <- int.crosstabs + labs(fill="Observed\ncounts")
+        int.crosstabs <- list(int.crosstabs)
+        crosstabs.graphs.list["International_Crosstabs"] <- int.crosstabs
+      }
+    }
     if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
-    } else if(isFALSE(save.output)) {
-      if(length(warnings.collector) == 0) {
-        return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
+      save.graphs(out.path = action.args.list[["output.file"]])
+      if(isFALSE(graphs)) {
+        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
       } else {
-        return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, non.perc.graphs = crosstabs.plots.files, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        delete.graphs(out.path = action.args.list[["output.file"]])
+      }
+    } else if(isFALSE(save.output)) {
+      if(missing(graphs) || graphs == FALSE) {
+        if(length(warnings.collector) == 0) {
+          return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
+        } else {
+          return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+        }
+      } else if(graphs == TRUE) {
+        message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+        if(length(warnings.collector) == 0) {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list))
+        } else {
+          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list, Warnings = unlist(unname(warnings.collector))))
+        }
       }
     }
   }, interrupt = function(f) {
