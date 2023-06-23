@@ -54,7 +54,7 @@
 #' \itemize{
 #' \item \strong{\code{lsa.convert.data}}
 #'
-#' IEA studies, as well as some OECD ones and those conducted by multiple organizations, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. Cycles of OECD PISA prior to 2015, on the other hand, do not provide SPSS \code{.sav} or other binary files, but ASCII text files, accompanied with SPSS syntax (\code{.sps}) files that are used to import the text files into SPSS. These files are per each type of respondent containing all countries' data. The \code{lsa.convert.data} function converts the data from either source assuring that the structure of the output \code{.RData} files is the same, although the structure of the input files is the different (SPSS binary files vs. ASCII text files plus import \code{.sps} files). The data from PISA 2015 and later, on the other hand, is provided in SPSS format (all countries in one file per type of respondent). Thus, the \code{PISApre15} argument needs to be specified as \code{TRUE} when converting data sets from PISA prior to its 2015 cycle. The default for the \code{PISApre15} argument is \code{FALSE} which means that the function expects to find IEA-like SPSS binary files per country and type of respondent in the directory in \code{inp.folder} or OECD PISA 2015 (or later) SPSS \code{.sav} files. If \code{PISApre15 = TRUE} and country codes are provided to \code{ISO}, they will be ignored because PISA files contain data from all countries together.
+#' IEA studies, as well as OECD TALIS and some conducted by other organizations, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be converted. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To convert the files from all countries in the downloaded data from IEA studies and OECD TALIS, simply omit the \code{ISO} argument. Cycles of OECD PISA prior to 2015, on the other hand, do not provide SPSS \code{.sav} or other binary files, but ASCII text files, accompanied with SPSS syntax (\code{.sps}) files that are used to import the text files into SPSS. These files are per each type of respondent containing all countries' data. The \code{lsa.convert.data} function converts the data from either source assuring that the structure of the output \code{.RData} files is the same, although the structure of the input files is different (SPSS binary files vs. ASCII text files plus import \code{.sps} files). The data from PISA 2015 and later, on the other hand, is provided in SPSS format (all countries in one file per type of respondent). Thus, the \code{PISApre15} argument needs to be specified as \code{TRUE} when converting data sets from PISA prior to its 2015 cycle. The default for the \code{PISApre15} argument is \code{FALSE} which means that the function expects to find IEA-like SPSS binary files per country and type of respondent in the directory in \code{inp.folder} or OECD PISA 2015 (or later) SPSS \code{.sav} files. If \code{PISApre15 = TRUE} and country codes are provided to \code{ISO}, they will be ignored because PISA files contain data from all countries together.
 #'
 #' The files to be converted must be in a folder on their own, from a single study, single cycle and single population. In addition, if there are more than one file types per study, cycle and population, these also must be in different folders. For example, in TIMSS 2019 the grade 8 data files are main (end with "m7", electronic version of the paper administered items), bridge (end with "b7", paper administration with trend items for countries participating in previous TIMSS cycles) and Problem Solving and Inquiry (PSI) tasks (end with "z7", electronic administration only, optional for countries). These different types must be in separate folders. In case of OECD PISA prior 2015, the folder must contain both the ASCII text files and the SPSS \code{.sps} import syntax files. If the folder contains data sets from more than one study or cycle, the operation will break with error messages.
 #'
@@ -131,10 +131,12 @@
 #' }
 #'
 #'
-#' @seealso \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
+#' @references
+#' Foy, P. (Ed.). (2018). \emph{PIRLS 2016 User Guide for the International Database}. TIMSS & PIRLS International Study Center.
+#'
+#' @seealso \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
 #' @export
 #' @rdname lsa.convert.data
-
 lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA = FALSE, out.folder) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -202,7 +204,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           warning("Data files for one or more countries in \"ISO = ...\"", " do not exist in the specified folder.", "\nCheck your input.\n", call. = FALSE)
         }
         ISO <- files[grep(pattern = paste0(ISO, study.and.cycle, collapse = "|"), x = files, ignore.case = TRUE)]
-        
+
         full.inp.file.path <- file.path(inp.folder, ISO)
       }
       root.file.names <- sapply(X = strsplit(x = ISO, split = "\\."), FUN = "[", 1)
@@ -276,8 +278,14 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             i <- factor(x = i, levels = levels(i)[!levels(i) %in% unique(unlist(all.missing.values.combinations))])
           })
           rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
-          if(length(rep.indicator) > 0 && is.factor(tmp[[rep.indicator]])) {
-            tmp[[rep.indicator]] <- as.numeric(tmp[[rep.indicator]]) - 1
+          if(length(rep.indicator) > 0) {
+            tmp[rep.indicator] <- lapply(X = tmp[rep.indicator], FUN = function(i) {
+              if(is.factor(i)) {
+                i <- as.numeric(i) - 1
+              } else {
+                i
+              }
+            })
           }
           numeric.vars <- names(Filter(is.numeric, tmp))
         } else if(missing.to.NA == FALSE) {
@@ -451,8 +459,14 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             }))
           }
           rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
-          if(length(rep.indicator) > 0 && is.factor(tmp[[rep.indicator]])) {
-            tmp[[rep.indicator]] <- as.numeric(tmp[[rep.indicator]]) - 1
+          if(length(rep.indicator) > 0) {
+            tmp[rep.indicator] <- lapply(X = tmp[rep.indicator], FUN = function(i) {
+              if(is.factor(i)) {
+                i <- as.numeric(i) - 1
+              } else {
+                i
+              }
+            })
           }
         }
         factor.vars <- names(Filter(is.factor, tmp))
@@ -560,6 +574,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "a" && study.and.cycle == "r5") {
           study.attribute <- "PIRLS"
           cycle.attribute <- "2021"
+        } else if(inp.file.first.char == "a" && study.and.cycle == "a5") {
+          study.attribute <- "PIRLS"
+          cycle.attribute <- "2021"
         } else if(inp.file.first.char == "a" && study.and.cycle == "r6") {
           study.attribute <- "PIRLS"
           cycle.attribute <- "2026"
@@ -596,6 +613,12 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "i" && study.and.cycle == "c3") {
           study.attribute <- "ICCS"
           cycle.attribute <- "2016"
+        } else if(inp.file.first.char == "i" && study.and.cycle == "c4") {
+          study.attribute <- "ICCS"
+          cycle.attribute <- "2022"
+        } else if(inp.file.first.char == "i" && study.and.cycle == "b4") {
+          study.attribute <- "ICCS"
+          cycle.attribute <- "2022"
         } else if(inp.file.first.char == "b"  && study.and.cycle == "i1") {
           study.attribute <- "ICILS"
           cycle.attribute <- "2013"
@@ -749,7 +772,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           cnt.identifier <- which(names(tmp) %in% c("CNTRYID", "CNTRID"))
         }
         if(attr(x = tmp, which = "study") %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS", "IALS", "ALLS", "PIAAC")) {
-          tmp[[cnt.identifier]] <- factor(x = tmp[[cnt.identifier]], levels = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860), labels = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan"))
+          tmp[[cnt.identifier]] <- factor(x = tmp[[cnt.identifier]], levels = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106), labels = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)"))
           tmp[[cnt.identifier]] <- droplevels(tmp[[cnt.identifier]])
         }
         if(attr(x = tmp, which = "study") %in% c("ICILS", "SITES", "TEDS-M", "TALIS", "REDS")) {
@@ -764,6 +787,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         var.labels <- attr(tmp, "variable.labels")
         var.labels <- gsub(pattern = "\\\\", replacement = "/", x = var.labels)
         var.labels <- gsub(pattern = "'", replacement = "\\\\'", x = var.labels)
+        var.labels <- sapply(X = var.labels, FUN = function(i) {
+          i <- gsub(pattern = "\u00e2\u20ac\u2122", replacement = "\\\\'", x = i)
+        })
         var.labels <- paste("attr(tmp[['", toupper(names(var.labels)), "']], 'variable.label') <- '", var.labels, "'", sep = "")
         eval(parse(text = var.labels))
         attr(x = tmp, which = "variable.labels") <- NULL
@@ -809,7 +835,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           message("\nError:\nThe input folder contains no data (\".txt\") files to read. Check your input.\n\n")
         }
       }
-      
+
       full.inp.file.path <- file.path(inp.folder, sps.files)
       root.file.names <- sapply(X = strsplit(x = sps.files, split = "\\."), FUN = "[", 1)
       full.out.file.path <- paste(file.path(out.folder, tolower(x = root.file.names)), "RData", sep = ".")
@@ -1517,7 +1543,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           full.out.file.path <- file.path(out.folder, paste(txt.file.name, "RData", sep = "."))
           save(list = tolower(new.file), file = out.file, compress = FALSE)
           message("       (", count.success, "/", length(txt.files), ")  ", str_pad(string = sub(pattern = "\\.sps", replacement = ".txt", x = basename(inp.file), ignore.case = TRUE), width = 40, side = "right"), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"))
-          
+
         },
         error = function(e) {
           message("")

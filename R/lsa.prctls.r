@@ -30,6 +30,14 @@
 #'                         design when computing the variance components and the standard errors of
 #'                         the PV estimates.
 #' @param graphs           Logical, shall graphs be produced? Default is \code{FALSE}. See details.
+#' @param perc.x.label     String, custom label for the horizontal axis in percentage graphs.
+#'                         Ignored if \code{graphs = FALSE}. See details.
+#' @param perc.y.label     String, custom label for the vertical axis in percentage graphs.
+#'                         Ignored if \code{graphs = FALSE}. See details.
+#' @param prctl.x.labels   List of strings, custom labels for the horizontal axis in percentiles'
+#'                         graphs. Ignored if \code{graphs = FALSE}. See details.
+#' @param prctl.y.labels   List of strings, custom labels for the vertical axis in percentiles'
+#'                         graphs.  Ignored if \code{graphs = FALSE}. See details.
 #' @param save.output      Logical, shall the output be saved in MS Excel file (default) or not
 #'                         (printed to the console or assigned to an object).
 #' @param output.file      If \code{save.output = TRUE} (default), full path to the output file
@@ -53,7 +61,7 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
-#' If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together.
+#' If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together. By default the percentage graphs horizontal axis is labeled with the name of the last splitting variable, and the vertical is labeled as "Percentages XXXXX" where XXXXX is the last splitting variable the percentages are computed for. For the percentiles' plots the horizontal axis is labeled as "Percentiles", and the vertical axis is labeled as the name of the variable for which percentiles are computed. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{prctl.x.labels} and \code{prctl.y.labels}. The \code{perc.x.label} and \code{perc.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. The \code{prctl.x.labels} and \code{prctl.y.labels} accept lists with number of components equal to the number of variables (background or PVs) for which percentiles are computed, longer or shorter lists throw errors. See the examples.
 #'
 #' @return
 #' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
@@ -143,8 +151,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
-lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.root.prctls, prctls = c(5, 25, 50, 75, 95), weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, perc.x.label = NULL, perc.y.label = NULL, prctl.x.labels = NULL, prctl.y.labels = NULL, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -198,6 +205,23 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or "bckg.prctls.vars") are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
   }
   tryCatch({
+    if(isTRUE(graphs)) {
+      if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
+      }
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
+      }
+      if(!is.null(prctl.x.labels) & !is.list(prctl.x.labels) || !is.null(prctl.y.labels) & !is.list(prctl.y.labels)) {
+        stop('\nThe "prctl.x.labels" and "prctl.y.labels" arguments accept only lists. Check your input.', call. = FALSE)
+      }
+      if(!is.null(prctl.x.labels) && length(unlist(c(prctl.x.labels))) != length(unlist(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])))) {
+        stop('\nThe number of list components in the "prctl.x.labels" argument is not equal to the number of variable names supplied in "bckg.prctls.vars" and/or "PV.root.prctls". Check your input.', call. = FALSE)
+      }
+      if(!is.null(prctl.y.labels) && length(unlist(c(prctl.y.labels))) != length(unlist(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])))) {
+        stop('\nThe number of list components in the "prctl.y.labels" argument is not equal to the number of variable names supplied in "bckg.prctls.vars" and/or "PV.root.prctls". Check your input.', call. = FALSE)
+      }
+    }
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
@@ -478,7 +502,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed percentiles resulted in missing values for one or more variable, no statistics are computed and no graphs are produced. Check if the variables contained only missings: ", paste(unique(unlist(prctls.NAs.only.vars.cnt)), collapse = ", "), ".")
         }
       }
-      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary")
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary", perc.graph.xlab = perc.x.label, perc.graph.ylab = perc.y.label)
       graphs.object <- lapply(X = graphs.object, FUN = function(i) {
         perc.vars <- grep(pattern = "^Percentages_", x = colnames(i), value = TRUE)
         prctl.value.cols <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]]), fixed = TRUE)
@@ -508,8 +532,11 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
         }
       })
       if(length(c(vars.list[["bckg.prctls.vars"]], vars.list[["PV.root.prctls"]])) > 0) {
-        percentiles.graphs.list <- produce.percentiles.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars)
+        percentiles.graphs.list <- produce.percentiles.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, prctl.graph.xlab = prctl.x.labels, prctl.graph.ylab = prctl.y.labels)
         if(length(key.vars) == 1) {
+          if(is.null(prctl.x.labels)) {
+            prctl.x.labels <- "Percentiles"
+          }
           graphs.object <- rbindlist(l = graphs.object)
           x.var <- sym("variable")
           group.var <- sym(key.vars[1])
@@ -522,19 +549,19 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           y.var <- lapply(X = y.var, FUN = function(i) {
             sym(i[!i %in% grep(pattern = "_SE$", x = i, value = TRUE)])
           })
-          int.percentiles <- lapply(X = y.var, FUN = function(i) {
-            cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i, group = !!group.var, color = !!group.var))
-            cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
+          int.percentiles <- lapply(X = 1:length(y.var), FUN = function(i) {
+            cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!y.var[[i]], group = !!group.var, color = !!group.var))
+            cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[i]] - 1.96 * !!sym(paste0(y.var[[i]], "_SE")), ymax = !!y.var[[i]] + 1.96 * !!sym(paste0(y.var[[i]], "_SE"))),
                                                  width = 0.5,
-                                                 size = 1.3,
+                                                 linewidth = 1.3,
                                                  position = position_dodge(0.01))
-            cnt.plot <- cnt.plot + geom_line(size = 1)
+            cnt.plot <- cnt.plot + geom_line(linewidth = 1)
             cnt.plot <- cnt.plot + geom_point(size = 3)
             cnt.plot <- cnt.plot + scale_color_manual(values = graph.custom.colors)
             cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                          panel.grid.major.x = element_blank(),
                                          panel.grid.major = element_line(colour = "black"),
-                                         panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                          plot.background = element_rect(fill = "#e2e2e2"),
                                          legend.background = element_rect(fill = "#e2e2e2"),
                                          legend.key = element_blank(),
@@ -547,7 +574,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
             })
             cnt.plot <- cnt.plot + guides(color=guide_legend(title="Legend"))
             suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = gsub(pattern = "Prctl_", replacement = "P", x = unique(graphs.object[ , variable]))))
-            cnt.plot <- cnt.plot + labs(x = "Percentiles", y = i)
+            cnt.plot <- cnt.plot + labs(x = prctl.x.labels, y = prctl.y.labels[i])
             cnt.plot <- cnt.plot + guides(color = guide_legend(title = "Legend", override.aes = list(linetype = 0, size = 3.5)))
           })
           names(int.percentiles) <- unlist(as.character(y.var))

@@ -40,8 +40,8 @@ will automatically select the default weight variable for the provided
 \code{lsa.data}, depending on the respondent type. \code{"none"} is
 for unweighted statistics. See details.}
 
-\item{cont.freq}{Shall the values of the numeric categories be treated as categorical
-to compute frequencies for? See details.}
+\item{cont.freq}{Logical, shall the values of the numeric categories be treated as
+categorical to compute frequencies for? See details.}
 
 \item{include.missing}{Shall the \code{NA} and user-defined missing values (if available) be
 included as splitting categories for the variables in \code{split.vars}?

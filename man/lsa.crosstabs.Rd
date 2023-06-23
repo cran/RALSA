@@ -18,6 +18,8 @@ lsa.crosstabs(
   include.missing = FALSE,
   shortcut = FALSE,
   graphs = FALSE,
+  graph.row.label = NULL,
+  graph.col.label = NULL,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -71,6 +73,12 @@ computing the variance components and the standard errors of the
 estimates.}
 
 \item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
+\item{graph.row.label}{String, custom label for the row variable in graphs. Ignored if
+\code{graphs = FALSE}. See details.}
+
+\item{graph.col.label}{String, custom label for the column variable in graphs. Ignored if
+\code{graphs = FALSE}. See details.}
 
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
@@ -146,7 +154,7 @@ If \code{include.missing = FALSE} (default), all cases with missing values on th
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017).
 
-If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together.
+If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together. By default the row and column variable names are used for labeling the axes of the heatmaps, unless \code{graph.row.label} and/or \code{graph.col.label} arguments are supplied. These two arguments accept strings of length 1 which will be used to label the axes.
 
 The function also computes chi-square statistics with Rao-Scott first- and second-order design corrections because of the clustering in complex survey designs. For more details, see Rao & Scott (1984, 1987) and Skinner (2019).
 }

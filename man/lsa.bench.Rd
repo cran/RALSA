@@ -17,6 +17,10 @@ lsa.bench(
   include.missing = FALSE,
   shortcut = FALSE,
   graphs = FALSE,
+  perc.x.label = NULL,
+  perc.y.label = NULL,
+  mean.x.label = NULL,
+  mean.y.label = NULL,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -48,8 +52,8 @@ be computed. See details.}
 groups defined by the \code{split.vars} (\code{TRUE}) or not (\code{FALSE},
 default). See details.}
 
-\item{bckg.var}{Name of continuous background or contextual variable to compute the mean
-for. The results will be computed by all groups specified by the
+\item{bckg.var}{Name of a continuous background or contextual variable to compute the
+mean for. The results will be computed by all groups specified by the
 splitting variables and per performance group. See details.}
 
 \item{weight.var}{The name of the variable containing the weights. If no name of a weight
@@ -68,6 +72,20 @@ computing the variance components and the standard errors of the
 estimates.}
 
 \item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
+\item{perc.x.label}{String, custom label for the horizontal axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{perc.y.label}{String, custom label for the vertical axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{mean.x.label}{List of strings, custom labels for the horizontal axis in means' graphs.
+Ignored if \code{bckg.var} is omitted and/or \code{graphs = FALSE}.
+See details.}
+
+\item{mean.y.label}{List of strings, custom labels for the vertical axis in means' graphs.
+Ignored if \code{bckg.var} is omitted and/or \code{graphs = FALSE}.
+See details.}
 
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
@@ -149,7 +167,7 @@ If \code{include.missing = FALSE} (default), all cases with missing values on th
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Numeracy, TIMSS Advanced, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 
-If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95\% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95\% confidence intervals of the average for this variable will be produced. All plots are produced per country.
+If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95\% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95\% confidence intervals of the average for this variable will be produced. All plots are produced per country. By default the percentage graphs horizontal axis is labeled as "Performance Group", and the vertical is labeled as "Percentages XXXXX" where XXXXX is the root name of the set of PVs percentages within performance group are computed for. If \code{bckg.var} is provide to compute means for, the means plots' horizontal axis is labeled as "Performance Group", and the vertical axis is labeled as "Mean XXXXX" where XXXXX is the name of the variable for which means are computed for each performance group. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.label} and \code{mean.y.label}. The \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.label} and \code{mean.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. See the examples.
 }
 \examples{
 # Compute percentages of female and male students reaching or surpassing the "Intermediate"
@@ -181,6 +199,16 @@ open.output = TRUE)
 \dontrun{
 lsa.bench(data.object = ICILS_2018_student_data, split.vars = c("S_SEX", "IS2G03"),
 PV.root.bench = "PV#CIL", bckg.var = "S_SPECACT", include.missing = TRUE,
+output.file = "C:/temp/test.xlsx", open.output = TRUE)
+}
+
+# Same as above, this time adding graphs with custom x-axis and y-axis labels
+\dontrun{
+lsa.bench(data.object = ICILS_2018_student_data, split.vars = c("S_SEX", "IS2G03"),
+PV.root.bench = "PV#CIL", bckg.var = "S_SPECACT",
+graphs = TRUE, perc.x.label = "Percentages of students", perc.y.label = "Benchmark groups",
+mean.x.label = "Performance groups", mean.y.label = "Average of using specialist apps scale",
+include.missing = TRUE,
 output.file = "C:/temp/test.xlsx", open.output = TRUE)
 }
 

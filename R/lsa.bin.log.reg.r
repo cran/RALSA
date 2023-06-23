@@ -197,8 +197,6 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}, , \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}, \code{\link{lsa.lin.reg}}
 #' @export
-
-
 lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, interactions, standardize = FALSE, weight.var, norm.weight = FALSE, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)

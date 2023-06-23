@@ -7,5 +7,5 @@
 ralsaGUI()
 }
 \description{
-Starts the GUI. The GUI contains elements for each parameter of each function (data preparation or analysis).
+Starts the GUI. The GUI contains elements for each parameter of each function (data preparation or analysis). The GUI starts as a background job without blocking the console which can be used as usual.
 }

@@ -1,3 +1,60 @@
+# RALSA v1.3.5 (2023-05-23)
+
+This update focuses on adding more functionality to the existing graph capabilities, bug fixes and overall improvement of the workflow, and updates existing features following updates of packages RALSA depends on. Saving syntaxes from the GUI now appends the new synatx to existing files instead of overwriting them.
+
+## Bug fixes
+* `lsa.convert.data` crashes when converting the TIMSS 1995 grade 4 ASA files. Thanks to Maximilian Brinkmann.
+
+* When converting datasets with `lsa.convert.data`, some of the variable labels contain unrecognized characters. Thanks to Falk Brese.
+
+* When a factor variable has only one level, the “Variable levels" also include NA as a level.
+
+* After updates of the `DT` package the panels displaying the country and variable names changed to grey and the colors of the selected rows changed.
+
+* In GUI with `lsa.convert.data` the syntax is not generated and cannot be executed when PISA (both pre-2015 and later) files are used.
+
+* In GUI with `lsa.recode.vars` the summary table of recodings is printed in the GUI console, but if any NA values are in the “Source_XXXXX” and “New_XXXXX” variable columns, the output is shifted to the left and unreadable for these lines.
+
+## New functionality
+* The descriptive statistics functions (`lsa.pcts.means`, `lsa.prctls`, `lsa.bench` and `lsa.crosstabs`) now have new arguments that allow definition of custom x- and y-axis labels for the plots. This has also been implemented in the GUI.
+
+  * The `lsa.crosstabs` function now has the possibility to add custom axes' labels in heat plots. Until now, the function used the row and column variable names to label the axes. The custom axis labels can be added using the `graph.row.label` and `graph.col.label` arguments.
+
+  * The `lsa.pcts.means` function now has the possibility to add custom axes' labels in percentages of respondents within groups and in means' plots. Until now, the function used the last split and the average variable(s) names to label the axes. The custom axis labels can be added using the  arguments `perc.x.label`, `perc.x.label`, `mean.x.labels` and `mean.y.labels`.
+
+  * The `lsa.bench` function now has the possibility to add custom axes' labels in plots of percentages of respondents within performance groups and the mean for continuous variable, if specified. Until now, the function used “Performance Group” and the PVs set name to to label the axes for the percentage plots, and “Performance Group” and the mean's variable name to label the axes of the mean plot. The custom axis labels can be added using the  arguments `perc.x.label`, `perc.x.label`, `mean.x.label` and `mean.y.label`.
+
+  * The `lsa.prctls` function now has the possibility to add custom axes' labels in plots of percentages of respondents within groups and percentiles for continuous variables. Until now, the function used the last split variable name to label the axes for the percentage plots, and “Percentiles” and the continuous variables' names to label the axes of the percentiles plot. The custom axis labels can be added using the  arguments `perc.x.label`, `perc.x.label`, `prctl.x.label` and `prctl.y.label`.
+
+## Miscellaneous
+* Added support for PIRLS 2021 data.
+
+* The GUI can now run in Rstudio without blocking the console and the session can run and be used on its own. The GUI runs as a background job. In case problems appear with the new way the GUI is started, use `ralsaGUIfailsafe()` instead of `ralsaGUI()` function. This will start the GUI using the old methods, but the console will be blocked.
+
+* The graphical functionality in `lsa.pcts.means`, `lsa.prctls`, `lsa.bench` and `lsa.crosstabs` has been updated after the `ggplot2` update to version 3.4.0 where the `size` aesthetic has been replaced with `linewidth` in line based geoms.
+
+* `lsa.vars.dict` now adds the levels' numeric values before the labels, as suggested by Falk Brese.
+
+* GUI with all functions. Following the updates of the `shiny` and `DT` packages the lists of variables lost their formatting (background color and selected rows color). These are now recovered and when rows are selected the variable names and labels are bolded.
+
+* The colors of the radio buttons and check boxes in the GUI have been changed to match the color scheme used in the rest of the application.
+
+* The behavior of the “Save syntax” button for all tabs in the GUI has been changed. When the file with the syntax already exists, the new syntax is appended to the end instead of overwriting the entire file. This is more convenient, as it allows to save all the syntax generated from different tabs in the GUI in a single file.
+
+* The definition of user-defined missing values in the “Recode variables” section in the GUI now uses semicolon as a delimiter.
+
+* Changed the icon for the "Exit" tab and button in the GUI.
+
+* The copyleft character in the footer of the GUI has been changed, now it is displayed properly.
+
+* Various improvements and optimizations in the GUI workfrlow.
+
+* Improved documentation.
+
+
+
+
+
 # RALSA v1.3.0 (2022-07-08)
 
 This update focuses mainly on bugfixes and improvements in the GUI and its workflow, but also introduces some new features.

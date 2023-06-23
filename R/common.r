@@ -3,7 +3,7 @@ import.data <- function(path) {
   return(get(tmp))
 }
 graph.custom.colors <- c("#F40040", "#72F842", "#4F45FA", "#877A77", "#E83BD1", "#FEBF32", "#00D1F8", "#32DBAB", "#BE4B3D", "#B898EC", "#B3C865", "#EC168E", "#F995BB", "#BB26EF", "#00622A", "#459AFB", "#8B600D", "#C2E7F7", "#8A0D7A", "#4B7DA8", "#F5D2A3", "#F4C9EA", "#C7EBC7", "#3D40B0", "#F79BF0", "#56F6F3", "#EEDE22", "#E69782", "#F85171", "#8FE98D", "#F0751C", "#697216", "#C33D75", "#AA77FE", "#9D69A3", "#CC5DE0", "#BDE635", "#F665C2", "#65BDAC", "#FE5635", "#A3687E", "#4F407C", "#CDC9FC", "#5C9600", "#F516F6", "#DDC1BB", "#6AB9FB", "#2ABE38", "#71AA79", "#A34F4B", "#F9A763", "#DBBB58", "#979EB6", "#53B1C9", "#49F695", "#949B78", "#F1AEB8", "#ECBBFE", "#FC7A89", "#C85CA7", "#D88DBD", "#53654B", "#4265DF", "#7276BD", "#927858", "#A0F268", "#ADA862", "#1CC072", "#C22A55", "#1C8C38", "#DDE4DC", "#D04235", "#96E6AF", "#DBD7B4", "#BE78D1", "#9B5CD1", "#8A2EE5", "#D20032", "#EBE47F", "#A53B6E", "#699294", "#F93DB7", "#865AB0", "#E78356", "#FA76E4", "#8CF2D7", "#C5E6A1", "#C09FCB", "#93E8FB", "#0DA876", "#3B8E71", "#8EA9E7", "#C70D9B", "#F54D8B", "#AEAEB0", "#E6AD7F", "#88BE0D", "#8391FC", "#CE9EB2", "#42C0C2")
-produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
+produce.percentages.plots <- function(data.obj, split.vars.vector, type, perc.graph.xlab, perc.graph.ylab) {
   if(type == "ordinary") {
     if(length(split.vars.vector) == 1) {
       x.var <- sym(split.vars.vector)
@@ -31,6 +31,12 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       fill.var <- sym("collapsed_split")
     }
   }
+  if(is.null(perc.graph.xlab)) {
+    perc.graph.xlab <- x.var
+  }
+  if(is.null(perc.graph.ylab)) {
+    perc.graph.ylab <- y.var
+  }
   if(length(split.vars.vector) <= 2) {
     lapply(X = data.obj, FUN = function(i) {
       tmp.percentages <- ggplot(data = i, aes(x = !! x.var, y = !! y.var, fill = factor(x = make.unique(as.character(!! fill.var)), levels = make.unique(as.character(!! fill.var)))))
@@ -51,13 +57,13 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
                                                  panel.grid.major.x = element_blank(),
                                                  panel.grid.major = element_line(colour = "black"),
-                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
                                                  plot.background = element_rect(fill = "#e2e2e2"),
                                                  legend.background = element_rect(fill = "#e2e2e2"),
                                                  plot.title = element_text(hjust = 0.5))
       tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
                                                          width = 0.2,
-                                                         size = 1,
+                                                         linewidth = 1,
                                                          position = position_dodge(0.9))
       tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
         str_wrap(string = j, width = 15)
@@ -69,9 +75,9 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       expand = expansion(mult = c(0, 0)),
       n.breaks = 10, minor_breaks = NULL)
       if(type == "ordinary") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var))
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = perc.graph.xlab, y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab))
       } else if(type == "bench") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var))
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = perc.graph.xlab), y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab))
       }
       return(tmp.percentages)
     })
@@ -91,7 +97,7 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
                                                  panel.grid.major.x = element_blank(),
                                                  panel.grid.major = element_line(colour = "black"),
-                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
                                                  plot.background = element_rect(fill = "#e2e2e2"),
                                                  legend.background = element_rect(fill = "#e2e2e2"),
                                                  plot.title = element_text(hjust = 0.5))
@@ -109,9 +115,9 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       expand = expansion(mult = c(0, 0)),
       n.breaks = 10, minor_breaks = NULL)
       if(type == "ordinary") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var), fill = "Legend")
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = perc.graph.xlab, y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab), fill = "Legend")
       } else if(type == "bench") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var), fill = "Legend")
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = perc.graph.xlab), y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab), fill = "Legend")
       }
       return(tmp.percentages)
     })
@@ -126,7 +132,7 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       tmp.percentages <- tmp.percentages + theme(panel.background = element_rect(fill = "white"),
                                                  panel.grid.major.x = element_blank(),
                                                  panel.grid.major = element_line(colour = "black"),
-                                                 panel.border = element_rect(colour = "black", fill=NA, size=1),
+                                                 panel.border = element_rect(colour = "black", fill=NA, linewidth=1),
                                                  plot.background = element_rect(fill = "#e2e2e2"),
                                                  legend.background = element_rect(fill = "#e2e2e2"),
                                                  plot.title = element_text(hjust = 0.5))
@@ -144,15 +150,15 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type) {
       expand = expansion(mult = c(0, 0)),
       n.breaks = 10, minor_breaks = NULL)
       if(type == "ordinary") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = y.var))
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = perc.graph.xlab, y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab))
       } else if(type == "bench") {
-        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = y.var))
+        tmp.percentages <- tmp.percentages + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = perc.graph.xlab), y = gsub(pattern = "_", replacement = " ", x = perc.graph.ylab))
       }
       return(tmp.percentages)
     })
   }
 }
-produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type) {
+produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type, mean.graph.xlab, mean.graph.ylab) {
   if(type == "ordinary") {
     if(length(split.vars.vector) == 1) {
       x.var <- sym(split.vars.vector)
@@ -175,17 +181,25 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
   y.var <- grep(pattern = "^Mean_[[:alnum:]]|^Median_[[:alnum:]]|^Mode_[[:alnum:]]", x = colnames(estimates.obj), value = TRUE)
   y.var <- y.var[!y.var %in% grep(pattern = "_SE$|_SVR$|_MVR$|_SVR_SE$|_MVR_SE$", x = y.var, value = TRUE)]
   y.var <- lapply(X = y.var, FUN = sym)
+  if(is.null(mean.graph.xlab)) {
+    mean.graph.xlab <- as.character(x.var)
+    mean.graph.xlab <- as.list(rep(x = mean.graph.xlab, times = length(y.var)))
+  }
+  if(is.null(mean.graph.ylab)) {
+    mean.graph.ylab <- as.character(y.var)
+    mean.graph.ylab <- as.list(rep(x = mean.graph.ylab, times = length(y.var)))
+  }
   if(length(split.vars.vector) <= 2) {
     lapply(X = data.obj, FUN = function(i) {
-      tmp.means <- lapply(X = y.var, FUN = function(j) {
+      tmp.means <- lapply(X = 1:length(y.var), FUN = function(j) {
         if(type == "ordinary" || type == "bench" & length(split.vars.vector) == 1) {
-          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j))
+          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var[[j]]))
         } else if(type == "bench" && length(split.vars.vector) > 1) {
-          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = factor(x = !!color.var, levels = !!color.var)))
+          cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, color = factor(x = !!color.var, levels = !!color.var)))
         }
-        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                              width = 0.3,
-                                             size = 1.3,
+                                             linewidth = 1.3,
                                              position = position_dodge(.9))
         if(type == "ordinary" || type == "bench" & length(split.vars.vector) == 1) {
           cnt.plot <- cnt.plot + geom_point(size = 3)
@@ -198,7 +212,7 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                      panel.grid.major.x = element_blank(),
                                      panel.grid.major = element_line(colour = "black"),
-                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                      plot.background = element_rect(fill = "#e2e2e2"),
                                      legend.background = element_rect(fill = "#e2e2e2"),
                                      legend.key = element_blank(),
@@ -210,9 +224,9 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
           sprintf("%.2f", k)
         })
         if(type == "ordinary") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = mean.graph.xlab[j], y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         } else if(type == "bench") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = mean.graph.xlab[j]), y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         }
       })
       names(tmp.means) <- unlist(as.character(y.var))
@@ -220,9 +234,9 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
     })
   } else if(length(split.vars.vector) > 2 && length(split.vars.vector) < 5) {
     lapply(X = data.obj, FUN = function(i) {
-      tmp.means <- lapply(X = y.var, FUN = function(j) {
-        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = factor(x = !!color.var, levels = !!color.var)))
-        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+      tmp.means <- lapply(X = 1:length(y.var), FUN = function(j) {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!y.var[[j]], color = factor(x = !!color.var, levels = !!color.var)))
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                              width = 0.3,
                                              size = 1.3,
                                              position = position_dodge(.9),
@@ -236,7 +250,7 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         cnt.plot <- cnt.plot + scale_color_manual(labels = i[ , get(as.character(color.var))], values = graph.custom.colors)
         cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                      panel.grid.major.y = element_line(colour = "black"),
-                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                      plot.background = element_rect(fill = "#e2e2e2"),
                                      legend.background = element_rect(fill = "#e2e2e2"),
                                      legend.key = element_blank(),
@@ -250,9 +264,9 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         })
         cnt.plot <- cnt.plot + guides(color = guide_legend(title="Legend"))
         if(type == "ordinary") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = mean.graph.xlab[j], y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         } else if(type == "bench") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = mean.graph.xlab[j]), y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         }
       })
       names(tmp.means) <- unlist(as.character(y.var))
@@ -260,9 +274,9 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
     })
   } else if(length(split.vars.vector) >= 5) {
     lapply(X = data.obj, FUN = function(i) {
-      tmp.means <- lapply(X = y.var, FUN = function(j) {
-        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!j, color = !!color.var))
-        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+      tmp.means <- lapply(X = 1:length(y.var), FUN = function(j) {
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!y.var[[j]], color = !!color.var))
+        cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                              width = 0.3,
                                              size = 1.3,
                                              position = position_dodge(.9),
@@ -275,7 +289,7 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
                                           show.legend = FALSE)
         cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                      panel.grid.major.y = element_line(colour = "black"),
-                                     panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                      plot.background = element_rect(fill = "#e2e2e2"),
                                      legend.background = element_rect(fill = "#e2e2e2"),
                                      legend.key = element_blank(),
@@ -289,9 +303,9 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         })
         cnt.plot <- cnt.plot + guides(color=guide_legend(title="Legend"))
         if(type == "ordinary") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = x.var, y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = mean.graph.xlab[j], y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         } else if(type == "bench") {
-          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = x.var), y = gsub(pattern = "_", replacement = " ", x = j))
+          cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = gsub(pattern = "\\_", replacement = " ", x = mean.graph.xlab[j]), y = gsub(pattern = "_", replacement = " ", x = mean.graph.ylab[j]))
         }
       })
       names(tmp.means) <- unlist(as.character(y.var))
@@ -299,10 +313,16 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
     })
   }
 }
-produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector) {
+produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector, prctl.graph.xlab, prctl.graph.ylab) {
   y.var <- grep(pattern = "_SE$", x = colnames(data.obj[[1]]), value = TRUE)
   y.var <- gsub(pattern = "_SE$", replacement = "", x = y.var)
   y.var <- lapply(X = y.var, FUN = sym)
+  if(is.null(prctl.graph.xlab)) {
+    prctl.graph.xlab <- as.list(rep(x = "Percentiles", times = length(y.var)))
+  }
+  if(is.null(prctl.graph.ylab)) {
+    prctl.graph.ylab <- y.var
+  }
   lapply(X = data.obj, FUN = function(i) {
     if(length(split.vars.vector) <= 2) {
       x.var <- sym("variable")
@@ -313,24 +333,24 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
       group.var <- sym(split.vars.vector[length(split.vars.vector)])
       facet.var <- split.vars.vector[length(split.vars.vector)]
     }
-    tmp.prctls <- lapply(X = y.var, FUN = function(j) {
+    tmp.prctls <- lapply(X = 1:length(y.var), FUN = function(j) {
       if(length(split.vars.vector) <= 2) {
-        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var, color = !!color.var))
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var[[j]], group = !!group.var, color = !!color.var))
       } else {
-        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!j, group = !!group.var))
+        cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var[[j]], group = !!group.var))
         cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - "), scales = "free_x", labeller = function(df) {list(str_wrap(string = as.character(df[ , 2]), width = 25))})
       }
-      cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!j - 1.96 * !!sym(paste0(j, "_SE")), ymax = !!j + 1.96 * !!sym(paste0(j, "_SE"))),
+      cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                            width = 0.3,
-                                           size = 1.3)
+                                           linewidth = 1.3)
       cnt.plot <- cnt.plot + geom_point(size = 3, position = position_dodge(0.1))
-      cnt.plot <- cnt.plot + geom_line(size = 1)
+      cnt.plot <- cnt.plot + geom_line(linewidth = 1)
       cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                    panel.grid.major.x = element_blank(),
                                    panel.grid.major = element_line(colour = "black"),
-                                   panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                   panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                    plot.background = element_rect(fill = "#e2e2e2"),
-                                   strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
+                                   strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth = 1, linetype = "solid"),
                                    legend.background = element_rect(fill = "#e2e2e2"),
                                    legend.key = element_blank(),
                                    plot.title = element_text(hjust = 0.5))
@@ -351,7 +371,7 @@ produce.percentiles.plots <- function(data.obj, estimates.obj, split.vars.vector
         suppressMessages(cnt.plot <- cnt.plot + scale_x_discrete(labels = unique(str_extract(string = i[ , collapsed_split], pattern = "^P[[:digit:]]+"))))
       }
       cnt.plot <- cnt.plot + guides(color = guide_legend(title = "Legend", override.aes = list(linetype = 0, size = 3.5)))
-      cnt.plot <- cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = "Percentiles", y = j)
+      cnt.plot <- cnt.plot + labs(title = unique(i[ , get(split.vars.vector[1])]), x = prctl.graph.xlab[j], y = prctl.graph.ylab[j])
     })
     names(tmp.prctls) <- unlist(as.character(y.var))
     return(tmp.prctls)
@@ -384,9 +404,9 @@ produce.crosstabs.plots <- function(data.obj, split.vars.vector, row.var, col.va
     cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                  panel.grid.major.x = element_blank(),
                                  panel.grid.major = element_line(colour = "black"),
-                                 panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                 panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                  plot.background = element_rect(fill = "#e2e2e2"),
-                                 strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
+                                 strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth = 1, linetype = "solid"),
                                  legend.background = element_rect(fill = "#e2e2e2"),
                                  legend.key = element_blank(),
                                  plot.title = element_text(hjust = 0.5))
@@ -1451,7 +1471,8 @@ design.weight.variables <- list(
 default.benchmarks <- list(
   ICCS = list(
     "2009" = c(395, 479, 563),
-    "2016" = c(311, 395, 479, 563)
+    "2016" = c(311, 395, 479, 563),
+    "2022" = c(311, 395, 479, 563)
   ),
   ICILS = c(407.001, 492.001, 576.001, 661.001),
   PIRLS = c(400, 475, 550, 625),
@@ -2564,10 +2585,6 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
-
-
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# Objects from global
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

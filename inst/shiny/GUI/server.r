@@ -1,12 +1,24 @@
 server <- function(input, output, session) {
-  
-  
-  
-  
-  
-  
+  Sys.sleep(2)
+  hide(id = "loading-content", anim = TRUE, animType = "fade", time = 2)
+  show("app-content")
+  observeEvent(input$home, {
+    js$scrolltop()
+  })
+  observeEvent(input$dataMenu, {
+    js$scrolltop()
+  })
+  observeEvent(input$analysisMenu, {
+    js$scrolltop()
+  })
+  observeEvent(input$help, {
+    js$scrolltop()
+  })
+  observeEvent(input$exit, {
+    js$scrolltop()
+  })
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-  # Define common objects
+  #Define common objects
   studies.all.design.variables <- list(
     sampling.vars = list(
       bc_ = c("SCHWGT", "STDWGT"),
@@ -83,11 +95,12 @@ server <- function(input, output, session) {
       )
     )
   )
-  
+
   default.benchmarks <- list(
     ICCS = list(
       "2009" = c(395, 479, 563),
-      "2016" = c(311, 395, 479, 563)
+      "2016" = c(311, 395, 479, 563),
+      "2022" = c(311, 395, 479, 563)
     ),
     ICILS = c(407.001, 492.001, 576.001, 661.001),
     PIRLS = c(400, 475, 550, 625),
@@ -161,7 +174,7 @@ server <- function(input, output, session) {
       Mathematics.root.PVs = "PV#MATH"
     )
   )
-  
+
   merge.combinations <- list(
     CivED = list(
       c("bc_", "sch.bckg"),
@@ -558,7 +571,7 @@ server <- function(input, output, session) {
       c("pcg", "psg", "psa", "ptg", "phys.std.bckg.ach.phys.sch.bckg.phys.tch.bckg")
     )
   )
-  
+
   design.weight.variables <- list(
     IEA.JK2.studies = c("CivED",
                         "ICCS",
@@ -758,36 +771,25 @@ server <- function(input, output, session) {
     OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
     OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
   )
-  
-  
-  ######################################################
-  # From Global
+
+
+  #Define global objects
   load.app.CSS.screen <- "
 #loading-content {
-  position: absolute;
-  background: #000000;
-  opacity: 1;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  height: 100%;
-  text-align: center;
-  color: #FFFFFF;
+position: absolute;
+background: #000000;
+opacity: 1;
+z-index: 100;
+left: 0;
+right: 0;
+height: 100%;
+text-align: center;
+color: #FFFFFF;
 }
 "
-
-
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
-
-
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}'
-
-
-country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
-
-
-
-
+country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa (Grade 6)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
 PISA.data.files <- list(
   PISA.pre2015.TXT.files = list(
     "2000" = c("intcogn_v4.txt",
@@ -814,7 +816,6 @@ PISA.data.files <- list(
                "INT_SCQ12_DEC03.txt",
                "INT_STU12_DEC03.txt")
   ),
-  
   PISA.pre2015.SPS.files = list(
     "2000" = c("PISA2000_SPSS_cognitive_item.sps",
                "PISA2000_SPSS_school_questionnaire.sps",
@@ -840,7 +841,6 @@ PISA.data.files <- list(
                "PISA2012_SPSS_school.sps",
                "PISA2012_SPSS_student.sps")
   ),
-  
   PISA.2015.plus.SPSS.files = list(
     "2015" = c("CY6_MS_CM2_SCH_QQQ.sav",
                "CY6_MS_CM2_STU_COG.sav",
@@ -864,9 +864,6 @@ PISA.data.files <- list(
                "CY07_VNM_STU_PVS.sav")
   )
 )
-
-
-
 PISA.for.Development.data.files <- list(
   PISA.for.Development.2019.files = list(
     "2019" = c("CY1MDAI_SCH_QQQ.sav",
@@ -878,14 +875,12 @@ PISA.for.Development.data.files <- list(
                "CY1MDCI_TIM.SAV")
   )
 )
-
-
-
-
 studies.and.cycles <- list(
   TIMSS = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
   ),
+  "TIMSS Bridge" = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "2007" = "b4", "2019" = "b7"),
   preTIMSS = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2015" = "n1"
   ),
@@ -897,6 +892,9 @@ studies.and.cycles <- list(
   ),
   PIRLS = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2001" = "r1", "2006" = "r2", "2011" = "r3", "2016" = "r4", "2021" = "r5", "2026" = "r6"
+  ),
+  "PIRLS Bridge" = list(
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2021" = "a5"
   ),
   prePIRLS = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2011" = "l1", "2016" = "l2"
@@ -919,6 +917,9 @@ studies.and.cycles <- list(
   ICCS = list(
     first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg", "jsa", "jse", "jsg", "jsl", "jss", "jsr"), "2009" = "c2", "2016" = "c3"
   ),
+  "ICCS Bridge" = list(
+    first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg"), "2022" = "b4"
+  ),
   ICILS = list(
     first.chars = c("bcg", "bsg", "btg"), "2013" = "i1", "2018" = "i2"
   ),
@@ -935,12 +936,7 @@ studies.and.cycles <- list(
     first.chars = c("dig", "deg", "dpg", "dsg", "dpr", "dsr"), "2008" = "t1"
   )
 )
-
-
-
-
 respondents.and.cycles <- list(
-  
   "Student background" = list(
     resp.type = c("asc", "asg", "bsg", "isg", "jsg", "bs_", "cs_"),
     round = c(
@@ -958,17 +954,14 @@ respondents.and.cycles <- list(
       "t1", "t2"
     )
   ),
-  
   "Mathematics student background" = list(
     resp.type = "msg",
     round = c("m1", "m2", "m3", "m4")
   ),
-  
   "Physics student background" = list(
     resp.type = "psg",
     round = c("m1", "m2", "m3", "m4")
   ),
-  
   "Student achievement items" = list(
     resp.type = c("asa", "bsa", "isa", "jsa"),
     round = c(
@@ -981,7 +974,6 @@ respondents.and.cycles <- list(
       "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
-  
   "Student home" = list(
     resp.type = "ash",
     round = c(
@@ -994,22 +986,18 @@ respondents.and.cycles <- list(
       "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
-  
   "European student module" = list(
     resp.type = "ise",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
-  
   "Latin American student module" = list(
     resp.type = "isl",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
-  
   "Asian student module" = list(
     resp.type = "iss",
     round = c("c2", "c3", "c4", "c5", "c6")
   ),
-  
   "Teacher background" = list(
     resp.type = c("atg", "btg", "ctg", "ptg", "itg", "bt_"),
     round = c(
@@ -1027,7 +1015,6 @@ respondents.and.cycles <- list(
       "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
-  
   "Mathematics teacher background" = list(
     resp.type = c("btm", "mtg"),
     round = c(
@@ -1036,12 +1023,10 @@ respondents.and.cycles <- list(
       "s1"
     )
   ),
-  
   "Physics teacher background" = list(
     resp.type = "ptg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
-  
   "Science teacher background" = list(
     resp.type = "bts",
     round = c(
@@ -1050,7 +1035,6 @@ respondents.and.cycles <- list(
       "s1"
     )
   ),
-  
   "School background" = list(
     resp.type = c("acg", "bcg", "ccg", "pcg", "icg", "bc_"),
     round = c(
@@ -1063,57 +1047,43 @@ respondents.and.cycles <- list(
       "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
       "z7", "z8", "z9",
       "r1", "r2", "r3", "r4", "r5", "r6", "r7",
-      "s1",
+      "s1", # SITES
       "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
-  
   "Mathematics school background" = list(
     resp.type = "mcg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
-  
   "Physics school background" = list(
     resp.type = "pcg",
     round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
-  
   "Leader background data" = list(
     resp.type = c("alg", "blg"),
     round = c("s1", "s2", "s3", "s4")
   ),
-  
   "Staff background data" = list(
     resp.type = c("asg", "bsg"),
     round = c("s1", "s2", "s3", "s4")
   ),
-  
   "Institutional program background" = list(
     resp.type = "dig",
     round = "t1"
   ),
-  
   "Educator background" = list(
     resp.type = "deg",
     round = "t1"
   ),
-  
   "Future primary teacher background" = list(
     resp.type = "dpg",
     round = "t1"
   ),
-  
   "Future lower-secondary teacher background" = list(
     resp.type = "dsg",
     round = "t1"
   )
-  
 )
-
-
-
-
-
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",
@@ -1225,140 +1195,87 @@ file.merged.respondents <- list(
   "tch.bckg"                                      = "Teacher background",
   "std.home"                                      = "Student home background"
 )
-
-
-
-
-
 extract.IEA.study.and.cycle <- function(list.abbrev, file.string) {
-  
   tmp <- lapply(X = list.abbrev, FUN = function(i) {
-    
     study.name <- file.string[1][file.string[1] %in% i[["first.chars"]]]
-    
     study.cycle <- file.string[2][file.string[2] %in% i[names(i) != "first.chars"]]
-    
     c(study.name, study.cycle)
-    
   })
-  
   tmp <- Filter(function(i) {length(i) > 1}, tmp)
-  
   study.ID <- names(tmp)
-  
   cycle.ID <- names(unlist(list.abbrev[[study.ID]])[unlist(list.abbrev[[study.ID]]) == tmp[[names(tmp)]][2]])
-  
   list(study.ID, cycle.ID)
 }
-
-
-
-
-
 extract.PISA.2015.plus.study.and.cycle <- function(list.abbrev, file.string) {
-  
   tmp <- Filter(length, lapply(list.abbrev, function(i) {
     Filter(isTRUE, lapply(X = i, FUN = function(j) {
       all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
     }))
   }))
-  
   cycle.ID <- sapply(X = tmp, FUN = names)
-  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
-  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA"
   } else {
     study.ID <- "Unknown"
   }
-  
   list(study.ID, cycle.ID)
 }
-
-
-
-
 extract.PISA.pre.2015.study.and.cycle <- function(list.abbrev, file.string) {
-  
   tmp <- unlist(Filter(length, lapply(list.abbrev, function(i) {
     Filter(length, lapply(X = i, FUN = function(j) {
       grep(pattern = file.string, x = j, ignore.case = TRUE, value = TRUE)
     }))
   })))
-  
   study.ID <- unique(substr(x = unlist(tmp), start = 1, stop = 4))
   cycle.ID <- unique(substr(x = unlist(tmp), start = 5, stop = 8))
-  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
-  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA"
   } else {
     study.ID <- "Unknown"
   }
-  
   list(study.ID, cycle.ID)
 }
-
-
-
 extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.string) {
-  
   tmp <- Filter(length, lapply(list.abbrev, function(i) {
     Filter(isTRUE, lapply(X = i, FUN = function(j) {
       all(grepl(pattern = file.string, x = j, ignore.case = TRUE) == TRUE)
     }))
   }))
-  
   cycle.ID <- sapply(X = tmp, FUN = names)
-  
   if(length(cycle.ID) == 1) {
     cycle.ID <- cycle.ID
   } else {
     cycle.ID <- "Unknown"
   }
-  
   if(length(cycle.ID) == 1 && cycle.ID %in% unlist(sapply(list.abbrev, names))) {
     study.ID <- "PISA for Development"
   } else {
     study.ID <- "Unknown"
   }
-  
   list(study.ID, cycle.ID)
 }
-
-
-
-
 all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
-
-
-
-
 collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
-  
   if(length(PV.vector) > 0) {
     tmp <- vars.object[get(colnames(vars.object)[1]) %in% PV.vector, ]
   } else {
     tmp <- NULL
   }
-  
   if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) > 0) {
     tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+$", replacement = "", x = get(colnames(tmp)[1]))]
   } else if(!is.null(tmp) && length(grep(pattern = "[[:digit:]]+$", x = tmp[ , get(colnames(tmp)[1])])) == 0) {
     tmp[ , colnames(tmp)[1] := gsub(pattern = "[[:digit:]]+", replacement = "#", x = get(colnames(tmp)[1]))]
   }
-  
-  
   if(!is.null(tmp) && nrow(tmp) > 0) {
     tmp <- split(x = tmp, by = "Variables")
     lapply(X = tmp, FUN = function(i) {
@@ -1369,26 +1286,15 @@ collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
     return(tmp)
   }
 }
-
-
-
-
-
 define.default.weight <- function(study, loaded.names.and.labels, respondent.type) {
-  
-  
   study.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.studies", "IEA.BRR.studies", "OECD.BRR.studies")], FUN = function(i) {
     study %in% i
   })))
-  
   resp.type <- names(Filter(isTRUE, sapply(X = design.weight.variables[c("IEA.JK2.dflt.std.bckg.types", "IEA.JK2.dflt.sch.bckg.types", "IEA.JK2.dflt.tch.bckg.types", "IEA.BRR.dflt.inst.bckg.types", "IEA.BRR.dflt.prim.tch.bckg.types", "IEA.BRR.dflt.low_sec.tch.bckg.types", "IEA.BRR.dflt.educ.bckg.types", "OECD.BRR.dflt.std.bckg", "OECD.BRR.dflt.sch.bckg", "OECD.BRR.dflt.tch.bckg", "OECD.BRR.dflt.lead.bckg", "OECD.BRR.dflt.staff.bckg")], FUN = function(i) {
     respondent.type %in% i
   })))
-  
   org.and.design.resp.type <- str_extract(string = study.type, pattern = "^[[:alpha:]]+\\.[[:alpha:]]+[[:digit:]]*")
-  
   resp.type <- grep(pattern = org.and.design.resp.type, x = resp.type, value = TRUE)
-  
   if(length(resp.type) == 0) {
     tmp.wgt <- NULL
   } else if(study.type == "IEA.JK2.studies" && resp.type == "IEA.JK2.dflt.std.bckg.types") {
@@ -1416,43 +1322,40 @@ define.default.weight <- function(study, loaded.names.and.labels, respondent.typ
   } else if(study.type == "OECD.BRR.studies" && resp.type == "OECD.BRR.dflt.staff.bckg") {
     tmp.wgt <- grep(pattern = paste(design.weight.variables[["OECD.BRR.dflt.staff.bckg.wgts"]], collapse = "|"), x = loaded.names.and.labels[ , Variables], value = TRUE)
   }
-  
 }
-
-
-
-
 all.studies.available.weights <- c("SCHWGT", "TOTWGT", "SENWGT", "TOTWGTCH", "SENWGTCH", "HOUSEWGT", "TOTWGTC", "TOTWGTS", "SENWGTS", "TOTWGTT", "SENWGTT", "SENWGTC", "STOTWGTU", "HOUWGT", "TCHWGT", "MTOTWGT", "STOTWGT", "CNTRWGT", "STAFFWGT", "INSWGTE", "FINWGTE", "INSWGTI", "FINWGTI", "INSWGTP", "FINWGTP", "INSWGTS", "FINWGTS", "MATWGT", "SCIWGT", "PHYWGT", "REAWGT", "WNRSCHBW", "SCWEIGHT", "W_FSCHWT", "SENWGT_SCQ", "W_SCHGRNRABWT", "W_SCHGRNRABWT", "SENWGT_PAQ", "W_FSTUWT", "SPFWT0")
+string.observe.syntax.save.button <- 'function(input, session, syntax.ID, syntax.object, volumes) {
+observeEvent(
+eventExpr = eval(parse(text = paste0("input$", syntax.ID))),
+handlerExpr = {
+shinyFileSave(
+input = input,
+id = syntax.ID,
+roots = volumes,
+session = session,
+filetype = list(R = "r"),
+updateFreq = 100000
+)
+file.info <- parseSavePath(
+roots = volumes,
+selection = eval(parse(text = paste0("input$", syntax.ID)))
+)
+if (nrow(file.info) > 0) {
+if(!file.exists(file.info$datapath)) {
+cat(eval(parse(text = syntax.object)), sep = "\n", file = file.info$datapath)
+} else {
+tmp.file <- readLines(file.info$datapath)
+tmp.file <- c(tmp.file, "\n", eval(parse(text = syntax.object)))
+cat(tmp.file, sep = "\n", file = file.info$datapath)
+}
+}
+}
+)
+}'
 
 
 
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-  
-  
-  
-  
-  
-  
-  
-  Sys.sleep(2)
-  hide(id = "loading-content", anim = TRUE, animType = "fade", time = 2)
-  show("app-content")
-  observeEvent(input$home, {
-    js$scrolltop()
-  })
-  observeEvent(input$dataMenu, {
-    js$scrolltop()
-  })
-  observeEvent(input$analysisMenu, {
-    js$scrolltop()
-  })
-  observeEvent(input$help, {
-    js$scrolltop()
-  })
-  observeEvent(input$exit, {
-    js$scrolltop()
-  })
+  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   output$welcomeToRALSA <- renderText("Welcome to RALSA")
   output$welcomeText <- renderText({HTML('The R Analyzer for Large-Scale Assessments (RALSA) is an R package for preparation and analysis of data from large-scale assessments and surveys which use complex sampling and assessment design. Currently, RALSA supports a number of studies with different design and a number of analysis types (see below). Both of these will increase in future.<br/>
 RALSA is a free and open source software licensed under GPL v2.0.<br/><br/>
@@ -1954,30 +1857,37 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
     })
     syntaxConvertData <- reactive({
-      if(length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0) {
+      if(length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0 &&
+         exists("convertAllCountries") |
+         exists("convertPISASAVFiles") |
+         exists("convertPISATXTFiles")
+      ) {
         full.file.list$convertSyntax <- paste0(
           'lsa.convert.data(inp.folder = "',
           parseSavePath(available.volumes, input$convertChooseSrcDir)$datapath,
-          if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
+          if(exists("convertAllCountries") && nrow(convertAllCountries$convertSelectionIEA) > 0) {
+            if(nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
+              '"'
+            } else if(nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
+              '"'
+            } else if(nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
+              paste0('", ISO = "', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '"')
+            } else if(nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
+              paste0('", ISO = c("', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '")')
+            } else if(!exists("convertAllCountries")) {
+              '"'
+            }
+          } else if(exists("convertPISASAVFiles")) {
             '"'
-          } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) == 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
-            '"'
-          } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) == 1) {
-            paste0('", ISO = "', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '"')
-          } else if(exists("convertAllCountries") && nrow(convertAllCountries$convertAvailCntIEAFiles) != 0 && nrow(convertAllCountries$convertSelectionIEA) > 1) {
-            paste0('", ISO = c("', paste(unique(grep(pattern = paste(convertAllCountries$convertSelectionIEA[["ISOs"]], collapse = "|"), x = substr(x = full.file.list$SAV.files, start = 4, stop = 6), ignore.case = TRUE, value = TRUE)), collapse = '", "'), '")')
-          } else if(!exists("convertAllCountries")) {
-            '"'
-          },
-          if(exists("convertPISATXTFiles") && length(convertPISATXTFiles$convertAvailPISATXTFiles) && length(parseSavePath(available.volumes, input$convertChooseOutDir)$datapath) > 0) {
-            ', PISApre15 = TRUE'
+          } else if(exists("convertPISATXTFiles")) {
+            full.file.list$convertSyntax <- paste0(
+              '", PISApre15 = TRUE'
+            )
           },
           if(input$convertMissToNA == 1) {
             ", missing.to.NA = TRUE"
           },
-          if(exists("convertAllCountries") && nrow(convertAllCountries$convertSelectionIEA) > 0 || !exists("convertAllCountries")) {
-            paste0(', out.folder = "', parseSavePath(available.volumes, input$convertChooseOutDir)$datapath, '")')
-          }
+          paste0(', out.folder = "', parseSavePath(available.volumes, input$convertChooseOutDir)$datapath, '")')
         )
       }
     })
@@ -2016,14 +1926,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         return(NULL)
       }
     })
-    shinyFileSave(input, "saveConvertSyntax", roots = available.volumes, updateFreq = 100000)
-    observe({
-      tmp.syntax <- syntaxConvertData()
-      fileinfo.convert <- parseSavePath(available.volumes, input$saveConvertSyntax)
-      if(nrow(fileinfo.convert) > 0) {
-        cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.convert$datapath)
-      }
-    })
+    observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+    observe.syntax.save.button(input = input, session = session, syntax.ID = "saveConvertSyntax", syntax.object = "syntaxConvertData()", volumes = available.volumes)
     output$copyConvertSyntax <- renderUI({
       rclipButton(inputId = "copyConvertSyntax", label = "Copy syntax", clipText = syntaxConvertData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
     })
@@ -2581,14 +2485,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               return(NULL)
             }
           })
-          shinyFileSave(input, "saveMergeSyntax", roots = available.volumes, updateFreq = 100000)
-          observe({
-            tmp.syntax <- syntaxMergeData()
-            fileinfo.merge <- parseSavePath(available.volumes, input$saveMergeSyntax)
-            if(nrow(fileinfo.merge) > 0) {
-              cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.merge$datapath)
-            }
-          })
+          observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+          observe.syntax.save.button(input = input, session = session, syntax.ID = "saveMergeSyntax", syntax.object = "syntaxMergeData()", volumes = available.volumes)
           output$mergeExecBtnHead <- renderText({
             if(length(full.file.list.merge$RData.files) > 0 & nrow(mergeAllVars$mergeSelectedVars) > 0 && length(parseSavePath(available.volumes, input$mergeChooseOutFile)$datapath) > 0) {
               HTML("Press the button below to execute the syntax")
@@ -2907,14 +2805,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveVarPropsSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxVarProps()
-        fileinfo.varprops <- parseSavePath(available.volumes, input$saveVarPropsSyntax)
-        if(nrow(fileinfo.varprops) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.varprops$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveVarPropsSyntax", syntax.object = "syntaxVarProps()", volumes = available.volumes)
       output$copyVarPropsSyntax <- renderUI({
         rclipButton(inputId = "copyVarPropsSyntax", label = "Copy syntax", clipText = syntaxVarProps(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -3297,14 +3189,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveDataDiagSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxDataDiag()
-        fileinfo.data.diag <- parseSavePath(available.volumes, input$saveDataDiagSyntax)
-        if(nrow(fileinfo.data.diag) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.data.diag$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveDataDiagSyntax", syntax.object = "syntaxDataDiag()", volumes = available.volumes)
       output$copyDataDiagSyntax <- renderUI({
         rclipButton(inputId = "copyDataDiagSyntax", label = "Copy syntax", clipText = syntaxDataDiag(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -3960,43 +3846,43 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
         if(!is.null(new.recoding.labels.FAC$labels)) {
           if(any(new.recoding.labels.FAC$labels != "")) {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.FAC$labels)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.FAC$labels)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.FAC$labels)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.FAC$labels)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           } else {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.FAC$values)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.FAC$values)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.FAC$values)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.FAC$values)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           }
         } else if(!is.null(new.recoding.labels.NUM$labels)) {
           if(any(new.recoding.labels.NUM$labels != "")) {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.NUM$labels)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.NUM$labels)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.NUM$labels)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.NUM$labels)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           } else {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.NUM$values)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.NUM$values)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.NUM$values)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.NUM$values)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           }
         } else if(!is.null(new.recoding.labels.CHAR$labels)) {
           if(any(new.recoding.labels.CHAR$labels != "")) {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.CHAR$labels)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.CHAR$labels)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.labels.CHAR$labels)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.labels.CHAR$labels)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           } else {
-            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.CHAR$values)) {
+            if(input$recodeNewMissings != "" && any(!gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.CHAR$values)) {
               new.values.and.labels.mismatch$diff.missings <- TRUE
-            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]) %in% new.recoding.values.CHAR$values)) {
+            } else if(input$recodeNewMissings == "" || all(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]) %in% new.recoding.values.CHAR$values)) {
               new.values.and.labels.mismatch$diff.missings <- FALSE
             }
           }
@@ -4068,7 +3954,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             paste0(', new.labels = c("', paste(CHAR.new.labels[ , V2], collapse = '", "'), '")')
           },
           if(input$recodeNewMissings != "") {
-            paste0(', missings.attr = list("', paste(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*,[[:space:]]*"*')[[1]]), collapse = '", "'), '")')
+            paste0(', missings.attr = list("', paste(gsub(pattern = '"+', replacement = '', x = strsplit(x = input$recodeNewMissings, split = '"*;[[:space:]]*"*')[[1]]), collapse = '", "'), '")')
           },
           if(!is.null(new.recoded.var.labels$labels) && any(new.recoded.var.labels$labels != "") && input$recodeInNewVars == 1) {
             if(length(new.recoded.var.labels$labels) == 1) {
@@ -4099,14 +3985,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveRecodeSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxRecodeVars()
-        fileinfo.recode <- parseSavePath(available.volumes, input$saveRecodeSyntax)
-        if(nrow(fileinfo.recode) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.recode$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveRecodeSyntax", syntax.object = "syntaxRecodeVars()", volumes = available.volumes)
       output$recodeExecBtnHead <- renderText({
         if(!is.null(file.var.recode$loaded) && length(parseSavePath(available.volumes, input$recodeChooseOutFile)$datapath) == 1) {
           HTML("Press the button below to execute the syntax")
@@ -4366,14 +4246,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveSelectPISACountriesSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxSelectPISA()
-        fileinfo.select.PISA <- parseSavePath(available.volumes, input$saveSelectPISACountriesSyntax)
-        if(nrow(fileinfo.select.PISA) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.select.PISA$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveSelectPISACountriesSyntax", syntax.object = "syntaxSelectPISA()", volumes = available.volumes)
       output$copySelectPISACountriesSyntax <- renderUI({
         rclipButton(inputId = "copySelectPISACountriesSyntax", label = "Copy syntax", clipText = syntaxSelectPISA(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -4844,6 +4718,74 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "pctsMeansGraphs", label = "Produce graphs", value = FALSE, width = "350px")
         }
       })
+      output$pctsMeansGraphsPctXlabelChk <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs)) {
+          checkboxInput(inputId = "pctsMeansGraphsPctXlabelChk", label = "Custom percentages graphs x-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$pctsMeansGraphsPctXlabelTXT <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && isTRUE(input$pctsMeansGraphsPctXlabelChk)) {
+          textInput(inputId = "pctsMeansGraphsPctXlabelTXT", label = NULL, placeholder = "Type your custom horizontal axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$pctsMeansGraphsPctYlabelChk <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs)) {
+          checkboxInput(inputId = "pctsMeansGraphsPctYlabelChk", label = "Custom percentages graphs y-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$pctsMeansGraphsPctYlabelTXT <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && isTRUE(input$pctsMeansGraphsPctYlabelChk)) {
+          textInput(inputId = "pctsMeansGraphsPctYlabelTXT", label = NULL, placeholder = "Type your custom vertical axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$pctsMeansGraphsMeanXlabelsChk <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) > 0) {
+          checkboxInput(inputId = "pctsMeansGraphsMeanXlabelsChk", label = "Custom means graphs x-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$pctsMeansGraphsMeanXlabelsTXT <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && isTRUE(input$pctsMeansGraphsMeanXlabelsChk)) {
+          textInput(inputId = "pctsMeansGraphsMeanXlabelsTXT", label = NULL, placeholder = "Type your custom horizontal axis labels for the mean plots, separated by semicolons", width = "100%")
+        }
+      })
+      output$pctsMeansGraphsMeanYlabelsChk <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) > 0) {
+          checkboxInput(inputId = "pctsMeansGraphsMeanYlabelsChk", label = "Custom means graphs y-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$pctsMeansGraphsMeanYlabelsTXT <- renderUI({
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && isTRUE(input$pctsMeansGraphsMeanYlabelsChk)) {
+          textInput(inputId = "pctsMeansGraphsMeanYlabelsTXT", label = NULL, placeholder = "Type your custom vertical axis labels for the mean plots, separated by semicolons", width = "100%")
+        }
+      })
+      means.custom.X.labels <- reactive({
+        if(!is.null(input$pctsMeansGraphsMeanXlabelsTXT)) {
+          means.custom.X.labels <- strsplit(x = input$pctsMeansGraphsMeanXlabelsTXT, split = "[[:space:]]*\\;[[:space:]]*")
+        }
+      })
+      output$warnPctsMeansCustomXlab <- renderText({
+        if(is.null(input$pctsMeansGraphsMeanXlabelsTXT) == FALSE) {
+          if(input$pctsMeansGraphsMeanXlabelsChk == TRUE & nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) != length(unlist(means.custom.X.labels()))) {
+            HTML('The number of custom labels for the <u>horizontal axis</u> in mean plots must be the same as the number of selected "Background continuous variables" and/or sets of "Plausible values".')
+          } else if(input$pctsMeansGraphsMeanXlabelsChk == FALSE && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) == length(unlist(means.custom.X.labels()))) {
+            HTML("")
+          }
+        }
+      })
+      means.custom.Y.labels <- reactive({
+        if(!is.null(input$pctsMeansGraphsMeanYlabelsTXT)) {
+          means.custom.Y.labels <- strsplit(x = input$pctsMeansGraphsMeanYlabelsTXT, split = "[[:space:]]*\\;[[:space:]]*")
+        }
+      })
+      output$warnPctsMeansCustomYlab <- renderText({
+        if(is.null(input$pctsMeansGraphsMeanYlabelsTXT) == FALSE) {
+          if(input$pctsMeansGraphsMeanYlabelsChk == TRUE && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) != length(unlist(means.custom.Y.labels()))) {
+            HTML('The number of custom labels for the <u>vertical axis</u> in mean plots must be the same as the number of selected "Background continuous variables" and/or sets of "Plausible values".')
+          } else if(input$pctsMeansGraphsMeanYlabelsChk == FALSE&& nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) == length(unlist(means.custom.Y.labels()))) {
+            HTML("")
+          }
+        }
+      })
       output$centralTendencyType <- renderUI({
         if(is.null(file.pct.means$resp.type)) {
           return(NULL)
@@ -4909,6 +4851,18 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE) {
             ", graphs = TRUE"
           },
+          if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE && !is.null(input$pctsMeansGraphsPctXlabelChk) && input$pctsMeansGraphsPctXlabelChk == TRUE && !is.null(input$pctsMeansGraphsPctXlabelTXT) && input$pctsMeansGraphsPctXlabelTXT != "") {
+            paste0(', perc.x.label = "', input$pctsMeansGraphsPctXlabelTXT, '"')
+          },
+          if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE && !is.null(input$pctsMeansGraphsPctYlabelChk) && input$pctsMeansGraphsPctYlabelChk == TRUE && !is.null(input$pctsMeansGraphsPctYlabelTXT) && input$pctsMeansGraphsPctYlabelTXT != "") {
+            paste0(', perc.y.label = "', input$pctsMeansGraphsPctYlabelTXT, '"')
+          },
+          if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE && !is.null(input$pctsMeansGraphsMeanXlabelsChk) && input$pctsMeansGraphsMeanXlabelsChk == TRUE && !is.null(input$pctsMeansGraphsMeanXlabelsTXT) && input$pctsMeansGraphsMeanXlabelsTXT != "") {
+            paste0(', mean.x.labels = list("', paste(unlist(means.custom.X.labels()), collapse = '", "'), '")')
+          },
+          if(!is.null(input$pctsMeansGraphs) && input$pctsMeansGraphs == TRUE && !is.null(input$pctsMeansGraphsMeanYlabelsChk) && input$pctsMeansGraphsMeanYlabelsChk == TRUE && !is.null(input$pctsMeansGraphsMeanYlabelsTXT) && input$pctsMeansGraphsMeanYlabelsTXT != "") {
+            paste0(', mean.y.labels = list("', paste(unlist(means.custom.Y.labels()), collapse = '", "'), '")')
+          },
           paste0(', output.file = "', parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath, '"'),
           if(!is.null(input$pctsMeansOpenOutput) && input$pctsMeansOpenOutput == FALSE) {
             ', open.output = FALSE'
@@ -4925,14 +4879,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "savePctsMeansSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxPctsMeans()
-        fileinfo.pcts.means <- parseSavePath(available.volumes, input$savePctsMeansSyntax)
-        if(nrow(fileinfo.pcts.means) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.pcts.means$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "savePctsMeansSyntax", syntax.object = "syntaxPctsMeans()", volumes = available.volumes)
       output$copyPctsMeansSyntax <- renderUI({
         rclipButton(inputId = "copyPctsMeansSyntax", label = "Copy syntax", clipText = syntaxPctsMeans(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -5073,11 +5021,43 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
         if(
           is.null(file.pct.means$loaded) ||
-          length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 0
+          length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 0 ||
+          !is.null(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) && length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 0
         ) {
           hide("savePctsMeansSyntax")
           hide("copyPctsMeansSyntax")
         } else {
+          show("savePctsMeansSyntax")
+          show("copyPctsMeansSyntax")
+        }
+        if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsPctXlabelChk) && isTRUE(input$pctsMeansGraphsPctXlabelChk) && !is.null(input$pctsMeansGraphsPctXlabelTXT) && input$pctsMeansGraphsPctXlabelTXT == "" ||
+           !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsPctYlabelChk) && isTRUE(input$pctsMeansGraphsPctYlabelChk) && !is.null(input$pctsMeansGraphsPctYlabelTXT) && input$pctsMeansGraphsPctYlabelTXT == "" ||
+           !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanXlabelsChk) && isTRUE(input$pctsMeansGraphsMeanXlabelsChk) && !is.null(input$pctsMeansGraphsMeanXlabelsTXT) && input$pctsMeansGraphsMeanXlabelsTXT == "" ||
+           !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanXlabelsChk) && isTRUE(input$pctsMeansGraphsMeanXlabelsChk) && !is.null(input$pctsMeansGraphsMeanXlabelsTXT) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) != length(unlist(means.custom.X.labels())) ||
+           !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanYlabelsChk) && isTRUE(input$pctsMeansGraphsMeanYlabelsChk) && !is.null(input$pctsMeansGraphsMeanYlabelsTXT) && input$pctsMeansGraphsMeanYlabelsTXT == "" ||
+           !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanYlabelsChk) && isTRUE(input$pctsMeansGraphsMeanYlabelsChk) && !is.null(input$pctsMeansGraphsMeanYlabelsTXT) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) != length(unlist(means.custom.Y.labels())) ||
+           length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) == 0) {
+          hide("pctsMeansOpenOutput")
+          hide("pctsMeansSyntaxHead")
+          hide("pctsMeansSyntax")
+          hide("pctsMeansExecBtnHead")
+          hide("execPctsMeans")
+          hide("consolePctsMeans")
+          hide("savePctsMeansSyntax")
+          hide("copyPctsMeansSyntax")
+        } else if(!is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsPctXlabelChk) && isTRUE(input$pctsMeansGraphsPctXlabelChk) && !is.null(input$pctsMeansGraphsPctXlabelTXT) && input$pctsMeansGraphsPctXlabelTXT != "" ||
+                  !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsPctYlabelChk) && isTRUE(input$pctsMeansGraphsPctYlabelChk) && !is.null(input$pctsMeansGraphsPctYlabelTXT) && input$pctsMeansGraphsPctYlabelTXT != "" ||
+                  !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanXlabelsChk) && isTRUE(input$pctsMeansGraphsMeanXlabelsChk) && !is.null(input$pctsMeansGraphsMeanXlabelsTXT) && input$pctsMeansGraphsMeanXlabelsTXT != "" ||
+                  !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanXlabelsChk) && isTRUE(input$pctsMeansGraphsMeanXlabelsChk) && !is.null(input$pctsMeansGraphsMeanXlabelsTXT) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) == length(unlist(means.custom.X.labels())) ||
+                  !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanYlabelsChk) && isTRUE(input$pctsMeansGraphsMeanYlabelsChk) && !is.null(input$pctsMeansGraphsMeanYlabelsTXT) && input$pctsMeansGraphsMeanYlabelsTXT != "" ||
+                  !is.null(file.pct.means$loaded) && isTRUE(input$pctsMeansGraphs) && !is.null(input$pctsMeansGraphsMeanYlabelsChk) && isTRUE(input$pctsMeansGraphsMeanYlabelsChk) && !is.null(input$pctsMeansGraphsMeanYlabelsTXT) && nrow(rbindlist(l = list(pctsMeansAllVars$pctsMeansSelectedBckgVars, pctsMeansAllVars$pctsMeansSelectedPVVars))) == length(unlist(means.custom.Y.labels())) ||
+                  length(parseSavePath(available.volumes, input$pctsMeansChooseOutFile)$datapath) > 0) {
+          show("pctsMeansOpenOutput")
+          show("pctsMeansSyntaxHead")
+          show("pctsMeansSyntax")
+          show("pctsMeansExecBtnHead")
+          show("execPctsMeans")
+          show("consolePctsMeans")
           show("savePctsMeansSyntax")
           show("copyPctsMeansSyntax")
         }
@@ -5604,6 +5584,74 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "prctlsGraphs", label = "Produce graphs", value = FALSE, width = "350px")
         }
       })
+      output$prctlsGraphsPctXlabelChk <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs)) {
+          checkboxInput(inputId = "prctlsGraphsPctXlabelChk", label = "Custom percentages graphs x-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$prctlsGraphsPctXlabelTXT <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && isTRUE(input$prctlsGraphsPctXlabelChk)) {
+          textInput(inputId = "prctlsGraphsPctXlabelTXT", label = NULL, placeholder = "Type your custom horizontal axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$prctlsGraphsPctYlabelChk <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs)) {
+          checkboxInput(inputId = "prctlsGraphsPctYlabelChk", label = "Custom percentages graphs y-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$prctlsGraphsPctYlabelTXT <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && isTRUE(input$prctlsGraphsPctYlabelChk)) {
+          textInput(inputId = "prctlsGraphsPctYlabelTXT", label = NULL, placeholder = "Type your custom vertical axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$prctlsGraphsPrctlXlabelsChk <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0) {
+          checkboxInput(inputId = "prctlsGraphsPrctlXlabelsChk", label = "Custom percentiles graphs x-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$prctlsGraphsPrctlXlabelsTXT <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && isTRUE(input$prctlsGraphsPrctlXlabelsChk)) {
+          textInput(inputId = "prctlsGraphsPrctlXlabelsTXT", label = NULL, placeholder = "Type your custom horizontal axis labels for the percentile plots, separated by semicolons", width = "100%")
+        }
+      })
+      output$prctlsGraphsPrctlYlabelsChk <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) > 0) {
+          checkboxInput(inputId = "prctlsGraphsPrctlYlabelsChk", label = "Custom percentiles graphs y-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$prctlsGraphsPrctlYlabelsTXT <- renderUI({
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && isTRUE(input$prctlsGraphsPrctlYlabelsChk)) {
+          textInput(inputId = "prctlsGraphsPrctlYlabelsTXT", label = NULL, placeholder = "Type your custom vertical axis labels for the percentile plots, separated by semicolons", width = "100%")
+        }
+      })
+      prctls.custom.X.labels <- reactive({
+        if(!is.null(input$prctlsGraphsPrctlXlabelsTXT)) {
+          prctls.custom.X.labels <- strsplit(x = input$prctlsGraphsPrctlXlabelsTXT, split = "[[:space:]]*\\;[[:space:]]*")
+        }
+      })
+      output$warnPrctlsCustomXlab <- renderText({
+        if(is.null(input$prctlsGraphsPrctlXlabelsTXT) == FALSE) {
+          if(input$prctlsGraphsPrctlXlabelsChk == TRUE & nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) != length(unlist(prctls.custom.X.labels()))) {
+            HTML('The number of custom labels for the <u>horizontal axis</u> in percentile plots must be the same as the number of selected "Background continuous variables" and/or sets of "Plausible values".')
+          } else if(input$prctlsGraphsPrctlXlabelsChk == FALSE && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == length(unlist(prctls.custom.X.labels()))) {
+            HTML("")
+          }
+        }
+      })
+      prctls.custom.Y.labels <- reactive({
+        if(!is.null(input$prctlsGraphsPrctlYlabelsTXT)) {
+          prctls.custom.Y.labels <- strsplit(x = input$prctlsGraphsPrctlYlabelsTXT, split = "[[:space:]]*\\;[[:space:]]*")
+        }
+      })
+      output$warnPrctlsCustomYlab <- renderText({
+        if(is.null(input$prctlsGraphsPrctlYlabelsTXT) == FALSE) {
+          if(input$prctlsGraphsPrctlYlabelsChk == TRUE && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) != length(unlist(prctls.custom.Y.labels()))) {
+            HTML('The number of custom labels for the <u>vertical axis</u> in percentile plots must be the same as the number of selected "Background continuous variables" and/or sets of "Plausible values".')
+          } else if(input$prctlsGraphsPrctlYlabelsChk == FALSE&& nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == length(unlist(prctls.custom.Y.labels()))) {
+            HTML("")
+          }
+        }
+      })
       shinyFileSave(input, "prctlsChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       output$prctlsOpenOutput <- renderUI({
         if(length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) > 0) {
@@ -5662,6 +5710,18 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$prctlsGraphs) || input$prctlsGraphs == TRUE) {
             ', graphs = TRUE'
           },
+          if(!is.null(input$prctlsGraphs) && input$prctlsGraphs == TRUE && !is.null(input$prctlsGraphsPctXlabelChk) && input$prctlsGraphsPctXlabelChk == TRUE && !is.null(input$prctlsGraphsPctXlabelTXT) && input$prctlsGraphsPctXlabelTXT != "") {
+            paste0(', perc.x.label = "', input$prctlsGraphsPctXlabelTXT, '"')
+          },
+          if(!is.null(input$prctlsGraphs) && input$prctlsGraphs == TRUE && !is.null(input$prctlsGraphsPctYlabelChk) && input$prctlsGraphsPctYlabelChk == TRUE && !is.null(input$prctlsGraphsPctYlabelTXT) && input$prctlsGraphsPctYlabelTXT != "") {
+            paste0(', perc.y.label = "', input$prctlsGraphsPctYlabelTXT, '"')
+          },
+          if(!is.null(input$prctlsGraphs) && input$prctlsGraphs == TRUE && !is.null(input$prctlsGraphsPrctlXlabelsChk) && input$prctlsGraphsPrctlXlabelsChk == TRUE && !is.null(input$prctlsGraphsPrctlXlabelsTXT) && input$prctlsGraphsPrctlXlabelsTXT != "") {
+            paste0(', prctl.x.labels = list("', paste(unlist(prctls.custom.X.labels()), collapse = '", "'), '")')
+          },
+          if(!is.null(input$prctlsGraphs) && input$prctlsGraphs == TRUE && !is.null(input$prctlsGraphsPrctlYlabelsChk) && input$prctlsGraphsPrctlYlabelsChk == TRUE && !is.null(input$prctlsGraphsPrctlYlabelsTXT) && input$prctlsGraphsPrctlYlabelsTXT != "") {
+            paste0(', prctl.y.labels = list("', paste(unlist(prctls.custom.Y.labels()), collapse = '", "'), '")')
+          },
           paste0(', output.file = "', parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath, '"'),
           if(is.null(input$prctlsOpenOutput) || input$prctlsOpenOutput == FALSE) {
             NULL
@@ -5678,14 +5738,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "savePrctlstSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxPrctls()
-        fileinfo.prctls <- parseSavePath(available.volumes, input$savePrctlsSyntax)
-        if(nrow(fileinfo.prctls) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.prctls$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "savePrctlstSyntax", syntax.object = "syntaxPrctls()", volumes = available.volumes)
       output$copyPrctlsSyntax <- renderUI({
         rclipButton(inputId = "copyPrctlsSyntax", label = "Copy syntax", clipText = syntaxPrctls(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -5842,6 +5896,37 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("savePrctlstSyntax")
           hide("copyPrctlsSyntax")
         } else {
+          show("savePrctlstSyntax")
+          show("copyPrctlsSyntax")
+        }
+        if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPctXlabelChk) && isTRUE(input$prctlsGraphsPctXlabelChk) && !is.null(input$prctlsGraphsPctXlabelTXT) && input$prctlsGraphsPctXlabelTXT == "" ||
+           !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPctYlabelChk) && isTRUE(input$prctlsGraphsPctYlabelChk) && !is.null(input$prctlsGraphsPctYlabelTXT) && input$prctlsGraphsPctYlabelTXT == "" ||
+           !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlXlabelsChk) && isTRUE(input$prctlsGraphsPrctlXlabelsChk) && !is.null(input$prctlsGraphsPrctlXlabelsTXT) && input$prctlsGraphsPrctlXlabelsTXT == "" ||
+           !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlXlabelsChk) && isTRUE(input$prctlsGraphsPrctlXlabelsChk) && !is.null(input$prctlsGraphsPrctlXlabelsTXT) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) != length(unlist(prctls.custom.X.labels())) ||
+           !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlYlabelsChk) && isTRUE(input$prctlsGraphsPrctlYlabelsChk) && !is.null(input$prctlsGraphsPrctlYlabelsTXT) && input$prctlsGraphsPrctlYlabelsTXT == "" ||
+           !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlYlabelsChk) && isTRUE(input$prctlsGraphsPrctlYlabelsChk) && !is.null(input$prctlsGraphsPrctlYlabelsTXT) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) != length(unlist(prctls.custom.Y.labels())) ||
+           length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) == 0) {
+          hide("prctlsOpenOutput")
+          hide("prctlsSyntaxHead")
+          hide("prctlsSyntax")
+          hide("prctlsExecBtnHead")
+          hide("execPrctls")
+          hide("consolePrctls")
+          hide("savePrctlstSyntax")
+          hide("copyPrctlsSyntax")
+        } else if(!is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPctXlabelChk) && isTRUE(input$prctlsGraphsPctXlabelChk) && !is.null(input$prctlsGraphsPctXlabelTXT) && input$prctlsGraphsPctXlabelTXT != "" ||
+                  !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPctYlabelChk) && isTRUE(input$prctlsGraphsPctYlabelChk) && !is.null(input$prctlsGraphsPctYlabelTXT) && input$prctlsGraphsPctYlabelTXT != "" ||
+                  !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlXlabelsChk) && isTRUE(input$prctlsGraphsPrctlXlabelsChk) && !is.null(input$prctlsGraphsPrctlXlabelsTXT) && input$prctlsGraphsPrctlXlabelsTXT != "" ||
+                  !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlXlabelsChk) && isTRUE(input$prctlsGraphsPrctlXlabelsChk) && !is.null(input$prctlsGraphsPrctlXlabelsTXT) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == length(unlist(prctls.custom.X.labels())) ||
+                  !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlYlabelsChk) && isTRUE(input$prctlsGraphsPrctlYlabelsChk) && !is.null(input$prctlsGraphsPrctlYlabelsTXT) && input$prctlsGraphsPrctlYlabelsTXT != "" ||
+                  !is.null(file.prctls$loaded) && isTRUE(input$prctlsGraphs) && !is.null(input$prctlsGraphsPrctlYlabelsChk) && isTRUE(input$prctlsGraphsPrctlYlabelsChk) && !is.null(input$prctlsGraphsPrctlYlabelsTXT) && nrow(rbindlist(l = list(prctlsAllVars$prctlsSelectedBckgVars, prctlsAllVars$prctlsSelectedPVVars))) == length(unlist(prctls.custom.Y.labels())) ||
+                  length(parseSavePath(available.volumes, input$prctlsChooseOutFile)$datapath) > 0) {
+          show("prctlsOpenOutput")
+          show("prctlsSyntaxHead")
+          show("prctlsSyntax")
+          show("prctlsExecBtnHead")
+          show("execPrctls")
+          show("consolePrctls")
           show("savePrctlstSyntax")
           show("copyPrctlsSyntax")
         }
@@ -6469,6 +6554,46 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "benchGraphs", label = "Produce graphs", value = FALSE, width = "350px")
         }
       })
+      output$benchGraphsPctXlabelChk <- renderUI({
+        if(!is.null(file.bench$loaded) && nrow(benchAllVars$benchSelectedPVVars) > 0 && isTRUE(input$benchGraphs)) {
+          checkboxInput(inputId = "benchGraphsPctXlabelChk", label = "Custom percentages graphs x-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$benchGraphsPctXlabelTXT <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && nrow(benchAllVars$benchSelectedPVVars) > 0 && isTRUE(input$benchGraphsPctXlabelChk)) {
+          textInput(inputId = "benchGraphsPctXlabelTXT", label = NULL, placeholder = "Type your custom horizontal axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$benchGraphsPctYlabelChk <- renderUI({
+        if(!is.null(file.bench$loaded) && nrow(benchAllVars$benchSelectedPVVars) > 0 && isTRUE(input$benchGraphs)) {
+          checkboxInput(inputId = "benchGraphsPctYlabelChk", label = "Custom percentages graphs y-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$benchGraphsPctYlabelTXT <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && nrow(benchAllVars$benchSelectedPVVars) > 0 && isTRUE(input$benchGraphsPctYlabelChk)) {
+          textInput(inputId = "benchGraphsPctYlabelTXT", label = NULL, placeholder = "Type your custom vertical axis label for the percentage plots", width = "100%")
+        }
+      })
+      output$benchGraphsMeanXlabelsChk <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && nrow(benchAllVars$benchSelectedPVVars) > 0 && nrow(benchAllVars$benchSelectedBckgVars) > 0) {
+          checkboxInput(inputId = "benchGraphsMeanXlabelsChk", label = "Custom mean graphs x-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$benchGraphsMeanXlabelsTXT <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && isTRUE(input$benchGraphsMeanXlabelsChk) && nrow(benchAllVars$benchSelectedPVVars) > 0 && nrow(benchAllVars$benchSelectedBckgVars) > 0) {
+          textInput(inputId = "benchGraphsMeanXlabelsTXT", label = NULL, placeholder = "Type your custom horizontal axis labels for the percentile plots, separated by semicolons", width = "100%")
+        }
+      })
+      output$benchGraphsMeanYlabelsChk <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && nrow(benchAllVars$benchSelectedPVVars) > 0 && nrow(benchAllVars$benchSelectedBckgVars) > 0) {
+          checkboxInput(inputId = "benchGraphsMeanYlabelsChk", label = "Custom mean graphs y-axis labels", value = FALSE, width = "300px")
+        }
+      })
+      output$benchGraphsMeanYlabelsTXT <- renderUI({
+        if(!is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && isTRUE(input$benchGraphsMeanYlabelsChk) && nrow(benchAllVars$benchSelectedPVVars) > 0 && nrow(benchAllVars$benchSelectedBckgVars) > 0) {
+          textInput(inputId = "benchGraphsMeanYlabelsTXT", label = NULL, placeholder = "Type your custom vertical axis labels for the percentile plots, separated by semicolons", width = "100%")
+        }
+      })
       shinyFileSave(input, "benchChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       output$benchOpenOutput <- renderUI({
         if(length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) > 0) {
@@ -6537,6 +6662,18 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           } else if(!is.null(input$benchGraphs) || input$benchGraphs == TRUE) {
             ', graphs = TRUE'
           },
+          if(!is.null(input$benchGraphs) && input$benchGraphs == TRUE && !is.null(input$benchGraphsPctXlabelChk) && input$benchGraphsPctXlabelChk == TRUE && !is.null(input$benchGraphsPctXlabelTXT) && input$benchGraphsPctXlabelTXT != "") {
+            paste0(', perc.x.label = "', input$benchGraphsPctXlabelTXT, '"')
+          },
+          if(!is.null(input$benchGraphs) && input$benchGraphs == TRUE && !is.null(input$benchGraphsPctYlabelChk) && input$benchGraphsPctYlabelChk == TRUE && !is.null(input$benchGraphsPctYlabelTXT) && input$benchGraphsPctYlabelTXT != "") {
+            paste0(', perc.y.label = "', input$benchGraphsPctYlabelTXT, '"')
+          },
+          if(!is.null(input$benchGraphs) && input$benchGraphs == TRUE && !is.null(input$benchGraphsMeanXlabelsChk) && input$benchGraphsMeanXlabelsChk == TRUE && !is.null(input$benchGraphsMeanXlabelsTXT) && input$benchGraphsMeanXlabelsTXT != "") {
+            paste0(', mean.x.label = "', input$benchGraphsMeanXlabelsTXT, '"')
+          },
+          if(!is.null(input$benchGraphs) && input$benchGraphs == TRUE && !is.null(input$benchGraphsMeanYlabelsChk) && input$benchGraphsMeanYlabelsChk == TRUE && !is.null(input$benchGraphsMeanYlabelsTXT) && input$benchGraphsMeanYlabelsTXT != "") {
+            paste0(', mean.y.label = "', input$benchGraphsMeanYlabelsTXT, '"')
+          },
           paste0(', output.file = "', parseSavePath(available.volumes, input$benchChooseOutFile)$datapath, '"'),
           if(is.null(input$benchOpenOutput) || input$benchOpenOutput == FALSE) {
             NULL
@@ -6553,14 +6690,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveBenchSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxBench()
-        fileinfo.bench <- parseSavePath(available.volumes, input$saveBenchSyntax)
-        if(nrow(fileinfo.bench) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.bench$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveBenchSyntax", syntax.object = "syntaxBench()", volumes = available.volumes)
       output$copyBenchSyntax <- renderUI({
         rclipButton(inputId = "copyBenchSyntax", label = "Copy syntax", clipText = syntaxBench(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -6673,6 +6804,35 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("saveBenchSyntax")
           hide("copyBenchSyntax")
         } else {
+          show("saveBenchSyntax")
+          show("copyBenchSyntax")
+        }
+        if(!is.null(file.bench$loaded) && nrow(benchAllVars$benchSelectedPVVars) == 0 ||
+           !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsPctXlabelChk) && isTRUE(input$benchGraphsPctXlabelChk) && !is.null(input$benchGraphsPctXlabelTXT) && input$benchGraphsPctXlabelTXT == "" ||
+           !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsPctYlabelChk) && isTRUE(input$benchGraphsPctYlabelChk) && !is.null(input$benchGraphsPctYlabelTXT) && input$benchGraphsPctYlabelTXT == "" ||
+           !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsMeanXlabelsChk) && isTRUE(input$benchGraphsMeanXlabelsChk) && !is.null(input$benchGraphsMeanXlabelsTXT) && input$benchGraphsMeanXlabelsTXT == "" ||
+           !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsMeanYlabelsChk) && isTRUE(input$benchGraphsMeanYlabelsChk) && !is.null(input$benchGraphsMeanYlabelsTXT) && input$benchGraphsMeanYlabelsTXT == "" ||
+           length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) == 0) {
+          hide("benchOpenOutput")
+          hide("benchSyntaxHead")
+          hide("benchSyntax")
+          hide("benchExecBtnHead")
+          hide("execBench")
+          hide("consoleBench")
+          hide("saveBenchSyntax")
+          hide("copyBenchSyntax")
+        } else if(!is.null(file.bench$loaded) && nrow(benchAllVars$benchSelectedPVVars) > 0 ||
+                  !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsPctXlabelChk) && isTRUE(input$benchGraphsPctXlabelChk) && !is.null(input$benchGraphsPctXlabelTXT) && input$benchGraphsPctXlabelTXT != "" ||
+                  !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsPctYlabelChk) && isTRUE(input$benchGraphsPctYlabelChk) && !is.null(input$benchGraphsPctYlabelTXT) && input$benchGraphsPctYlabelTXT != "" ||
+                  !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsMeanXlabelsChk) && isTRUE(input$benchGraphsMeanXlabelsChk) && !is.null(input$benchGraphsMeanXlabelsTXT) && input$benchGraphsMeanXlabelsTXT != "" ||
+                  !is.null(file.bench$loaded) && isTRUE(input$benchGraphs) && !is.null(input$benchGraphsMeanYlabelsChk) && isTRUE(input$benchGraphsMeanYlabelsChk) && !is.null(input$benchGraphsMeanYlabelsTXT) && input$benchGraphsMeanYlabelsTXT != "" ||
+                  length(parseSavePath(available.volumes, input$benchChooseOutFile)$datapath) > 0) {
+          show("benchOpenOutput")
+          show("benchSyntaxHead")
+          show("benchSyntax")
+          show("benchExecBtnHead")
+          show("execBench")
+          show("consoleBench")
           show("saveBenchSyntax")
           show("copyBenchSyntax")
         }
@@ -7120,6 +7280,26 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "crossTabsGraphs", label = "Produce graphs", value = FALSE, width = "350px")
         }
       })
+      output$crossTabsGraphsPlotXlabelChk <- renderUI({
+        if(!is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0 && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0) {
+          checkboxInput(inputId = "crossTabsGraphsPlotXlabelChk", label = "Custom graphs x-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$crossTabsGraphsPlotXlabelTXT <- renderUI({
+        if(!is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0 && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0 && isTRUE(input$crossTabsGraphsPlotXlabelChk)) {
+          textInput(inputId = "crossTabsGraphsPlotXlabelTXT", label = NULL, placeholder = "Type your custom horizontal axis label for the plots", width = "100%")
+        }
+      })
+      output$crossTabsGraphsPlotYlabelChk <- renderUI({
+        if(!is.null(file.crosstabs$loaded) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0  && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0 && isTRUE(input$crossTabsGraphs)) {
+          checkboxInput(inputId = "crossTabsGraphsPlotYlabelChk", label = "Custom graphs y-axis label", value = FALSE, width = "300px")
+        }
+      })
+      output$crossTabsGraphsPlotYlabelTXT <- renderUI({
+        if(!is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0 && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0 && isTRUE(input$crossTabsGraphsPlotYlabelChk)) {
+          textInput(inputId = "crossTabsGraphsPlotYlabelTXT", label = NULL, placeholder = "Type your custom vertical axis label for the plots", width = "100%")
+        }
+      })
       shinyFileSave(input, "crossTabsChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
       output$crossTabsOpenOutput <- renderUI({
         if(length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) > 0) {
@@ -7165,6 +7345,12 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           if(!is.null(input$crossTabsGraphs) && input$crossTabsGraphs == TRUE) {
             ", graphs = TRUE"
           },
+          if(!is.null(input$crossTabsGraphs) && input$crossTabsGraphs == TRUE && !is.null(input$crossTabsGraphsPlotXlabelChk) && input$crossTabsGraphsPlotXlabelChk == TRUE && !is.null(input$crossTabsGraphsPlotXlabelTXT) && input$crossTabsGraphsPlotXlabelTXT != "") {
+            paste0(', graph.row.label = "', input$crossTabsGraphsPlotXlabelTXT, '"')
+          },
+          if(!is.null(input$crossTabsGraphs) && input$crossTabsGraphs == TRUE && !is.null(input$crossTabsGraphsPlotYlabelChk) && input$crossTabsGraphsPlotYlabelChk == TRUE && !is.null(input$crossTabsGraphsPlotYlabelTXT) && input$crossTabsGraphsPlotYlabelTXT != "") {
+            paste0(', graph.col.label = "', input$crossTabsGraphsPlotYlabelTXT, '"')
+          },
           if(!is.null(input$crossTabsShortcut) && input$crossTabsShortcut == TRUE) {
             ", shortcut = TRUE"
           },
@@ -7184,14 +7370,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveCrosstabsSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxCrossTabs()
-        fileinfo.crosstabs <- parseSavePath(available.volumes, input$saveCrosstabsSyntax)
-        if(nrow(fileinfo.crosstabs) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.crosstabs$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveCrosstabsSyntax", syntax.object = "syntaxCrossTabs()", volumes = available.volumes)
       output$copyCrosstabsSyntax <- renderUI({
         rclipButton(inputId = "copyCrosstabstSyntax", label = "Copy syntax", clipText = syntaxCrossTabs(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -7281,6 +7461,36 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           hide("saveCrosstabsSyntax")
           hide("copyCrosstabsSyntax")
         } else {
+          show("saveCrosstabsSyntax")
+          show("copyCrosstabsSyntax")
+        }
+        if(!is.null(file.crosstabs$loaded) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) == 0 ||
+           !is.null(file.crosstabs$loaded) && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) == 0 ||
+           !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsPlotXlabelChk) && isTRUE(input$crossTabsGraphsPlotXlabelChk) && !is.null(input$crossTabsGraphsPlotXlabelTXT) && input$crossTabsGraphsPlotXlabelTXT == "" ||
+           !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsPlotYlabelChk) && isTRUE(input$crossTabsGraphsPlotYlabelChk) && !is.null(input$crossTabsGraphsPlotYlabelTXT) && input$crossTabsGraphsPlotYlabelTXT == "" ||
+           !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsMeanXlabelsChk) && isTRUE(input$crossTabsGraphsMeanXlabelsChk) && !is.null(input$crossTabsGraphsMeanXlabelsTXT) && input$crossTabsGraphsMeanXlabelsTXT == "" ||
+           !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsMeanYlabelsChk) && isTRUE(input$crossTabsGraphsMeanYlabelsChk) && !is.null(input$crossTabsGraphsMeanYlabelsTXT) && input$crossTabsGraphsMeanYlabelsTXT == "" ||
+           length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) == 0) {
+          hide("crossTabsOpenOutput")
+          hide("crossTabsSyntaxHead")
+          hide("crossTabsSyntax")
+          hide("crossTabsExecBtnHead")
+          hide("execCrossTabs")
+          hide("consoleCrossTabs")
+          hide("saveCrosstabsSyntax")
+          hide("copyCrosstabsSyntax")
+        } else if(!is.null(file.crosstabs$loaded) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0 && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0 ||
+                  !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsPlotXlabelChk) && isTRUE(input$crossTabsGraphsPlotXlabelChk) && !is.null(input$crossTabsGraphsPlotXlabelTXT) && input$crossTabsGraphsPlotXlabelTXT != "" ||
+                  !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsPlotYlabelChk) && isTRUE(input$crossTabsGraphsPlotYlabelChk) && !is.null(input$crossTabsGraphsPlotYlabelTXT) && input$crossTabsGraphsPlotYlabelTXT != "" ||
+                  !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsMeanXlabelsChk) && isTRUE(input$crossTabsGraphsMeanXlabelsChk) && !is.null(input$crossTabsGraphsMeanXlabelsTXT) && input$crossTabsGraphsMeanXlabelsTXT != "" ||
+                  !is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && !is.null(input$crossTabsGraphsMeanYlabelsChk) && isTRUE(input$crossTabsGraphsMeanYlabelsChk) && !is.null(input$crossTabsGraphsMeanYlabelsTXT) && input$crossTabsGraphsMeanYlabelsTXT != "" ||
+                  length(parseSavePath(available.volumes, input$crossTabsChooseOutFile)$datapath) > 0) {
+          show("crossTabsOpenOutput")
+          show("crossTabsSyntaxHead")
+          show("crossTabsSyntax")
+          show("crossTabsExecBtnHead")
+          show("execCrossTabs")
+          show("consoleCrossTabs")
           show("saveCrosstabsSyntax")
           show("copyCrosstabsSyntax")
         }
@@ -7810,14 +8020,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveCorrSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxCorr()
-        fileinfo.corr <- parseSavePath(available.volumes, input$saveCorrSyntax)
-        if(nrow(fileinfo.corr) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.corr$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveCorrSyntax", syntax.object = "syntaxCorr()", volumes = available.volumes)
       output$copyCorrSyntax <- renderUI({
         rclipButton(inputId = "copyCrrtSyntax", label = "Copy syntax", clipText = syntaxCorr(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -8780,12 +8984,6 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           checkboxInput(inputId = "linRegShortcut", label = "Use shortcut method for computing SE", value = FALSE, width = "350px")
         }
       })
-      shinyFileSave(input, "linRegChooseOutFile", filetype = list(xlsx = "xlsx"), roots = available.volumes, updateFreq = 100000)
-      output$linRegOpenOutput <- renderUI({
-        if(length(parseSavePath(available.volumes, input$linRegChooseOutFile)$datapath) > 0) {
-          checkboxInput(inputId = "linRegOpenOutput", label = "Open the output when done", value = TRUE, width = "250px")
-        }
-      })
       syntaxLinReg <- reactive({
         file.lin.reg$lin.reg.syntax <- paste0(
           'lsa.lin.reg(data.file = "', parseFilePaths(available.volumes, input$linRegChooseSrcFile)$datapath, '", ',
@@ -8870,14 +9068,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveLinRegSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxLinReg()
-        fileinfo.lin.reg <- parseSavePath(available.volumes, input$saveLinRegSyntax)
-        if(nrow(fileinfo.lin.reg) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.lin.reg$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveLinRegSyntax", syntax.object = "syntaxLinReg()", volumes = available.volumes)
       output$copyLinRegSyntax <- renderUI({
         rclipButton(inputId = "copyLinRegSyntax", label = "Copy syntax", clipText = syntaxLinReg(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -9848,14 +10040,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           return(NULL)
         }
       })
-      shinyFileSave(input, "saveBinLogRegSyntax", roots = available.volumes, updateFreq = 100000)
-      observe({
-        tmp.syntax <- syntaxBinLogReg()
-        fileinfo.bin.log.reg <- parseSavePath(available.volumes, input$saveBinLogRegSyntax)
-        if(nrow(fileinfo.bin.log.reg) > 0) {
-          cat(paste0(tmp.syntax, "\n\n"), file = fileinfo.bin.log.reg$datapath)
-        }
-      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveBinLogRegSyntax", syntax.object = "syntaxBinLogReg()", volumes = available.volumes)
       output$copyBinLogRegSyntax <- renderUI({
         rclipButton(inputId = "copyBinLogRegSyntax", label = "Copy syntax", clipText = syntaxBinLogReg(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
       })
@@ -10026,26 +10212,26 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   }, ignoreInit = TRUE)
   output$helpHeading <- renderText("Help")
   output$helpOnRALSAWebsite <- renderText({
-    HTML("Visit the user guide section at <a href = http://ralsa.ineri.org/user-guide/, target = '_blank'> RALSA's dedicated website</a> for the userguide or use the following links for help on speciffic functionality:<br/><br/>")
+    HTML("Visit the user guide section at <a href = https://ralsa.ineri.org/user-guide/, target = '_blank'> RALSA's dedicated website</a> for the userguide or use the following links for help on speciffic functionality:<br/><br/>")
   })
   output$helpRALSAWebsiteLinks <- renderText({
     HTML(
-      "<a href = http://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a><br/>
-<a href = http://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a><br/><br/>
+      "<a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a><br/>
+<a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a><br/><br/>
 Prepare data for analysis:<br/>
-<ul><li><a href = http://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
 Perform analyses:<br/>
-<ul><li><a href = http://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
-<ul><li><a href = http://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
+<ul><li><a href = https://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
     )
   })
   output$exitHeading <- renderText("Press the button below to exit RALSA")

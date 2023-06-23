@@ -17,8 +17,8 @@
 #'                        factors or character, frequencies will be computed, and if they are
 #'                        numeric, descriptives will be computed, unless \code{cont.freq = TRUE}.
 #'                        See details.
-#' @param cont.freq       Shall the values of the numeric categories be treated as categorical
-#'                        to compute frequencies for? See details.
+#' @param cont.freq       Logical, shall the values of the numeric categories be treated as
+#'                        categorical to compute frequencies for? See details.
 #' @param weight.var      The name of the variable containing the weights, if weighted statistics
 #'                        are needed. If no name of a weight variable is provided, the function
 #'                        will automatically select the default weight variable for the provided
@@ -94,7 +94,6 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
 lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.var, cont.freq = FALSE, include.missing = FALSE, output.file, open.output = TRUE, ...) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)

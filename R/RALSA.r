@@ -51,7 +51,7 @@
 #'             \item \code{lsa.bin.log.reg} Computes binary logistic regression with or without contrast coding of categorical variables
 #'   }
 #' }
-#' 
+#'
 #' The \code{lsa.pcts.means}, \code{lsa.prctls}, \code{lsa.bench} and \code{lsa.crosstabs} also have the option to produce graphs from the estimates.
 #'
 #' More studies and analysis types will be added in future, and the existing ones will be updated, adding more features.
@@ -59,11 +59,11 @@
 #' RALSA also has a Graphical User Interface (GUI) for the less technical users. The GUI incorporates all aspects of the data preparation and analysis functions.
 #'
 #' @references
-#' 
+#'
 #' Here are the two articles presenting the package and it's technical details:
-#' 
+#'
 #' Mirazchiyski, P.V. (2021). RALSA: The R analyzer for large-scale assessments. \emph{Large-scale Assess Educ 9}(21), 1-24. https://doi.org/10.1186/s40536-021-00114-4
-#' 
+#'
 #' Mirazchiyski, P. V. (2021). RALSA: Design and Implementation. \emph{Psych, 3}(2), 233-248. https://doi.org/10.3390/psych3020018
 #'
 #' Here is a list of selected references related to some of the studies' design, relevant to their latest cycles:
@@ -87,10 +87,12 @@
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
 #' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames model.frame model.matrix pchisq pf xtabs
-#' @importFrom utils head tail menu
+#' @importFrom utils head tail menu browseURL
 #' @importFrom methods is
 #' @importFrom ggplot2 ggplot ggsave geom_line geom_point geom_bar geom_vline scale_fill_manual sym aes geom_errorbar position_dodge theme element_rect element_blank element_line element_text scale_x_discrete scale_y_continuous labs scale_color_manual guides guide_legend expansion facet_wrap geom_tile scale_fill_gradient xlab ylab geom_text scale_y_discrete coord_equal ggtitle
 #' @importFrom rclipboard rclipButton
+#' @importFrom rstudioapi jobRunScript executeCommand
+#' @importFrom import from
 NULL
 #> NULL
 

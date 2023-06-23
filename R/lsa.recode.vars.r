@@ -128,7 +128,6 @@
 #' }
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.vars.dict}}
 #' @export
-
 lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables, old.new, new.labels, missings.attr, variable.labels, out.file) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -240,6 +239,9 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
   src.vars.freqs <- lapply(X = data[ , mget(src.variables)], FUN = function(i) {
     data.table(table(i, useNA = "always"))
   })
+  src.vars.freqs <- lapply(X = src.vars.freqs, FUN = function(j) {
+    j[ , i := ifelse(test = is.na(i), yes = "NA", no = i)]
+  })
   names.src.vars.freqs <- as.list(names(src.vars.freqs))
   src.vars.freqs <- Map(f = function(input1, input2) {
     setnames(x = input1, c(paste0("Source_", input2), "N"))
@@ -265,9 +267,15 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     nrows.max <- max(nrow(input1), nrow(input2))
     if(nrow(input1) < nrows.max) {
       input1 <- rbindlist(l = list(input1, rbindlist(rep(list(setDT(as.list(c("NaN", NaN)))), times = nrows.max - nrow(input1)))))
+      input1[ , grep(pattern = "^New", x = colnames(input1), value = TRUE) := lapply(.SD, function(i) {
+        ifelse(test = is.na(i), yes = "NA", no = i)
+      }), .SDcols = grep(pattern = "^Source", x = colnames(input1), value = TRUE)]
     }
     if(nrow(input2) < nrows.max) {
       input2 <- rbindlist(l = list(input2, rbindlist(rep(list(setDT(as.list(c("NaN", NaN)))), times = nrows.max - nrow(input2)))), use.names = FALSE)
+      input2[ , grep(pattern = "^New", x = colnames(input2), value = TRUE) := lapply(.SD, function(i) {
+        ifelse(test = is.na(i), yes = "NA", no = i)
+      }), .SDcols = grep(pattern = "^New", x = colnames(input2), value = TRUE)]
     }
     divider <- data.table("|||" = rep(x = "|||", times = nrows.max))
     cbind(input1, divider, input2)

@@ -140,7 +140,6 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
 lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)

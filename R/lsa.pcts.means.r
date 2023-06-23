@@ -35,6 +35,14 @@
 #'                          computing the variance components and the standard errors of the
 #'                          estimates.
 #' @param graphs            Logical, shall graphs be produced? Default is \code{FALSE}. See details.
+#' @param perc.x.label      String, custom label for the horizontal axis in percentage graphs.
+#'                          Ignored if \code{graphs = FALSE}. See details.
+#' @param perc.y.label      String, custom label for the vertical axis in percentage graphs.
+#'                          Ignored if \code{graphs = FALSE}. See details.
+#' @param mean.x.labels     List of strings, custom labels for the horizontal axis in means' graphs.
+#'                          Ignored if \code{graphs = FALSE}. See details.
+#' @param mean.y.labels     List of strings, custom labels for the vertical axis in means' graphs.
+#'                          Ignored if \code{graphs = FALSE}. See details.
 #' @param save.output       Logical, shall the output be saved in MS Excel file (default) or not
 #'                          (printed to the console or assigned to an object).
 #' @param output.file       If \code{save.output = TRUE} (default), full path to the output file
@@ -60,7 +68,9 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
-#' If \code{graphs = TRUE}, the function will produce graphs. If only \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, plots with 95% confidence intervals of the averages (means, medians or modes) will be produced for each average analysis variable. All plots are produced per country. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, but no \code{split.vars} at the end there will be plots for each of the analysis average variables for all countries together.
+#' If \code{graphs = TRUE}, the function will produce graphs. If only \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95% confidence) for these percentages. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, plots with 95% confidence intervals of the averages (means, medians or modes) will be produced for each average analysis variable. All plots are produced per country. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, but no \code{split.vars} at the end there will be plots for each of the analysis average variables for all countries together. By default the percentage graphs horizontal axis is labeled with the name of the last splitting variable, and the vertical is labeled as "Percentages XXXXX" where XXXXX is the last splitting variable the percentages are computed for. For the means' plots the horizontal axis is labeled as the name of the last splitting variable for whose categories the means are computed by, and the vertical axis is labeled as "Mean XXXXX" where XXXXX is the name of the variable for which means are computed. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.labels} and \code{mean.y.labels}. The \code{perc.x.label} and \code{perc.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. The \code{mean.x.labels} and \code{mean.y.labels} accept lists with number of components equal to the number of variables (background or PVs) for which means are computed, longer or shorter lists throw errors. See the examples.
+#'
+#' row and column variable names are used for labeling the axes of the heatmaps, unless \code{graph.row.label} and/or \code{graph.col.label} arguments are supplied. These two arguments accept strings which will be used to label the axes.
 #'
 #' @return
 #' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
@@ -156,6 +166,17 @@
 #' bckg.avg.vars = c("BSBGSLM", "BSBGSLS"), weight.var = "SENWGT", include.missing = FALSE,
 #' shortcut = TRUE, output.file = "C:/temp/test.xlsx", open.output = TRUE)
 #' }
+#' # Same as above, but add graphs with custom labels for the percentages and means
+#' \dontrun{
+#' lsa.pcts.means(data.object = T15_G8_student_data, split.vars = c("BSBG01", "BSBG13A"),
+#' bckg.avg.vars = c("BSBGSLM", "BSBGSLS"), weight.var = "SENWGT", include.missing = FALSE,
+#' shortcut = TRUE, graphs = TRUE,
+#' perc.x.label = "Using computer or tables for schoolwork at home",
+#' perc.y.label = "Percentage of students",
+#' mean.x.labels = list("Books at home", "Books at home"),
+#' mean.y.labels = list("Average like learning math", "Average like learning science"),
+#' output.file = "C:/temp/test.xlsx", open.output = TRUE)
+#' }
 #'
 #' # Compute the arithmetic average of student overall reading achievement scores
 #' # (i.e. using a set of PVs), using PIRLS 2016 student data file, split the output by student
@@ -181,8 +202,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
-lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV.root.avg, central.tendency, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV.root.avg, central.tendency, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, perc.x.label = NULL, perc.y.label = NULL, mean.x.labels = NULL, mean.y.labels = NULL, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -234,6 +254,23 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
     }
     if(!action.args.list[["central.tendency"]] %in% c("mean", "median", "mode")) {
       stop('\nThe "central.tendency" argument can be either "mean", "median" or "mode". Check your input.', call. = FALSE)
+    }
+    if(isTRUE(graphs)) {
+      if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
+      }
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
+      }
+      if(!is.null(mean.x.labels) & !is.list(mean.x.labels) || !is.null(mean.y.labels) & !is.list(mean.y.labels)) {
+        stop('\nThe "mean.x.labels" and "mean.x.labels" arguments accept only lists. Check your input.', call. = FALSE)
+      }
+      if(!is.null(mean.x.labels) && length(unlist(c(mean.x.labels))) != length(unlist(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])))) {
+        stop('\nThe number of list components in the "mean.x.labels" argument is not equal to the number of variable names supplied in "bckg.avg.vars" and/or "PV.root.avg". Check your input.', call. = FALSE)
+      }
+      if(!is.null(mean.y.labels) && length(unlist(c(mean.y.labels))) != length(unlist(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])))) {
+        stop('\nThe number of list components in the "mean.y.labels" argument is not equal to the number of variable names supplied in "bckg.avg.vars" and/or "PV.root.avg". Check your input.', call. = FALSE)
+      }
     }
     if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
@@ -707,9 +744,21 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           warnings.collector[["cnt.NAs.on.analysis.vars"]] <- paste0("In one or more countries computed means resulted in missing values for one or more variable, no statistics are computed and no graphs are produced. Check if the variables contained only missings: ", paste(unique(unlist(means.NAs.only.vars.cnt)), collapse = ", "), ".")
         }
       }
-      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary")
+      if(is.null(perc.x.label)) {
+        perc.x.label <- NULL
+      }
+      if(is.null(perc.y.label)) {
+        perc.y.label <- NULL
+      }
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "ordinary", perc.graph.xlab = perc.x.label, perc.graph.ylab = perc.y.label)
       if(length(c(vars.list[["bckg.avg.vars"]], vars.list[["PV.root.avg"]])) > 0) {
-        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "ordinary")
+        if(is.null(mean.x.labels)) {
+          mean.x.labels <- NULL
+        }
+        if(is.null(mean.y.labels)) {
+          mean.y.labels <- NULL
+        }
+        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "ordinary", mean.graph.xlab = mean.x.labels, mean.graph.ylab = mean.y.labels)
         if(length(key.vars) == 1) {
           graphs.object <- rbindlist(l = graphs.object)
           x.var <- sym(key.vars)
@@ -723,13 +772,13 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
             cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i))
             cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
                                                  width = 0.3,
-                                                 size = 1.3,
+                                                 linewidth = 1.3,
                                                  position = position_dodge(.9))
             cnt.plot <- cnt.plot + geom_point(size = 3)
             cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
                                          panel.grid.major.x = element_blank(),
                                          panel.grid.major = element_line(colour = "black"),
-                                         panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
                                          plot.background = element_rect(fill = "#e2e2e2"),
                                          legend.background = element_rect(fill = "#e2e2e2"),
                                          plot.title = element_text(hjust = 0.5))
@@ -739,7 +788,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
             cnt.plot <- cnt.plot + scale_y_continuous(labels = function(k) {
               sprintf("%.2f", k)
             })
-            cnt.plot + labs(title = "", x = x.var, y = gsub(pattern = "_", replacement = " ", x = i))
+            cnt.plot + labs(title = "", x = mean.x.labels, y = gsub(pattern = "_", replacement = " ", x = i))
           })
           names(int.means) <- unlist(as.character(y.var))
           means.graphs.list[["International"]] <- int.means

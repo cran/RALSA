@@ -37,6 +37,10 @@
 #'                        computing the variance components and the standard errors of the
 #'                        estimates.
 #' @param graphs          Logical, shall graphs be produced? Default is \code{FALSE}. See details.
+#' @param graph.row.label String, custom label for the row variable in graphs. Ignored if
+#'                        \code{graphs = FALSE}. See details.
+#' @param graph.col.label String, custom label for the column variable in graphs. Ignored if
+#'                        \code{graphs = FALSE}. See details.
 #' @param save.output     Logical, shall the output be saved in MS Excel file (default) or not
 #'                        (printed to the console or assigned to an object).
 #' @param output.file     If \code{save.output = TRUE} (default), full path to the output file
@@ -58,7 +62,7 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017).
 #'
-#' If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together.
+#' If \code{graphs = TRUE}, the function will produce graphs, heatmaps of counts per combination of \code{bckg.row.var} and \code{bckg.col.var} category (population estimates) per group defined by the \code{split.vars} will be produced. All plots are produced per country. If no \code{split.vars} at the end there will be a heatmap for all countries together. By default the row and column variable names are used for labeling the axes of the heatmaps, unless \code{graph.row.label} and/or \code{graph.col.label} arguments are supplied. These two arguments accept strings of length 1 which will be used to label the axes.
 #'
 #' The function also computes chi-square statistics with Rao-Scott first- and second-order design corrections because of the clustering in complex survey designs. For more details, see Rao & Scott (1984, 1987) and Skinner (2019).
 #'
@@ -135,8 +139,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
-lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg.col.var, expected.cnts = TRUE, row.pcts = FALSE, column.pcts = FALSE, total.pcts = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg.col.var, expected.cnts = TRUE, row.pcts = FALSE, column.pcts = FALSE, total.pcts = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, graph.row.label = NULL, graph.col.label = NULL, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -216,6 +219,14 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     }
     if(length(data) == 0) {
       stop('\nAll countries in the data have only missing values on "bckg.row.var" and/or "bckg.col.var". All operations stop here.\n\n', call. = FALSE)
+    }
+    if(isTRUE(graphs)) {
+      if(!is.null(graph.row.label) & length(graph.row.label) > 1 || !is.null(graph.col.label) & length(graph.col.label) > 1) {
+        stop('\nThe "graph.row.label" and "graph.col.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
+      }
+      if(!is.null(graph.row.label) & !is.vector(graph.row.label) | !is.atomic(graph.row.label) || !is.null(graph.col.label) & !is.vector(graph.col.label) | !is.atomic(graph.col.label)) {
+        stop('\nThe "graph.row.label" and "graph.col.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
+      }
     }
     missing.JKZONES <- lapply(X = data, FUN = function(i) {
       jk.zone.col <- intersect(unique(unname(unlist(design.weight.variables[c("IEA.JK2.dflt.std.bckg.zones", "IEA.JK2.dflt.sch.bckg.zones", "IEA.JK2.dflt.tch.bckg.zones")]))), colnames(i))
@@ -542,7 +553,13 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
         }), .SDcols = key.vars[2:length(key.vars)]]
       }
       graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
-      crosstabs.graphs.list <- produce.crosstabs.plots(data.obj = graphs.object, row.var = vars.list[["bckg.row.var"]], split.vars.vector = key.vars, col.var = "variable", name.col.var = vars.list[["bckg.col.var"]], name.row.var = vars.list[["bckg.row.var"]])
+      if(is.null(graph.row.label)) {
+        graph.row.label <- vars.list[["bckg.row.var"]]
+      }
+      if(is.null(graph.col.label)) {
+        graph.col.label <- vars.list[["bckg.col.var"]]
+      }
+      crosstabs.graphs.list <- produce.crosstabs.plots(data.obj = graphs.object, row.var = vars.list[["bckg.row.var"]], split.vars.vector = key.vars, col.var = "variable", name.col.var = graph.col.label, name.row.var = graph.row.label)
       if(length(key.vars) == 1) {
         graphs.object <- rbindlist(l = graphs.object)
         x.var <- sym("variable")
@@ -553,8 +570,8 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
         int.crosstabs <- int.crosstabs + facet_wrap(graphs.object[ , get(facet.var)] ~ .)
         int.crosstabs <- int.crosstabs + geom_tile(color = "grey")
         int.crosstabs <- int.crosstabs + scale_fill_gradient(low = "white", high = "red")
-        int.crosstabs <- int.crosstabs + xlab(label = vars.list[["bckg.col.var"]])
-        int.crosstabs <- int.crosstabs + ylab(label = vars.list[["bckg.row.var"]])
+        int.crosstabs <- int.crosstabs + xlab(label = graph.col.label)
+        int.crosstabs <- int.crosstabs + ylab(label = graph.row.label)
         int.crosstabs <- int.crosstabs + geom_text(aes(label = round(x = value, digits = 0)))
         int.crosstabs <- int.crosstabs + scale_x_discrete(expand = c(0,0), position = "top", labels = str_wrap(string = graphs.object[ , get(as.character(x.var))], width = 10))
         int.crosstabs <- int.crosstabs + scale_y_discrete(expand = c(0,0), labels = str_wrap(string = rev(levels(droplevels(graphs.object[ , get(as.character(y.var))]))), width = 10))
@@ -562,9 +579,9 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
         int.crosstabs <- int.crosstabs + theme(panel.background = element_rect(fill = "white"),
                                                panel.grid.major.x = element_blank(),
                                                panel.grid.major = element_line(colour = "black"),
-                                               panel.border = element_rect(colour = "black", fill = NA, size = 1),
+                                               panel.border = element_rect(colour = "black", fill = NA, linewidth =  1),
                                                plot.background = element_rect(fill = "#e2e2e2"),
-                                               strip.background = element_rect(color = "black", fill = "#9E9E9E", size = 1, linetype = "solid"),
+                                               strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth =  1, linetype = "solid"),
                                                legend.background = element_rect(fill = "#e2e2e2"),
                                                legend.key = element_blank(),
                                                plot.title = element_text(hjust = 0.5))

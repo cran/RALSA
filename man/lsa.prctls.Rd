@@ -15,6 +15,10 @@ lsa.prctls(
   include.missing = FALSE,
   shortcut = FALSE,
   graphs = FALSE,
+  perc.x.label = NULL,
+  perc.y.label = NULL,
+  prctl.x.labels = NULL,
+  prctl.y.labels = NULL,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -58,6 +62,18 @@ design when computing the variance components and the standard errors of
 the PV estimates.}
 
 \item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
+\item{perc.x.label}{String, custom label for the horizontal axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{perc.y.label}{String, custom label for the vertical axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{prctl.x.labels}{List of strings, custom labels for the horizontal axis in percentiles'
+graphs. Ignored if \code{graphs = FALSE}. See details.}
+
+\item{prctl.y.labels}{List of strings, custom labels for the vertical axis in percentiles'
+graphs.  Ignored if \code{graphs = FALSE}. See details.}
 
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
@@ -130,7 +146,7 @@ If \code{include.missing = FALSE} (default), all cases with missing values on th
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 
-If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95\% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95\% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together.
+If \code{graphs = TRUE}, the function will produce graphs. Bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95\% confidence) for these percentages. Line plots for the percentiles per group defined by the \code{split.vars} will be created with 95\% confidence intervals for the percentile values. All plots are produced per country. If no \code{split.vars} are specified, at the end there will be percentile plots for each of the variables specified in \code{bckg.prctls.vars} and/or \code{PV.root.prctls} for all countries together. By default the percentage graphs horizontal axis is labeled with the name of the last splitting variable, and the vertical is labeled as "Percentages XXXXX" where XXXXX is the last splitting variable the percentages are computed for. For the percentiles' plots the horizontal axis is labeled as "Percentiles", and the vertical axis is labeled as the name of the variable for which percentiles are computed. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{prctl.x.labels} and \code{prctl.y.labels}. The \code{perc.x.label} and \code{perc.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. The \code{prctl.x.labels} and \code{prctl.y.labels} accept lists with number of components equal to the number of variables (background or PVs) for which percentiles are computed, longer or shorter lists throw errors. See the examples.
 }
 \examples{
 # Compute the 5th, 25th and 50th percentiles of the complex background scale "Students like

@@ -20,8 +20,8 @@
 #' @param pcts.within     Logical value specifying if the percentages shall be computed within the
 #'                        groups defined by the \code{split.vars} (\code{TRUE}) or not (\code{FALSE},
 #'                        default). See details.
-#' @param bckg.var        Name of continuous background or contextual variable to compute the mean
-#'                        for. The results will be computed by all groups specified by the
+#' @param bckg.var        Name of a continuous background or contextual variable to compute the
+#'                        mean for. The results will be computed by all groups specified by the
 #'                        splitting variables and per performance group. See details.
 #' @param weight.var      The name of the variable containing the weights. If no name of a weight
 #'                        variable is provide, the function will automatically select the default
@@ -36,6 +36,16 @@
 #'                        computing the variance components and the standard errors of the
 #'                        estimates.
 #' @param graphs          Logical, shall graphs be produced? Default is \code{FALSE}. See details.
+#' @param perc.x.label    String, custom label for the horizontal axis in percentage graphs.
+#'                        Ignored if \code{graphs = FALSE}. See details.
+#' @param perc.y.label    String, custom label for the vertical axis in percentage graphs.
+#'                        Ignored if \code{graphs = FALSE}. See details.
+#' @param mean.x.label    List of strings, custom labels for the horizontal axis in means' graphs.
+#'                        Ignored if \code{bckg.var} is omitted and/or \code{graphs = FALSE}.
+#'                        See details.
+#' @param mean.y.label    List of strings, custom labels for the vertical axis in means' graphs.
+#'                        Ignored if \code{bckg.var} is omitted and/or \code{graphs = FALSE}.
+#'                        See details.
 #' @param save.output     Logical, shall the output be saved in MS Excel file (default) or not
 #'                        (printed to the console or assigned to an object).
 #' @param output.file     If \code{save.output = TRUE} (default), full path to the output file
@@ -67,7 +77,7 @@
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Numeracy, TIMSS Advanced, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 #'
-#' If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95% confidence intervals of the average for this variable will be produced. All plots are produced per country.
+#' If \code{graphs = TRUE}, the function will produce graphs. If \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) reaching or surpassing each benchmark level specified in \code{bench.vals} per group specified by \code{split.vars} will be produced with error bars (95% confidence) for these percentages. If \code{bckg.var} is specified, plots with 95% confidence intervals of the average for this variable will be produced. All plots are produced per country. By default the percentage graphs horizontal axis is labeled as "Performance Group", and the vertical is labeled as "Percentages XXXXX" where XXXXX is the root name of the set of PVs percentages within performance group are computed for. If \code{bckg.var} is provide to compute means for, the means plots' horizontal axis is labeled as "Performance Group", and the vertical axis is labeled as "Mean XXXXX" where XXXXX is the name of the variable for which means are computed for each performance group. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.label} and \code{mean.y.label}. The \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.label} and \code{mean.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. See the examples.
 #'
 #' @return
 #' If \code{save.output = FALSE}, a list containing the estimates and analysis information. If \code{graphs = TRUE}, the plots will be added to the list of estimates.
@@ -146,6 +156,16 @@
 #' output.file = "C:/temp/test.xlsx", open.output = TRUE)
 #' }
 #'
+#' # Same as above, this time adding graphs with custom x-axis and y-axis labels
+#' \dontrun{
+#' lsa.bench(data.object = ICILS_2018_student_data, split.vars = c("S_SEX", "IS2G03"),
+#' PV.root.bench = "PV#CIL", bckg.var = "S_SPECACT",
+#' graphs = TRUE, perc.x.label = "Percentages of students", perc.y.label = "Benchmark groups",
+#' mean.x.label = "Performance groups", mean.y.label = "Average of using specialist apps scale",
+#' include.missing = TRUE,
+#' output.file = "C:/temp/test.xlsx", open.output = TRUE)
+#' }
+#'
 #' # Compute the cumulative percentage of students at or above each of the (default) benchmarks
 #' # of student overall reading achievement scores using PIRLS 2016 student data file, split the
 #' # output by student sex, use the full design, include the missing values of the splitting
@@ -162,9 +182,7 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-
-
-lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.vals, bench.type, pcts.within = FALSE, bckg.var, weight.var, include.missing = FALSE, shortcut = FALSE, graphs = FALSE, perc.x.label = NULL, perc.y.label = NULL, mean.x.label = NULL, mean.y.label = NULL, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -197,6 +215,20 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
     }
     if(!is.logical(save.output) || !save.output %in% c(TRUE, FALSE)) {
       stop('\nThe "save.output" argument can take only logical values (TRUE or FALSE). All operations stop here. Check your input.', call. = FALSE)
+    }
+    if(isTRUE(graphs)) {
+      if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
+      }
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+        stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
+      }
+      if(!is.null(mean.x.label) & length(mean.x.label) > 1 || !is.null(mean.y.label) & length(mean.y.label) > 1) {
+        stop('\nThe "mean.x.label" and "mean.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
+      }
+      if(!is.null(mean.x.label) & !is.vector(mean.x.label) | !is.atomic(mean.x.label) || !is.null(mean.y.label) & !is.vector(mean.y.label) | !is.atomic(mean.y.label)) {
+        stop('\nThe "mean.x.label" and "mean.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
+      }
     }
     ptm.data.import <- proc.time()
     data <- copy(import.data(path = data.file))
@@ -947,9 +979,15 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
           }
         }
       }
-      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "bench")
+      if(is.null(perc.x.label)) {
+        perc.x.label <- NULL
+      }
+      if(is.null(perc.y.label)) {
+        perc.y.label <- NULL
+      }
+      perc.graphs.list <- produce.percentages.plots(data.obj = graphs.object, split.vars.vector = key.vars, type = "bench", perc.graph.xlab = perc.x.label, perc.graph.ylab = perc.y.label)
       if(!is.null(vars.list[["bckg.var"]]) && bench.type != "cumulative") {
-        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "bench")
+        means.graphs.list <- produce.means.plots(data.obj = graphs.object, estimates.obj = estimates, split.vars.vector = key.vars, type = "bench", mean.graph.xlab = mean.x.label, mean.graph.ylab = mean.y.label)
       }
     }
     if(isTRUE(save.output)) {

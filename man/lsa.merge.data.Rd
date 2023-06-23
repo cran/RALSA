@@ -31,7 +31,7 @@ The \code{inp.folder} specifies the path to the folder containing the \code{.RDa
 
 The \code{file.types} is a list of the respondent types as component names and their variables as elements to be merged. The file type names are three-character codes, the first three characters of the corresponding file names. The elements are vectors of upper case variable names, \code{NULL} takes all variables in the corresponding file. For example, in TIMSS \code{asg} will merge only student-level data from grade 4, \code{c(asg, atg)} will merge the student-level and teacher-level data from grade 4, \code{c(bsg, btm)} will merge student-level and mathematics teacher-level data from grade 8. If a merge is not possible by the study design, the function will stop with an error. See the examples.
 
-The \code{ISO} is a character vector specifying the countries whose data shall be merged. The elements of the vector are the fourth, fifth and sixth characters in the file names. For example, \code{c("aus", "swe", "svn")} will merge the data from Australia, Sweden and Slovenia for the file types specified in \code{file.types}. If file for specific country does not exist in the \code{inp.folder}, a warning will be issued. If missing, the files for all countries in the folder will be merged for the specified \code{file.types}.
+The \code{ISO} is a character vector specifying the countries whose data shall be merged. The elements of the vector are the fourth, fifth and sixth characters in the file names. For example, \code{c("aus", "swe", "svn")} will merge the data from Australia, Sweden and Slovenia for the file types specified in \code{file.types}. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. If file for specific country does not exist in the \code{inp.folder}, a warning will be issued. If the \code{ISO} argument is missing, the files for all countries in the folder will be merged for the specified \code{file.types}.
 
 The \code{out.file} must contain full path (including the \code{.RData} extension, if missing, it will be added) to the output file (i.e. the file containing merged data). The file contains object with the same name and has a class extension \code{lsa.data}. It has additional attribute \code{file.type} showing data from which respondents is available after the merging has been done. For example, merging the student-level data with teacher-level data in TIMSS grade 4 will assign "std.bckg.tch.bckg" to this attribute. The object has two additional attributes: study name (\code{study}) and study cycle (\code{cycle}). The object in the \code{.RData} file is keyed on the country ID variable. If output folder is not provided, the merged file will be saved in the working folder (\code{getwd()}) as \code{merged_data.RData}.
 }
@@ -52,6 +52,9 @@ atg = c("ATBG01", "ATBG02", "ATBG03")), ISO = c("aus", "twn", "svnn"),
 out.file = "C:/Merged/Merged.RData")
 }
 
+}
+\references{
+Foy, P. (Ed.). (2018). \emph{PIRLS 2016 User Guide for the International Database}. TIMSS & PIRLS International Study Center.
 }
 \seealso{
 \code{\link{lsa.convert.data}}

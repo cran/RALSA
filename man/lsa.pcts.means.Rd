@@ -15,6 +15,10 @@ lsa.pcts.means(
   include.missing = FALSE,
   shortcut = FALSE,
   graphs = FALSE,
+  perc.x.label = NULL,
+  perc.y.label = NULL,
+  mean.x.labels = NULL,
+  mean.y.labels = NULL,
   save.output = TRUE,
   output.file,
   open.output = TRUE
@@ -63,6 +67,18 @@ computing the variance components and the standard errors of the
 estimates.}
 
 \item{graphs}{Logical, shall graphs be produced? Default is \code{FALSE}. See details.}
+
+\item{perc.x.label}{String, custom label for the horizontal axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{perc.y.label}{String, custom label for the vertical axis in percentage graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{mean.x.labels}{List of strings, custom labels for the horizontal axis in means' graphs.
+Ignored if \code{graphs = FALSE}. See details.}
+
+\item{mean.y.labels}{List of strings, custom labels for the vertical axis in means' graphs.
+Ignored if \code{graphs = FALSE}. See details.}
 
 \item{save.output}{Logical, shall the output be saved in MS Excel file (default) or not
 (printed to the console or assigned to an object).}
@@ -161,7 +177,9 @@ If \code{include.missing = FALSE} (default), all cases with missing values on th
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
 
-If \code{graphs = TRUE}, the function will produce graphs. If only \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95\% confidence) for these percentages. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, plots with 95\% confidence intervals of the averages (means, medians or modes) will be produced for each average analysis variable. All plots are produced per country. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, but no \code{split.vars} at the end there will be plots for each of the analysis average variables for all countries together.
+If \code{graphs = TRUE}, the function will produce graphs. If only \code{split.vars} are specified, bar plots of percentages of respondents (population estimates) per group will be produced with error bars (95\% confidence) for these percentages. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, plots with 95\% confidence intervals of the averages (means, medians or modes) will be produced for each average analysis variable. All plots are produced per country. If \code{bckg.avg.vars} and/or \code{PV.root.avg} are specified, but no \code{split.vars} at the end there will be plots for each of the analysis average variables for all countries together. By default the percentage graphs horizontal axis is labeled with the name of the last splitting variable, and the vertical is labeled as "Percentages XXXXX" where XXXXX is the last splitting variable the percentages are computed for. For the means' plots the horizontal axis is labeled as the name of the last splitting variable for whose categories the means are computed by, and the vertical axis is labeled as "Mean XXXXX" where XXXXX is the name of the variable for which means are computed. These defaults can be overriden by supplying values to \code{perc.x.label}, \code{perc.y.label}, \code{mean.x.labels} and \code{mean.y.labels}. The \code{perc.x.label} and \code{perc.y.label} arguments accept vectors of length 1, and if longer vectors are supplied, error is thrown. The \code{mean.x.labels} and \code{mean.y.labels} accept lists with number of components equal to the number of variables (background or PVs) for which means are computed, longer or shorter lists throw errors. See the examples.
+
+row and column variable names are used for labeling the axes of the heatmaps, unless \code{graph.row.label} and/or \code{graph.col.label} arguments are supplied. These two arguments accept strings which will be used to label the axes.
 }
 \examples{
 # Compute percentages of female and male students in TIMSS 2015 grade 8 using data file, omit
@@ -189,6 +207,17 @@ output.file = "C:/temp/test.xlsx", open.output = TRUE)
 lsa.pcts.means(data.object = T15_G8_student_data, split.vars = c("BSBG01", "BSBG13A"),
 bckg.avg.vars = c("BSBGSLM", "BSBGSLS"), weight.var = "SENWGT", include.missing = FALSE,
 shortcut = TRUE, output.file = "C:/temp/test.xlsx", open.output = TRUE)
+}
+# Same as above, but add graphs with custom labels for the percentages and means
+\dontrun{
+lsa.pcts.means(data.object = T15_G8_student_data, split.vars = c("BSBG01", "BSBG13A"),
+bckg.avg.vars = c("BSBGSLM", "BSBGSLS"), weight.var = "SENWGT", include.missing = FALSE,
+shortcut = TRUE, graphs = TRUE,
+perc.x.label = "Using computer or tables for schoolwork at home",
+perc.y.label = "Percentage of students",
+mean.x.labels = list("Books at home", "Books at home"),
+mean.y.labels = list("Average like learning math", "Average like learning science"),
+output.file = "C:/temp/test.xlsx", open.output = TRUE)
 }
 
 # Compute the arithmetic average of student overall reading achievement scores

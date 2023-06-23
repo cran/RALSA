@@ -50,7 +50,6 @@
 #'
 #' @seealso \code{\link{lsa.convert.data}}, \code{\link{lsa.recode.vars}}
 #' @export
-
 lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.file = FALSE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
@@ -103,10 +102,15 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
     })
     var.unique.values <- lapply(X = data, FUN = function(i) {
       if(is.factor(i)) {
+        levels.number <- 1:length(levels(i))
         if(length(levels(i)) > 2) {
-          c(paste0("'", levels(i)[1], "'\n"), paste0("                 '", levels(i)[2:(length(levels(i)) - 1)], "'\n"), paste0("                 '", levels(i)[length(levels(i))], "'"))
-        } else {
-          c(paste0("'", levels(i)[1], "'\n"), paste0("                 '", levels(i)[2]), "'")
+          c(paste0(levels.number[1], " - '", levels(i)[1], "'\n"),
+            paste0("                 ", levels.number[2:(length(levels.number) - 1)], " - '", levels(i)[2:(length(levels(i)) - 1)], "'\n"),
+            paste0("                 ", levels.number[length(levels.number)], " - '", levels(i)[length(levels(i))], "'"))
+        } else if(length(levels(i)) == 2) {
+          c(paste0(levels.number[1], " - '", levels(i)[1], "'\n"), paste0("                 ", levels.number[2], " - '", levels(i)[2]), "'")
+        } else if (length(levels(i)) == 1) {
+          c(paste0(levels.number, " - '", levels(i), "'\n"))
         }
       } else {
         if(length(unique(i)) > 6) {
@@ -124,9 +128,9 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
         } else if(length(miss.attr) == 1) {
           paste0("'", miss.attr, "'")
         } else if(length(miss.attr) == 2) {
-          c(paste0("'", miss.attr[1], "'\n"), paste0("                 '", miss.attr[2], "'"))
+          c(paste0("    '", miss.attr[1], "'\n"), paste0("                     '", miss.attr[2], "'"))
         } else if (length(miss.attr) > 2) {
-          c(paste0("'", miss.attr[1], "'\n"), paste0("                 '", miss.attr[2:(length(miss.attr) - 1)], "\n"), paste0("                 '", miss.attr[length(miss.attr)], "'"))
+          c(paste0("    '", miss.attr[1], "'\n"), paste0("                     '", miss.attr[2:(length(miss.attr) - 1)], "\n"), paste0("                     '", miss.attr[length(miss.attr)], "'"))
         }
       } else if(is.numeric(i)) {
         if(length(miss.attr) == 0) {
