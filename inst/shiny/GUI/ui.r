@@ -27,8 +27,8 @@ import::from(RALSA,
              lsa.lin.reg,
              lsa.bin.log.reg)
 
-
 ui <- tagList(
+  
   load.app.CSS.screen <- "
 #loading-content {
   position: absolute;
@@ -45,7 +45,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-
+  
   useShinyjs(),
   rclipboardSetup(),
   inlineCSS(load.app.CSS.screen),
@@ -53,7 +53,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
     id = "loading-content", class = "center",
     h1(HTML("<br/><br/><blink>Loading...</blink><br/><br/>")),
     img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
-    h1(HTML("<br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="http://www.ralsa.ineri.org/", "(http://www.ineri.org/)", target = "_blank"))
+    h1(HTML("<br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="https://www.ralsa.ineri.org/", "(https://www.ineri.org/)", target = "_blank"))
   ),
   hidden(
     div(
@@ -62,7 +62,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
         title = "RALSA",
         dashboardHeader(
           title =
-            tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "http://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
+            tags$a(img(src = "RALSA_Logo.png", height = "60px"), href = "https://ralsa.ineri.org/", target = "_blank"), titleWidth = 260,
           tags$li(class = "dropdown",
                   tags$style(".main-header .logo {height: 70px; padding-top: 5px; padding-left: 15px; background-color: #000000 !important;}"),
                   tags$style(".sidebar-toggle {background-color: #000000 !important; width: 0px;}"),

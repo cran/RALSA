@@ -1343,9 +1343,6 @@ design.weight.variables <- list(
                                     "JKREPS",
                                     "JKINDIC"),
   IEA.JK2.dflt.sch.bckg.types = c("sch.bckg",
-                                  "sch.bckg.tch.bckg",
-                                  "sch.bckg.math.tch.bckg",
-                                  "sch.bckg.sci.tch.bckg",
                                   "std.home.sch.bckg",
                                   "math.sch.bckg",
                                   "math.sch.bckg.math.tch.bckg",
@@ -2585,6 +2582,9 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Gloabl objects
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

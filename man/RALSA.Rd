@@ -3,6 +3,7 @@
 \docType{package}
 \name{RALSA}
 \alias{RALSA}
+\alias{RALSA-package}
 \title{R Analyzer for Large-Scale Assessments (RALSA)}
 \description{
 The RALSA package provides functionality for analyzing data from large-scale assessments and surveys which use complex sampling and assessment design. Such (international) assessments and surveys are TIMSS, PIRLS and PISA, for example.
@@ -87,4 +88,7 @@ OECD. (in press). \emph{PISA 2018 Technical Report}. OECD.
 Rutkowski, L., Gonzalez, E., Joncas, M., & von Davier, M. (2010). International Large-Scale Assessment Data: Issues in Secondary Analysis and Reporting. \emph{Educational Researcher, 39}(2), 142-151.
 
 Rutkowski, L., Rutkowski, D., & von Davier, M. (2014). A Brief Introduction to Modern International Large-Scale Assessment. In L. Rutkowski, M. von Davier, & D. Rutkowski (Eds.), \emph{Handbook of International Large-Scale Assessments: Background, Technical Issues, and Methods of Data Analysis} (pp. 3-10). CRC Press.
+}
+\author{
+Plamen V. Mirazchiyski, INERI
 }

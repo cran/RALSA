@@ -1,3 +1,23 @@
+# RALSA v1.3.7 (2023-10-25)
+
+This update focuses mainly on some critical issues that were introduced after the changes in the last versions of R and CRAN policies on package documentation.
+
+## Bug fixes
+
+* When a file with school and teacher data merged is imported, the GUI crashes for all analysis functions.
+
+* The GUI does not recognize some populations' files in different studies when using the `lsa.convert.data` function and crashes.
+
+## Miscellaneous
+
+* Various improvements and optimizations in the GUI workfrlow for all data preparation and analysis functions, including showing and hiding elements depending on the user selections.
+
+* Improved documentation.
+
+
+
+
+
 # RALSA v1.3.5 (2023-05-23)
 
 This update focuses on adding more functionality to the existing graph capabilities, bug fixes and overall improvement of the workflow, and updates existing features following updates of packages RALSA depends on. Saving syntaxes from the GUI now appends the new synatx to existing files instead of overwriting them.

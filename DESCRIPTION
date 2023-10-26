@@ -1,8 +1,8 @@
 Package: RALSA
 Type: Package
 Title: R Analyzer for Large-Scale Assessments
-Version: 1.3.5
-Date: 2023-06-23 17:30
+Version: 1.3.7
+Date: 2023-10-26 18:00
 Authors@R: c(person(given = "Plamen V.",
                     family = "Mirazchiyski",
                     role = c("aut", "cre"),
@@ -35,9 +35,9 @@ Imports: DT, Hmisc, data.table, foreign, ggplot2, import, methods,
         openxlsx, rclipboard, readr, rstudioapi, shiny, shinyFiles,
         shinydashboard, shinyjs, stringi, stringr
 License: GPL-2
-URL: http://ralsa.ineri.org/
+URL: https://ralsa.ineri.org/
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-06-23 15:00:47 UTC; plamen
+Packaged: 2023-10-26 15:09:02 UTC; plamen
 Repository: CRAN
-Date/Publication: 2023-06-23 15:40:03 UTC
+Date/Publication: 2023-10-26 15:50:02 UTC

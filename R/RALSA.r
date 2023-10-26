@@ -80,8 +80,10 @@
 #'
 #' Rutkowski, L., Rutkowski, D., & von Davier, M. (2014). A Brief Introduction to Modern International Large-Scale Assessment. In L. Rutkowski, M. von Davier, & D. Rutkowski (Eds.), \emph{Handbook of International Large-Scale Assessments: Background, Technical Issues, and Methods of Data Analysis} (pp. 3-10). CRC Press.
 #'
-#' @docType package
 #' @name RALSA
+#' @docType package
+#' @author Plamen V. Mirazchiyski, INERI
+#' @aliases RALSA-package
 #' @import data.table openxlsx stringr foreign readr stringi shiny shinydashboard shinyFiles
 #' @importFrom DT JS renderDT DTOutput
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
