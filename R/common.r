@@ -1,7 +1,320 @@
+reshape.imported <- function(object, to.NA, study, cycle, type) {
+  setDT(object)
+  setnames(x = object, toupper(names(object)))
+  object[ , colnames(object) := lapply(.SD, function(i) {
+    spss.format.string <- attr(x = i, which = "format.spss")
+    start.char <- substr(x = spss.format.string, start = 1, stop = 1)
+    var.labels <- attr(x = i, which = "label")
+    var.labels <- gsub(pattern = "\\\\", replacement = "/", x = var.labels)
+    var.labels <- gsub(pattern = "\u00e2\u20ac\u2122", replacement = "\\\\'", x = var.labels)
+    var.labels <- gsub(pattern = "\u00e2\u0080\u009cA |\u00e2\u0080\u009d|\u00e2\u0080\u009c|\u00e2\u0080\u0099 ", replacement = '"', x = var.labels)
+    var.labels <- gsub(pattern = "\u00e2\u0080\u0094", replacement = "-", x = var.labels)
+    var.labels <- gsub(pattern = "\u00e2\u0080\u00a6", replacement = "...", x = var.labels)
+    miss.labels <- lapply(X = all.missing.values.combinations, FUN = function(j) {
+      identical(x = j, y = tail(names(sort(attr(x = i, which = "labels"))), n = length(j)))
+    })
+    miss.labels <- all.missing.values.combinations[which(unlist(miss.labels))]
+    if(length(miss.labels) > 0) {
+      miss.labels <- miss.labels[[which.max(lengths(miss.labels))]]
+      miss.labels <- attr(x = i, which = "labels")[names(attr(x = i, which = "labels")) %in% miss.labels]
+    } else {
+      miss.labels <- names(attr(x = i, which = "labels"))[unlist(all.missing.values.combinations)]
+      if(is.null(miss.labels)) {
+        miss.labels <- attr(x = i, which = "na_values")
+      }
+      if(all(is.na(miss.labels))) {
+        miss.labels <- NULL
+      } else {
+        miss.labels <- miss.labels
+      }
+    }
+    if(start.char %in% c("A", "a") && is.null(attr(x = i, which = "labels"))) {
+      i <- as.character(i)
+    } else if(start.char %in% c("A", "a") && !is.null(attr(x = i, which = "labels"))) {
+      if(isTRUE(to.NA)) {
+        if(!is.null(miss.labels)) {
+          i[i %in% as.numeric(miss.labels)] <- NA
+        }
+        i <- as.character(as_factor(x = i, levels = "both"))
+      } else if(isFALSE(to.NA)) {
+        if(!is.null(miss.labels)) {
+          tmp.miss <- paste0("[", miss.labels, "] ", names(miss.labels))
+        }
+        i <- as.character(as_factor(i, levels = "both"))
+        if(!is.null(miss.labels)) {
+          attr(i, "missings") <- tmp.miss
+        }
+      }
+    } else if(start.char %in% c("F", "f") && !is.null(attr(x = i, which = "labels"))) {
+      names(attr(x = i, which = "labels")) <- make.unique(names(attr(x = i, which = "labels")))
+      if(isTRUE(to.NA)) {
+        if(all(names(attr(i, "labels")) %in% names(miss.labels))) {
+          i <- as.numeric(i)
+          i[i %in% miss.labels] <- NA
+        } else if(!all(names(attr(i, "labels")) %in% names(miss.labels))) {
+          i <- as_factor(i)
+          i[i %in% names(miss.labels)] <- NA
+          i <- factor(x = i, levels = levels(i)[!levels(i) %in% names(miss.labels)])
+        }
+      } else if(isFALSE(to.NA)) {
+        if(all(names(attr(i, "labels")) %in% names(miss.labels))) {
+          i <- as.numeric(i)
+          attr(x = i, which = "missings") <- miss.labels
+        } else if(all(!attr(i, "labels") %in% names(miss.labels))) {
+          i <- as_factor(i)
+          attr(i, "missings") <- names(miss.labels)
+        }
+      }
+    } else if(start.char %in% c("F", "f") && is.null(attr(x = i, which = "labels"))) {
+      i <- as.numeric(i)
+      if(isTRUE(to.NA)) {
+        if(is.null(miss.labels)) {
+          i
+        } else {
+          i[i %in% as.numeric(miss.labels)] <- NA
+        }
+      } else {
+        attr(i, "missings") <- miss.labels
+      }
+    } else if("Date" %in% class(i)) {
+      i <- as.numeric(gsub(pattern = "[[:punct:]]+", replacement = "", x = as.character(i)))
+    }
+    if(length(var.labels)) {
+      setattr(x = object[ , (i)], name = "variable.label", value = var.labels)
+    }
+    setattr(x = object[ , (i)], name = "label", value = NULL)
+  })]
+  rep.indicator <- names(object)[which(colnames(object) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
+  if(length(rep.indicator) > 0) {
+    object[ , eval(rep.indicator) := lapply(.SD, function(i) {
+      tmp.var.label <- attr(x = i, which = "variable.label")
+      tmp.missings <- attr(x = i, which = "missings")
+      if(is.factor(i)) {
+        i <- as.numeric(i) - 1
+      } else {
+        i <- i
+      }
+      if(length(tmp.var.label) > 0) {
+        attr(x = i, which = "variable.label") <- tmp.var.label
+      } else {
+        i <- i
+      }
+      if(length(tmp.missings) > 0) {
+        attr(x = i, which = "missings") <- tmp.missings
+      } else {
+        i <- i
+      }
+      return(i)
+    }), .SDcols = rep.indicator]
+  }
+  if(study %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS")) {
+    idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
+    if(isFALSE(to.NA)) {
+      idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
+    }
+    idx.cnt.num.code <- match(unique(object[ , IDCNTRY]), cnt.ID.list[["Numeric"]])
+    object[ , IDCNTRY := factor(x = IDCNTRY, labels = cnt.ID.list[["ISO"]][idx.cnt.num.code])]
+    object[ , setattr(x = IDCNTRY, name = "variable.label", value = idcntry.var.lab)]
+  } else if(study %in% c("ICILS", "SITES", "TEDS-M", "TALIS", "REDS")) {
+    idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
+    if(isFALSE(to.NA)) {
+      idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
+    }
+    object[ , IDCNTRY := droplevels(x = IDCNTRY)]
+    if(isFALSE(to.NA) && length(idcntry.missings) > 0) {
+      object[ , setattr(x = IDCNTRY, name = "missings", value = idcntry.missings)]
+    }
+    object[ , setattr(x = IDCNTRY, name = "variable.label", value = idcntry.var.lab)]
+  } else if(study %in% c("PISA", "PISA for Development")) {
+    if(is.character(object[ , CNT])) {
+      cnt.var.lab <- attr(x = object[ , CNT], which = "variable.label")
+      object[ , CNT := as.factor(gsub(pattern = "^\\[[[:alpha:]]+\\][[:space:]]+", replacement = "", x = CNT))]
+      object[ , setattr(x = CNT, name = "variable.label", value = cnt.var.lab)]
+    }
+  }
+  setattr(x = object, name = "study", value = get(x = "study.attribute", envir = parent.frame()))
+  setattr(x = object, name = "cycle", value = get(x = "cycle.attribute", envir = parent.frame()))
+  setattr(x = object, name = "file.type", value = get(x = "file.type.attribute", envir = parent.frame()))
+  setattr(x = object, name = "class", value = c("lsa.data", attr(x = object, which = "class")))
+  if(isFALSE(to.NA)) {
+    object[ , colnames(object) := lapply(.SD, function(i) {
+      if(is.factor(i) & is.numeric(attr(x = i, which = "missings"))) {
+        tmp.label <- attr(x = i, which = "variable.label")
+        names.miss <- names(attr(x = i, which = "missings"))
+        i <- factor(x = i, levels = c(levels(x = i)[!levels(i) %in% as.character(attr(x = i, which = "missings"))], names.miss))
+        attr(x = i, which = "missings") <- names.miss
+        attr(x = i, which = "variable.label") <- tmp.label
+        return(i)
+      } else {
+        i
+      }
+    })]
+  } else {
+    object
+  }
+  if(study %in% c("PISA", "PISA for Development")) {
+    setkeyv(x = object, cols = "CNT")
+  } else {
+    setkeyv(x = object, cols = "IDCNTRY")
+  }
+}
+cnt.ID.list <- list(
+  Numeric = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 9130, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106, 276005),
+  ISO = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein")
+)
 import.data <- function(path) {
   tmp <- load(path)
   return(get(tmp))
 }
+study.dataset.files <- list(
+  ZIP.data.folders = list(
+    "CivED" = list(
+      "1999" = list(G8 = "CivED1999_IDB_SPSS_G8/Data/", G12 = "CivED1999_IDB_SPSS_G8/Data/")
+    ),
+    "ICCS" = list(
+      "2009" = list(G8 = "ICCS2009_IDB_SPSS/Data_G8/", G9 = "ICCS2009_IDB_SPSS/Data_G9/"),
+      "2016" = list(G8 = "ICCS2016_IDB_SPSS/Data/")
+    ),
+    "ICILS" = list(
+      "2013" = list(G8 = "ICILS2013_IDB_SPSS/Data/"),
+      "2018" = list(G8 = "ICILS2018_IDB_SPSS/Data/")
+    ),
+    "PIRLS" = list(
+      "2001" = list(G4 = "PIRLS2001_IDB_SPSS/Data/"),
+      "2006" = list(G4 = "PIRLS2006_IDB_SPSS/Data/"),
+      "2011" = list(G4 = "PIRLS2011_IDB_SPSS/Data/"),
+      "2016" = list(G4 = "PIRLS2016_IDB_SPSS/Data/"),
+      "2021" = list(G4 = "PIRLS2021_IDB_SPSS/3_International Database/1_SPSS Data/")
+    ),
+    "prePIRLS" = list(
+      "2016" = list(G4 = "PIRLS_Literacy2016_IDB_SPSS/Data/")
+    ),
+    "ePIRLS" = list(
+      "2016" = list(G4 = "ePIRLS2016_IDB_SPSS/Data/")
+    ),
+    "REDS" = list(
+      "2021" = list(G8 = "REDS2021_IDB_SPSS/Data/")
+    ),
+    "RLII" = list(
+      "1991" = list(G4 = "RLII1991_IDB_SPSS/Data/"),
+      "2001" = list(G4 = "RLII2001_IDB_SPSS/Data/")
+    ),
+    "SITES" = list(
+      "1998" = list(M1 = "SITES1998_IDB_SPSS/"),
+      "2006" = list(M2 = "SITES2006_IDB_SPSS/Data/")
+    ),
+    "TIMSS" = list(
+      "1995" = list(G4 = "TIMSS1995_IDB_SPSS_G4/Data/", G8 = "TIMSS1995_IDB_SPSS_G8/Data/"),
+      "1999" = list(G8 = "TIMSS1999_IDB_SPSS_G8/Data/"),
+      "2003" = list(G4 = "TIMSS2003_IDB_SPSS_G4/Data/", G8 = "TIMSS2003_IDB_SPSS_G8/Data/"),
+      "2007" = list(G4 = "TIMSS2007_IDB_SPSS_G4/Data/", G8 = "TIMSS2007_IDB_SPSS_G8/Data/"),
+      "2011" = list(G4 = "TIMSS2011_IDB_SPSS_G4/Data/", G8 = "TIMSS2011_IDB_SPSS_G8/Data/"),
+      "2015" = list(G4 = "TIMSS2015_IDB_SPSS_G4/Data/", G8 = "TIMSS2015_IDB_SPSS_G8/Data/"),
+      "2019" = list(G4 = "TIMSS2019_IDB_SPSS_G4/Data/", G8 = "TIMSS2019_IDB_SPSS_G8/Data/")
+    ),
+    "preTIMSS" = list(
+      "2015" = list(G4 = "TIMSS2015_IDB_SPSS_G4/Data/")
+    ),
+    "TIMSS Advanced Math" = list(
+      "1995" = list(G12 = "TA1995_IDB_SPSS_Mathematics/Data/"),
+      "2008" = list(G12 = "TA1995_IDB_SPSS_Mathematics/Data/"),
+      "2015" = list(G12 = "TA2015_IDB_SPSS_Mathematics/Data/")
+    ),
+    "TIMSS Advanced Phys" = list(
+      "1995" = list(G12 = "TA1995_IDB_SPSS_Physics/Data/"),
+      "2008" = list(G12 = "TA1995_IDB_SPSS_Physics/Data/"),
+      "2015" = list(G12 = "TA2015_IDB_SPSS_Physics/Data/")
+    ),
+    "TiPi" = list(
+      "2011" = list(G4 = "TIMSS&PIRLS2011_IDB_SPSS/Data/")
+    ),
+    "TALIS" = list(
+      "2008" = list(I2 = ""),
+      "2013" = list(I1 = "", I2 = "", I3 = "", P = ""),
+      "2018" = list(I1 = "", I2 = "", I3 = "", P = "")
+    ),
+    "TALIS 3S" = list(
+      "2018" = list(I0.2 = "TALIS-Starting-Strong-By-country-SPSS/SPSS/", U3 = "TALIS-Starting-Strong-By-country-SPSS/SPSS/")
+    ),
+    "PISA" = list(
+      "2015" = list(YO15 = ""),
+      "2018" = list(YO15 = "")
+    )
+  ),
+  ZIP.roots = list(
+    "CivED" = list(
+      "1999" = list(G8 = "CivED/CivED1999/CivED1999_IDB_SPSS_G8.zip", G12 = "CivED/CivED1999/CivED1999_IDB_SPSS_G12.zip")
+    ),
+    "ICCS" = list(
+      "2009" = list(G8 = "ICCS/ICCS2009/ICCS2009_IDB_SPSS.zip", G9 = "ICCS/ICCS2009/ICCS2009_IDB_SPSS.zip"),
+      "2016" = list(G8 = "ICCS/ICCS2016/ICCS2016_IDB_SPSS.zip")
+    ),
+    "ICILS" = list(
+      "2013" = list(G8 = "ICILS/ICILS2013/ICILS2013_IDB_SPSS.zip"),
+      "2018" = list(G8 = "ICILS/ICILS2018/ICILS2018_IDB_SPSS.zip")
+    ),
+    "PIRLS" = list(
+      "2001" = list(G4 = "PIRLS/PIRLS2001/PIRLS2001_IDB_SPSS.zip"),
+      "2006" = list(G4 = "PIRLS/PIRLS2006/PIRLS2006_IDB_SPSS.zip"),
+      "2011" = list(G4 = "PIRLS/PIRLS2011/PIRLS2011_IDB_SPSS.zip"),
+      "2016" = list(G4 = "PIRLS/PIRLS2016/PIRLS2016_IDB_SPSS.zip"),
+      "2021" = list(G4 = "PIRLS/PIRLS2021/PIRLS2021_IDB_SPSS.zip")
+    ),
+    "prePIRLS" = list(
+      "2016" = list(G4 = "PIRLS/PIRLS2016/PIRLS_Literacy2016_IDB_SPSS.zip")
+    ),
+    "ePIRLS" = list(
+      "2016" = list(G4 = "PIRLS/PIRLS2016/ePIRLS2016_IDB_SPSS.zip")
+    ),
+    "REDS" = list(
+      "2021" = list(G8 = "REDS/REDS2021/REDS2021_IDB_SPSS.zip")
+    ),
+    "RLII" = list(
+      "1991" = list(G4 = "RLII/RLII1991/RLII1991_IDB_SPSS.zip"),
+      "2001" = list(G4 = "RLII/RLII2001/RLII2001_IDB_SPSS.zip")
+    ),
+    "SITES" = list(
+      "1998" = list(M1 = "SITES/SITES1998/SITES1998_IDB_SPSS.zip"),
+      "2006" = list(M2 = "SITES/SITES2006/SITES2006_IDB_SPSS.zip")
+    ),
+    "TIMSS Advanced Math" = list(
+      "1995" = list(G12 = "TIMSSAdvanced/TA1995/TA1995_IDB_SPSS_Mathematics.zip"),
+      "2008" = list(G12 = "TIMSSAdvanced/TA2008/TA2008_IDB_SPSS_Mathematics.zip"),
+      "2015" = list(G12 = "TIMSSAdvanced/TA2015/TA2015_IDB_SPSS_Mathematics.zip")
+    ),
+    "TIMSS Advanced Phys" = list(
+      "1995" = list(G12 = "TIMSSAdvanced/TA1995/TA1995_IDB_SPSS_Physics.zip"),
+      "2008" = list(G12 = "TIMSSAdvanced/TA2008/TA2008_IDB_SPSS_Physics.zip"),
+      "2015" = list(G12 = "TIMSSAdvanced/TA2015/TA2015_IDB_SPSS_Physics.zip")
+    ),
+    "TiPi" = list(
+      "2011" = list(G4 = "TiPi/TiPi2011/TIMSS%26PIRLS2011_IDB_SPSS.zip")
+    ),
+    "TIMSS" = list(
+      "1995" = list(G4 = "TIMSS/TIMSS1995/TIMSS1995_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS1995/TIMSS1995_IDB_SPSS_G8.zip"),
+      "1999" = list(G8 = "TIMSS/TIMSS1999/TIMSS1999_IDB_SPSS_G8.zip"),
+      "2003" = list(G4 = "TIMSS/TIMSS2003/TIMSS2003_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2003/TIMSS2003_IDB_SPSS_G8.zip"),
+      "2007" = list(G4 = "TIMSS/TIMSS2007/TIMSS2007_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2007/TIMSS2007_IDB_SPSS_G8.zip"),
+      "2011" = list(G4 = "TIMSS/TIMSS2011/TIMSS2011_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2011/TIMSS2011_IDB_SPSS_G8.zip"),
+      "2015" = list(G4 = "TIMSS/TIMSS2015/TIMSS2015_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2015/TIMSS2015_IDB_SPSS_G8.zip"),
+      "2019" = list(G4 = "TIMSS/TIMSS2019/TIMSS2019_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2019/TIMSS2019_IDB_SPSS_G8.zip")
+    ),
+    "preTIMSS" = list(
+      "2015" = list(G4 = "TIMSS/TIMSS2015/TIMSS2015_IDB_SPSS_G4.zip")
+    ),
+    "TALIS" = list(
+      "2008" = list(I2 = "SPSS_2013_national.zip"),
+      "2013" = list(I1 = "SPSS_2013_national.zip", I2 = "SPSS_2013_national.zip", I3 = "SPSS_2013_national.zip", P = "SPSS_2013_national.zip"),
+      "2018" = list(I1 = "SPSS_2018_national.zip", I2 = "SPSS_2018_national.zip", I3 = "SPSS_2018_national.zip", P = "SPSS_2018_national.zip")
+    ),
+    "TALIS 3S" = list(
+      "2018" = list(I0.2 = "TALIS-Starting-Strong-By-country-SPSS.zip", U3 = "TALIS-Starting-Strong-By-country-SPSS.zip")
+    ),
+    "PISA" = list(
+      "2015" = list(YO15 = c("PUF_SPSS_COMBINED_CMB_STU_QQQ.zip", "PUF_SPSS_COMBINED_CMB_SCH_QQQ.zip", "PUF_SPSS_COMBINED_CMB_TCH_QQQ.zip", "PUF_SPSS_COMBINED_CMB_STU_COG.zip", "PUF_SPSS_COMBINED_CMB_STU_QTM.zip", "PUF_SPSS_COMBINED_CM2_STU_QQQ_COG_QTM_SCH_TCH.zip", "PUF_SPSS_COMBINED_CMB_STU_FLT.zip", "PUF_SPSS_COMBINED_CMB_STU_CPS.zip", "PUF_SPSS_STU_TTM.zip"))
+    )
+  )
+)
 graph.custom.colors <- c("#F40040", "#72F842", "#4F45FA", "#877A77", "#E83BD1", "#FEBF32", "#00D1F8", "#32DBAB", "#BE4B3D", "#B898EC", "#B3C865", "#EC168E", "#F995BB", "#BB26EF", "#00622A", "#459AFB", "#8B600D", "#C2E7F7", "#8A0D7A", "#4B7DA8", "#F5D2A3", "#F4C9EA", "#C7EBC7", "#3D40B0", "#F79BF0", "#56F6F3", "#EEDE22", "#E69782", "#F85171", "#8FE98D", "#F0751C", "#697216", "#C33D75", "#AA77FE", "#9D69A3", "#CC5DE0", "#BDE635", "#F665C2", "#65BDAC", "#FE5635", "#A3687E", "#4F407C", "#CDC9FC", "#5C9600", "#F516F6", "#DDC1BB", "#6AB9FB", "#2ABE38", "#71AA79", "#A34F4B", "#F9A763", "#DBBB58", "#979EB6", "#53B1C9", "#49F695", "#949B78", "#F1AEB8", "#ECBBFE", "#FC7A89", "#C85CA7", "#D88DBD", "#53654B", "#4265DF", "#7276BD", "#927858", "#A0F268", "#ADA862", "#1CC072", "#C22A55", "#1C8C38", "#DDE4DC", "#D04235", "#96E6AF", "#DBD7B4", "#BE78D1", "#9B5CD1", "#8A2EE5", "#D20032", "#EBE47F", "#A53B6E", "#699294", "#F93DB7", "#865AB0", "#E78356", "#FA76E4", "#8CF2D7", "#C5E6A1", "#C09FCB", "#93E8FB", "#0DA876", "#3B8E71", "#8EA9E7", "#C70D9B", "#F54D8B", "#AEAEB0", "#E6AD7F", "#88BE0D", "#8391FC", "#CE9EB2", "#42C0C2")
 produce.percentages.plots <- function(data.obj, split.vars.vector, type, perc.graph.xlab, perc.graph.ylab) {
   if(type == "ordinary") {
@@ -645,7 +958,111 @@ produce.analysis.data.table <- function(data.object, object.variables, action.ar
   }
   return(data.object)
 }
-all.missing.values.combinations <- list("not administered", "not admin.", "not admin", "n. admin.", "noz admin", "missing", "MISSING", c("not admin.", "missing"), c("crossed out, not interpretable", "not reached", "not admin.", "missing"), c("crossed out, not interpretable", "not reached", "not admin.", "omitted"), c("not admin.", "omitted"), c("omitted", "not admin."), c("not reached", "two or more responses, not interpretable", "not admin."), c("not reached", "two or more responses, not interpretable", "not admin.", "omitted (blank only)"), c("not reached", "two or more responses, uninterpretable, ...", "not admin."), c("not reached", "two or more responses, uninterpretable", "not admin."), c("NOT REACHED", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "MISSING (BLANK ONLY)"), c("not reached", "uninterpretable", "not admin."), c("not reached", "uninterpretable", "not admin"), c("n. rea.", "n. adm."), c("n. rea.", "n. admin."), c("n.reach.", "n. admin."), c("not appl.", "not admin."), c("not appl", "not admin"), c(" not appl.", "not admin."), c("not applicable", "not admin."), c("not reached", "not admin."), "n. adm.", c("n. reached", "n. admin."), c("n.rea.", "n. adm."), c("n. reach.", "n. admin."), c("not reached", "not admin"), c("log.not appl.", "not admin."), c("Not Applicable", "Not Administered"), c("don't know", "not admin.", "missing"), c("Not reached", "INVALID", "not admin."), c("not reached", "INVALID", "not admin."), c("INVALID", "OMITTED OR INVALID"), c("INVALID", "OMITTED"), "OMITTED", c("NOT REACHED", "INVALID", "OMITTED"), c("NOT REACHED", "MISSING"), c("MISSING", "LOGICALLY NOT APPLICABLE"), c("LOGICALLY NOT APPLICABLE", "MISSING"), c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED"), c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED OR INVALID"), c("Not administered/missing by design", "Presented but not answered/invalid"), c("Logically not applicable", "Not administered/missing by design", "Presented but not answered/invalid"), c("Not applicable", "Not stated"), c("Not reached", "Not administered/missing by design", "Presented but not answered/invalid"), c("Notadministered/missing by design", "Presented but not answered/invalid"), c("Not administered/missing by design", "Presented but not answered/invalid"), "Not administered or missing by design", "Presented but not answered or invalid", c("Not administered or missing by design", "Presented but not answered or invalid"), "OMITTED OR INVALID", "Omitted or invalid", c("LOGICALLY NOT APPLICABLE", "OMITTED OR INVALID"), c("Logically not applicable", "Omitted or invalid"), c("Omitted or invalid", "Logically not applicable"), c("NOT REACHED", "OMITTED"), c("Not reached", "Omitted"), c("LOGICALLY NOT APPLICABLE", "OMITTED"), c("OMITTED", "LOGICALLY NOT APPLICABLE"), c("LOGICALLY NOT APPLICABLE", "NOT REACHED", "OMITTED"), "NOT EXCLUDED", c("Not reached (default during data processing)", "Not administered", "Omitted or Invalid"), c("Logically not applicable", "Not reached", "Not administered", "Omitted or Invalid"), c("Default", "Not applicable", "Not stated"), c("Valid Skip", "Not Applicable", "Invalid", "No Response"), c("Valid Skip", "Not Reached", "Not Applicable", "Invalid", "No Response"), c("Not Applicable", "Invalid"), c("Not administered", "Omitted"), c("Invalid", "Not administered", "Omitted"), c("NOT REACHED", "INVALID RESPONSE", "OMITTED"), c("INVALID RESPONSE", "OMITTED"), c("Not reached", "Omitted or invalid"), c("Omitted or invalid", "Not reached"), c("Not applicable", "Omitted or invalid"), c("Not Reached", "Not Applicable", "Invalid", "No Response"))
+all.missing.values.combinations <- list("Invalid", "mis.", "miss.", "missing", "MISSING", "not administered", "NOT ADMINISTERED", "NOT EXCLUDED", "Omitted or invalid", "OMITTED OR INVALID", "omitted", "Omitted", "OMITTED",
+                                        c(" not appl.", "not admin.", "omitted"),
+                                        c("Default missing code", "Not administered/missing by design", "Presented but not answered/invalid"),
+                                        c("Default", "Not applicable", "Not stated"),
+                                        c("DO NOT KNOW", "OMITTED"),
+                                        c("DOES NOT APPLY", "OMITTED"),
+                                        c("DONT KNOW", "LOGICALLY NOT APPLICABLE", "OMITTED"),
+                                        c("DONT KNOW", "OMITTED"),
+                                        c("INVALID RESPONSE", "OMITTED"),
+                                        c("Invalid", "Not administered", "Omitted"),
+                                        c("Invalid", "Not administered/not scored/score out of range", "Omitted"),
+                                        c("INVALID", "OMITTED OR INVALID"),
+                                        c("INVALID", "OMITTED"),
+                                        c("log.not appl.", "not admin.", "omitted"),
+                                        c("Logically not applicable", "Invalid", "Not administered", "Omitted"),
+                                        c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED OR INVALID"),
+                                        c("LOGICALLY NOT APPLICABLE", "INVALID", "OMITTED"),
+                                        c("LOGICALLY NOT APPLICABLE", "MISSING"),
+                                        c("Logically not applicable", "Not administered or missing by design", "Presented but not answered or invalid"),
+                                        c("Logically not applicable", "Not administered/missing by design", "Presented but not answered/invalid"),
+                                        c("Logically not applicable", "Not reached", "Not administered", "Omitted or Invalid"),
+                                        c("Logically not applicable", "Not Reached", "Not administered", "Omitted or invalid"),
+                                        c("LOGICALLY NOT APPLICABLE", "NOT REACHED", "OMITTED"),
+                                        c("Logically not applicable", "Omitted or invalid"),
+                                        c("LOGICALLY NOT APPLICABLE", "OMITTED OR INVALID"),
+                                        c("LOGICALLY NOT APPLICABLE", "OMITTED"),
+                                        c("N/A, Yes: Not administered", "N/A, N/A: Not administered"),
+                                        c("not admin.", "missing"),
+                                        c("not admin.", "omitted"),
+                                        c("not admin", "omitted"),
+                                        c("Not administered or missing by design", "Presented but not answered or invalid"),
+                                        c("Not administered", "Omitted or invalid"),
+                                        c("Not administered", "Omitted"),
+                                        c("Not administered/missing by design", "Presented but not answered/invalid"),
+                                        c("not appl.", "not admin.", "omitted"),
+                                        c("not appl", "not admin", "omitted"),
+                                        c("Not applicable", "Invalid", "Missing"),
+                                        c("Not Applicable", "Invalid", "Missing"),
+                                        c("Not applicable", "Invalid", "No response"),
+                                        c("Not Applicable", "Invalid", "No Response"),
+                                        c("NOT APPLICABLE", "MISSING"),
+                                        c("not applicable", "not admin.", "missing"),
+                                        c("not applicable", "not admin.", "omitted"),
+                                        c("Not Applicable", "Not Administered", "Omitted"),
+                                        c("not applicable", "not applicable", "not admin.", "missing"),
+                                        c("Not applicable", "Not stated"),
+                                        c("Not reached (default during data processing)", "Not administered", "Omitted or Invalid"),
+                                        c("NOT REACHED", "INVALID RESPONSE", "OMITTED"),
+                                        c("not reached", "INVALID", "not admin.", "missing"),
+                                        c("Not reached", "INVALID", "not admin.", "missing"),
+                                        c("Not reached", "Invalid", "Not administered", "Omitted"),
+                                        c("NOT REACHED", "INVALID", "OMITTED"),
+                                        c("NOT REACHED", "MISSING (BLANK ONLY)"),
+                                        c("NOT REACHED", "MISSING"),
+                                        c("not reached", "not admin.", "blank(miss)"),
+                                        c("not reached", "not admin.", "blank(missing)"),
+                                        c("not reached", "not admin.", "blank(omitted)"),
+                                        c("not reached", "not admin.", "missing (blank only)"),
+                                        c("not reached", "not admin.", "missing"),
+                                        c("not reached", "not admin.", "omitted (blank only)"),
+                                        c("not reached", "not admin.", "omitted"),
+                                        c("not reached", "not admin", "blank(miss)"),
+                                        c("not reached", "not admin", "blank(missing)"),
+                                        c("not reached", "not admin", "omitted"),
+                                        c("Not Reached", "Not administered or missing by design", "Presented but not answered or invalid"),
+                                        c("Not Reached", "Not administered", "Missing"),
+                                        c("Not Reached", "Not administered", "Omitted or invalid"),
+                                        c("NOT REACHED", "NOT ADMINISTERED"),
+                                        c("Not reached", "Not administered/missing by design", "Presented but not answered/invalid"),
+                                        c("Not Reached", "Not Applicable", "Invalid", "No Response"),
+                                        c("Not reached", "Omitted or invalid"),
+                                        c("Not reached", "Omitted"),
+                                        c("NOT REACHED", "OMITTED"),
+                                        c("not reached", "uninterpretable", "not admin.", "omitted"),
+                                        c("not reached", "uninterpretable", "not admin", "omitted"),
+                                        c("Notadministered/missing by design", "Presented but not answered/invalid"),
+                                        c("noz admin", "omitted"),
+                                        c("Omitted or invalid", "Omitted or invalid"),
+                                        c("OMITTED OR INVALID", "OMITTED OR INVALID"),
+                                        c("OMITTED", "OMITTED"),
+                                        c("Valid Skip", "Not Applicable", "Invalid", "No Response"),
+                                        c("Valid Skip", "Not Reached", "Not Applicable", "Invalid", "No Response")
+)
+fac.to.num.missing.codes <- c("not admin." = 8, "missing" = 9, "Not reached" = 6, "INVALID" = 7,
+                              "not reached" = 6, "Omitted or invalid" = 999999, "Logically not applicable" = 6,
+                              "Omitted" = 9, "OMITTED" = 99999, "OMITTED OR INVALID" = 9, "NOT REACHED" = 6,
+                              "LOGICALLY NOT APPLICABLE" = 5, "Not administered" = 999998,
+                              "Invalid" = 7, "Not administered/not scored/score out of range" = 9998,
+                              "Not administered/missing by design" = 8, "Presented but not answered/invalid" = 9,
+                              "Not applicable" = 8, "Not stated" = 9, "Notadministered/missing by design" = 8,
+                              "Default missing code" = 9997, "Not administered or missing by design" = 9998,
+                              "Presented but not answered or invalid" = 9999, "Not Reached" = 7,
+                              "INVALID RESPONSE" = 7, "Missing" = 9, "non-scalable" = 8, "Mis" = 9,
+                              "Miss" = 9, "Unreached" = 8, "N/A, Yes: Not administered" = 71, "N/A, N/A: Not administered" = 77,
+                              "Valid Skip" = 995, "Not Applicable" = 997, "No Response" = 999,
+                              "No response" = 9999, "NOT EXCLUDED" = 9, "Default" = 9997, "Not reached (default during data processing)" = 7,
+                              "Omitted or Invalid" = 9, "DONT KNOW" = 11, "DOES NOT APPLY" = 5,
+                              "NOT ADMINISTERED" = 8, "not applicable" = 6, "missing (blank only)" = 9,
+                              "blank(missing)" = 99, "not admin" = 98, "blank(miss)" = 99,
+                              "omitted" = 9, "omitted (blank only)" = 9, "blank(omitted)" = 99,
+                              "log.not appl." = 6, "Not Administered" = 8, "not appl." = 6,
+                              "miss." = 9, "uninterpretable" = 7, "mis." = 99, "not administered" = 8,
+                              "noz admin" = 8, "not appl" = 96, " not appl." = 6, "DO NOT KNOW" = 6,
+                              "MISSING" = 999, "NOT APPLICABLE" = 5, "MISSING (BLANK ONLY)" = 9
+)
 fac.to.num.missing.codes <- c(99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999991, 99999992, 99999994, 99999995, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999996, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999997, 99999998, 99999998, 99999998, 99999998, 99999998, 99999998, 99999998, 99999999, 99999998, 99999998, 99999998, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999, 99999999)
 names(fac.to.num.missing.codes) <- c(" not appl.", "Default", "log.not appl.", "LOGICALLY NOT APPLICABLE", "Logically not applicable", "not appl", "not appl.", "Not Applicable", "Not applicable", "not applicable", "don't know", "No Response", "Valid Skip", "n. rea.", "n. reach.", "n. reached", "n.rea.", "n.reach.", "NOT REACHED", "Not Reached", "Not reached", "not reached", "Not reached (default during data processing)", "crossed out, not interpretable", "INVALID", "Invalid", "INVALID RESPONSE", "Presented but not answered/invalid", "Presented but not answered or invalid", "two or more responses, not interpretable", "two or more responses, uninterpretable", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "two or more responses, uninterpretable, ...", "uninterpretable", "n. adm.", "n. admin.", "not admin", "not admin.", "Not administered", "not administered", "Not administered/missing by design", "Not administered or missing by design", "Not stated", "Notadministered/missing by design", "noz admin", "missing", "MISSING", "MISSING (BLANK ONLY)", "NOT EXCLUDED", "OMITTED", "Omitted", "omitted", "omitted (blank only)", "OMITTED OR INVALID", "Omitted or invalid", "Omitted or Invalid")
 get.analysis.and.design.vars <- function(x) {
@@ -656,7 +1073,7 @@ get.analysis.and.design.vars <- function(x) {
       if(attr(x, "file.type") %in% design.weight.variables[["IEA.JK2.dflt.std.bckg.types"]]) {
         passed.args["weight.var"] <- intersect(design.weight.variables[["IEA.JK2.dflt.std.bckg.wgts"]], names(x))
         passed.args["jk.zones"] <- intersect(design.weight.variables[["IEA.JK2.dflt.std.bckg.zones"]], names(x))
-        passed.args["rep.ind"] <- intersect(design.weight.variables[["IEA.JK2.dflt.std.bckg.rep.ind"]], names(x))
+        passed.args["rep.ind"] <- intersect(design.weight.variables[["IEA.JK2.dflt.std.bckg.rep.ind"]], names(x))[1]
       } else if(attr(x, "file.type") %in% design.weight.variables[["IEA.JK2.dflt.sch.bckg.types"]]) {
         passed.args["weight.var"] <- intersect(design.weight.variables[["IEA.JK2.dflt.sch.bckg.wgts"]], names(x))
         passed.args["jk.zones"] <- intersect(design.weight.variables[["IEA.JK2.dflt.sch.bckg.zones"]], names(x))
@@ -1265,7 +1682,7 @@ studies.all.design.variables <- list(
       G8 = c("PV[[:digit:]]+CIL", "PV[[:digit:]]+CT")
     ),
     PISA = list(
-      fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+      fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML", "PV[[:digit:]]+MCCR", "PV[[:digit:]]+MCQN", "PV[[:digit:]]+MCSS", "PV[[:digit:]]+MCUD", "PV[[:digit:]]+MPEM", "PV[[:digit:]]+MPFS", "PV[[:digit:]]+MPIN", "PV[[:digit:]]+MPRE")
     )
   )
 )
@@ -1473,6 +1890,7 @@ default.benchmarks <- list(
   ),
   ICILS = c(407.001, 492.001, 576.001, 661.001),
   PIRLS = c(400, 475, 550, 625),
+  RLII = c(400, 475, 550, 625),
   ePIRLS = c(400, 475, 550, 625),
   prePIRLS = c(400, 475, 550, 625),
   TIMSS = c(400, 475, 550, 625),
@@ -1482,6 +1900,7 @@ default.benchmarks <- list(
   TiPi = c(400, 475, 550, 625),
   PISA = list(
     Reading = list(
+      "2022" = c(189.33, 262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
       "2018" = c(189.33, 262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
       "2015" = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
       "2012" = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
@@ -1491,6 +1910,7 @@ default.benchmarks <- list(
       "2000" = c(334.75, 407.47, 480.18, 552.89, 625.61)
     ),
     Science = list(
+      "2022" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
       "2018" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
       "2015" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
       "2012" = c(334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
@@ -1500,6 +1920,7 @@ default.benchmarks <- list(
       "2000" = c(334.94, 409.54, 484.14, 558.73, 633.33, 707.93)
     ),
     Mathematics = list(
+      "2022" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
       "2018" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
       "2015" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
       "2012" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
@@ -1515,14 +1936,16 @@ default.benchmarks <- list(
       "2015" = c(340, 440, 540, 640)
     ),
     Financial.Literacy = list(
+      "2022" = c(326, 399, 474, 549, 624),
       "2015" = c(325.57, 400.33, 475.10, 549.86, 624.63)
     ),
     Global.Competency = list(
+      "2018" = c(340, 440, 540, 640),
       "2018" = c(340, 440, 540, 640)
     ),
     Reading.root.PVs = c("PV#READ", "PV#READ1", "PV#READ2", "PV#READ3", "PV#READ4", "PV#READ5", "PV#RCLI", "PV#RCUN", "PV#RCER", "PV#RTSN", "PV#RTML"),
     Science.root.PVs = c("PV#SCIE", "PV#INTR", "PV#SUPP", "PV#EPS", "PV#ISI", "PV#USE", "PV#SCEP", "PV#SCED", "PV#SCID", "PV#SKCO", "PV#SKPE", "PV#SSPH", "PV#SSLI", "PV#SSES"),
-    Mathematics.root.PVs = c("PV#MATH", "PV#MATH1", "PV#MATH2", "PV#MATH3", "PV#MATH4", "PV#MACC", "PV#MACQ", "PV#MACS", "PV#MACU", "PV#MAPE", "PV#MAPF", "PV#MAPI"),
+    Mathematics.root.PVs = c("PV#MATH", "PV#MATH1", "PV#MATH2", "PV#MATH3", "PV#MATH4", "PV#MACC", "PV#MACQ", "PV#MACS", "PV#MACU", "PV#MAPE", "PV#MAPF", "PV#MAPI", "PV#MCCR", "PV#MCQN", "PV#MCSS", "PV#MCUD", "PV#MPEM", "PV#MPFS", "PV#MPIN", "PV#MPRE"),
     Problem.Solving.root.PVs = c("PV#PROB"),
     Collaborative.Problem.Solving.root.PVs = c("PV#CLPS"),
     Financial.Literacy.root.PVs = c("PV#FLIT"),
@@ -2072,20 +2495,6 @@ compute.Rao.Scott.adj.chi.sq <- function(data.obj, var1, var2, weights, des.scal
   }
   cnt.name <- as.character(unique(data.obj[ , get(keys[1])]))
   data.obj <- split(x = data.obj, by = keys)
-  insufficient.split <- lapply(X = data.obj, FUN = function(i) {
-    if(
-      length(unique(i[ , get(var1)])) == 1 && length(unique(i[ , get(var2)]))  > 1 ||
-      length(unique(i[ , get(var1)]))  > 1 && length(unique(i[ , get(var2)])) == 1 ||
-      length(unique(i[ , get(var1)])) == 1 && length(unique(i[ , get(var2)])) == 1 ||
-      nrow(i) ==0) {
-      return(TRUE)
-    }
-  })
-  insufficient.split <- names(Filter(isTRUE, insufficient.split))
-  data.obj[which(names(data.obj) %in% insufficient.split)] <- NULL
-  if(length(insufficient.split) > 0) {
-    assign(x = "cnt.warn.insuff.RS.collector", value = cnt.name, envir = parent.frame())
-  }
   Rao.Scott.adjustment <- lapply(X = data.obj, FUN = function(i) {
     interaction.formula <- formula(x = paste0("~interaction(factor(", var1, "), factor(", var2, ")) - 1"))
     Rao.Scott.design.matrix <- model.matrix(object = interaction.formula, model.frame(formula = interaction.formula, na.omit(i)))
@@ -2316,6 +2725,7 @@ reshape.list.statistics.PV <- function(estimate.object, estimate.name, PV.vars.v
     assign(x = "PV.MADs", value = estimate.object, envir = parent.frame())
   }
 }
+#' @exportS3Method pkg::aggregate.PV
 aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.vars.vector, data.key.variables, study.name, SE.design) {
   object.type <- deparse(substitute(estimate.object))
   if(study.name %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && SE.design == FALSE || study.name %in% c("ICCS", "ICILS")) {
@@ -2371,6 +2781,7 @@ aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.v
     setkeyv(x = i, cols = data.key.variables)
   })
 }
+
 compute.table.average <- function(output.obj, object.variables, data.key.variables, data.properties) {
   all.estimate.columns <- grep(pattern = "^Percentages$|Percentages_.*|Mean_.*|Median_.*|MAD_.*|Mode_.*|Prctl_.*|Variance_.*|SD_.*|Correlation_|Coefficients|Odds_|Wald_|t_value|p_value|Estimate|Crosstab_", x = names(output.obj), value = TRUE)
   all.estimate.columns <- grep(pattern = "_SVR$|_MVR$|_SE$", x = all.estimate.columns, value = TRUE, invert = TRUE)
@@ -2582,9 +2993,6 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
-
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-# Gloabl objects
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

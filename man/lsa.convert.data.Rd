@@ -45,7 +45,7 @@ specified in the OECD PISA import syntax files) are all imported as
 and the missing codes are assigned to an attribute \code{missings} for
 each variable. See details.}
 
-\item{out.folder}{Path to the folder where the converted files will be stored. If blank,
+\item{out.folder}{Path to the folder where the converted files will be stored. If omitted,
 same as the \code{inp.folder}, and if the \code{inp.folder} is missing as
 well, this will be \code{getwd()}.}
 

@@ -91,7 +91,7 @@ server <- function(input, output, session) {
         G8 = c("PV[[:digit:]]+CIL", "PV[[:digit:]]+CT")
       ),
       PISA = list(
-        fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+        fifteen.year.old = c("PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML", "PV[[:digit:]]+MCCR", "PV[[:digit:]]+MCQN", "PV[[:digit:]]+MCSS", "PV[[:digit:]]+MCUD", "PV[[:digit:]]+MPEM", "PV[[:digit:]]+MPFS", "PV[[:digit:]]+MPIN", "PV[[:digit:]]+MPRE")
       )
     )
   )
@@ -104,6 +104,7 @@ server <- function(input, output, session) {
     ),
     ICILS = c(407.001, 492.001, 576.001, 661.001),
     PIRLS = c(400, 475, 550, 625),
+    RLII = c(400, 475, 550, 625),
     ePIRLS = c(400, 475, 550, 625),
     prePIRLS = c(400, 475, 550, 625),
     TIMSS = c(400, 475, 550, 625),
@@ -113,6 +114,7 @@ server <- function(input, output, session) {
     TiPi = c(400, 475, 550, 625),
     PISA = list(
       Reading = list(
+        "2022" = c(189.33, 262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
         "2018" = c(189.33, 262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
         "2015" = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
         "2012" = c(262.04, 334.75, 407.47, 480.18, 552.89, 625.61, 698.32),
@@ -122,6 +124,7 @@ server <- function(input, output, session) {
         "2000" = c(334.75, 407.47, 480.18, 552.89, 625.61)
       ),
       Science = list(
+        "2022" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
         "2018" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
         "2015" = c(260.54, 334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
         "2012" = c(334.94, 409.54, 484.14, 558.73, 633.33, 707.93),
@@ -131,6 +134,7 @@ server <- function(input, output, session) {
         "2000" = c(334.94, 409.54, 484.14, 558.73, 633.33, 707.93)
       ),
       Mathematics = list(
+        "2022" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
         "2018" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
         "2015" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
         "2012" = c(357.77, 420.07, 482.38, 544.68, 606.99, 669.30),
@@ -146,14 +150,16 @@ server <- function(input, output, session) {
         "2015" = c(340, 440, 540, 640)
       ),
       Financial.Literacy = list(
+        "2022" = c(326, 399, 474, 549, 624),
         "2015" = c(325.57, 400.33, 475.10, 549.86, 624.63)
       ),
       Global.Competency = list(
+        "2018" = c(340, 440, 540, 640),
         "2018" = c(340, 440, 540, 640)
       ),
       Reading.root.PVs = c("PV#READ", "PV#READ1", "PV#READ2", "PV#READ3", "PV#READ4", "PV#READ5", "PV#RCLI", "PV#RCUN", "PV#RCER", "PV#RTSN", "PV#RTML"),
       Science.root.PVs = c("PV#SCIE", "PV#INTR", "PV#SUPP", "PV#EPS", "PV#ISI", "PV#USE", "PV#SCEP", "PV#SCED", "PV#SCID", "PV#SKCO", "PV#SKPE", "PV#SSPH", "PV#SSLI", "PV#SSES"),
-      Mathematics.root.PVs = c("PV#MATH", "PV#MATH1", "PV#MATH2", "PV#MATH3", "PV#MATH4", "PV#MACC", "PV#MACQ", "PV#MACS", "PV#MACU", "PV#MAPE", "PV#MAPF", "PV#MAPI"),
+      Mathematics.root.PVs = c("PV#MATH", "PV#MATH1", "PV#MATH2", "PV#MATH3", "PV#MATH4", "PV#MACC", "PV#MACQ", "PV#MACS", "PV#MACU", "PV#MAPE", "PV#MAPF", "PV#MAPI", "PV#MCCR", "PV#MCQN", "PV#MCSS", "PV#MCUD", "PV#MPEM", "PV#MPFS", "PV#MPIN", "PV#MPRE"),
       Problem.Solving.root.PVs = c("PV#PROB"),
       Collaborative.Problem.Solving.root.PVs = c("PV#CLPS"),
       Financial.Literacy.root.PVs = c("PV#FLIT"),
@@ -768,6 +774,170 @@ server <- function(input, output, session) {
     OECD.BRR.dflt.staff.bckg.wgts = "STAFFWGT",
     OECD.BRR.dflt.staff.bckg.rep.wgts = paste0("SRWGT", 1:92)
   )
+  
+  reshape.imported <- function(object, to.NA, study, cycle, type) {
+    setDT(object)
+    setnames(x = object, toupper(names(object)))
+    object[ , colnames(object) := lapply(.SD, function(i) {
+      spss.format.string <- attr(x = i, which = "format.spss")
+      start.char <- substr(x = spss.format.string, start = 1, stop = 1)
+      var.labels <- attr(x = i, which = "label")
+      var.labels <- gsub(pattern = "\\\\", replacement = "/", x = var.labels)
+      var.labels <- gsub(pattern = "\u00e2\u20ac\u2122", replacement = "\\\\'", x = var.labels)
+      var.labels <- gsub(pattern = "\u00e2\u0080\u009cA |\u00e2\u0080\u009d|\u00e2\u0080\u009c|\u00e2\u0080\u0099 ", replacement = '"', x = var.labels)
+      var.labels <- gsub(pattern = "\u00e2\u0080\u0094", replacement = "-", x = var.labels)
+      var.labels <- gsub(pattern = "\u00e2\u0080\u00a6", replacement = "...", x = var.labels)
+      miss.labels <- lapply(X = all.missing.values.combinations, FUN = function(j) {
+        identical(x = j, y = tail(names(sort(attr(x = i, which = "labels"))), n = length(j)))
+      })
+      miss.labels <- all.missing.values.combinations[which(unlist(miss.labels))]
+      if(length(miss.labels) > 0) {
+        miss.labels <- miss.labels[[which.max(lengths(miss.labels))]]
+        miss.labels <- attr(x = i, which = "labels")[names(attr(x = i, which = "labels")) %in% miss.labels]
+      } else {
+        miss.labels <- names(attr(x = i, which = "labels"))[unlist(all.missing.values.combinations)]
+        if(is.null(miss.labels)) {
+          miss.labels <- attr(x = i, which = "na_values")
+        }
+        if(all(is.na(miss.labels))) {
+          miss.labels <- NULL
+        } else {
+          miss.labels <- miss.labels
+        }
+      }
+      if(start.char %in% c("A", "a") && is.null(attr(x = i, which = "labels"))) {
+        i <- as.character(i)
+      } else if(start.char %in% c("A", "a") && !is.null(attr(x = i, which = "labels"))) {
+        if(isTRUE(to.NA)) {
+          if(!is.null(miss.labels)) {
+            i[i %in% as.numeric(miss.labels)] <- NA
+          }
+          i <- as.character(as_factor(x = i, levels = "both"))
+        } else if(isFALSE(to.NA)) {
+          if(!is.null(miss.labels)) {
+            tmp.miss <- paste0("[", miss.labels, "] ", names(miss.labels))
+          }
+          i <- as.character(as_factor(i, levels = "both"))
+          if(!is.null(miss.labels)) {
+            attr(i, "missings") <- tmp.miss
+          }
+        }
+      } else if(start.char %in% c("F", "f") && !is.null(attr(x = i, which = "labels"))) {
+        names(attr(x = i, which = "labels")) <- make.unique(names(attr(x = i, which = "labels")))
+        if(isTRUE(to.NA)) {
+          if(all(names(attr(i, "labels")) %in% names(miss.labels))) {
+            i <- as.numeric(i)
+            i[i %in% miss.labels] <- NA
+          } else if(!all(names(attr(i, "labels")) %in% names(miss.labels))) {
+            i <- as_factor(i)
+            i[i %in% names(miss.labels)] <- NA
+            i <- factor(x = i, levels = levels(i)[!levels(i) %in% names(miss.labels)])
+          }
+        } else if(isFALSE(to.NA)) {
+          if(all(names(attr(i, "labels")) %in% names(miss.labels))) {
+            i <- as.numeric(i)
+            attr(x = i, which = "missings") <- miss.labels
+          } else if(all(!attr(i, "labels") %in% names(miss.labels))) {
+            i <- as_factor(i)
+            attr(i, "missings") <- names(miss.labels)
+          }
+        }
+      } else if(start.char %in% c("F", "f") && is.null(attr(x = i, which = "labels"))) {
+        i <- as.numeric(i)
+        if(isTRUE(to.NA)) {
+          if(is.null(miss.labels)) {
+            i
+          } else {
+            i[i %in% as.numeric(miss.labels)] <- NA
+          }
+        } else {
+          attr(i, "missings") <- miss.labels
+        }
+      } else if("Date" %in% class(i)) {
+        i <- as.numeric(gsub(pattern = "[[:punct:]]+", replacement = "", x = as.character(i)))
+      }
+      if(length(var.labels)) {
+        setattr(x = object[ , (i)], name = "variable.label", value = var.labels)
+      }
+      setattr(x = object[ , (i)], name = "label", value = NULL)
+    })]
+    rep.indicator <- names(object)[which(colnames(object) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
+    if(length(rep.indicator) > 0) {
+      object[ , eval(rep.indicator) := lapply(.SD, function(i) {
+        tmp.var.label <- attr(x = i, which = "variable.label")
+        tmp.missings <- attr(x = i, which = "missings")
+        if(is.factor(i)) {
+          i <- as.numeric(i) - 1
+        } else {
+          i <- i
+        }
+        if(length(tmp.var.label) > 0) {
+          attr(x = i, which = "variable.label") <- tmp.var.label
+        } else {
+          i <- i
+        }
+        if(length(tmp.missings) > 0) {
+          attr(x = i, which = "missings") <- tmp.missings
+        } else {
+          i <- i
+        }
+        return(i)
+      }), .SDcols = rep.indicator]
+    }
+    if(study %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS")) {
+      idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
+      if(isFALSE(to.NA)) {
+        idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
+      }
+      idx.cnt.num.code <- match(unique(object[ , IDCNTRY]), cnt.ID.list[["Numeric"]])
+      object[ , IDCNTRY := factor(x = IDCNTRY, labels = cnt.ID.list[["ISO"]][idx.cnt.num.code])]
+      object[ , setattr(x = IDCNTRY, name = "variable.label", value = idcntry.var.lab)]
+    } else if(study %in% c("ICILS", "SITES", "TEDS-M", "TALIS", "REDS")) {
+      idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
+      if(isFALSE(to.NA)) {
+        idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
+      }
+      object[ , IDCNTRY := droplevels(x = IDCNTRY)]
+      if(isFALSE(to.NA) && length(idcntry.missings) > 0) {
+        object[ , setattr(x = IDCNTRY, name = "missings", value = idcntry.missings)]
+      }
+      object[ , setattr(x = IDCNTRY, name = "variable.label", value = idcntry.var.lab)]
+    } else if(study %in% c("PISA", "PISA for Development")) {
+      if(is.character(object[ , CNT])) {
+        cnt.var.lab <- attr(x = object[ , CNT], which = "variable.label")
+        object[ , CNT := as.factor(gsub(pattern = "^\\[[[:alpha:]]+\\][[:space:]]+", replacement = "", x = CNT))]
+        object[ , setattr(x = CNT, name = "variable.label", value = cnt.var.lab)]
+      }
+    }
+    setattr(x = object, name = "study", value = get(x = "study.attribute", envir = parent.frame()))
+    setattr(x = object, name = "cycle", value = get(x = "cycle.attribute", envir = parent.frame()))
+    setattr(x = object, name = "file.type", value = get(x = "file.type.attribute", envir = parent.frame()))
+    setattr(x = object, name = "class", value = c("lsa.data", attr(x = object, which = "class")))
+    if(isFALSE(to.NA)) {
+      object[ , colnames(object) := lapply(.SD, function(i) {
+        if(is.factor(i) & is.numeric(attr(x = i, which = "missings"))) {
+          tmp.label <- attr(x = i, which = "variable.label")
+          names.miss <- names(attr(x = i, which = "missings"))
+          i <- factor(x = i, levels = c(levels(x = i)[!levels(i) %in% as.character(attr(x = i, which = "missings"))], names.miss))
+          attr(x = i, which = "missings") <- names.miss
+          attr(x = i, which = "variable.label") <- tmp.label
+          return(i)
+        } else {
+          i
+        }
+      })]
+    } else {
+      object
+    }
+    if(study %in% c("PISA", "PISA for Development")) {
+      setkeyv(x = object, cols = "CNT")
+    } else {
+      setkeyv(x = object, cols = "IDCNTRY")
+    }
+  }
+  
+  
+  
   #Define global objects
   load.app.CSS.screen <- "
 #loading-content {
@@ -1347,7 +1517,743 @@ cat(tmp.file, sep = "\n", file = file.info$datapath)
 }
 )
 }'
+countries.studies.cycles.table <- data.table(
+  `Alpha 3 ISO` = c(
+    "AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL",
+    "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLR", "BLZ", "BRA", "BRN", "BSQ",
+    "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU",
+    "CRI", "CSH", "CSK/CZE", "CYP", "DEU", "DN3", "DNK", "DNW", "DOM", "DSH",
+    "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST",
+    "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG",
+    "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA",
+    "JAM", "JOR", "JPN", "KAZ", "KEN", "KGZ", "KHM", "KOR", "KSV/XKX", "KWT",
+    "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET",
+    "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM",
+    "MUS", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4",
+    "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PAN", "PER", "PHL",
+    "PO2", "POL", "PRT", "PRY", "PSE", "QAR", "QAT", "QAZ", "QCH/QCI", "QCN",
+    "QES", "QHP", "QMR", "QRS", "QRT", "QTN", "QUA", "QUB", "QUC", "QUD", "QUE",
+    "QUR", "QVE", "RMO", "ROM/ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG/SRB",
+    "SCO", "SE3", "SEN", "SG7", "SGP", "SLV", "SVK", "SVN", "SWE", "SYR",
+    "TAP/TWN", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO",
+    "TUN", "TUR", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR",
+    "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "YE6", "YEM", "YUG", "ZA4",
+    "ZA5", "ZA6", "ZAF", "ZGT", "ZMB", "ZWC"
+  ),
+  `Numeric Code` = c(
+    "7842", "32001", "7841", "8", "784", "32", "51", "36", "40", "31", "56",
+    "854", "956", "957", "100", "48", "70", "112", "84", "76", "96", "3724", "72",
+    "9134", "124", "9135", "756", "152", "9137/9130", "9136", "170", "9132",
+    "9133", "188", "156001", "200/203", "196", "276", "208001", "208", "276001",
+    "214", "276005", "12", "72401", "72404", "7241", "218", "818", "724005",
+    "724004", "926", "724", "233", "231", "7246", "246", "250", "826", "268",
+    "288", "48401", "300", "320", "344", "340", "191", "348", "360", "356", "372",
+    "364", "9352", "352", "376", "380", "388", "400", "392", "398", "404", "417",
+    "116", "410", "383/411", "414", "422", "438", "440", "442", "428", "6504",
+    "446", "504", "498", "48411", "48420", "484", "48412", "807", "9470", "470",
+    "499", "496", "48415", "48416", "48417", "48418", "480", "48499", "458",
+    "558", "928", "528", "9528", "57891", "57892", "57893", "5784", "9578",
+    "5788", "57894", "578", "7554", "554", "512", "586", "591", "604", "608",
+    "6162", "616", "620", "600", "275", "974", "634", "311", "970/975", "156",
+    "971", "35601", "982", "6430059", "983", "35602", "8400100", "8400200",
+    "8400300", "630", "973", "901", "862", "643001", "642/9642", "643002", "6431",
+    "643", "646", "682", "891/688", "927", "3752", "686", "7702", "702", "222",
+    "703", "705", "752", "760", "158", "48421", "764", "48422", "48402", "48425",
+    "48426", "48427", "48428", "780", "788", "792", "10400", "11100", "10800",
+    "10900", "11200", "800", "11800", "8261", "804", "12500", "12700", "13700",
+    "858", "840", "860", "704", "6887", "887", "891", "4710", "7105", "7106",
+    "710", "710003", "894", "710004"
+  ),
+  `Country Name` = c(
+    "United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires",
+    "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates",
+    "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of",
+    "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)",
+    "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belarus", "Belize",
+    "Brazil", "Brunei Darussalam", "Spain (Basque Country)", "Botswana",
+    "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland",
+    "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)",
+    "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica",
+    "China (Shanghai)", "Czech Republic", "Cyprus", "Germany",
+    "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia",
+    "Dominican Republic", "Germany, Schleswig-Holstein", "Algeria",
+    "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador",
+    "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain",
+    "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France",
+    "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)",
+    "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia",
+    "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of",
+    "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jamaica", "Jordan",
+    "Japan", "Kazakhstan", "Kenya", "Kyrgyzstan", "Cambodia",
+    "Korea, Republic of", "Kosovo", "Kuwait", "Lebanon", "Liechtenstein",
+    "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR",
+    "Morocco", "Moldova", "Mexico (Distrito Federal)",
+    "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)",
+    "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia",
+    "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)",
+    "Mexico (Tamaulipas)", "Mauritius", "Mexico (Talis-Nacional)", "Malaysia",
+    "Nicaragua", "Northern Ireland", "Netherlands",
+    "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)",
+    "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)",
+    "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)",
+    "New Zealand", "Oman", "Pakistan", "Panama", "Peru", "Philippines",
+    "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay",
+    "Palestinian National Authority", "Argentina (Ciudad Autonoma de Buenos)",
+    "Qatar", "Baku (Azerbaijan)", "B-S-J-G (China)", "Shanghai-China",
+    "Spain (Regions)", "Himachal Pradesh-India", "Moscow Region (RUS)",
+    "Perm (Russian Federation)", "Tatarstan (RUS)", "Tamil Nadu-India",
+    "Florida (USA)", "Connecticut (USA)", "Massachusetts (USA)",
+    "Puerto Rico (USA)", "North Carolina (USA)", "Ukrainian regions (18 of 27)",
+    "Miranda-Venezuela", "Russian Federation, Moscow", "Romania",
+    "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation",
+    "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Senegal",
+    "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Slovak Republic",
+    "Slovenia", "Sweden", "Syria, Arab Republic of", "Chinese Taipei",
+    "Mexico (Telesecundaria-Distrito Federal)", "Thailand",
+    "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)",
+    "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)",
+    "Mexico (Telesecundaria-San Luis Potosi)",
+    "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia",
+    "Turkey", "United States (Alabama)", "United States (California)",
+    "United States (Colorado)", "United States (Connecticut)",
+    "United States (Florida)", "Uganda", "United States (Indiana)",
+    "England and Northern Ireland (UK)", "Ukraine",
+    "United States (Massachusetts)", "United States (Minnesota)",
+    "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan",
+    "Vietnam", "Yemen (Grade 6)", "Yemen", "Yugoslavia", "South Africa (Grade 4)",
+    "South Africa (Eng/Afr)", "South Africa (Grade 6)", "South Africa",
+    "South Africa (Gauteng)", "Zambia", "South Africa (Western Cape Province)"
+  ),
+  `CivED 1999 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 1L, 5L, 2L, 11L, 2L, 2L, 1L, 4L, 3L, 1L, 1L, 11L, 1L, 1L,
+      1L, 2L, 1L, 5L, 1L, 1L, 1L, 2L, 1L, 7L, 1L, 12L, 1L, 1L, 1L,
+      31L, 1L, 8L, 2L, 21L, 1L, 2L, 1L, 9L, 3L, 26L, 1L, 12L)
+  ),
+  `CivED 1999 G12` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(26L, 2L, 2L, 1L, 4L, 2L, 2L, 1L, 13L, 1L, 10L, 1L, 9L, 1L,
+      15L, 1L, 31L, 1L, 8L, 2L, 24L, 1L, 10L, 2L, 39L)
+  ),
+  `ICCS 2009 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA
+    ),
+    c(8L, 1L, 3L, 1L, 1L, 1L, 11L, 2L, 2L, 1L, 4L, 2L, 2L, 1L, 1L,
+      1L, 9L, 3L, 2L, 1L, 5L, 3L, 3L, 1L, 1L, 1L, 4L, 1L, 7L, 1L, 3L,
+      4L, 6L, 1L, 3L, 1L, 11L, 1L, 8L, 1L, 1L, 1L, 6L, 1L, 1L, 1L,
+      23L, 1L, 9L, 3L, 1L, 1L, 1L, 1L, 35L)
+  ),
+  `ICCS 2009 G9` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(62L, 1L, 59L, 1L, 45L, 2L, 39L)),
+  `ICCS 2016 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(12L, 1L, 1L, 1L, 12L, 1L, 2L, 1L, 8L, 3L, 11L, 1L, 2L, 1L,
+      7L, 1L, 1L, 1L, 8L, 1L, 7L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L,
+      11L, 1L, 8L, 1L, 5L, 1L, 28L, 1L, 10L, 2L, 1L, 1L, 37L)
+  ),
+  `ICCS 2022 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(14L, 1L, 4L, 1L, 10L, 1L, 5L, 1L, 2L, 2L, 1L, 1L, 9L, 2L, 3L,
+      1L, 8L, 1L, 8L, 1L, 12L, 1L, 1L, 1L, 10L, 1L, 11L, 1L, 8L, 1L,
+      8L, 1L, 22L, 1L, 5L, 1L, 6L, 3L, 1L, 1L, 37L)
+  ),
+  `ICILS 2013 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA
+    ),
+    c(1L, 1L, 5L, 1L, 18L, 3L, 2L, 1L, 3L, 1L, 1L, 1L, 1L, 1L, 24L,
+      1L, 1L, 1L, 16L, 1L, 4L, 1L, 24L, 1L, 8L, 1L, 8L, 1L, 25L, 1L,
+      9L, 2L, 4L, 1L, 8L, 1L, 26L)
+  ),
+  `ICILS 2018 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA
+    ),
+    c(27L, 1L, 9L, 1L, 1L, 2L, 15L, 2L, 17L, 1L, 3L, 1L, 3L, 1L,
+      5L, 1L, 42L, 1L, 20L, 1L, 41L, 2L, 12L)
+  ),
+  `PIRLS 2001 G4` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA
+    ),
+    c(5L, 1L, 8L, 1L, 3L, 1L, 5L, 1L, 5L, 3L, 2L, 3L, 13L, 1L, 5L,
+      1L, 4L, 1L, 1L, 1L, 2L, 1L, 3L, 1L, 1L, 3L, 9L, 1L, 2L, 1L, 1L,
+      1L, 2L, 2L, 4L, 1L, 13L, 1L, 8L, 1L, 1L, 1L, 29L, 1L, 2L, 1L,
+      3L, 2L, 2L, 1L, 1L, 3L, 12L, 1L, 13L, 1L, 12L)
+  ),
+  `PIRLS 2006 G4` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(8L, 1L, 3L, 3L, 8L, 1L, 1L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L,
+      1L, 11L, 2L, 4L, 1L, 1L, 1L, 4L, 1L, 2L, 2L, 2L, 5L, 9L, 1L,
+      2L, 3L, 2L, 2L, 4L, 1L, 13L, 1L, 5L, 1L, 2L, 1L, 1L, 1L, 6L,
+      1L, 4L, 1L, 17L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 1L, 1L,
+      8L, 1L, 15L, 1L, 8L, 1L, 3L)
+  ),
+  `PIRLS 2011 G4` = rep(
+    rep(c("X", NA), 36),
+    c(1L, 1L, 1L, 1L, 1L, 2L, 3L, 3L, 2L, 7L, 3L, 5L, 3L, 2L, 1L,
+      1L, 1L, 1L, 1L, 4L, 1L, 6L, 2L, 3L, 2L, 1L, 1L, 4L, 5L, 1L, 2L,
+      2L, 2L, 9L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 6L, 2L, 10L, 2L, 8L,
+      1L, 1L, 2L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L, 1L, 1L, 5L, 1L,
+      1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 8L, 1L, 3L)
+  ),
+  `prePIRLS 2011 G4` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(22L, 1L, 7L, 1L, 174L, 1L, 3L)),
+  `PIRLS 2016 G4` = rep(
+    rep(c("X", NA), 39),
+    c(3L, 1L, 1L, 2L, 3L, 2L, 4L, 8L, 1L, 2L, 1L, 3L, 2L, 2L, 1L,
+      1L, 1L, 1L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L,
+      2L, 1L, 2L, 2L, 2L, 2L, 3L, 1L, 8L, 1L, 1L, 1L, 1L, 2L, 7L, 1L,
+      10L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 16L, 1L, 3L,
+      1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 6L, 1L,
+      5L)
+  ),
+  `ePIRLS 2016 G4` = rep(
+    rep(c("X", NA), 14),
+    c(1L, 1L, 1L, 1L, 1L, 19L, 1L, 14L, 1L, 19L, 1L, 10L, 1L, 3L,
+      2L, 46L, 1L, 9L, 1L, 32L, 1L, 2L, 2L, 1L, 1L, 24L, 1L, 12L)
+  ),
+  `prePIRLS 2016 G4` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(38L, 1L, 9L, 1L, 22L, 1L, 13L, 1L, 7L, 1L, 111L, 1L, 3L)
+  ),
+  `PIRLS 2021 G4` = rep(
+    rep(c("X", NA), 41),
+    c(1L, 1L, 3L, 2L, 3L, 2L, 4L, 3L, 1L, 3L, 1L, 1L, 1L, 2L, 1L,
+      3L, 1L, 2L, 3L, 1L, 1L, 8L, 1L, 2L, 2L, 3L, 2L, 1L, 1L, 4L, 1L,
+      1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 1L, 1L,
+      1L, 2L, 5L, 1L, 1L, 2L, 9L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 3L, 1L,
+      16L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L,
+      2L, 6L, 2L, 3L)
+  ),
+  `PIRLS 2021 G4 Bridge` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(4L, 1L, 7L, 1L, 22L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 9L,
+      2L, 6L, 2L, 3L, 1L, 8L, 1L, 12L, 1L, 20L, 1L, 1L, 1L, 7L, 1L,
+      3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 37L)
+  ),
+  `PISA 2000` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA
+    ),
+    c(3L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L,
+      2L, 7L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L, 3L, 3L, 1L, 1L, 1L,
+      2L, 2L, 1L, 1L, 2L, 3L, 2L, 1L, 4L, 1L, 3L, 1L, 1L, 2L, 6L, 1L,
+      1L, 1L, 13L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 21L, 1L, 2L,
+      1L, 11L, 1L, 3L, 1L, 22L, 1L, 12L)
+  ),
+  `PISA 2003` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 2L, 1L, 1L, 8L, 1L, 4L, 1L, 1L, 1L, 8L, 1L, 1L, 1L, 1L,
+      1L, 12L, 1L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 1L,
+      1L, 1L, 2L, 1L, 4L, 1L, 3L, 1L, 1L, 2L, 1L, 1L, 4L, 1L, 15L,
+      1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 9L, 1L, 1L, 1L, 3L, 1L,
+      7L, 2L, 12L, 2L, 4L, 1L, 7L)
+  ),
+  `PISA 2006` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(5L, 1L, 1L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 2L, 1L, 4L,
+      1L, 1L, 1L, 1L, 1L, 12L, 2L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L,
+      1L, 1L, 2L, 3L, 1L, 2L, 2L, 1L, 1L, 1L, 3L, 4L, 1L, 1L, 4L, 1L,
+      4L, 1L, 10L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 3L, 1L, 17L, 1L, 2L,
+      1L, 2L, 1L, 6L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 12L)
+  ),
+  `PISA 2009` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(3L, 3L, 1L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 2L, 1L, 2L,
+      1L, 1L, 1L, 1L, 1L, 1L, 1L, 12L, 2L, 2L, 4L, 2L, 1L, 1L, 1L,
+      1L, 3L, 1L, 1L, 2L, 3L, 1L, 3L, 1L, 1L, 1L, 1L, 3L, 4L, 1L, 1L,
+      1L, 1L, 2L, 1L, 3L, 2L, 5L, 1L, 1L, 1L, 2L, 1L, 8L, 1L, 1L, 1L,
+      2L, 2L, 2L, 2L, 3L, 1L, 2L, 1L, 1L, 1L, 3L, 1L, 6L, 1L, 1L, 1L,
+      2L, 1L, 2L, 1L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L,
+      2L, 12L)
+  ),
+  `PISA 2012` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA
+    ),
+    c(3L, 3L, 1L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 2L,
+      1L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 12L, 2L, 2L, 3L, 3L, 1L,
+      1L, 1L, 1L, 3L, 1L, 1L, 2L, 3L, 1L, 3L, 3L, 1L, 3L, 4L, 1L, 1L,
+      4L, 1L, 4L, 1L, 7L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L,
+      3L, 1L, 2L, 1L, 3L, 1L, 2L, 3L, 5L, 1L, 2L, 1L, 2L, 1L, 4L, 1L,
+      1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 1L, 1L, 10L)
+  ),
+  `PISA 2015` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(3L, 2L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 2L,
+      1L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 8L, 2L, 2L,
+      4L, 2L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 2L, 3L, 1L, 2L, 4L, 2L, 1L,
+      1L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 10L, 1L,
+      8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 7L, 3L,
+      3L, 1L, 2L, 1L, 7L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L,
+      2L, 1L, 1L, 10L)
+  ),
+  `PISA 2018` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(3L, 3L, 1L, 2L, 1L, 1L, 3L, 1L, 1L, 2L, 1L, 2L, 3L, 1L, 1L,
+      2L, 2L, 1L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L,
+      2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 2L, 3L, 1L, 3L, 3L, 2L,
+      1L, 1L, 1L, 3L, 1L, 3L, 2L, 1L, 1L, 1L, 1L, 2L, 7L, 1L, 2L, 1L,
+      8L, 1L, 1L, 1L, 2L, 3L, 1L, 2L, 3L, 3L, 3L, 1L, 1L, 1L, 9L, 1L,
+      2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 8L, 1L, 8L, 1L,
+      3L, 2L, 1L, 1L, 10L)
+  ),
+  `PISA 2022` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(3L, 3L, 1L, 2L, 1L, 1L, 3L, 1L, 4L, 2L, 3L, 1L, 1L, 2L, 2L,
+      1L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L, 2L, 4L,
+      2L, 3L, 1L, 3L, 1L, 1L, 2L, 7L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L,
+      2L, 1L, 1L, 1L, 1L, 3L, 6L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 2L, 3L,
+      1L, 4L, 1L, 2L, 13L, 1L, 2L, 1L, 4L, 2L, 4L, 5L, 1L, 1L, 1L,
+      1L, 8L, 1L, 12L, 4L, 10L)
+  ),
+  `PISA for Development 2019 in School` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(47L, 1L, 15L, 1L, 1L, 1L, 16L, 1L, 50L, 1L, 29L, 1L, 43L, 1L,
+      1L)
+  ),
+  `PISA for Development 2019 Out of School` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(63L, 1L, 1L, 1L, 61L, 1L, 5L, 1L, 29L, 1L, 45L)
+  ),
+  `REDS 2021 G8` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(4L, 1L, 6L, 1L, 27L, 1L, 14L, 1L, 14L, 1L, 10L, 1L, 76L, 2L,
+      9L, 1L, 26L, 1L, 1L, 1L, 11L)
+  ),
+  `RL II 1991 G4` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(62L, 1L, 4L, 1L, 5L, 1L, 1L, 1L, 48L, 1L, 40L, 1L, 2L, 2L,
+      26L, 1L, 12L)
+  ),
+  `RL II 2001 G4` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(62L, 1L, 4L, 1L, 5L, 1L, 1L, 1L, 48L, 1L, 40L, 1L, 2L, 2L,
+      26L, 1L, 12L)
+  ),
+  `SITES 1998 M1 POP A` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA
+    ),
+    c(24L, 1L, 11L, 1L, 19L, 2L, 6L, 1L, 8L, 3L, 2L, 1L, 43L, 1L,
+      1L, 1L, 40L, 1L, 2L, 1L, 2L, 1L, 37L)
+  ),
+  `SITES 1998 M1 POP B` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA
+    ),
+    c(13L, 2L, 9L, 1L, 10L, 2L, 2L, 1L, 16L, 2L, 6L, 1L, 2L, 1L,
+      5L, 3L, 2L, 1L, 9L, 2L, 32L, 1L, 1L, 1L, 32L, 1L, 7L, 1L, 2L,
+      1L, 2L, 1L, 1L, 1L, 31L, 1L, 3L)
+  ),
+  `SITES 1998 M1 POP C` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(13L, 2L, 9L, 1L, 10L, 2L, 20L, 1L, 6L, 1L, 8L, 3L, 2L, 1L,
+      9L, 3L, 31L, 1L, 34L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 33L, 1L, 3L
+    )
+  ),
+  `SITES 2006 M2` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA
+    ),
+    c(7L, 1L, 15L, 1L, 3L, 1L, 3L, 1L, 7L, 1L, 6L, 1L, 6L, 1L, 2L,
+      2L, 6L, 1L, 9L, 2L, 2L, 1L, 9L, 1L, 33L, 1L, 33L, 2L, 7L, 1L,
+      1L, 2L, 2L, 1L, 1L, 1L, 31L, 1L, 3L)
+  ),
+  `TALIS 2008 ISCED 2` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 2L, 3L, 1L, 1L, 1L, 4L, 1L, 19L, 1L, 12L, 2L, 13L, 1L,
+      2L, 1L, 2L, 1L, 1L, 1L, 7L, 1L, 4L, 1L, 8L, 1L, 3L, 1L, 8L, 1L,
+      2L, 1L, 8L, 1L, 8L, 2L, 34L, 2L, 13L, 1L, 26L)
+  ),
+  `TALIS 2013 ISCED 1` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(12L, 1L, 26L, 1L, 16L, 1L, 40L, 1L, 24L, 1L, 8L, 1L, 77L)
+  ),
+  `TALIS 2013 ISCED 2` = rep(
+    rep(c("X", NA), 30),
+    c(1L, 6L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 6L, 2L,
+      3L, 1L, 11L, 3L, 2L, 2L, 1L, 1L, 6L, 1L, 7L, 2L, 2L, 1L, 4L,
+      1L, 6L, 1L, 6L, 1L, 12L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 6L, 2L,
+      21L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 1L, 1L, 1L, 26L, 1L, 12L
+    )
+  ),
+  `TALIS 2013 ISCED 3` = rep(
+    rep(c("X", NA), 9),
+    c(1L, 6L, 1L, 31L, 1L, 16L, 1L, 18L, 1L, 21L, 1L, 24L, 1L, 8L,
+      1L, 33L, 1L, 43L)
+  ),
+  `TALIS 2013 PISA Link` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(7L, 1L, 44L, 1L, 3L, 1L, 33L, 1L, 6L, 1L, 34L, 1L, 21L, 1L,
+      10L, 1L, 43L)
+  ),
+  `TALIS 2018 ISCED 1` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(1L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 26L, 1L, 11L, 2L, 4L, 1L, 20L,
+      1L, 4L, 1L, 29L, 1L, 55L, 1L, 1L, 1L, 10L, 1L, 15L, 1L, 10L)
+  ),
+  `TALIS 2018 ISCED 2` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA
+    ),
+    c(1L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 3L, 1L, 3L,
+      1L, 2L, 1L, 3L, 3L, 2L, 1L, 11L, 3L, 2L, 2L, 1L, 1L, 6L, 2L,
+      6L, 2L, 2L, 2L, 3L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 11L,
+      1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 1L, 1L, 5L, 1L,
+      1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 1L, 1L, 6L, 1L, 3L)
+  ),
+  `TALIS 2018 ISCED 3` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(4L, 1L, 14L, 1L, 3L, 1L, 15L, 1L, 26L, 1L, 65L, 1L, 35L, 2L,
+      1L, 1L, 10L, 1L, 15L, 1L, 10L)
+  ),
+  `TALIS 2018 PISA Link` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(1L, 1L, 5L, 1L, 22L, 1L, 4L, 1L, 3L, 1L, 19L, 1L, 41L, 1L,
+      80L, 1L, 15L, 1L, 10L)
+  ),
+  `TALIS 3S 2018 ISCED 0.2` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(37L, 1L, 1L, 1L, 34L, 1L, 47L, 1L, 86L)
+  ),
+  `TALIS 3S 2018 ISCED U3` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(37L, 1L, 1L, 1L, 34L, 1L, 47L, 1L, 86L)
+  ),
+  `TEDS-M 2008` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(22L, 1L, 1L, 1L, 1L, 2L, 9L, 1L, 14L, 1L, 6L, 1L, 50L, 1L,
+      11L, 1L, 2L, 1L, 3L, 1L, 1L, 1L, 25L, 1L, 7L, 1L, 5L, 1L, 1L,
+      1L, 22L, 1L, 12L)
+  ),
+  `TIMSS 1995 G4` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 2L, 15L, 1L, 10L, 2L, 14L, 1L, 10L, 1L, 1L, 1L, 2L, 1L,
+      2L, 2L, 1L, 2L, 3L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 22L, 1L, 8L,
+      1L, 1L, 1L, 7L, 1L, 28L, 1L, 3L, 1L, 2L, 1L, 4L, 1L, 22L, 1L,
+      12L)
+  ),
+  `TIMSS 1995 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 2L, 3L, 3L, 9L, 1L, 1L, 1L, 3L, 1L, 4L, 3L, 1L, 1L, 11L,
+      2L, 4L, 1L, 4L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 1L, 3L, 2L, 1L, 4L,
+      1L, 1L, 1L, 2L, 1L, 1L, 1L, 22L, 1L, 8L, 1L, 1L, 1L, 7L, 1L,
+      21L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L, 1L, 22L, 1L, 8L,
+      1L, 3L)
+  ),
+  `TIMSS 1999 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 2L, 1L, 7L, 2L, 14L, 1L, 4L,
+      1L, 7L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 4L, 1L, 4L, 1L, 1L,
+      1L, 2L, 2L, 4L, 1L, 10L, 1L, 2L, 1L, 10L, 1L, 4L, 1L, 24L, 1L,
+      2L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 7L, 2L, 13L, 1L, 8L,
+      1L, 3L)
+  ),
+  `TIMSS 2003 G4` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA
+    ),
+    c(6L, 2L, 4L, 1L, 18L, 2L, 3L, 1L, 14L, 1L, 12L, 1L, 2L, 1L,
+      3L, 1L, 3L, 1L, 2L, 1L, 9L, 1L, 1L, 1L, 2L, 2L, 18L, 1L, 8L,
+      1L, 1L, 1L, 4L, 1L, 27L, 1L, 3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L,
+      9L, 1L, 7L, 1L, 6L, 1L, 3L, 1L, 8L)
+  ),
+  `TIMSS 2003 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(6L, 2L, 4L, 1L, 1L, 2L, 5L, 2L, 4L, 1L, 3L, 2L, 3L, 1L, 11L,
+      1L, 2L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L,
+      2L, 4L, 1L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L,
+      2L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 4L, 1L, 19L, 1L, 2L, 1L, 1L,
+      3L, 3L, 1L, 1L, 5L, 9L, 1L, 7L, 1L, 6L, 1L, 8L, 1L, 3L)
+  ),
+  `TIMSS 2007 G4` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(2L, 1L, 3L, 3L, 14L, 1L, 1L, 1L, 4L, 3L, 2L, 1L, 1L, 1L, 1L,
+      1L, 3L, 1L, 7L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 2L,
+      2L, 5L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 9L, 1L, 9L, 1L, 8L, 1L, 1L,
+      1L, 11L, 1L, 20L, 1L, 3L, 1L, 3L, 5L, 1L, 1L, 9L, 1L, 9L, 3L,
+      2L, 1L, 3L, 1L, 8L)
+  ),
+  `TIMSS 2007 G4 Bridge` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(6L, 2L, 23L, 2L, 18L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 3L, 1L,
+      2L, 1L, 9L, 1L, 1L, 1L, 22L, 1L, 8L, 1L, 1L, 1L, 32L, 1L, 3L,
+      1L, 3L, 1L, 2L, 1L, 2L, 1L, 9L, 1L, 14L, 1L, 12L)
+  ),
+  `TIMSS 2007 G8` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA
+    ),
+    c(2L, 1L, 3L, 2L, 6L, 3L, 4L, 2L, 2L, 1L, 4L, 3L, 2L, 2L, 6L,
+      1L, 4L, 1L, 2L, 1L, 7L, 2L, 3L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L,
+      2L, 4L, 1L, 1L, 2L, 1L, 1L, 4L, 1L, 7L, 1L, 1L, 1L, 6L, 1L, 11L,
+      1L, 2L, 1L, 8L, 1L, 1L, 1L, 17L, 1L, 2L, 1L, 1L, 3L, 3L, 2L,
+      1L, 4L, 1L, 1L, 7L, 2L, 8L, 3L, 2L, 1L, 12L)
+  ),
+  `TIMSS 2007 G8 Bridge` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA
+    ),
+    c(6L, 2L, 6L, 2L, 5L, 2L, 8L, 2L, 3L, 1L, 11L, 1L, 2L, 1L, 8L,
+      1L, 3L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 4L, 1L, 2L, 1L, 1L,
+      1L, 21L, 1L, 11L, 1L, 11L, 1L, 19L, 1L, 2L, 1L, 2L, 2L, 3L, 1L,
+      2L, 2L, 1L, 1L, 9L, 1L, 14L, 1L, 12L)
+  ),
+  `TIMSS 2011 G4` = rep(
+    rep(c("X", NA), 39),
+    c(1L, 1L, 1L, 1L, 1L, 1L, 4L, 2L, 1L, 2L, 1L, 6L, 2L, 3L, 1L,
+      3L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 1L, 2L, 1L, 4L,
+      4L, 2L, 2L, 3L, 1L, 2L, 2L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 7L,
+      1L, 10L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L,
+      1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 13L, 1L, 2L,
+      2L, 8L)
+  ),
+  `TIMSS 2011 G8` = rep(
+    rep(c("X", NA), 36),
+    c(1L, 1L, 1L, 1L, 1L, 1L, 2L, 7L, 1L, 6L, 2L, 3L, 1L, 3L, 2L,
+      18L, 1L, 4L, 1L, 2L, 2L, 3L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L,
+      3L, 3L, 1L, 2L, 1L, 1L, 1L, 4L, 1L, 5L, 1L, 10L, 1L, 11L, 1L,
+      1L, 2L, 8L, 1L, 1L, 1L, 17L, 1L, 2L, 1L, 1L, 1L, 5L, 1L, 2L,
+      4L, 1L, 1L, 7L, 2L, 8L, 1L, 4L, 1L, 8L, 1L, 3L)
+  ),
+  `TIMSS 2015 G4` = rep(
+    rep(c("X", NA), 35),
+    c(3L, 1L, 1L, 1L, 2L, 4L, 1L, 1L, 2L, 8L, 1L, 2L, 1L, 3L, 2L,
+      2L, 3L, 1L, 1L, 11L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 3L, 1L,
+      2L, 3L, 1L, 2L, 2L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 18L, 2L,
+      4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 20L, 1L, 1L, 2L, 4L,
+      1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 12L)
+  ),
+  `preTIMSS 2015 G4` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(1L, 1L, 13L, 1L, 52L, 1L, 2L, 1L, 5L, 1L, 7L, 1L, 7L, 1L, 111L,
+      1L, 3L)
+  ),
+  `TIMSS 2015 G8` = rep(
+    rep(c("X", NA), 35),
+    c(3L, 1L, 1L, 1L, 2L, 7L, 1L, 6L, 1L, 1L, 1L, 2L, 1L, 3L, 2L,
+      15L, 1L, 2L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 1L,
+      3L, 3L, 1L, 1L, 2L, 1L, 1L, 4L, 1L, 7L, 1L, 8L, 1L, 9L, 1L, 1L,
+      1L, 1L, 2L, 10L, 1L, 20L, 1L, 1L, 1L, 5L, 1L, 2L, 2L, 1L, 1L,
+      1L, 1L, 8L, 1L, 13L, 1L, 8L, 1L, 3L)
+  ),
+  `TIMSS 2019 G4` = rep(
+    rep(c("X", NA), 41),
+    c(1L, 1L, 3L, 1L, 4L, 2L, 1L, 1L, 3L, 7L, 1L, 2L, 1L, 3L, 2L,
+      2L, 3L, 1L, 1L, 9L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L,
+      2L, 2L, 3L, 1L, 2L, 2L, 3L, 3L, 2L, 1L, 1L, 1L, 2L, 1L, 5L, 1L,
+      1L, 2L, 9L, 2L, 8L, 1L, 1L, 3L, 2L, 1L, 1L, 2L, 3L, 1L, 16L,
+      1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 1L,
+      13L, 1L, 8L, 1L, 3L)
+  ),
+  `TIMSS 2019 G4 Bridge` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(4L, 1L, 3L, 1L, 15L, 1L, 2L, 1L, 7L, 1L, 1L, 1L, 1L, 1L, 11L,
+      2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 7L, 1L, 7L, 1L, 4L, 1L, 24L,
+      1L, 8L, 1L, 9L, 1L, 3L, 1L, 20L, 1L, 7L, 1L, 1L, 1L, 1L, 1L,
+      1L, 1L, 24L, 1L, 12L)
+  ),
+  `TIMSS 2019 G8` = rep(
+    c(
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X"
+    ),
+    c(1L, 1L, 1L, 1L, 1L, 2L, 1L, 7L, 1L, 11L, 1L, 3L, 2L, 3L, 1L,
+      11L, 1L, 2L, 1L, 4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 2L,
+      2L, 1L, 3L, 3L, 1L, 1L, 2L, 1L, 1L, 4L, 1L, 16L, 1L, 11L, 1L,
+      1L, 2L, 6L, 1L, 3L, 1L, 16L, 2L, 2L, 1L, 1L, 1L, 5L, 1L, 3L,
+      1L, 1L, 1L, 10L, 1L, 13L, 1L, 8L, 2L, 1L, 1L)
+  ),
+  `TIMSS 2019 G8 Bridge` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA
+    ),
+    c(4L, 1L, 22L, 1L, 23L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 6L, 2L, 7L,
+      1L, 4L, 1L, 21L, 1L, 11L, 1L, 13L, 1L, 20L, 1L, 7L, 1L, 3L, 1L,
+      1L, 1L, 10L, 1L, 13L, 1L, 12L)
+  ),
+  `TIMSS Advanced 1995` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(7L, 2L, 15L, 1L, 1L, 1L, 8L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 11L,
+      2L, 12L, 1L, 68L, 1L, 10L, 2L, 26L, 1L, 12L)
+  ),
+  `TIMSS Advanced 2008` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(6L, 1L, 64L, 1L, 3L, 1L, 10L, 1L, 26L, 1L, 8L, 1L, 6L, 1L,
+      27L, 1L, 10L, 2L, 39L)
+  ),
+  `TIMSS Advanced 2015` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(57L, 1L, 17L, 1L, 10L, 1L, 35L, 1L, 9L, 1L, 22L, 1L, 1L, 1L,
+      10L, 2L, 26L, 1L, 12L)
+  ),
+  `TiPi 2011 G4` = rep(
+    rep(c("X", NA), 28),
+    c(1L, 1L, 1L, 1L, 1L, 2L, 3L, 12L, 1L, 9L, 1L, 2L, 1L, 1L, 1L,
+      14L, 1L, 3L, 1L, 2L, 1L, 4L, 4L, 2L, 2L, 3L, 1L, 12L, 1L, 4L,
+      1L, 7L, 1L, 10L, 1L, 9L, 1L, 2L, 1L, 5L, 2L, 3L, 1L, 17L, 1L,
+      2L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 37L)
+  ),
+  key = "Alpha 3 ISO"
+)
 
+  
+  
+  
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   output$welcomeToRALSA <- renderText("Welcome to RALSA")
   output$welcomeText <- renderText({HTML('The R Analyzer for Large-Scale Assessments (RALSA) is an R package for preparation and analysis of data from large-scale assessments and surveys which use complex sampling and assessment design. Currently, RALSA supports a number of studies with different design and a number of analysis types (see below). Both of these will increase in future.<br/>
@@ -7263,7 +8169,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       })
       output$crossTabsGraphsPlotXlabelChk <- renderUI({
         if(!is.null(file.crosstabs$loaded) && isTRUE(input$crossTabsGraphs) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0 && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0) {
-          checkboxInput(inputId = "crossTabsGraphsPlotXlabelChk", label = "Custom graphs x-axis label", value = FALSE, width = "300px")
+          checkboxInput(inputId = "crossTabsGraphsPlotXlabelChk", label = "Custom graphs row variable label", value = FALSE, width = "300px")
         }
       })
       output$crossTabsGraphsPlotXlabelTXT <- renderUI({
@@ -7273,7 +8179,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       })
       output$crossTabsGraphsPlotYlabelChk <- renderUI({
         if(!is.null(file.crosstabs$loaded) && nrow(crossTabsAllVars$crossTabsSelectedBckgRowVar) > 0  && nrow(crossTabsAllVars$crossTabsSelectedBckgColVar) > 0 && isTRUE(input$crossTabsGraphs)) {
-          checkboxInput(inputId = "crossTabsGraphsPlotYlabelChk", label = "Custom graphs y-axis label", value = FALSE, width = "300px")
+          checkboxInput(inputId = "crossTabsGraphsPlotYlabelChk", label = "Custom graphs column variable label", value = FALSE, width = "300px")
         }
       })
       output$crossTabsGraphsPlotYlabelTXT <- renderUI({
@@ -8516,7 +9422,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       }
       gather.lin.reg.cat.new.inputs.data <- function(id, len) {
         unlist(lapply(seq_len(len), function(i) {
-          value = input[[paste0(id, i)]]
+          value <- input[[paste0(id, i)]]
           if (is.null(value)) NA else value
         }))
       }
@@ -8531,15 +9437,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               length(i)
             })[linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables]]),
             V4 = if(any(sapply(X = file.lin.reg$var.unique.values[linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables]], FUN = is.null)) == FALSE) {
-              generate.lin.reg.contr.new.inputs(FUN = selectInput, id = 'linregcontrast', len = nrow(linRegAllVars$linRegSelectedIndepCatBckgVars), choices = c("Dummy", "Deviation", "Simple"), width = "100%")
+              generate.lin.reg.contr.new.inputs(FUN = selectInput, id = 'linregcontrast', len = nrow(linRegAllVars$linRegSelectedIndepCatBckgVars), choices = c("Dummy", "Deviation", "Simple"), width = "100%", selectize = FALSE)
             } else {
-              generate.lin.reg.contr.new.inputs(FUN = selectInput, id = 'linregcontrast', len = nrow(linRegAllVars$linRegSelectedIndepCatBckgVars), choices = "PVs are added, check your input", width = "100%")
+              generate.lin.reg.contr.new.inputs(FUN = selectInput, id = 'linregcontrast', len = nrow(linRegAllVars$linRegSelectedIndepCatBckgVars), choices = "PVs are added, check your input", width = "100%", selectize = FALSE)
             },
             V5 = lapply(seq_along(1:nrow(linRegAllVars$linRegSelectedIndepCatBckgVars)), function(i) {
               if(any(sapply(X = file.lin.reg$var.unique.values[linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables]], FUN = is.null)) == FALSE) {
-                generate.lin.reg.refcat.new.inputs(FUN = selectInput, id = paste0("linregrefcat", i), choices = file.lin.reg$var.unique.values[linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables]][i], width = "100%")
+                generate.lin.reg.refcat.new.inputs(FUN = selectInput, id = paste0("linregrefcat", i), choices = file.lin.reg$var.unique.values[linRegAllVars$linRegSelectedIndepCatBckgVars[ , Variables]][i], width = "100%", selectize = FALSE)
               } else {
-                generate.lin.reg.refcat.new.inputs(FUN = selectInput, id = paste0("linregrefcat", i), choices = "PVs are added, check your input", width = "100%")
+                generate.lin.reg.refcat.new.inputs(FUN = selectInput, id = paste0("linregrefcat", i), choices = "PVs are added, check your input", width = "100%", selectize = FALSE)
               }
             }),
             V6 = data.table(linRegAllVars$linRegSelectedIndepCatBckgVars[ , order_col])
@@ -9574,15 +10480,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
               length(i)
             })[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]]),
             V4 = if(any(sapply(X = file.bin.log.reg$var.unique.values[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]], FUN = is.null)) == FALSE) {
-              generate.bin.log.reg.contr.new.inputs(FUN = selectInput, id = 'binlogregcontrast', len = nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars), choices = c("Dummy", "Deviation", "Simple"), width = "100%")
+              generate.bin.log.reg.contr.new.inputs(FUN = selectInput, id = 'binlogregcontrast', len = nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars), choices = c("Dummy", "Deviation", "Simple"), width = "100%", selectize = FALSE)
             } else {
-              generate.bin.log.reg.contr.new.inputs(FUN = selectInput, id = 'binlogregcontrast', len = nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars), choices = "PVs are added, check your input", width = "100%")
+              generate.bin.log.reg.contr.new.inputs(FUN = selectInput, id = 'binlogregcontrast', len = nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars), choices = "PVs are added, check your input", width = "100%", selectize = FALSE)
             },
             V5 = lapply(seq_along(1:nrow(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars)), function(i) {
               if(any(sapply(X = file.bin.log.reg$var.unique.values[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]], FUN = is.null)) == FALSE) {
-                generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = file.bin.log.reg$var.unique.values[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]][i], width = "100%")
+                generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = file.bin.log.reg$var.unique.values[binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , Variables]][i], width = "100%", selectize = FALSE)
               } else {
-                generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = "PVs are added, check your input", width = "100%")
+                generate.bin.log.reg.refcat.new.inputs(FUN = selectInput, id = paste0("binlogregrefcat", i), choices = "PVs are added, check your input", width = "100%", selectize = FALSE)
               }
             }),
             V6 = data.table(binLogRegAllVars$binLogRegSelectedIndepCatBckgVars[ , order_col])
@@ -10186,11 +11092,11 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
   }, ignoreInit = TRUE)
-  output$helpHeading <- renderText("Help")
+  output$helpSectionsHeading <- renderText("Help")
   output$helpOnRALSAWebsite <- renderText({
     HTML("Visit the user guide section at <a href = https://ralsa.ineri.org/user-guide/, target = '_blank'> RALSA's dedicated website</a> for the userguide or use the following links for help on speciffic functionality:<br/><br/>")
   })
-  output$helpRALSAWebsiteLinks <- renderText({
+  output$helpSectionRALSAWebsiteLinks <- renderText({
     HTML(
       "<a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a><br/>
 <a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a><br/><br/>
@@ -10210,6 +11116,55 @@ Perform analyses:<br/>
 <ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
     )
   })
+  output$partCountriesHeading <- renderText("Countries' study participation")
+  output$helpOnPartCountries <- renderText({
+    HTML('Use the drop-down list below to select studies and cycles.<br/>
+Use the checkbox to filter the countries which participate in all selected studies and cycles.<br/>
+Note: Some countries have more than one numeric code in PISA. These appear with a slash in the "Numeric code" column.<br/><br/>')
+  })
+  output$selectStudyCycleDropdown <- renderUI({
+    pickerInput(
+      inputId = "selectStudyCycleDropdown", label = "Select studies and cycles",
+      choices = colnames(countries.studies.cycles.table)[!colnames(countries.studies.cycles.table) %in% c("Alpha 3 ISO", "Numeric Code", "Country Name")],
+      options = list('actions-box' = TRUE),
+      multiple = TRUE,
+      width = "300px"
+    )
+  })
+  filter.studies.and.cycles <-  reactive({
+    countries.studies.cycles.table[ , c("Alpha 3 ISO", "Numeric Code", "Country Name", input$selectStudyCycleDropdown), with = FALSE]
+  })
+  output$selectStudyCycleTable <- renderDT({
+    if(ncol(filter.studies.and.cycles()) <= 3) {
+      NULL
+    } else if(ncol(filter.studies.and.cycles()) > 3) {
+      if(input$partCountriesFilterParticipating == FALSE) {
+        filter.studies.and.cycles()
+      } else if(input$partCountriesFilterParticipating == TRUE) {
+        na.omit(filter.studies.and.cycles())
+      }
+    }
+  },
+  callback=JS('$("button.buttons-excel").css("background","black").css("color", "white").css("font-size", "14px").css("border-radius", "10px").css("height", "33px").css("padding-top", "5px").css("margin-top", "10px").css("margin-right", "15px");'),
+  rownames = FALSE,
+  select = "none",
+  filter = "top",
+  class = "cell-border stripe;compact cell-border;",
+  extensions = c("Scroller", "Buttons"),
+  options = list(
+    buttons = list(list(extend = "excel", text = "Download Excel", title = "Participating_Countries")),
+    language = list(zeroRecords = "No study and cycle is selected"),
+    initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+    dom = "tB",
+    searchHighlight = FALSE,
+    searchDelay = 100,
+    ordering = FALSE,
+    pageLength = 5000,
+    columnDefs = list(list(width = '75px', targets = 0), list(width = '100px', targets = c(1, 3:(ncol(filter.studies.and.cycles())-1))), list(className = 'dt-body-center', targets = 3:(ncol(filter.studies.and.cycles())-1)), list(className = 'dt-body-right', targets = 1)),
+    rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+    deferRender = TRUE,
+    scrollY = 700, scrollX = TRUE, scroller = TRUE
+  ))
   output$exitHeading <- renderText("Press the button below to exit RALSA")
   observeEvent(input$closeGUI, {
     js$closeWindow()

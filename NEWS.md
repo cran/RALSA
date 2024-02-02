@@ -1,4 +1,47 @@
-# RALSA v1.3.7 (2023-10-25)
+# RALSA v1.4.0 (2024-02-02)
+
+This update fixes a number of issues, completely revamps the conversion function, updates the conversion of PISA 2015 files, adds support for PISA 2022 and a studies, and countries' participation in studies and cycles reference table in the GUI help section.
+
+## Bug fixes
+* `lsa.convert.data` crashes when converting PISA 2015 data and `missing.to.NA = FALSE`.
+
+* `lsa.convert.data` crashes when converting PISA for Development 2019 out of school files.
+
+* `lsa.convert.data` converts TALIS 3S 2018 ISCED 0.2 as SITES 2006 data.
+
+* `lsa.convert.data` does not save converted `.RData` files when converting PISA data prior to its 2015 cycle with `missing.to.NA = TRUE`.
+
+* `lsa.bench` crashes when benchmarks are not provided by the user, not using the default benchmarks.
+
+* `lsa.crosstabs` crashes when one or more of the countries has just one valid value in the `bckg.row.var` or `bckg.col.var` (i.e. insufficient data).
+
+* `lsa.bin.log.reg` crashes when one or more of the countries does not have valid data in the analysis variables.
+
+* Following the last changes of how R handles the POSIX dates and times, `lsa.convert.data`, `lsa.bench`, `lsa.crosstabs`, `lsa.corr`, `lsa.lin.reg` and `lsa.bin.log.reg` report incorrect total times of all operations.
+
+* Following the latest changes in the `shiny`'s package update to version 1.8.0, when using categorical background variables in the GUI, `lsa.lin.reg` and `lsa.bin.log.reg` do not add the contrasts and reference categories in the syntax and do not update user selections.
+
+## New functionality
+* A reference table with countries' participation in different studies and cycles was added in the GUI help section which is now split into two parts.
+
+## Miscellaneous
+* The `lsa.convert.data` function was rewritten (almost) from scratch replacing the `foreign` package with `haven` when importing SPSS files. The conversion is much more efficient now and has a better handling of the user-defined missing values. The previous version is now deprecated and is available as `lsa.convert.data2` (to be removed in June of 2025).
+
+* Added support for student test timing files in PISA 2015.
+
+* Added support for the student financial literacy file in PISA 2015.
+
+* Added support for PISA 2022 data.
+
+* Various visual improvements and optimizations in the GUI.
+
+* Improved documentation.
+
+
+
+
+
+# RALSA v1.3.7 (2023-10-26)
 
 This update focuses mainly on some critical issues that were introduced after the changes in the last versions of R and CRAN policies on package documentation.
 

@@ -243,6 +243,23 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     if(length(names(data)) == 0) {
       stop('\nAll countries with valid valid values on "bckg.row.var" and/or "bckg.col.var" in the data have only missing values on the jackknifing zones. All operations stop here.\n\n', call. = FALSE)
     }
+    insufficient.split <- lapply(X = data, FUN = function(i) {
+      if(
+        length(unique(i[ , get(bckg.row.var)])) == 1 && length(unique(i[ , get(bckg.col.var)]))  > 1 ||
+        length(unique(i[ , get(bckg.row.var)]))  > 1 && length(unique(i[ , get(bckg.col.var)])) == 1 ||
+        length(unique(i[ , get(bckg.row.var)])) == 1 && length(unique(i[ , get(bckg.col.var)])) == 1 ||
+        nrow(i) ==0) {
+        return(TRUE)
+      }
+    })
+    insufficient.split <- names(Filter(isTRUE, insufficient.split))
+    data[which(names(data) %in% insufficient.split)] <- NULL
+    if(length(insufficient.split) > 0) {
+      warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics: ', paste(insufficient.split, collapse = ", "), '.\n These data were removed and statistics for them are not to be found in the output.')
+      if(length(data) == 0) {
+        stop('\nNone of the countries in the data file contains sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics. All operations stop here.\n\n', call. = FALSE)
+      }
+    }
     vars.list[["pcts.var"]] <- tmp.pcts.var
     vars.list[["group.vars"]] <- tmp.group.vars
     analysis.info <- list()
@@ -469,9 +486,6 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
         Rao.Scott.deg.freedom <- length(all.weights) - 2
       }
       country.Rao.Scott.adj.chi.sq <- compute.Rao.Scott.adj.chi.sq(data.obj = data, var1 = vars.list[["bckg.row.var"]], var2 = vars.list[["bckg.col.var"]], weights = all.weights, des.scale.fac = Rao.Scott.design.var.scale.fac, deg.freedom = Rao.Scott.deg.freedom, miss.to.include = include.missing, keys = key.vars)
-      if(exists("cnt.warn.insuff.RS.collector")) {
-        warnings.collector[["insufficient.cases"]] <<- c(warnings.collector[["insufficient.cases"]], cnt.warn.insuff.RS.collector)
-      }
       cnt.RS.chi.sq.name <- unique(as.character(country.Rao.Scott.adj.chi.sq[ , get(key.vars[1])]))
       Rao.Scott.adj.chi.sq[[cnt.RS.chi.sq.name]] <<- country.Rao.Scott.adj.chi.sq
       country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[[1]])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
@@ -507,7 +521,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
     } else {
       message("")
     }
@@ -529,9 +543,6 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
     setnames(x = estimates, old = Total.cols, new = c("Total", "Total_SE"))
     ptm.add.RS.chi.square <- proc.time()
     Rao.Scott.adj.chi.sq <- rbindlist(l = Rao.Scott.adj.chi.sq)
-    if(!is.null(warnings.collector[["insufficient.cases"]])) {
-      warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the Rao-Scott first- and second-order chi-square adjustments: ', paste(warnings.collector[["insufficient.cases"]], collapse = ", "), '.\n These split combinations were removed and the statistics for them are not to be found in the output.')
-    }
     message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"))
     warnings.collector[["insufficient.cases"]] <- Filter(Negate(is.null), warnings.collector[["insufficient.cases"]])
     if(isFALSE(graphs)) {

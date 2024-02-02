@@ -511,7 +511,7 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
     } else {
       message("\n")
     }

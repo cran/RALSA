@@ -1,11 +1,6 @@
-#' @name lsa.convert.data
-#' @aliases lsa.convert.data
-#' @aliases print.lsa.data
-#' @aliases lsa.select.countries.PISA
-#'
 #' @title Convert Large-Scale Assessments' Datasets to .RData Format
 #'
-#' @description \code{lsa.convert.data} converts datasets from large-scale assessments from their original formats (SPSS or ASCII text) into \code{.RData} files. \code{print} prints the properties of an \code{lsa.data} objects on screen. \code{lsa.select.countries.PISA} lets selecting PISA data from specific countries for analysis.
+#' @description \code{lsa.convert.data2} is a deprecated version of of the \code{lsa.convert.data} function using a different approach. It is an old version of the \code{lsa.convert.data} function and will be removed from the package in June of 2025. Use only if you experience issues with \code{lsa.convert.data}.
 #'
 #' @param inp.folder    The folder containing the IEA-like SPSS data files or ASCII text files and
 #'                      \code{.sps} import files for OECD PISA data from cycles prior to 2015.
@@ -32,111 +27,26 @@
 #' @param out.folder    Path to the folder where the converted files will be stored. If omitted,
 #'                      same as the \code{inp.folder}, and if the \code{inp.folder} is missing as
 #'                      well, this will be \code{getwd()}.
-#' @param x             (\code{print} only) \code{lsa.data} object.
-#' @param col.nums      (\code{print} only) Which columns to print, positions by number.
-#' @param data.file     (\code{lsa.select.countries.PISA} only) Converted PISA data file to select
-#'                      countries' data from. Either this one or \code{data.object} must be
-#'                      provided, but not both. See details.
-#' @param data.object   (\code{lsa.select.countries.PISA} only) PISA object in memory to filter.
-#'                      Either this one or \code{data.file} must be provided, but not both.
-#'                      See details.
-#' @param cnt.names     (\code{lsa.select.countries.PISA} only) Character vector containing the
-#'                      names of the countries, as they exist in the data, which should stay in the
-#'                      PISA exported file or object in memory.
-#' @param output.file   (\code{lsa.select.countries.PISA} only) Full path to the file with the filtered
-#'                      countries' data to be written on disk. If not provided, the PISA object
-#'                      will be written to memory.
-#' @param ...           (\code{print} only) Further arguments passed to or from other methods.
 #'
 #' @details
-#' The \code{lsa.convert.data} function converts the originally provided data files into \code{.RData} sets. RALSA adds its own method for printing \code{lsa.data} objects on screen. The \code{lsa.select.countries.PISA} is a utility function that allows the user to select countries of interest from a converted PISA data file (or PISA object residing in memory) and remove the rest of the countries' data. This is useful when the user does not want to analyze all countries data in a PISA file.
-#'
-#' \itemize{
-#' \item \strong{\code{lsa.convert.data}}
-#'
-#' IEA studies, as well as OECD TALIS and some conducted by other organizations, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be converted. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To convert the files from all countries in the downloaded data from IEA studies and OECD TALIS, simply omit the \code{ISO} argument. Cycles of OECD PISA prior to 2015, on the other hand, do not provide SPSS \code{.sav} or other binary files, but ASCII text files, accompanied with SPSS syntax (\code{.sps}) files that are used to import the text files into SPSS. These files are per each type of respondent containing all countries' data. The \code{lsa.convert.data} function converts the data from either source assuring that the structure of the output \code{.RData} files is the same, although the structure of the input files is different (SPSS binary files vs. ASCII text files plus import \code{.sps} files). The data from PISA 2015 and later, on the other hand, is provided in SPSS format (all countries in one file per type of respondent). Thus, the \code{PISApre15} argument needs to be specified as \code{TRUE} when converting data sets from PISA prior to its 2015 cycle. The default for the \code{PISApre15} argument is \code{FALSE} which means that the function expects to find IEA-like SPSS binary files per country and type of respondent in the directory in \code{inp.folder} or OECD PISA 2015 (or later) SPSS \code{.sav} files. If \code{PISApre15 = TRUE} and country codes are provided to \code{ISO}, they will be ignored because PISA files contain data from all countries together.
-#'
-#' The files to be converted must be in a folder on their own, from a single study, single cycle and single population. In addition, if there are more than one file types per study, cycle and population, these also must be in different folders. For example, in TIMSS 2019 the grade 8 data files are main (end with "m7", electronic version of the paper administered items), bridge (end with "b7", paper administration with trend items for countries participating in previous TIMSS cycles) and Problem Solving and Inquiry (PSI) tasks (end with "z7", electronic administration only, optional for countries). These different types must be in separate folders. In case of OECD PISA prior 2015, the folder must contain both the ASCII text files and the SPSS \code{.sps} import syntax files. If the folder contains data sets from more than one study or cycle, the operation will break with error messages.
-#'
-#' If the path for the \code{inp.folder} argument is not specified, the function will search for files in the working directory (i.e. as returned by \code{getwd()}). If folder path for the the \code{out.folder} is not specified, it will take the one from the \code{inp.folder} and the files will be stored there. If both the \code{inp.folder} and \code{out.folder} arguments are missing, the directory from \code{getwd()} will be used to search, convert and store files.
-#'
-#' If \code{missing.to.NA} is set to \code{TRUE}, all user-defined missing values from the SPSS will be imported as \code{NA} which is \code{R}'s only kind of missing value. This will be the most often case when analyzing these data since the reason why the response is missing will be irrelevant most of the times. However, if it is needed to know why the reasons for missing responses, as when analyzing achievement items (i.e. not administered vs. omitted or not reached), the argument shall be set to \code{FALSE} (default for this argument) which will convert all user-defined missing values as valid ones.
-#'
-#' \item \strong{\code{print}}
-#'
-#' RALSA uses its own method for printing objects of class \code{lsa.data} on screen. Passing just the object name to the console will print summarized information about the study's data and the first six columns of the dataset (see the Value section). If \code{col.nums} specifies which columns from the dataset shall be included in the output (see examples).
-#'
-#' \item \strong{\code{lsa.select.countries.PISA}}
-#'
-#' \code{lsa.select.countries.PISA} lets the user to take a PISA dataset, either a converted file or \code{lsa.data} object in the memory and reduce the number of countries in it by passing the names of the countries which need to be kept as a character vector to the \code{cnt.names} argument. If full path (including the file name) to the resulting file is specified in the \code{output.file} argument, it will be written on disk. If not, the data will be written to an \code{lsa.object} in memory with the same name as the input file. See the examples.
-#' }
+#' See the details of \code{lsa.convert.data}.
 #'
 #' @return
-#'
-#' \itemize{
-#'
-#' \item \strong{\code{lsa.convert.data}}
-#'
-#' \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class. The \code{data.table} object has the same name as the \code{.RData} file it is saved in. The object has additional attributes: study name (\code{study}), study cycle (\code{cycle}), and respondent file type (\code{file.type}). Each variable has its own additional attributes: its own label attached to it, if it existed in the source SPSS file. If the \code{missing.to.NA} was set to \code{TRUE}, each variable has an attribute \code{missings}, containing the user-defined missing values from the SPSS files.
-#'
-#' The object in the \code{.RData} file is keyed on the country ID variable.
-#'
-#' \item \strong{\code{print}}
-#'
-#' Prints the information of an \code{lsa.data} object (study, cycle, respondent type, number of countries, key -- country ID, and if the variables have user-defined missing values) and a preview of the data. The default preview (when no \code{col.nums}) are specified will include the first six columns.
-#'
-#' \item \strong{\code{lsa.select.countries.PISA}}
-#'
-#'  Writes a file containing an \code{lsa.object} with the data for the countries passed to the \code{cnt.names} argument, if the \code{output.file} argument is used. If the \code{output.file} argument is not used, the \code{lsa.object} will be written to the memory with the same name as the file name in \code{inp.file}.
-#' }
+#' See the "Value" section of the \code{lsa.convert.data}.
 #'
 #' @note
-#' When downloading the \code{.sps} files (ASCII text and control \code{.sps}) for OECD PISA files prior to the 2015 cycle (say http://www.oecd.org/pisa/pisaproducts/pisa2009database-downloadabledata.htm), save them **without changing their names and without modifying the file contents**. The function will look for the files as they were named originally.
-#'
-#' Different studies and cycles define the "I don't know" (or similar) category of discrete variables in different ways - either as a valid or missing value. The \code{lsa.convert.data} function sets all such or similar codes to missing value. If this has to be changed, the \code{lsa.recode.vars} can be used as well (also see \code{lsa.vars.dict}).
+#' See the "Notes" section of \code{lsa.convert.data}.
 #'
 #' @examples
-#' # Convert all IEA-like SPSS files in the working directory, setting all user-defined missing
-#' # values to \code{NA}
-#' \dontrun{
-#' lsa.convert.data(missing.to.NA = TRUE)
-#' }
-#'
-#'
-#' # Convert IEA TIMSS 2011 grade 8 data from Australia and Slovenia, keeping all user-defined
-#' # missing values as valid ones specifying custom input and output directories
-#' \dontrun{
-#' lsa.convert.data(inp.folder = "C:/TIMSS_2011_G8", ISO = c("aus", "svn"), missing.to.NA = FALSE,
-#' out.folder = "C:/Data")
-#' }
-#'
-#' # Convert OECD PISA 2009 files converting all user-defined missing values to \code{NA}
-#' # using custom input and output directories
-#' \dontrun{
-#' lsa.convert.data(inp.folder = "/media/PISA_2009", PISApre15 = TRUE, missing.to.NA = TRUE,
-#' out.folder = "/tmp")
-#' }
-#'
-#' # Print 20th to 25th column in PISA 2018 student questionnaire dataset loaded into memory
-#' \dontrun{
-#' print(x = cy07_msu_stu_qqq, col.nums = 20:25)
-#' }
-#'
-#' # Select data from Albania and Slovenia from PISA 2018 student questionnaire dataset
-#' # and save it under the same file name in a different folder
-#' \dontrun{
-#' lsa.select.countries.PISA(data.file = "C:/PISA/cy07_msu_stu_qqq.RData",
-#' cnt.names = c("Albania", "Slovenia"),
-#' output.file = "C:/PISA/Reduced/cy07_msu_stu_qqq.RData")
-#' }
+#' # See the examples of \code{lsa.convert.data}.
 #'
 #' @references
 #' Foy, P. (Ed.). (2018). \emph{PIRLS 2016 User Guide for the International Database}. TIMSS & PIRLS International Study Center.
 #'
-#' @seealso \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
+#' @seealso \code{\link{lsa.convert.data2}}, \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
 #' @export
-#' @rdname lsa.convert.data
-lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA = FALSE, out.folder) {
+lsa.convert.data2 <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA = FALSE, out.folder) {
+  .Deprecated(new = "lsa.convert.data", msg = '\nThis function is deprecated and will be removed from the package in June of 2025. Please use the "lsa.convert.data" instead.\n')
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   tryCatch({
@@ -226,11 +136,284 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
       counter <- 0
       convert.IEA <- function(inp.file, out.file, new.file) {
         ptm <- proc.time()
-        tmp <- tryCatch({
-          read_sav(file = inp.file, user_na = TRUE)
-        }, error = function(e) {
-          read_sav(file = inp.file, user_na = TRUE, encoding = "latin1")
+        if(missing.to.NA == TRUE) {
+          tmp <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = TRUE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+          tmp1 <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+          value.labels <- lapply(X = tmp1, FUN = levels)
+          tmp1 <- NULL
+          value.labels <- lapply(X = value.labels, FUN = function(i) {
+            gsub(pattern = "'", replacement = "\\\\'", x = i)
+          })
+          index.missings.only <- function(missing.values, labels.list) {
+            which(setNames(labels.list %in% missing.values, names(labels.list)))
+          }
+          num.vars.with.labels <- index.missings.only(missing.values = all.missing.values.combinations, labels.list = value.labels)
+          if(length(num.vars.with.labels) > 0) {
+            tmp2 <- suppressMessages(read.spss(file = inp.file, use.value.labels = FALSE, use.missings = TRUE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+            tmp[num.vars.with.labels] <- tmp2[num.vars.with.labels]
+            tmp2 <- NULL
+          }
+          factor.vars <- names(Filter(is.factor, tmp))
+          tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u0022]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00e2]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u20ac]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201c]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201d]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u2122]", replacement = "'", x = levels(i)))
+            if(length(grep(pattern = "-$", x = levels(i))) == 0) {
+              i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "--|---|----", replacement = "-", x = levels(i)))
+            }
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00c2]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00b4]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "\\'\\'", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "-+\\'", replacement = "'", x = levels(i)))
+          })
+          factors.to.be.numeric <- names(
+            Filter(Negate(is.null), lapply(X = tmp[factor.vars], FUN = function(i) {
+              factor.vars.missings.levels <- which(levels(i) %in% names(fac.to.num.missing.codes))
+              factor.vars.num.values.levels <- which(grepl(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i)) == TRUE)
+              if(length(factor.vars.missings.levels) + length(factor.vars.num.values.levels) == length(levels(i))) {
+                TRUE
+              }
+            })))
+          if(length(factors.to.be.numeric) > 0) {
+            tmp[factors.to.be.numeric] <- lapply(X = tmp[factors.to.be.numeric], FUN = function(i) {
+              as.numeric(as.character(i))
+            })
+          }
+          factor.vars <- names(Filter(is.factor, tmp))
+          tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            i <- factor(x = i, levels = levels(i)[!levels(i) %in% unique(unlist(all.missing.values.combinations))])
+          })
+          rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
+          if(length(rep.indicator) > 0) {
+            tmp[rep.indicator] <- lapply(X = tmp[rep.indicator], FUN = function(i) {
+              if(is.factor(i)) {
+                i <- as.numeric(i) - 1
+              } else {
+                i
+              }
+            })
+          }
+          numeric.vars <- names(Filter(is.numeric, tmp))
+        } else if(missing.to.NA == FALSE) {
+          tmp <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+          value.labels <- lapply(X = tmp, FUN = levels)
+          value.labels <- lapply(X = value.labels, FUN = function(i) {
+            gsub(pattern = "'", replacement = "\\\\'", x = i)
+          })
+          index.missings.only <- function(missing.values, labels.list) {
+            which(setNames(labels.list %in% missing.values, names(labels.list)))
+          }
+          num.vars.with.labels <- index.missings.only(missing.values = all.missing.values.combinations, labels.list = value.labels)
+          if(length(x = num.vars.with.labels) > 0) {
+            tmp1 <- suppressMessages(read.spss(file = inp.file, use.value.labels = FALSE, use.missings = FALSE, to.data.frame = TRUE, stringsAsFactors = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+            tmp[num.vars.with.labels] <- tmp1[num.vars.with.labels]
+            tmp1 <- NULL
+          }
+          tmp2 <- suppressMessages(read.spss(file = inp.file, use.value.labels = TRUE, use.missings = TRUE, duplicated.value.labels = "append", duplicated.value.labels.infix = " ", add.undeclared.levels = "append", to.data.frame = TRUE, stringsAsFactors = TRUE, reencode = "CP1252", sub = ".", trim_values = TRUE, trim.factor.names = TRUE))
+          factor.vars <- names(Filter(is.factor, tmp))
+          string.vars.to.remove <- grep(pattern = "IS4G06A|IS4G045|IS4G00|IS4G06B|IS4G02U|IS4G02V|IS4G08A|IS4G08B", x = factor.vars, value = TRUE)
+          if(length(string.vars.to.remove)) {
+            factor.vars <- factor.vars[!factor.vars %in% string.vars.to.remove]
+          }
+          tmp[factor.vars] <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u0022]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00e2]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u20ac]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201c]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u201d]", replacement = "-", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u2122]", replacement = "'", x = levels(i)))
+            if(length(grep(pattern = "-$", x = levels(i))) == 0) {
+              i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "--|---|----", replacement = "-", x = levels(i)))
+            }
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00c2]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "[\u00b4]", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "\\'\\'", replacement = "'", x = levels(i)))
+            i <- factor(x = i, levels = levels(i), labels = gsub(pattern = "-+\\'", replacement = "'", x = levels(i)))
+          })
+          numeric.vars <- names(Filter(is.numeric, tmp))
+          full.labels.factor.vars <- lapply(X = tmp[factor.vars], FUN = function(i) {
+            levels(i)
+          })
+          full.labels.numeric.vars <- lapply(X = tmp[numeric.vars], FUN = function(i) {
+            as.numeric(attr(i, "value.labels"))
+          })
+          full.labels <- c(full.labels.factor.vars, full.labels.numeric.vars)
+          incomplete.labels.factor.vars <- lapply(X = tmp2[factor.vars], FUN = function(i) {
+            levels(i)
+          })
+          missing.factor.labels <- mapply(FUN = setdiff, full.labels.factor.vars, incomplete.labels.factor.vars)
+          missing.labels <- c(missing.factor.labels, full.labels.numeric.vars)
+          missing.labels <- missing.labels[lapply(X = missing.labels, FUN = length) > 0]
+          missing.labels <- lapply(X = missing.labels, FUN = function(i) {
+            i <- gsub(pattern = "'", replacement = "\\\\'", x = i)
+            i <- gsub(pattern = "\\\\M", replacement = "-M", x = i)
+            i <- gsub(pattern = "\\\\NO", replacement = "-NO", x = i)
+          })
+          if(length(x = missing.labels) > 0) {
+            miss.statements.left <- paste0("attr(tmp[['", names(missing.labels), "']], 'missings') <- ")
+            miss.statements.right <- lapply(X = missing.labels, FUN = function(i) {
+              if(is.character(i) && length(i) == 1) {
+                paste0("'", i, "'")
+              } else if(is.character(i) && length(i) > 1) {
+                paste0("c('", paste(i, collapse = "', '"), "')")
+              } else if(is.numeric(i) && length(i) == 1) {
+                paste(i)
+              } else if(is.numeric(i) && length(i) > 1) {
+                paste0("c(", paste(i, collapse = ", "), ")")
+              }
+            })
+            miss.statements <- paste0(miss.statements.left, miss.statements.right)
+            eval(parse(text = miss.statements))
+          }
+          names.num.miss.labels <- lapply(X = tmp[numeric.vars], FUN = function(i) {
+            names(attr(i, "value.labels"))
+          })
+          names.num.miss.labels <- Filter(Negate(is.null), names.num.miss.labels)
+          if(length(names.num.miss.labels) > 0) {
+            names.num.miss.labels <- names.num.miss.labels[which(unlist(lapply(X = names.num.miss.labels, FUN = function(i) {length(i) > 0})))]
+            naming.statement.left <- paste0("names(attr(tmp[['", names(names.num.miss.labels), "']], 'missings')) <- ")
+            naming.statements.right <- lapply(X = names.num.miss.labels, FUN = function(i) {
+              paste0("c('", paste0(i, collapse = "', '"), "')")
+            })
+            naming.statements <- paste0(naming.statement.left, naming.statements.right)
+          }
+          num.vars.miss.attr <- lapply(X = tmp[numeric.vars], FUN = attr, "missings")
+          num.vars.wo.miss.attr <- names(num.vars.miss.attr[unlist(lapply(num.vars.miss.attr, is.null))])
+          full.num.unique.values <- lapply(X = tmp[num.vars.wo.miss.attr], unique)
+          incomplete.num.unique.values <- lapply(X = tmp2[num.vars.wo.miss.attr], unique)
+          miss.values.num <- mapply(FUN = setdiff, full.num.unique.values, incomplete.num.unique.values)
+          miss.values.num <- Filter(length, miss.values.num)
+          if(length(x = miss.values.num) > 0) {
+            eval(parse(text = paste0("attr(tmp[['", names(miss.values.num), "']], 'missings') <- ", miss.values.num)))
+          }
+          tmp2 <- NULL
+          factor.vars <- names(Filter(is.factor, tmp))
+          all.levels.factor.vars <- lapply(X = tmp[factor.vars], FUN = levels)
+          levels.match.all.missing.combinations <- Filter(length, lapply(X = all.levels.factor.vars, FUN = function(i) {
+            i[i %in% unlist(all.missing.values.combinations)]
+          }))
+          names.levels.match.all.missing.combinations <- names(lapply(X = levels.match.all.missing.combinations, FUN = names))
+          if(length(x = levels.match.all.missing.combinations) > 0) {
+            produce.statements.left <- function(data.obj, var.names) {
+              paste0("attr(tmp[['", var.names, "']], 'missings') <- ")
+            }
+            missing.statements.left <- as.list(mapply(FUN = produce.statements.left, data.obj = tmp[unlist(names.levels.match.all.missing.combinations)], var.names = names.levels.match.all.missing.combinations))
+            levels.match.all.missing.combinations <- lapply(X = levels.match.all.missing.combinations, FUN = function(i) {
+              gsub(pattern = "'", replacement = "\\\\'", x = i)
+            })
+            missing.statements.right <- lapply(X = levels.match.all.missing.combinations, FUN = function(i) {
+              if(length(i) == 1) {
+                paste0("'", i, "'")
+              } else {
+                i <- paste(i, sep = "", collapse = "', '")
+                i <- paste0("c('", i, "')")
+              }
+            })
+            missing.statements <- mapply(FUN = paste0, missing.statements.left, missing.statements.right)
+            eval(parse(text = missing.statements))
+          }
+          num.vars.miss.attr <- names(Filter(Negate(is.null), lapply(X = tmp[numeric.vars], FUN = function(i) {
+            attr(i, "missings")
+          })))
+          if(length(num.vars.miss.attr) > 0) {
+            to.numeric.statements <- lapply(num.vars.miss.attr, function(i) {
+              paste0("attr(tmp[['", i, "']], 'missings') <- as.numeric(attr(tmp[['", i, "']], 'missings'))")
+            })
+            eval(parse(text = to.numeric.statements))
+          }
+          if(length(names.num.miss.labels) > 0) {
+            eval(parse(text = naming.statements))
+          }
+          factor.vars <- names(Filter(is.factor, tmp))
+          factors.to.be.numeric <- names(Filter(Negate(is.null), lapply(X = tmp[factor.vars], FUN = function(i) {
+            factor.vars.missings <- which(attributes(i)[["missings"]] %in% levels(i))
+            factor.vars.num.values.levels <- which(grepl(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i)) == TRUE)
+            if(length(factor.vars.missings) + length(factor.vars.num.values.levels) == length(levels(i))) {
+              TRUE
+            }
+          })))
+          missing.codes <- lapply(X = tmp[factors.to.be.numeric], FUN = function(i) {
+            attr(i, "missings")
+          })
+          missing.codes <- lapply(X = missing.codes, FUN = function(i) {
+            sapply(X = i, FUN = function(j) {
+              if(j %in% names(fac.to.num.missing.codes)) {
+                idx <- which(names(fac.to.num.missing.codes) %in% j)
+                j <- unname(fac.to.num.missing.codes)[idx]
+              }
+            })
+          })
+          missing.codes <- Filter(length, missing.codes)
+          if(length(missing.codes) > 0) {
+            overwrite.numeric.miss.attr.statements.left <- paste0("attr(tmp[['", names(missing.codes), "']], 'missings') <- ")
+            overwrite.numeric.miss.attr.statements.right <- paste0(missing.codes)
+            overwrite.numeric.miss.attr.statements <- paste0(overwrite.numeric.miss.attr.statements.left, overwrite.numeric.miss.attr.statements.right)
+            eval(parse(text = overwrite.numeric.miss.attr.statements))
+            tmp[names(missing.codes)] <- lapply(X = tmp[names(missing.codes)], FUN = function(i) {
+              levels.and.missing.dictionary <- setNames(c(as.character(attributes(i)[["missings"]]), grep(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)), c(as.character(names(attributes(i)[["missings"]])), grep(pattern = "^\\-*[[:digit:]]+$|^\\-*[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)))
+              variable.as.character <- as.character(i)
+              if(any(names(attributes(i)[["missings"]]) %in% variable.as.character) == TRUE) {
+                replacement.values <- as.numeric(levels.and.missing.dictionary[variable.as.character])
+              } else {
+                replacement.values <- as.numeric(variable.as.character)
+              }
+              missings.attribute <- attributes(i)[["missings"]]
+              attr(replacement.values, "missings") <- missings.attribute
+              return(replacement.values)
+            })
+            Filter(Negate(is.na), lapply(X = tmp, FUN = function(i) {
+              if(length(levels(i)) > 0) {
+                if(!is.null(attr(i, "missings")) && !is.na(attr(i, "missings")[levels(i)[1] == attr(i, "missings")][1])) {
+                  miss.to.remove <- attr(i, "missings")[levels(i)[1] %in% attr(i, "missings")][1]
+                  setattr(x = i, name = "missings", value = attr(i, "missings")[!attr(i, "missings") %in% miss.to.remove])
+                }
+              }
+            }))
+          }
+          rep.indicator <- names(tmp)[which(colnames(tmp) %in% c("JKINDIC", "JKCREP", "JKREP", "jkrep"))]
+          if(length(rep.indicator) > 0) {
+            tmp[rep.indicator] <- lapply(X = tmp[rep.indicator], FUN = function(i) {
+              if(is.factor(i)) {
+                i <- as.numeric(i) - 1
+              } else {
+                i
+              }
+            })
+          }
+        }
+        factor.vars <- names(Filter(is.factor, tmp))
+        doubled.num.levels.with.space <- names(
+          Filter(length, lapply(X = tmp[factor.vars], FUN = function(i) {
+            grep(pattern = "^[[:digit:]]+[[:space:]]+[[:digit:]]+$|^[[:digit:]]+\\.[[:digit:]]+[[:space:]]+[[:digit:]]+\\.[[:digit:]]+$", x = levels(i), value = TRUE)
+          })
+          ))
+        if(length(doubled.num.levels.with.space) > 0) {
+          tmp[doubled.num.levels.with.space] <- lapply(X = tmp[doubled.num.levels.with.space], FUN = function(i) {
+            as.numeric(as.character(droplevels(i)))
+          })
+        }
+        factor.vars <- names(Filter(is.factor, tmp))
+        factors.with.whitespace <- names(Filter(function(i) {length(i) > 0}, lapply(X = tmp[factor.vars], FUN = function(j) {
+          grep(pattern = "^.+[[:space:]]+$|^[[:digit:]]+\\.[[:digit:]]+[[:space:]]*$", x = levels(j))
         })
+        ))
+        if(length(factors.with.whitespace) > 0) {
+          tmp[factors.with.whitespace] <- lapply(X = tmp[factors.with.whitespace], FUN = function(i) {
+            factor(x = str_trim(i), levels = make.unique(str_trim(levels(i))))
+          })
+        }
+        factor.vars <- names(Filter(is.factor, tmp))
+        factor.vars.all.num.levels <- names(which(sapply(X = tmp[factor.vars], FUN = function(i) {
+          all(grepl(pattern = "^\\-*[[:digit:]]+[[:space:]]*$|^\\-*[[:digit:]]+\\.[[:digit:]]+[[:space:]]*$", x = levels(i)) == TRUE)
+        }) == TRUE))
+        tmp[factor.vars.all.num.levels] <- lapply(X = tmp[factor.vars.all.num.levels], FUN = function(i) {
+          as.numeric(as.character(i))
+        })
+        numeric.val.lab.to.null <- paste0("attr(tmp[['", numeric.vars, "']], 'value.labels') <- NULL")
+        eval(parse(text = numeric.val.lab.to.null))
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
           inp.file.first.char <- substr(x = basename(inp.file), start = 1, stop = 1)
         } else if (any(sapply(X = ISO, FUN = nchar) > 12 )) {
@@ -333,7 +516,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b", "c") && study.and.cycle == "s0") {
           study.attribute <- "SITES"
           cycle.attribute <- "1998"
-        } else if(inp.file.first.char == "b" && study.and.cycle == "s1" && "DPCDATE" %in% colnames(tmp) && unique(tmp[ , "DPCDATE"]) < 20191102) {
+        } else if(inp.file.first.char == "b" && study.and.cycle == "s1") {
           study.attribute <- "SITES"
           cycle.attribute <- "2006"
         } else if(inp.file.first.char %in% c("b", "c") && study.and.cycle == "f2") {
@@ -366,7 +549,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b", "c", "p")  && study.and.cycle == "t3") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s1" && "IEADATE" %in% colnames(tmp) && unique(tmp[ , "IEADATE"]) > 20191102) {
+        } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s1") {
           study.attribute <- "TALIS 3S"
           cycle.attribute <- "2018"
         } else if(inp.file.first.char == "d"  && study.and.cycle == "t1") {
@@ -381,9 +564,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "cy07") {
           study.attribute <- "PISA"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char == "cy08") {
-          study.attribute <- "PISA"
-          cycle.attribute <- "2022"
         } else if(inp.file.first.char == "cy1") {
           study.attribute <- "PISA for Development"
           cycle.attribute <- "2019"
@@ -392,13 +572,13 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
           inp.file.abbrev <- substr(x = basename(inp.file), start = 1, stop = 3)
         } else if (any(sapply(X = ISO, FUN = nchar) > 12 )) {
-          if(study.and.cycle %in% c("cy6", "cy07", "cy08")) {
+          if(study.and.cycle %in% c("cy6", "cy07")) {
             inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 6, stop = nchar(base.ISO))
           } else if(study.and.cycle == "cy1") {
             if(nchar(basename(inp.file)) == 19) {
               inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 6, stop = nchar(base.ISO))
             } else if(nchar(basename(inp.file)) == 15) {
-              inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 2, stop = nchar(base.ISO))
+              inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 6, stop = nchar(base.ISO))
             }
           }
         }
@@ -507,7 +687,37 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.abbrev %in% c("TIM", "tim")) {
           file.type.attribute <- "out.of.school.qtm"
         }
-        tmp <- reshape.imported(object = tmp, to.NA = missing.to.NA, study = study.attribute, cycle = cycle.attribute, type = file.type.attribute)
+        attr(x = tmp, which = "study") <- study.attribute
+        attr(x = tmp, which = "cycle") <- cycle.attribute
+        attr(x = tmp, which = "file.type") <- file.type.attribute
+        if(attr(x = tmp, which = "study") %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS")) {
+          cnt.identifier <- which(names(tmp) %in% c("IDCNTRY", "idcntry"))
+        } else if(attr(tmp, "study") %in% c("IALS", "ALLS", "PIAAC")) {
+          cnt.identifier <- which(names(tmp) %in% c("CNTRYID", "CNTRID"))
+        }
+        if(attr(x = tmp, which = "study") %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS", "IALS", "ALLS", "PIAAC")) {
+          tmp[[cnt.identifier]] <- factor(x = tmp[[cnt.identifier]], levels = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106), labels = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)"))
+          tmp[[cnt.identifier]] <- droplevels(tmp[[cnt.identifier]])
+        }
+        if(attr(x = tmp, which = "study") %in% c("ICILS", "SITES", "TEDS-M", "TALIS", "REDS")) {
+          tmp[["IDCNTRY"]] <- droplevels(tmp[["IDCNTRY"]])
+        }
+        names(tmp) <- toupper(names(tmp))
+        if(study.attribute %in% c("PISA", "PISA for Development")) {
+          setDT(x = tmp, key = "CNT")
+        } else {
+          setDT(x = tmp, key = "IDCNTRY")
+        }
+        var.labels <- attr(tmp, "variable.labels")
+        var.labels <- gsub(pattern = "\\\\", replacement = "/", x = var.labels)
+        var.labels <- gsub(pattern = "'", replacement = "\\\\'", x = var.labels)
+        var.labels <- sapply(X = var.labels, FUN = function(i) {
+          i <- gsub(pattern = "\u00e2\u20ac\u2122", replacement = "\\\\'", x = i)
+        })
+        var.labels <- paste("attr(tmp[['", toupper(names(var.labels)), "']], 'variable.label') <- '", var.labels, "'", sep = "")
+        eval(parse(text = var.labels))
+        attr(x = tmp, which = "variable.labels") <- NULL
+        attr(x = tmp, which = "class") <- c("lsa.data", attr(x = tmp, which = "class"))
         assign(x = tolower(new.file), value = tmp)
         tmp <- NULL
         save(list = tolower(new.file), file = out.file, compress = FALSE)
@@ -527,7 +737,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         invisible(mapply(FUN = convert.IEA, inp.file = full.inp.file.path, out.file = full.out.file.path, new.file = root.file.names))
       )
       if(length(ISO) == 1) {
-        message("\n", " The selected file successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"), "\n\n")
+        message("\n", " The selected file successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"), "\n\n")
       } else {
         message("\n All ", length(ISO), " found files successfully converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"), "\n\n")
       }
@@ -1130,22 +1340,33 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
               names.numeric.vars <- names(numeric.vars.logical[numeric.vars.logical == TRUE])
               missing.levels.factor <- attr.list[names.factor.vars]
               missing.values.numeric <- attr.list[names.numeric.vars]
-              statements.factor <- sapply(X = names(missing.levels.factor), FUN = function(k) {
-                if(length(missing.levels.factor[[k]]) > 1) {
-                  paste0("tmp[['", k, "']][tmp[['", k, "']] %in% ", missing.levels.factor[k], "] <- NA")
-                } else if(length(missing.levels.factor[[k]]) == 1) {
-                  paste0("tmp[['", k, "']][tmp[['", k, "']] == '", missing.levels.factor[k], "'] <- NA")
+              statements.factor.left <- paste(deparse(substitute(data)), "[['", names.factor.vars, "']] <- ", sep = "")
+              statements.factor.right0 <- lapply(missing.levels.factor, FUN = function(i) {
+                if(length(i) == 1) {
+                  paste("c('", i, "')", sep = "")
+                } else {
+                  paste("c('", paste(i, collapse = "', '"), "')", sep = "")
                 }
               })
-              statements.numeric <- sapply(X = names(missing.values.numeric), FUN = function(k) {
-                if(length(missing.values.numeric[[k]]) > 1) {
-                  paste0("tmp[['", k, "']][tmp[['", k, "']] %in% ", missing.values.numeric[k], "] <- NA")
-                } else if(length(missing.values.numeric[[k]]) == 1) {
-                  paste0("tmp[['", k, "']][tmp[['", k, "']] == ", missing.values.numeric[k], "] <- NA")
+              statements.factor.right <- paste("unknownToNA(x = ", deparse(substitute(data)), "[['", names(missing.levels.factor), "']], unknown = ", statements.factor.right0, ")", sep = "")
+              statements.numeric.left <- paste(deparse(substitute(data)), "[['", names.numeric.vars, "']] <- ", sep = "")
+              statements.numeric.right0 <- lapply(missing.values.numeric, FUN = function(i) {
+                if(length(i) == 1) {
+                  paste("c(", i, ")", sep = "")
+                } else {
+                  paste("c(", paste(i, collapse = ", "), ")", sep = "")
                 }
               })
+              statements.numeric.right <- paste("unknownToNA(x = ", deparse(substitute(data)), "[['", names(missing.values.numeric), "']], unknown = ", statements.numeric.right0, ")", sep = "")
+              statements.factor <- paste(statements.factor.left, statements.factor.right, sep = "")
+              statements.numeric <- paste(statements.numeric.left, statements.numeric.right, sep = "")
               statements <- c(statements.factor, statements.numeric)
-              statements <- Filter(Negate(is.null), statements)
+              empty <- grep(pattern = "[['']]", x = statements, fixed = TRUE)
+              statements <- if(length(empty) == 0) {
+                statements
+              } else {
+                statements[-empty]
+              }
             } else if(attr.name == "missings" & to.na == "no") {
               var.names <- names(attr.list)
               statements.left <- paste("attr(", deparse(substitute(data)), "[['", var.names, "']], '", attr.name, "') <- ", sep = "")
@@ -1272,126 +1493,4 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
   error = function(e) {
     message("")
   })
-}
-lsa.data <- function(x, ...) {
-  NextMethod(x, ...)
-}
-#' @rdname lsa.convert.data
-#' @export
-print.lsa.data <- function(x, col.nums, ...) {
-  if(missing(col.nums)) {
-    col.nums <- colnames(x)[1:6]
-  } else {
-    if(is.numeric(col.nums)) {
-      col.nums <- colnames(x)[col.nums]
-    } else {
-      col.nums <- col.nums
-    }
-  }
-  col.nums <- na.omit(col.nums)
-  attr(x = col.nums, which = "na.action") <- NULL
-  print.obj <- names(which(sapply(X = ls(envir = parent.frame(2)), FUN = function(v) {
-    identical(x, get(v, envir = parent.frame(2)))
-  })))
-  print.call <- match.call(expand.dots=FALSE)
-  if(length(print.obj) != 0 & print.call != "print.lsa.data(x = x)" || length(print.obj) != 0 & print.call == "print.lsa.data(x = x)") {
-    user.def.miss <- any(sapply(X = x, FUN = function(i) {
-      length(attr(x = i, "missings")) > 0
-    }))
-    tmp.data <- setDT(copy(x[ , mget(col.nums)]))
-    if(length(col.nums) < length(colnames(x))) {
-      tmp.data[ , ".../..." := ".../..."]
-    }
-    list.of.components <- list(
-      attr(x = x, which = "study"),
-      attr(x = x, which = "cycle"),
-      attr(x = x, which = "file.type"),
-      length(unique(x[ , mget(key(x))])),
-      attr(x = x, which = "sorted"),
-      user.def.miss
-    )
-    message("\nLarge-scale assessment/survey data")
-    message("==================================")
-    message("Study:                 ", list.of.components[[1]])
-    message("Study cycle:           ", list.of.components[[2]])
-    message("Respondent type:       ", list.of.components[[3]])
-    message("Number of countries:   ", list.of.components[[4]])
-    message("Key:                   ", list.of.components[[5]])
-    message("User defined missings: ", list.of.components[[6]])
-    message("")
-    if(length(col.nums) < length(colnames(x))) {
-      message("\nData (omitted ", length(colnames(x)) - length(col.nums), " columns):\n")
-    } else {
-      message("\nData:\n")
-    }
-    message(paste0(capture.output(tmp.data), collapse = "\n"))
-  } else if(length(print.obj) == 0 && print.call == "print.lsa.data(x = x)") {
-    message(paste0(capture.output(data.table(x)), collapse = "\n"))
-  }
-}
-#' @rdname lsa.convert.data
-#' @export
-lsa.select.countries.PISA <- function(data.file, data.object, cnt.names, output.file) {
-  if(missing(cnt.names)) {
-    stop('Vector of country names must be provided for the "cnt.names" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
-  }
-  if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
-    stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
-  } else if(!missing(data.file)) {
-    if(file.exists(data.file) == FALSE) {
-      stop('The file specified in the "data.file" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
-    }
-    ptm.data.import <- proc.time()
-    data <- copy(import.data(path = data.file))
-    used.data <- deparse(substitute(data.file))
-    message('\nData file ', used.data, ' imported in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.import}[[3]], "%H:%M:%OS3"), "\n")
-  } else if(!missing(data.object)) {
-    if(length(all.vars(match.call())) == 0) {
-      stop('The object specified in the "data.object" argument is quoted, is this an object or a path to a file? All operations stop here. Check your input.\n\n', call. = FALSE)
-    }
-    if(!exists(all.vars(match.call()))) {
-      stop('The object specified in the "data.object" argument does not exist. All operations stop here. Check your input.\n\n', call. = FALSE)
-    }
-    data <- copy(data.object)
-    used.data <- deparse(substitute(data.object))
-    message('\nUsing data from object "', used.data, '".')
-  }
-  if(!"lsa.data" %in% class(data)) {
-    stop('The data is not of class "lsa.data". All operations stop here. Check your input.\n\n', call. = FALSE)
-  }
-  if(attributes(data)[["study"]] != "PISA" ) {
-    stop('The data is not PISA data. All operations stop here. Check your input.\n\n', call. = FALSE)
-  }
-  ptm.data.reduction <- proc.time()
-  warnings.collector <- list()
-  cnt.names.in.data <- names(Filter(isFALSE, sapply(X = cnt.names, FUN = function(i) {
-    i %in% data[ , CNT]
-  })))
-  if(length(cnt.names.in.data) > 0) {
-    warnings.collector[["nonexisting.cnt"]] <- paste0('One or more country names passed to "cnt.names" do not exist in the data. These were ignored: ', paste(cnt.names.in.data, collapse = ", "), ".")
-    cnt.names <- cnt.names[!cnt.names %in% cnt.names.in.data]
-  }
-  message("   A total of ", length(cnt.names), " valid country names found in the data.")
-  tmp.key <- key(data)
-  data <- data[CNT %in% cnt.names, ]
-  data[ , CNT := droplevels(CNT)]
-  setkeyv(x = data, cols = tmp.key)
-  message('\n   Data from ', length(unique(data[ , CNT])), ' valid country names selected in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.reduction}[[3]], "%H:%M:%OS3"))
-  if(!missing(output.file)) {
-    ptm.save <- proc.time()
-    assign(x = gsub(pattern = "\\.RData$", replacement = "", x = basename(output.file), ignore.case = TRUE), value = data)
-    if(length(grep(pattern = "\\.RData$", x = output.file, value = TRUE)) == 0) {
-      output.file <- paste0(output.file, ".RData")
-    }
-    save(list = gsub(pattern = "\\.RData$", replacement = "", x = basename(output.file), ignore.case = TRUE), file = output.file, compress = FALSE)
-    message('\nThe file with the selected countries  "', basename(output.file), '" is saved under "', dirname(output.file), '" in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.save}[[3]], "%H:%M:%OS3"), "\n")
-  } else {
-    assign(x = gsub(pattern = "\\.RData$", replacement = "", x = basename(data.file), ignore.case = TRUE), value = data, envir = parent.frame())
-    message('\nThe data object "', gsub(pattern = "\\.RData$", replacement = "", x = basename(data.file), ignore.case = TRUE), '" with selected countries was written to memory.\n')
-  }
-  if(length(warnings.collector) > 0) {
-    if(!is.null(warnings.collector[["nonexisting.cnt"]])) {
-      warning(warnings.collector[["nonexisting.cnt"]], call. = FALSE)
-    }
-  }
 }

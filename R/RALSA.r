@@ -81,10 +81,9 @@
 #' Rutkowski, L., Rutkowski, D., & von Davier, M. (2014). A Brief Introduction to Modern International Large-Scale Assessment. In L. Rutkowski, M. von Davier, & D. Rutkowski (Eds.), \emph{Handbook of International Large-Scale Assessments: Background, Technical Issues, and Methods of Data Analysis} (pp. 3-10). CRC Press.
 #'
 #' @name RALSA
-#' @docType package
 #' @author Plamen V. Mirazchiyski, INERI
 #' @aliases RALSA-package
-#' @import data.table openxlsx stringr foreign readr stringi shiny shinydashboard shinyFiles
+#' @import data.table openxlsx stringr foreign readr stringi shiny shinyWidgets shinydashboard shinyFiles
 #' @importFrom DT JS renderDT DTOutput
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
@@ -94,8 +93,9 @@
 #' @importFrom ggplot2 ggplot ggsave geom_line geom_point geom_bar geom_vline scale_fill_manual sym aes geom_errorbar position_dodge theme element_rect element_blank element_line element_text scale_x_discrete scale_y_continuous labs scale_color_manual guides guide_legend expansion facet_wrap geom_tile scale_fill_gradient xlab ylab geom_text scale_y_discrete coord_equal ggtitle
 #' @importFrom rclipboard rclipButton
 #' @importFrom rstudioapi jobRunScript executeCommand
+#' @importFrom haven read_sav as_factor
 #' @importFrom import from
 NULL
 #> NULL
 
-globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT", "perf_group", "Performance_Group", "collapsed_split", "percentage.plots.files", "means.plots.files", "percentiles.plots.files", "crosstabs.plots.files"))
+globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT", "perf_group", "Performance_Group", "collapsed_split", "percentage.plots.files", "means.plots.files", "percentiles.plots.files", "crosstabs.plots.files", "IDCNTRY"))

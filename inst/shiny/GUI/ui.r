@@ -12,6 +12,8 @@ suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyjs
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyFiles, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(ggplot2, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(rclipboard, warn.conflicts = FALSE, quietly = TRUE))))
+suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(haven, warn.conflicts = FALSE, quietly = TRUE))))
+suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shinyWidgets, warn.conflicts = FALSE, quietly = TRUE))))
 
 # Load RALSA functions
 import::from(RALSA,
@@ -45,6 +47,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
+
   
   useShinyjs(),
   rclipboardSetup(),
@@ -107,7 +110,10 @@ background-color: #000000;"),
                                      )
                          ),
                          sidebarMenu(id = "help",
-                                     menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp")
+                                     menuItem(text = "Help", icon = icon("question-circle"), tabName = "ralsaHelp",
+                                              menuSubItem(text = "Help sections", icon = icon("question-circle"), tabName = "helpSections"),
+                                              menuSubItem(text = "Participating countries", icon = icon("table"), tabName = "partCountries")
+                                     )
                          ),
                          sidebarMenu(id = "exit",
                                      menuItem(text = "Exit", icon = icon("power-off"), tabName = "exitUI")
@@ -123,6 +129,7 @@ background-color: #000000;"),
         dashboardBody(
           extendShinyjs(text = jscode.scroll.tab.to.top, functions = c("scrolltop")),
           tags$style(HTML('table.dataTable tbody>* {background-color: #ffffff !important;}')),
+          tags$style(HTML('div.dt-buttons {position: fixed; right: 0;}')),
           tags$style(HTML('table.dataTable tbody tr.selected>* {box-shadow: inset 0 0 0 9999px #e2e2e2 !important; color: #000000; font-weight: bold}')),
           tags$style(HTML("input[type='checkbox']:checked {width: 10px; height: 10px; accent-color: #ffffff; outline: 2px solid #767676; outline-offset: max(0px, 0em); border-radius: 10px;}")),
           tags$style(HTML('input[type="radio"]:checked {accent-color: #767676;}')),
@@ -178,10 +185,22 @@ Shiny.unbindAll($table.DataTable().table().node());
                     ),
                     htmlOutput(outputId = "welcomeText")
             ),
-            tabItem(tabName = "ralsaHelp", class = "active",
-                    h1(textOutput(outputId = "helpHeading")),
+            tabItem(tabName = "helpSections", class = "active",
+                    h1(textOutput(outputId = "helpSectionsHeading")),
                     htmlOutput(outputId = "helpOnRALSAWebsite"),
-                    htmlOutput(outputId = "helpRALSAWebsiteLinks")
+                    htmlOutput(outputId = "helpSectionRALSAWebsiteLinks")
+            ),
+            tabItem(tabName = "partCountries", class = "active",
+                    h1(textOutput(outputId = "partCountriesHeading")),
+                    htmlOutput(outputId = "helpOnPartCountries"),
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      div(uiOutput("selectStudyCycleDropdown")),
+                      div(style = "width: 30px;"),
+                      div(checkboxInput(inputId = "partCountriesFilterParticipating", label = "Filter only the participating countries", value = FALSE), style = " padding-top: 30px;")
+                    ),
+                    DTOutput(outputId = "selectStudyCycleTable"),
+                    br()
             ),
             tabItem(tabName = "exitUI", class = "active",
                     h1(textOutput(outputId = "exitHeading")),
@@ -191,15 +210,14 @@ Shiny.unbindAll($table.DataTable().table().node());
             tabItem(tabName = "convertData", class = "active",
                     h1(textOutput(outputId = "h1ConvertData")),
                     htmlOutput(outputId = "convertIntro"),
-                    fluidRow(
-                      column(width = 2, shinyDirButton(id = "convertChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyDirButton(id = "convertChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.convertChooseSrcDir",
+                                       div(verbatimTextOutput(outputId = "convertSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#convertSrcPathDisplay {background-color: white;}"))
                       ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.convertChooseSrcDir",
-                                              verbatimTextOutput(outputId = "convertSrcPathDisplay"),
-                                              tags$head(tags$style("#convertSrcPathDisplay {background-color: white;}"))
-                             )
-                      )
                     ),
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertIEAStudyName"),
@@ -280,12 +298,12 @@ Shiny.unbindAll($table.DataTable().table().node());
                                                        checkboxInput(inputId = "convertMissToNA", label = "Convert user-defined missings to NA", value = FALSE)
                                                 ),
                                                 br(), br(),
-                                                column(width = 2,
-                                                       shinyDirButton(id = "convertChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                                                ),
-                                                column(width = 9, offset = 1,
-                                                       verbatimTextOutput(outputId = "convertOutPathDisplay"),
-                                                       tags$head(tags$style("#convertOutPathDisplay {background-color: white;}"))
+                                                div(
+                                                  style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                                  shinyDirButton(id = "convertChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                                                  div(style = "width: 30px;"),
+                                                  div(verbatimTextOutput(outputId = "convertOutPathDisplay"), style = "min-width: 750px;"),
+                                                  tags$head(tags$style("#convertOutPathDisplay {background-color: white;}"))
                                                 )
                                               ),
                                               br(), br(),
@@ -323,15 +341,14 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "mergeData", class = "active",
                     h1(textOutput(outputId = "h1MergeData")),
                     htmlOutput(outputId = "mergeIntro"),
-                    fluidRow(
-                      column(width = 2, shinyDirButton(id = "mergeChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.mergeChooseSrcDir",
-                                              verbatimTextOutput(outputId = "mergeSrcPathDisplay"),
-                                              tags$head(tags$style("#mergeSrcPathDisplay {background-color: white;}"))
-                             )
-                      ),
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyDirButton(id = "mergeChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.mergeChooseSrcDir",
+                                       div(verbatimTextOutput(outputId = "mergeSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#mergeSrcPathDisplay {background-color: white;}"))
+                      )
                     ),
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "mergeIEAStudyName"),
@@ -432,14 +449,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "varProperties", class = "active",
                     h1(textOutput(outputId = "h1VarProperties")),
                     htmlOutput(outputId = "varPropsIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "varPropsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.varPropsChooseSrcFile",
-                                              verbatimTextOutput(outputId = "varPropsSrcPathDisplay"),
-                                              tags$head(tags$style("#varPropsSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "varPropsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.varPropsChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "varPropsSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#varPropsSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -479,14 +495,12 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                      checkboxInput(inputId = "varPropsSaveOutput", label = "Save the variable dictionaries in a file", value = FALSE, width = "400px"),
                                      checkboxInput(inputId = "varPropsOpenOutput", label = "Open the variable dictionaries file when finished", value = FALSE),
                                      conditionalPanel(condition = "output.varPropsSaveOutput",
-                                                      fluidRow(
-                                                        column(width = 2,
-                                                               shinySaveButton(id = "varPropsChooseOutFile", label = "Define output file name", title = "Define file name", icon = icon("file-export"), filetype = list(txt = "txt"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                                                        ),
-                                                        column(width = 9, offset = 1,
-                                                               verbatimTextOutput(outputId = "varPropsOutPathDisplay"),
-                                                               tags$head(tags$style("#varPropsOutPathDisplay {background-color: white;}"))
-                                                        )
+                                                      div(
+                                                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                                        shinySaveButton(id = "varPropsChooseOutFile", label = "Define output file name", title = "Define file name", icon = icon("file-export"), filetype = list(txt = "txt"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                                                        div(style = "width: 30px;"),
+                                                        div(verbatimTextOutput(outputId = "varPropsOutPathDisplay"), style = "min-width: 750px;"),
+                                                        tags$head(tags$style("#varPropsOutPathDisplay {background-color: white;}"))
                                                       ),
                                                       br(), br()
                                      ),
@@ -519,14 +533,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "dataDiag", class = "active",
                     h1(textOutput(outputId = "h1DataDiag")),
                     htmlOutput(outputId = "dataDiagIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "dataDiagChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.dataDiagChooseSrcFile",
-                                              verbatimTextOutput(outputId = "dataDiagSrcPathDisplay"),
-                                              tags$head(tags$style("#dataDiagSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "dataDiagChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.dataDiagChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "dataDiagSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#dataDiagSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -643,14 +656,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "recodeVars", class = "active",
                     h1(textOutput(outputId = "h1RecodeVars")),
                     htmlOutput(outputId = "recodeIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "recodeChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.recodeChooseSrcFile",
-                                              verbatimTextOutput(outputId = "recodeSrcPathDisplay"),
-                                              tags$head(tags$style("#recodeSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "recodeChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.recodeChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "recodeSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#recodeSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -779,14 +791,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "selectPISACountries", class = "active",
                     h1(textOutput(outputId = "h1selectPISACountries")),
                     htmlOutput(outputId = "selectPISACountriesIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "selectPISACountriesChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.selectPISACountriesChooseSrcFile",
-                                              verbatimTextOutput(outputId = "selectPISACountriesSrcPathDisplay"),
-                                              tags$head(tags$style("#selectPISACountriesSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "selectPISACountriesChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.selectPISACountriesChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "selectPISACountriesSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#selectPISACountriesSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -862,14 +873,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "pctsMeans", class = "active",
                     h1(textOutput(outputId = "h1PctsMeans")),
                     htmlOutput(outputId = "pctsMeansIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "pctsMeansChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.pctsMeansChooseSrcFile",
-                                              verbatimTextOutput(outputId = "pctsMeansSrcPathDisplay"),
-                                              tags$head(tags$style("#pctsMeansSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "pctsMeansChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.pctsMeansChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "pctsMeansSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#pctsMeansSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -971,52 +981,50 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       ),
                       column(width = 9,
                              htmlOutput(outputId = "centralTendencyTypeExpl")
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
                              uiOutput(outputId = "pctsMeansShortcut"),
-                             br(),
                              uiOutput(outputId = "pctsMeansGraphs"),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "pctsMeansGraphsPctXlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "pctsMeansGraphsPctXlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "pctsMeansGraphsPctXlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "pctsMeansGraphsPctXlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "pctsMeansGraphsPctYlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "pctsMeansGraphsPctYlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "pctsMeansGraphsPctYlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "pctsMeansGraphsPctYlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "pctsMeansGraphsMeanXlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "pctsMeansGraphsMeanXlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "pctsMeansGraphsMeanXlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "pctsMeansGraphsMeanXlabelsTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "pctsMeansGraphsMeanYlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "pctsMeansGraphsMeanYlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "pctsMeansGraphsMeanYlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "pctsMeansGraphsMeanYlabelsTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
@@ -1070,14 +1078,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "prctls", class = "active",
                     h1(textOutput(outputId = "h1Prctls")),
                     htmlOutput(outputId = "prctlsIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "prctlsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.prctlsChooseSrcFile",
-                                              verbatimTextOutput(outputId = "prctlsSrcPathDisplay"),
-                                              tags$head(tags$style("#prctlsSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "prctlsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.prctlsChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "prctlsSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#prctlsSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -1202,43 +1209,43 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              uiOutput(outputId = "prctlsShortcut"),
                              uiOutput(outputId = "prctlsGraphs"),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "prctlsGraphsPctXlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "prctlsGraphsPctXlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "prctlsGraphsPctXlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "prctlsGraphsPctXlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "prctlsGraphsPctYlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "prctlsGraphsPctYlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "prctlsGraphsPctYlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "prctlsGraphsPctYlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "prctlsGraphsPrctlXlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "prctlsGraphsPrctlXlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "prctlsGraphsPrctlXlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "prctlsGraphsPrctlXlabelsTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "prctlsGraphsPrctlYlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "prctlsGraphsPrctlYlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "prctlsGraphsPrctlYlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "prctlsGraphsPrctlYlabelsTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
@@ -1292,14 +1299,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "bnchMarks", class = "active",
                     h1(textOutput(outputId = "h1Bench")),
                     htmlOutput(outputId = "benchIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "benchChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.benchChooseSrcFile",
-                                              verbatimTextOutput(outputId = "benchSrcPathDisplay"),
-                                              tags$head(tags$style("#benchSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "benchChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.benchChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "benchSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#benchSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -1446,43 +1452,43 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              uiOutput(outputId = "benchShortcut"),
                              uiOutput(outputId = "benchGraphs"),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "benchGraphsPctXlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "benchGraphsPctXlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "benchGraphsPctXlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "benchGraphsPctXlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "benchGraphsPctYlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "benchGraphsPctYlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "benchGraphsPctYlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "benchGraphsPctYlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "benchGraphsMeanXlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "benchGraphsMeanXlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "benchGraphsMeanXlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "benchGraphsMeanXlabelsTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "benchGraphsMeanYlabelsChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "benchGraphsMeanYlabelsTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "benchGraphsMeanYlabelsChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "benchGraphsMeanYlabelsTXT"), style = "min-width: 500px;")
                                )
                              )
                       ),
@@ -1528,14 +1534,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "crossTabs", class = "active",
                     h1(textOutput(outputId = "h1CrossTabs")),
                     htmlOutput(outputId = "crossTabsIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "crossTabsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.crossTabsChooseSrcFile",
-                                              verbatimTextOutput(outputId = "crossTabsSrcPathDisplay"),
-                                              tags$head(tags$style("#crossTabsSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "crossTabsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.crossTabsChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "crossTabsSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#crossTabsSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -1642,23 +1647,23 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              uiOutput(outputId = "crossTabsShortcut"),
                              uiOutput(outputId = "crossTabsGraphs"),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "crossTabsGraphsPlotXlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "crossTabsGraphsPlotXlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "crossTabsGraphsPlotXlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "crossTabsGraphsPlotXlabelTXT"), style = "min-width: 500px;")
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
-                                      div(style = "display: inline-block; margin-left: 20px; padding-top:7px",
-                                          uiOutput(outputId = "crossTabsGraphsPlotYlabelChk")
-                                      )
-                               ),
-                               column(width = 10,
-                                      uiOutput(outputId = "crossTabsGraphsPlotYlabelTXT")
+                               div(
+                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                     uiOutput(outputId = "crossTabsGraphsPlotYlabelChk")
+                                 ),
+                                 div(style = "width: 15px;"),
+                                 div(uiOutput(outputId = "crossTabsGraphsPlotYlabelTXT"), style = "min-width: 500px;")
                                )
                              )
                       ),
@@ -1704,14 +1709,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "corr", class = "active",
                     h1(textOutput(outputId = "h1Corr")),
                     htmlOutput(outputId = "corrIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "corrChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.corrChooseSrcFile",
-                                              verbatimTextOutput(outputId = "corrSrcPathDisplay"),
-                                              tags$head(tags$style("#corrSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "corrChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.corrChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "corrSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#corrSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -1862,14 +1866,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "linReg", class = "active",
                     h1(textOutput(outputId = "h1LinReg")),
                     htmlOutput(outputId = "linRegIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "linRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.linRegChooseSrcFile",
-                                              verbatimTextOutput(outputId = "linRegSrcPathDisplay"),
-                                              tags$head(tags$style("#linRegSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "linRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.linRegChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "linRegSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#linRegSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
@@ -2073,14 +2076,13 @@ objDiv.scrollTop = objDiv.scrollHeight;
             tabItem(tabName = "binLogReg", class = "active",
                     h1(textOutput(outputId = "h1binLogReg")),
                     htmlOutput(outputId = "binLogRegIntro"),
-                    fluidRow(
-                      column(width = 2, shinyFilesButton(id = "binLogRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      column(width = 9, offset = 1,
-                             conditionalPanel(condition = "input.binLogRegChooseSrcFile",
-                                              verbatimTextOutput(outputId = "binLogRegSrcPathDisplay"),
-                                              tags$head(tags$style("#binLogRegSrcPathDisplay {background-color: white;}"))
-                             )
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "binLogRegChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.binLogRegChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "binLogRegSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#binLogRegSrcPathDisplay {background-color: white;}"))
                       )
                     ),
                     fluidRow(
