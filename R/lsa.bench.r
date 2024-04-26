@@ -220,13 +220,13 @@ lsa.bench <- function(data.file, data.object, split.vars, PV.root.bench, bench.v
       if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
       }
-      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | is.recursive(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | is.recursive(perc.y.label)) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
       }
       if(!is.null(mean.x.label) & length(mean.x.label) > 1 || !is.null(mean.y.label) & length(mean.y.label) > 1) {
         stop('\nThe "mean.x.label" and "mean.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
       }
-      if(!is.null(mean.x.label) & !is.vector(mean.x.label) | !is.atomic(mean.x.label) || !is.null(mean.y.label) & !is.vector(mean.y.label) | !is.atomic(mean.y.label)) {
+      if(!is.null(mean.x.label) & !is.vector(mean.x.label) | is.recursive(mean.x.label) || !is.null(mean.y.label) & !is.vector(mean.y.label) | is.recursive(mean.y.label)) {
         stop('\nThe "mean.x.label" and "mean.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
       }
     }

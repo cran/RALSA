@@ -203,7 +203,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           warning("Data files for one or more countries in \"ISO = ...\"", " do not exist in the specified folder.", "\nCheck your input.\n", call. = FALSE)
         }
         ISO <- files[grep(pattern = paste0(ISO, study.and.cycle, collapse = "|"), x = files, ignore.case = TRUE)]
-        
         full.inp.file.path <- file.path(inp.folder, ISO)
       }
       root.file.names <- sapply(X = strsplit(x = ISO, split = "\\."), FUN = "[", 1)
@@ -549,7 +548,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           message("\nError:\nThe input folder contains no data (\".txt\") files to read. Check your input.\n\n")
         }
       }
-      
       full.inp.file.path <- file.path(inp.folder, sps.files)
       root.file.names <- sapply(X = strsplit(x = sps.files, split = "\\."), FUN = "[", 1)
       full.out.file.path <- paste(file.path(out.folder, tolower(x = root.file.names)), "RData", sep = ".")
@@ -1246,7 +1244,6 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           full.out.file.path <- file.path(out.folder, paste(txt.file.name, "RData", sep = "."))
           save(list = tolower(new.file), file = out.file, compress = FALSE)
           message("       (", count.success, "/", length(txt.files), ")  ", str_pad(string = sub(pattern = "\\.sps", replacement = ".txt", x = basename(inp.file), ignore.case = TRUE), width = 40, side = "right"), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]] - 1, "%H:%M:%OS3"))
-          
         },
         error = function(e) {
           message("")

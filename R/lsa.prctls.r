@@ -209,7 +209,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
       if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
       }
-      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | is.recursive(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | is.recursive(perc.y.label)) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
       }
       if(!is.null(prctl.x.labels) & !is.list(prctl.x.labels) || !is.null(prctl.y.labels) & !is.list(prctl.y.labels)) {
@@ -462,7 +462,7 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
     total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
     total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
     if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time - 1, "%H:%M:%OS3"))
+      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
     } else {
       message("")
     }

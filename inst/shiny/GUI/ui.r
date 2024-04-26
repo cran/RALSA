@@ -48,7 +48,6 @@ jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
 
-  
   useShinyjs(),
   rclipboardSetup(),
   inlineCSS(load.app.CSS.screen),
@@ -211,7 +210,7 @@ Shiny.unbindAll($table.DataTable().table().node());
                     h1(textOutput(outputId = "h1ConvertData")),
                     htmlOutput(outputId = "convertIntro"),
                     div(
-                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex; padding-bottom:30px",
                       shinyDirButton(id = "convertChooseSrcDir", label = "Choose source folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
                       div(style = "width: 30px;"),
                       conditionalPanel(condition = "input.convertChooseSrcDir",
@@ -219,15 +218,18 @@ Shiny.unbindAll($table.DataTable().table().node());
                                        tags$head(tags$style("#convertSrcPathDisplay {background-color: white;}"))
                       ),
                     ),
-                    fluidRow(column(width = 12,
-                                    htmlOutput(outputId = "convertIEAStudyName"),
-                                    htmlOutput(outputId = "convertIEAStudyCycle"),
-                                    br()
-                    )),
-                    htmlOutput(outputId = "convertAvailableIEACntsText"),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px;",
+                        div(style = "display: inline-block;",
+                            htmlOutput(outputId = "convertIEAStudyName"),
+                            htmlOutput(outputId = "convertIEAStudyCycle")))
+                    ),
                     conditionalPanel(condition = "output.convertIEAStudyName && output.convertIEAStudyCycle",
+                                     div(style = "display: inline-block; padding-top: 30px; padding-bottom:15px;",
+                                         htmlOutput(outputId = "convertAvailableIEACntsText")
+                                     ),
                                      fluidRow(
-                                       br(),
                                        column(width = 6,
                                               DTOutput(outputId = "convertAvailCntIEAFiles"),
                                               tags$head(tags$style("#convertAvailCntIEAFiles {white-space: nowrap;}"))
@@ -245,68 +247,74 @@ Shiny.unbindAll($table.DataTable().table().node());
                                        column(width = 5,
                                               DTOutput(outputId = "convertSelectionIEA"),
                                               tags$head(tags$style("#convertSelectionIEA {white-space: nowrap;}"))
-                                       ),
-                                     )),
+                                       )
+                                     )
+                    ),
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISA2015PlusStudyName"),
-                                    htmlOutput(outputId = "convertPISA2015PlusStudyCycle"),
-                                    br()
+                                    htmlOutput(outputId = "convertPISA2015PlusStudyCycle")
                     )),
-                    htmlOutput(outputId = "convertAvailablePISA2015PlusFilesText"),
-                    fluidRow(
-                      column(width = 2),
-                      column(width = 8,
-                             DTOutput(outputId = "convertPISA2015PlusFiles"),
-                             tags$head(tags$style("#convertPISA2015PlusFiles {white-space: nowrap;}"))
-                      ),
-                      column(width = 2)
-                    ),
+                    conditionalPanel(condition = "output.convertPISA2015PlusStudyName && output.convertPISA2015PlusStudyCycle",
+                                     div(style = "display: inline-block; padding-top: 30px; padding-bottom:15px;",
+                                         htmlOutput(outputId = "convertAvailablePISA2015PlusFilesText")
+                                     ),
+                                     fluidRow(
+                                       column(width = 2),
+                                       column(width = 8,
+                                              DTOutput(outputId = "convertPISA2015PlusFiles"),
+                                              tags$head(tags$style("#convertPISA2015PlusFiles {white-space: nowrap;}"))
+                                       ),
+                                       column(width = 2)
+                                     )),
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISApre2015StudyName"),
-                                    htmlOutput(outputId = "convertPISApre2015StudyCycle"),
-                                    br()
+                                    htmlOutput(outputId = "convertPISApre2015StudyCycle")
                     )),
-                    htmlOutput(outputId = "convertAvailablePISApre2015FilesText"),
-                    fluidRow(
-                      column(width = 2),
-                      column(width = 8,
-                             DTOutput(outputId = "convertPISApre2015Files"),
-                             tags$head(tags$style("#convertPISApre2015Files {white-space: nowrap;}"))
-                      ),
-                      column(width = 2)
-                    ),
+                    conditionalPanel(condition = "output.convertPISApre2015StudyName && output.convertPISApre2015StudyCycle",
+                                     div(style = "display: inline-block; padding-top: 30px; padding-bottom:15px;",
+                                         htmlOutput(outputId = "convertAvailablePISApre2015FilesText")
+                                     ),
+                                     fluidRow(
+                                       column(width = 2),
+                                       column(width = 8,
+                                              DTOutput(outputId = "convertPISApre2015Files"),
+                                              tags$head(tags$style("#convertPISApre2015Files {white-space: nowrap;}"))
+                                       ),
+                                       column(width = 2)
+                                     )),
                     fluidRow(column(width = 12,
                                     htmlOutput(outputId = "convertPISADev2019PlusStudyName"),
-                                    htmlOutput(outputId = "convertPISADev2019PlusStudyCycle"),
-                                    br()
+                                    htmlOutput(outputId = "convertPISADev2019PlusStudyCycle")
                     )),
-                    htmlOutput(outputId = "convertAvailablePISADev2019PlusFilesText"),
+                    conditionalPanel(condition = "output.convertPISADev2019PlusStudyName && output.convertPISADev2019PlusStudyCycle",
+                                     div(style = "display: inline-block; padding-top: 30px; padding-bottom:15px;",
+                                         htmlOutput(outputId = "convertAvailablePISADev2019PlusFilesText")
+                                     ),
+                                     fluidRow(
+                                       column(width = 2),
+                                       column(width = 8,
+                                              DTOutput(outputId = "convertPISADev2019PlusFiles"),
+                                              tags$head(tags$style("#convertPISADev2019PlusFiles {white-space: nowrap;}"))
+                                       ),
+                                       column(width = 2)
+                                     )),
                     fluidRow(
-                      column(width = 2),
-                      column(width = 8,
-                             DTOutput(outputId = "convertPISADev2019PlusFiles"),
-                             tags$head(tags$style("#convertPISADev2019PlusFiles {white-space: nowrap;}"))
-                      ),
-                      column(width = 2)
-                    ),
-                    fluidRow(
-                      br(), br(),
                       column(width = 12,
                              conditionalPanel(condition = "output.convertSelectionIEA || output.convertPISA2015PlusFiles || output.convertPISApre2015Files || output.convertPISADev2019PlusFiles",
                                               fluidRow(
                                                 column(width = 4,
-                                                       checkboxInput(inputId = "convertMissToNA", label = "Convert user-defined missings to NA", value = FALSE)
-                                                ),
-                                                br(), br(),
-                                                div(
-                                                  style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                                  shinyDirButton(id = "convertChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
-                                                  div(style = "width: 30px;"),
-                                                  div(verbatimTextOutput(outputId = "convertOutPathDisplay"), style = "min-width: 750px;"),
-                                                  tags$head(tags$style("#convertOutPathDisplay {background-color: white;}"))
-                                                )
-                                              ),
-                                              br(), br(),
+                                                       div(style = "margin-top:38px;;",
+                                                           checkboxInput(inputId = "convertMissToNA", label = "Convert user-defined missings to NA", value = FALSE))
+                                                )),
+                                              fluidRow(column(width = 6,
+                                                              div(
+                                                                style = "display:-webkit-flex; display:-ms-flexbox; display:flex; padding-top: 30px; margin-bottom: 20px;",
+                                                                shinyDirButton(id = "convertChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                                                                div(style = "width: 30px;"),
+                                                                div(verbatimTextOutput(outputId = "convertOutPathDisplay"), style = "min-width: 750px;"),
+                                                                tags$head(tags$style("#convertOutPathDisplay {background-color: white;}"))
+                                                              )
+                                              )),
                                               conditionalPanel(condition = "intput.convertChooseOutDir",
                                                                div(style="display:inline-block", textOutput(outputId = "convertSyntaxHead")),
                                                                div(style="display:inline-block", shinySaveButton(id = "saveConvertSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
@@ -314,15 +322,17 @@ Shiny.unbindAll($table.DataTable().table().node());
                                                                verbatimTextOutput(outputId = "convertSyntax"),
                                                                tags$head(tags$style(HTML("#convertSyntax {background-color: white; white-space: pre-wrap;}")))
                                               ),
-                                              br(), br(),
                                               conditionalPanel(condition = "output.convertSyntax",
-                                                               textOutput(outputId = "convertExecBtnHead"),
-                                                               uiOutput(outputId = "execConvertData")
+                                                               div(style = "margin-top: 30px",
+                                                                   textOutput(outputId = "convertExecBtnHead")
+                                                               ),
+                                                               div(style = "margin-bottom: 30px",
+                                                                   uiOutput(outputId = "execConvertData")
+                                                               )
                                               ),
-                                              br(),
                                               conditionalPanel(condition = "output.execConvertData != 0",
                                                                verbatimTextOutput(outputId = "consoleConvertData"),
-                                                               tags$head(tags$style("#consoleConvertData {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                                               tags$head(tags$style("#consoleConvertData {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                                                tags$script(
                                                                  '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -332,9 +342,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
                                                                ),
-                                                               br()
                                               ),
-                                              br(), br()
                              )
                       )),
             ),
@@ -350,15 +358,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                        tags$head(tags$style("#mergeSrcPathDisplay {background-color: white;}"))
                       )
                     ),
-                    fluidRow(column(width = 12,
-                                    htmlOutput(outputId = "mergeIEAStudyName"),
-                                    htmlOutput(outputId = "mergeIEAStudyCycle"),
-                                    br()
-                    )),
-                    htmlOutput(outputId = "mergeAvailableIEACntsText"),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "mergeIEAStudyName"),
+                            htmlOutput(outputId = "mergeIEAStudyCycle")
+                        )
+                      )),
+                    div(style = "display: inline-block; padding-bottom: 15px;",
+                        htmlOutput(outputId = "mergeAvailableIEACntsText")
+                    ),
                     conditionalPanel(condition = "output.mergeIEAStudyName && output.mergeIEAStudyCycle",
                                      fluidRow(
-                                       br(),
                                        column(width = 6,
                                               DTOutput(outputId = "mergeAvailCntIEAFiles"),
                                               tags$head(tags$style("#mergeAvailCntIEAFiles {white-space: nowrap;}"))
@@ -379,23 +391,27 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                        ),
                                      ),
                                      fluidRow(
-                                       br(), br(),
-                                       column(width = 12, htmlOutput(outputId = "mergeAvailRespText"))
+                                       div(style = "display: inline-block; margin-top: 35px;",
+                                           column(width = 12, htmlOutput(outputId = "mergeAvailRespText"))
+                                       )
                                      ),
                                      fluidRow(
-                                       column(width = 4,
-                                              br(),
-                                              uiOutput(outputId = "mergeAvailRespCheckboxes")
+                                       column(width = 12,
+                                              div(style = "display: inline-block; margin-top: 5px;",
+                                                  uiOutput(outputId = "mergeAvailRespCheckboxes")
+                                              )
                                        ),
-                                       column(width = 8,
-                                              br(), br(),
+                                       column(width = 12,
                                               uiOutput(outputId = "warnNoSuchCombination"),
                                               tags$head(tags$style("#warnNoSuchCombination {color: red; font-weight: bold;}"))
                                        )
                                      ),
                                      fluidRow(
-                                       br(),
-                                       column(width = 12, htmlOutput(outputId = "mergeAvailVarsText")),
+                                       column(width = 12,
+                                              div(style = "display: inline-block; margin-top: 20px; margin-bottom: 5px;",
+                                                  htmlOutput(outputId = "mergeAvailVarsText")
+                                              )
+                                       ),
                                        column(width = 6,
                                               DTOutput(outputId = "mergeAllAvailableVars"),
                                               tags$head(tags$style("#mergeAllAvailableVars {white-space: nowrap;}"))
@@ -415,24 +431,27 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                      )
                     ),
                     conditionalPanel(condition = "output.mergeVarsSelection",
-                                     br(), br(), br(),
-                                     shinySaveButton(id = "mergeChooseOutFile", label = "Define merged file name", title = "Define file name", icon = icon("file-import"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"),
-                                     br(), br(), br(), br(),
-                                     div(style="display:inline-block", htmlOutput(outputId = "mergeSyntaxHead")),
+                                     div(
+                                       style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 60px; margin-bottom: 30px",
+                                       div(style="display:inline-block",
+                                           shinySaveButton(id = "mergeChooseOutFile", label = "Define merged file name", title = "Define file name", icon = icon("file-import"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"))),
+                                     div(style="display: inline-block; margin-top: 5px;", htmlOutput(outputId = "mergeSyntaxHead")),
                                      div(style="display:inline-block", shinySaveButton(id = "saveMergeSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                                      div(style="display:inline-block", uiOutput(outputId = "copyMergeSyntax")),
                                      verbatimTextOutput(outputId = "mergeSyntax"),
                                      tags$head(tags$style(HTML("#mergeSyntax {background-color: white; white-space: pre-wrap;}")))
                     ),
-                    br(), br(),
                     conditionalPanel(condition = "output.mergeSyntax",
-                                     textOutput(outputId = "mergeExecBtnHead"),
-                                     uiOutput(outputId = "execMergeData")
-                    ), br(), br(),
-                    br(),
+                                     div(style = "margin-top: 40px",
+                                         textOutput(outputId = "mergeExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execMergeData")
+                                     )
+                    ),
                     conditionalPanel(condition = "output.execMergeData != 0",
                                      verbatimTextOutput(outputId = "consoleMergeData"),
-                                     tags$head(tags$style("#consoleMergeData {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleMergeData {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -442,9 +461,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
                                      ),
-                                     br()
                     ),
-                    br(), br()
             ),
             tabItem(tabName = "varProperties", class = "active",
                     h1(textOutput(outputId = "h1VarProperties")),
@@ -459,18 +476,22 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "varPropsStudyName"),
-                             htmlOutput(outputId = "varPropsStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "varPropsRespHead"),
-                             htmlOutput(outputId = "varPropsRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "varPropsStudyName"),
+                            htmlOutput(outputId = "varPropsStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "varPropsRespHead"),
+                            htmlOutput(outputId = "varPropsRespAvailable")
+                        )
                       )
                     ),
-                    htmlOutput(outputId = "varPropsExplText"),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "varPropsExplText")
+                    ),
                     fluidRow(
                       column(width = 6,
                              DTOutput(outputId = "varPropsAllAvailableVars"),
@@ -487,36 +508,39 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       column(width = 5,
                              DTOutput(outputId = "varPropsVarsSelection"),
                              tags$head(tags$style("#varPropsVarsSelection {white-space: nowrap;}"))
-                      ),
-                      br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.varPropsVarsSelection",
-                                     br(), br(), br(),
-                                     checkboxInput(inputId = "varPropsSaveOutput", label = "Save the variable dictionaries in a file", value = FALSE, width = "400px"),
-                                     checkboxInput(inputId = "varPropsOpenOutput", label = "Open the variable dictionaries file when finished", value = FALSE),
+                                     fluidRow(
+                                       column(width = 12,
+                                              div(
+                                                style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px;",
+                                                checkboxInput(inputId = "varPropsSaveOutput", label = "Save the variable dictionaries in a file", value = FALSE, width = "400px")))),
                                      conditionalPanel(condition = "output.varPropsSaveOutput",
                                                       div(
-                                                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 44px; margin-bottom: 25px;",
                                                         shinySaveButton(id = "varPropsChooseOutFile", label = "Define output file name", title = "Define file name", icon = icon("file-export"), filetype = list(txt = "txt"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
-                                                        div(style = "width: 30px;"),
-                                                        div(verbatimTextOutput(outputId = "varPropsOutPathDisplay"), style = "min-width: 750px;"),
-                                                        tags$head(tags$style("#varPropsOutPathDisplay {background-color: white;}"))
-                                                      ),
-                                                      br(), br()
+                                                        div(style="display:inline-block; margin-left: 15px; margin-top: 7px;",
+                                                            checkboxInput(inputId = "varPropsOpenOutput", label = "Open the output when done", value = TRUE)
+                                                        )
+                                                      )
                                      ),
                                      div(style="display:inline-block", htmlOutput(outputId = "varPropsSyntaxHead")),
                                      div(style="display:inline-block", shinySaveButton(id = "saveVarPropsSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                                      div(style="display:inline-block", uiOutput(outputId = "copyVarPropsSyntax")),
                                      verbatimTextOutput(outputId = "varPropsSyntax"),
-                                     br(), br(),
                                      tags$head(tags$style(HTML("#varPropsSyntax {background-color: white; white-space: pre-wrap;}"))),
                                      conditionalPanel(condition = "output.varPropsSyntax",
-                                                      textOutput(outputId = "varPropsExecBtnHead"),
-                                                      uiOutput(outputId = "execVarProps")
-                                     ), br(), br(),
+                                                      div(style = "margin-top: 41px",
+                                                          textOutput(outputId = "varPropsExecBtnHead")
+                                                      ),
+                                                      div(style = "margin-bottom: 30px",
+                                                          uiOutput(outputId = "execVarProps")
+                                                      )
+                                     ),
                                      conditionalPanel(condition = "varPropsSyntax",
                                                       verbatimTextOutput(outputId = "consoleVarProps"),
-                                                      tags$head(tags$style("#consoleVarProps {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                                      tags$head(tags$style("#consoleVarProps {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                                       tags$script(
                                                         '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -526,7 +550,6 @@ objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
                                                       ),
-                                                      br()
                                      )
                     ),
             ),
@@ -543,15 +566,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "dataDiagStudyName"),
-                             htmlOutput(outputId = "dataDiagStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "dataDiagRespHead"),
-                             htmlOutput(outputId = "dataDiagRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "dataDiagStudyName"),
+                            htmlOutput(outputId = "dataDiagStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "dataDiagRespHead"),
+                            htmlOutput(outputId = "dataDiagRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -560,7 +585,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#dataDiagNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-                    htmlOutput(outputId = "dataDiagVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "dataDiagVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "dataDiagAllAvailableVars"),
@@ -600,8 +627,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "dataDiagWeightVar"),
-                                      tags$head(tags$style("#dataDiagWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#dataDiagWeightVar {white-space: nowrap;}"))
                                )
                              ),
                       )
@@ -615,12 +641,16 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     fluidRow(
                       column(width = 12,
-                             uiOutput(outputId = "dataDiagContFreq"),
-                             br(), br(),
-                             div(style="display:inline-block", shinySaveButton(id = "dataDiagChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "dataDiagOpenOutput")),
-                             br(), br(), br()
-                      ),
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px; margin-bottom:25px",
+                               uiOutput(outputId = "dataDiagContFreq")
+                             ),
+                             div(style="display:inline-block; margin-bottom: 33px;",
+                                 shinySaveButton(id = "dataDiagChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                             div(style="display:inline-block; margin-left: 15px; margin-top: 8px;",
+                                 div(style="display:inline-block", uiOutput(outputId = "dataDiagOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -628,19 +658,20 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", shinySaveButton(id = "saveDataDiagSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                              div(style="display:inline-block", uiOutput(outputId = "copyDataDiagSyntax")),
                              verbatimTextOutput(outputId = "dataDiagSyntax"),
-                             tags$head(tags$style(HTML("#dataDiagSyntax {background-color: white; white-space: pre-wrap;}"))),
-                             br(), br()
-                      ),
-                      br(), br(), br(), br()
+                             tags$head(tags$style(HTML("#dataDiagSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
                     ),
                     conditionalPanel(condition = "output.dataDiagSyntax",
-                                     textOutput(outputId = "dataDiagExecBtnHead"),
-                                     uiOutput(outputId = "execDataDiag"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "dataDiagExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execDataDiag")
+                                     )
                     ),
                     conditionalPanel(condition = "dataDiagSyntax",
                                      verbatimTextOutput(outputId = "consoleDataDiag"),
-                                     tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -649,8 +680,7 @@ var objDiv = document.getElementById("consoleDataDiag"); /* Here we point to "co
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "recodeVars", class = "active",
@@ -666,18 +696,22 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "recodeStudyName"),
-                             htmlOutput(outputId = "recodeStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "recodeRespHead"),
-                             htmlOutput(outputId = "recodeRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "recodeStudyName"),
+                            htmlOutput(outputId = "recodeStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "recodeRespHead"),
+                            htmlOutput(outputId = "recodeRespAvailable")
+                        )
                       )
                     ),
-                    htmlOutput(outputId = "recodeVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "recodeVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6,
                              DTOutput(outputId = "recodeAllAvailableVars"),
@@ -692,19 +726,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       column(width = 5,
                              DTOutput(outputId = "recodeVarsSelection"),
                              tags$head(tags$style("#recodeVarsSelection {white-space: nowrap;}"))
-                      ),
-                      br(), br()
-                    ),
-                    fluidRow(
-                      br(), br(),
-                      column(width = 12,
-                             htmlOutput(outputId = "recodeSchemeExpl"),
-                             htmlOutput(outputId = "recodeSchemeWarn"),
-                             tags$head(tags$style("#recodeSchemeWarn {color: red; font-weight: bold;}"))
                       )
                     ),
                     fluidRow(
-                      br(), br(),
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px;",
+                               htmlOutput(outputId = "recodeSchemeExpl"),
+                               htmlOutput(outputId = "recodeSchemeWarn"),
+                               tags$head(tags$style("#recodeSchemeWarn {color: red; font-weight: bold;}"))
+                             )
+                      )
+                    ),
+                    fluidRow(
                       column(width = 12,
                              htmlOutput(outputId = "recodeWarnSchemeIncomplete"),
                              tags$head(tags$style("#recodeWarnSchemeIncomplete {color: red; font-weight: bold;}")),
@@ -726,8 +760,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              DTOutput(outputId = "recodeSchemeNUM"),
                              tags$head(tags$style("#recodeSchemeNUM {white-space: nowrap;}")),
                              DTOutput(outputId = "recodeSchemeCHAR"),
-                             tags$head(tags$style("#recodeSchemeCHAR {white-space: nowrap;}")),
-                             br()
+                             tags$head(tags$style("#recodeSchemeCHAR {white-space: nowrap;}"))
                       )
                     ),
                     fluidRow(
@@ -738,8 +771,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       column(width = 6,
                              htmlOutput(outputId = "recodeMissingsWarn"),
                              tags$head(tags$style("#recodeMissingsWarn {color: red; font-weight: bold;}"))
-                      ),
-                      br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -747,35 +779,36 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              htmlOutput(outputId = "recodeOverwriteWarn"),
                              tags$head(tags$style("#recodeOverwriteWarn {font-weight: bold;}")),
                              DTOutput(outputId = "recodeNewVarNames")
-                      ),
-                      br(), br(), br()
+                      )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 6,
-                             shinySaveButton(id = "recodeChooseOutFile", label = "Define recoded output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-                      ),
-                      br(), br(), br(), br()
-                    ),
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                               div(style="display:inline-block; margin-top: 66px; margin-bottom: 35px;",
+                                   shinySaveButton(id = "recodeChooseOutFile", label = "Define recoded output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               )
+                             ))),
                     fluidRow(
                       column(width = 12,
                              div(style="display:inline-block", htmlOutput(outputId = "recodeSyntaxHead")),
                              div(style="display:inline-block", shinySaveButton(id = "saveRecodeSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                              div(style="display:inline-block", uiOutput(outputId = "copyRecodeSyntax")),
                              verbatimTextOutput(outputId = "recodeSyntax"),
-                             tags$head(tags$style(HTML("#recodeSyntax {background-color: white; white-space: pre-wrap;}"))),
-                             br(), br()
-                      ),
-                      br(), br(), br()
+                             tags$head(tags$style(HTML("#recodeSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
                     ),
                     conditionalPanel(condition = "output.recodeSyntax",
-                                     textOutput(outputId = "recodeExecBtnHead"),
-                                     uiOutput(outputId = "execRecode"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "recodeExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execRecode")
+                                     )
                     ),
                     conditionalPanel(condition = "recodeSyntax",
                                      verbatimTextOutput(outputId = "consoleRecode"),
-                                     tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -784,8 +817,7 @@ var objDiv = document.getElementById("consoleRecode"); /* Here we point to "cons
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "selectPISACountries", class = "active",
@@ -801,18 +833,22 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "selectPISACountriesStudyName"),
-                             htmlOutput(outputId = "selectPISACountriesStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "selectPISACountriesRespHead"),
-                             htmlOutput(outputId = "selectPISACountriesRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "selectPISACountriesStudyName"),
+                            htmlOutput(outputId = "selectPISACountriesStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "selectPISACountriesRespHead"),
+                            htmlOutput(outputId = "selectPISACountriesRespAvailable")
+                        )
                       )
                     ),
-                    htmlOutput(outputId = "selectPISACountriesExplText"),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "selectPISACountriesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "selectPISACountriesAvailableCountries"),
@@ -827,17 +863,16 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "selectPISASelectedCountries"),
-                                      tags$head(tags$style("#selectPISASelectedCountries {white-space: nowrap;}")),
-                                      br()
+                                      tags$head(tags$style("#selectPISASelectedCountries {white-space: nowrap;}"))
                                )
-                             ),
-                      ),
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "selectPISACountriesChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"))
-                      ),
-                      br(), br(), br(), br()
+                             div(style="display:inline-block; margin-top: 60px; margin-bottom: 33px;",
+                                 shinySaveButton(id = "selectPISACountriesChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px"))
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -845,19 +880,20 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", shinySaveButton(id = "saveSelectPISACountriesSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                              div(style="display:inline-block", uiOutput(outputId = "copySelectPISACountriesSyntax")),
                              verbatimTextOutput(outputId = "selectPISACountriesSyntax"),
-                             tags$head(tags$style(HTML("#selectPISACountriesSyntax {background-color: white; white-space: pre-wrap;}"))),
-                             br(), br()
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                             tags$head(tags$style(HTML("#selectPISACountriesSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
                     ),
                     conditionalPanel(condition = "output.selectPISACountriesSyntax",
-                                     textOutput(outputId = "selectPISACountriesExecBtnHead"),
-                                     uiOutput(outputId = "execSelectPISACountries"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "selectPISACountriesExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execSelectPISACountries")
+                                     )
                     ),
                     conditionalPanel(condition = "selectPISACountriesSyntax",
                                      verbatimTextOutput(outputId = "consoleSelectPISACountries"),
-                                     tags$head(tags$style("#consoleSelectPISACountries {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleSelectPISACountries {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -866,8 +902,7 @@ var objDiv = document.getElementById("consoleSelectPISACountries"); /* Here we p
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "pctsMeans", class = "active",
@@ -883,15 +918,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "pctsMeansStudyName"),
-                             htmlOutput(outputId = "pctsMeansStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "pctsMeansRespHead"),
-                             htmlOutput(outputId = "pctsMeansRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "pctsMeansStudyName"),
+                            htmlOutput(outputId = "pctsMeansStudyCycle")
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "pctsMeansRespHead"),
+                            htmlOutput(outputId = "pctsMeansRespAvailable"),
+                        )
                       )
                     ),
                     fluidRow(
@@ -900,7 +937,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#pctsMeansNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-                    htmlOutput(outputId = "pctsMeansVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "pctsMeansVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "pctsMeansAllAvailableVars"),
@@ -955,8 +994,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "pctsMeansWeightVar"),
-                                      tags$head(tags$style("#pctsMeansWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#pctsMeansWeightVar {white-space: nowrap;}"))
                                )
                              ),
                       )
@@ -971,20 +1009,23 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#pctsMeansBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "pctsMeansWgtsNotWgts"),
                              tags$head(tags$style("#pctsMeansWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "pctsMeansWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "pctsMeansWarnMoreVars")
                       )
                     ),
                     fluidRow(
-                      column(width = 3,
-                             uiOutput(outputId = "centralTendencyType")
-                      ),
-                      column(width = 9,
-                             htmlOutput(outputId = "centralTendencyTypeExpl")
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom: 30px",
+                        div(style = "display: inline-block; margin-top: 30px;",
+                            uiOutput(outputId = "centralTendencyType")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "display: inline-block; padding-top:15px;",
+                            htmlOutput(outputId = "centralTendencyTypeExpl")
+                        )
                       )
                     ),
                     fluidRow(
-                      column(width = 12,
+                      column(width = 12, offset = 0, style = "margin-top: -20px;",
                              uiOutput(outputId = "pctsMeansShortcut"),
                              uiOutput(outputId = "pctsMeansGraphs"),
                              fluidRow(
@@ -1020,7 +1061,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              fluidRow(
                                div(
                                  style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-bottom: 30px; padding-left: 7px",
                                      uiOutput(outputId = "pctsMeansGraphsMeanYlabelsChk")
                                  ),
                                  div(style = "width: 15px;"),
@@ -1035,15 +1076,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                       tags$head(tags$style("#warnPctsMeansCustomYlab {color: red; font-weight: bold;}"))
                                )
                              )
-                      ),
-                      br(), br(), br(), br()
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "pctsMeansChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "pctsMeansOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   shinySaveButton(id = "pctsMeansChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               ),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;",
+                                   uiOutput(outputId = "pctsMeansOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -1052,17 +1097,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyPctsMeansSyntax")),
                              verbatimTextOutput(outputId = "pctsMeansSyntax"),
                              tags$head(tags$style(HTML("#pctsMeansSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.pctsMeansSyntax",
-                                     textOutput(outputId = "pctsMeansExecBtnHead"),
-                                     uiOutput(outputId = "execPctsMeans"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "pctsMeansExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execPctsMeans")
+                                     )
                     ),
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
-                                     tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1071,8 +1118,7 @@ var objDiv = document.getElementById("consolePctsMeans"); /* Here we point to "c
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "prctls", class = "active",
@@ -1088,15 +1134,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "prctlsStudyName"),
-                             htmlOutput(outputId = "prctlsStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "prctlsRespHead"),
-                             htmlOutput(outputId = "prctlsRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top: 30px;",
+                            htmlOutput(outputId = "prctlsStudyName"),
+                            htmlOutput(outputId = "prctlsStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top: 17px",
+                            htmlOutput(outputId = "prctlsRespHead"),
+                            htmlOutput(outputId = "prctlsRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -1105,7 +1153,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#prctlsNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-                    htmlOutput(outputId = "prctlsVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "prctlsVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "prctlsAllAvailableVars"),
@@ -1160,8 +1210,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "prctlsWeightVar"),
-                                      tags$head(tags$style("#prctlsWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#prctlsWeightVar {white-space: nowrap;}"))
                                )
                              )
                       )
@@ -1178,93 +1227,104 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#prctlsBckgNotCnt {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "prctlsWgtsNotWgts"),
                              tags$head(tags$style("#prctlsWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "prctlsWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "prctlsWarnMoreVars")
+                      )
+                    ),
+                    fluidRow(
+                      div(style = "margin-top: 20px; margin-bottom: 30px; margin-left: 15px;",
+                          htmlOutput(outputId = "prctlsValuesExpl")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block;",
+                            uiOutput(outputId = "prctlsValues")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "margin-top: 25px",
+                            uiOutput(outputId = "prctlsValuesReset")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "padding-top: 15px;",
+                            htmlOutput(outputId = "prctlsNotNum"),
+                            tags$head(tags$style("#prctlsNotNum {color: red; font-weight: bold;}")),
+                            htmlOutput(outputId = "prctlsNotInRange"),
+                            tags$head(tags$style("#prctlsNotInRange {color: red; font-weight: bold;}"))
+                        )
                       )
                     ),
                     fluidRow(
                       column(width = 12,
-                             htmlOutput(outputId = "prctlsValuesExpl")
-                      ),
-                      br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 3,
-                             uiOutput(outputId = "prctlsValues")
-                      ),
-                      column(width = 1,
-                             uiOutput(outputId = "prctlsValuesReset"),
-                             tags$style(type='text/css', "#prctlsValuesReset {margin-top: 13px;}")
-                      ),
-                      column(width = 4,
-                             htmlOutput(outputId = "prctlsNotNum"),
-                             tags$head(tags$style("#prctlsNotNum {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "prctlsNotInRange"),
-                             tags$head(tags$style("#prctlsNotInRange {color: red; font-weight: bold;}"))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                             uiOutput(outputId = "prctlsShortcut")
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             uiOutput(outputId = "prctlsShortcut"),
-                             uiOutput(outputId = "prctlsGraphs"),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "prctlsGraphsPctXlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "prctlsGraphsPctXlabelTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "prctlsGraphsPctYlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "prctlsGraphsPctYlabelTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "prctlsGraphsPrctlXlabelsChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "prctlsGraphsPrctlXlabelsTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "prctlsGraphsPrctlYlabelsChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "prctlsGraphsPrctlYlabelsTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               column(width = 12,
-                                      htmlOutput(outputId = "warnPrctlsCustomXlab"),
-                                      tags$head(tags$style("#warnPrctlsCustomXlab {color: red; font-weight: bold;}")),
-                                      htmlOutput(outputId = "warnPrctlsCustomYlab"),
-                                      tags$head(tags$style("#warnPrctlsCustomYlab {color: red; font-weight: bold;}"))
-                               )
+                             div(style = "margin-top: 25px",
+                                 uiOutput(outputId = "prctlsGraphs")
                              )
-                      ),
-                      br(), br(), br(), br()
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "prctlsGraphsPctXlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "prctlsGraphsPctXlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "prctlsGraphsPctYlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "prctlsGraphsPctYlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "prctlsGraphsPrctlXlabelsChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "prctlsGraphsPrctlXlabelsTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-bottom: 30px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "prctlsGraphsPrctlYlabelsChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "prctlsGraphsPrctlYlabelsTXT"), style = "min-width: 500px;")
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "prctlsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "prctlsOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             htmlOutput(outputId = "warnPrctlsCustomXlab"),
+                             tags$head(tags$style("#warnPrctlsCustomXlab {color: red; font-weight: bold;}")),
+                             htmlOutput(outputId = "warnPrctlsCustomYlab"),
+                             tags$head(tags$style("#warnPrctlsCustomYlab {color: red; font-weight: bold;}"))
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(
+                                 style="display:inline-block",
+                                 shinySaveButton(id = "prctlsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               ),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;", uiOutput(outputId = "prctlsOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -1273,17 +1333,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyPrctlsSyntax")),
                              verbatimTextOutput(outputId = "prctlsSyntax"),
                              tags$head(tags$style(HTML("#prctlsSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.prctlsSyntax",
-                                     textOutput(outputId = "prctlsExecBtnHead"),
-                                     uiOutput(outputId = "execPrctls"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px;",
+                                         textOutput(outputId = "prctlsExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execPrctls")
+                                     )
                     ),
                     conditionalPanel(condition = "prctlsSyntax",
                                      verbatimTextOutput(outputId = "consolePrctls"),
-                                     tags$head(tags$style("#consolePrctls {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consolePrctls {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px;}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1292,8 +1354,7 @@ var objDiv = document.getElementById("consolePrctls"); /* Here we point to "cons
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "bnchMarks", class = "active",
@@ -1309,15 +1370,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "benchStudyName"),
-                             htmlOutput(outputId = "benchStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "benchRespHead"),
-                             htmlOutput(outputId = "benchRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "benchStudyName"),
+                            htmlOutput(outputId = "benchStudyCycle")
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "benchRespHead"),
+                            htmlOutput(outputId = "benchRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -1333,15 +1396,20 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      column(width = 3,
-                             uiOutput(outputId = "benchType")
-                      ),
-                      column(width = 9,
-                             htmlOutput(outputId = "benchTypeExpl")
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:15px",
+                        div(style = "display: inline-block;",
+                            uiOutput(outputId = "benchType"),
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "display: inline-block; padding-top:5px;",
+                            htmlOutput(outputId = "benchTypeExpl")
+                        )
+                      )
                     ),
-                    htmlOutput(outputId = "benchVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "benchVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "benchAllAvailableVars"),
@@ -1389,15 +1457,14 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                )
                              ),
                              fluidRow(
-                               column(width = 2,
+                               column(width = 2, align = "center",
                                       br(), br(),  br(), br(),
                                       uiOutput(outputId = "benchArrowSelWeightVarsRight"),
                                       uiOutput(outputId = "benchArrowSelWeightVarsLeft"),
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "benchWeightVar"),
-                                      tags$head(tags$style("#benchWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#benchWeightVar {white-space: nowrap;}"))
                                )
                              )
                       )
@@ -1412,94 +1479,107 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#benchBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "benchWgtsNotWgts"),
                              tags$head(tags$style("#benchWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "benchWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "benchWarnMoreVars")
+                      )
+                    ),
+                    fluidRow(
+                      div(style = "margin-top: 20px; margin-bottom: 30px; margin-left: 15px;",
+                          htmlOutput(outputId = "benchValuesExpl")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block;",
+                            uiOutput(outputId = "benchValues"),
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "margin-top: 25px",
+                            uiOutput(outputId = "benchValuesReset")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "padding-top: 15px;",
+                            htmlOutput(outputId = "benchNotNum"),
+                            tags$head(tags$style("#benchNotNum {color: red; font-weight: bold;}")),
+                            htmlOutput(outputId = "benchNotInRange"),
+                            tags$head(tags$style("#benchNotInRange {color: red; font-weight: bold;}"))
+                        )
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:25px",
+                        div(style = "display: inline-block;",
+                            uiOutput(outputId = "benchComputeWithin")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "display: inline-block;",
+                            htmlOutput(outputId = "benchComputeWithinExpl")
+                        )
                       )
                     ),
                     fluidRow(
                       column(width = 12,
-                             htmlOutput(outputId = "benchValuesExpl")
-                      ),
-                      br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 3,
-                             uiOutput(outputId = "benchValues")
-                      ),
-                      column(width = 1,
-                             uiOutput(outputId = "benchValuesReset"),
-                             tags$style(type='text/css', "#benchValuesReset {margin-top: 13px;}")
-                      ),
-                      column(width = 4,
-                             htmlOutput(outputId = "benchNotNum"),
-                             tags$head(tags$style("#benchNotNum {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "benchNotInRange"),
-                             tags$head(tags$style("#benchNotInRange {color: red; font-weight: bold;}"))
-                      ),
-                      br(), br(), br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 4,
-                             uiOutput(outputId = "benchComputeWithin")
-                      ),
-                      column(width = 8,
-                             htmlOutput(outputId = "benchComputeWithinExpl")
-                      ),
-                      br(), br(), br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 12,
                              uiOutput(outputId = "benchShortcut"),
-                             uiOutput(outputId = "benchGraphs"),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "benchGraphsPctXlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "benchGraphsPctXlabelTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "benchGraphsPctYlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "benchGraphsPctYlabelTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "benchGraphsMeanXlabelsChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "benchGraphsMeanXlabelsTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "benchGraphsMeanYlabelsChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "benchGraphsMeanYlabelsTXT"), style = "min-width: 500px;")
-                               )
-                             )
-                      ),
-                      br(), br(), br(), br()
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "benchChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "benchOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             div(style = "margin-top: 25px",
+                                 uiOutput(outputId = "benchGraphs")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "benchGraphsPctXlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "benchGraphsPctXlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "benchGraphsPctYlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "benchGraphsPctYlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "benchGraphsMeanXlabelsChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "benchGraphsMeanXlabelsTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-bottom: 30px; padding-left: 7px",
+                            uiOutput(outputId = "benchGraphsMeanYlabelsChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "benchGraphsMeanYlabelsTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   shinySaveButton(id = "benchChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               ),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;", uiOutput(outputId = "benchOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -1508,17 +1588,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyBenchSyntax")),
                              verbatimTextOutput(outputId = "benchSyntax"),
                              tags$head(tags$style(HTML("#benchSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.benchSyntax",
-                                     textOutput(outputId = "benchExecBtnHead"),
-                                     uiOutput(outputId = "execBench"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "benchExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execBench")
+                                     )
                     ),
                     conditionalPanel(condition = "benchSyntax",
                                      verbatimTextOutput(outputId = "consoleBench"),
-                                     tags$head(tags$style("#consoleBench {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleBench {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1527,8 +1609,7 @@ var objDiv = document.getElementById("consoleBench"); /* Here we point to "conso
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "crossTabs", class = "active",
@@ -1544,15 +1625,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "crossTabsStudyName"),
-                             htmlOutput(outputId = "crossTabsStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "crossTabsRespHead"),
-                             htmlOutput(outputId = "crossTabsRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "crossTabsStudyName"),
+                            htmlOutput(outputId = "crossTabsStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "crossTabsRespHead"),
+                            htmlOutput(outputId = "crossTabsRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -1613,8 +1696,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "crossTabsWeightVar"),
-                                      tags$head(tags$style("#crossTabsWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#crossTabsWeightVar {white-space: nowrap;}"))
                                )
                              ),
                       ),
@@ -1627,54 +1709,65 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                htmlOutput(outputId = "crossTabsBckgColIsPVs"),
                                tags$head(tags$style("#crossTabsBckgColIsPVs {color: red; font-weight: bold;}")),
                                htmlOutput(outputId = "crossTabsWgtsNotWgts"),
-                               tags$head(tags$style("#crossTabsWgtsNotWgts {color: red; font-weight: bold;}")),
-                               br()
+                               tags$head(tags$style("#crossTabsWgtsNotWgts {color: red; font-weight: bold;}"))
                         )
                       )
                     ),
                     fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "crossTabsExpCnts"),
-                             uiOutput(outputId = "crossTabsRowPcts"),
-                             uiOutput(outputId = "crossTabsColPcts"),
-                             uiOutput(outputId = "crossTabsTotPcts")
-                      ),
-                      br(), br()
-                    ),
-                    fluidRow(
-                      br(), br(),
                       column(width = 12,
-                             uiOutput(outputId = "crossTabsShortcut"),
-                             uiOutput(outputId = "crossTabsGraphs"),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "crossTabsGraphsPlotXlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "crossTabsGraphsPlotXlabelTXT"), style = "min-width: 500px;")
-                               )
-                             ),
-                             fluidRow(
-                               div(
-                                 style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
-                                 div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
-                                     uiOutput(outputId = "crossTabsGraphsPlotYlabelChk")
-                                 ),
-                                 div(style = "width: 15px;"),
-                                 div(uiOutput(outputId = "crossTabsGraphsPlotYlabelTXT"), style = "min-width: 500px;")
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px; padding-bottom:30px",
+                               div(style = "display: inline-block;",
+                                   uiOutput(outputId = "crossTabsExpCnts"),
+                                   uiOutput(outputId = "crossTabsRowPcts"),
+                                   uiOutput(outputId = "crossTabsColPcts"),
+                                   uiOutput(outputId = "crossTabsTotPcts")
                                )
                              )
-                      ),
-                      br(), br(), br()
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "crossTabsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "crossTabsOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             uiOutput(outputId = "crossTabsShortcut")
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(style = "margin-top: 25px",
+                                 uiOutput(outputId = "crossTabsGraphs")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-left: 7px",
+                            uiOutput(outputId = "crossTabsGraphsPlotXlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "crossTabsGraphsPlotXlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                        div(style = "display: inline-block; margin-left: 20px; padding-top:7px; padding-bottom: 40px; padding-left: 7px",
+                            uiOutput(outputId = "crossTabsGraphsPlotYlabelChk")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(uiOutput(outputId = "crossTabsGraphsPlotYlabelTXT"), style = "min-width: 500px;")
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   shinySaveButton(id = "crossTabsChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;",
+                                   uiOutput(outputId = "crossTabsOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -1683,17 +1776,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyCrosstabsSyntax")),
                              verbatimTextOutput(outputId = "crossTabsSyntax"),
                              tags$head(tags$style(HTML("#crossTabsSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.crossTabsSyntax",
-                                     textOutput(outputId = "crossTabsExecBtnHead"),
-                                     uiOutput(outputId = "execCrossTabs"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "crossTabsExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execCrossTabs")
+                                     )
                     ),
                     conditionalPanel(condition = "crossTabsSyntax",
                                      verbatimTextOutput(outputId = "consoleCrossTabs"),
-                                     tags$head(tags$style("#consoleCrossTabs {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleCrossTabs {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1702,8 +1797,7 @@ var objDiv = document.getElementById("consoleCrossTabs"); /* Here we point to "c
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "corr", class = "active",
@@ -1719,15 +1813,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "corrStudyName"),
-                             htmlOutput(outputId = "corrStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "corrRespHead"),
-                             htmlOutput(outputId = "corrRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "corrStudyName"),
+                            htmlOutput(outputId = "corrStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "corrRespHead"),
+                            htmlOutput(outputId = "corrRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -1737,15 +1833,20 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      column(width = 3,
-                             uiOutput(outputId = "corrType")
-                      ),
-                      column(width = 9,
-                             htmlOutput(outputId = "corrTypeExpl")
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block;",
+                            uiOutput(outputId = "corrType")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "display: inline-block; margin-top:-15px;",
+                            htmlOutput(outputId = "corrTypeExpl")
+                        )
+                      )
                     ),
-                    htmlOutput(outputId = "corrVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "corrVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "corrAllAvailableVars"),
@@ -1800,8 +1901,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                ),
                                column(width = 10,
                                       DTOutput(outputId = "corrWeightVar"),
-                                      tags$head(tags$style("#corrWeightVar {white-space: nowrap;}")),
-                                      br(), br()
+                                      tags$head(tags$style("#corrWeightVar {white-space: nowrap;}"))
                                )
                              )
                       )
@@ -1816,22 +1916,28 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#corrBckgArePVs {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "corrWgtsNotWgts"),
                              tags$head(tags$style("#corrWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "corrWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "corrWarnMoreVars")
                       )
                     ),
                     fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "corrShortcut")
-                      ),
-                      br(), br(), br(), br()
+                      column(width = 12,
+                             div(style = "margin-top: 35px",
+                                 uiOutput(outputId = "corrShortcut")
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "corrChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "corrOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 30px; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   div(style="display:inline-block",
+                                       shinySaveButton(id = "corrChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                                   div(style="display:inline-block; margin-left: 15px; margin-top: 8px;",
+                                       uiOutput(outputId = "corrOpenOutput"))
+                               )
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -1840,17 +1946,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyCorrSyntax")),
                              verbatimTextOutput(outputId = "corrSyntax"),
                              tags$head(tags$style(HTML("#corrSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.corrSyntax",
-                                     textOutput(outputId = "corrExecBtnHead"),
-                                     uiOutput(outputId = "execCorr"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "corrExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execCorr")
+                                     )
                     ),
                     conditionalPanel(condition = "corrSyntax",
                                      verbatimTextOutput(outputId = "consoleCorr"),
-                                     tags$head(tags$style("#consoleCorr {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleCorr {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1859,8 +1967,7 @@ var objDiv = document.getElementById("consoleCorr"); /* Here we point to "consol
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "linReg", class = "active",
@@ -1876,15 +1983,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "linRegStudyName"),
-                             htmlOutput(outputId = "linRegStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "linRegRespHead"),
-                             htmlOutput(outputId = "linRegRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "linRegStudyName"),
+                            htmlOutput(outputId = "linRegStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "linRegRespHead"),
+                            htmlOutput(outputId = "linRegRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -1893,7 +2002,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#linRegNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-                    htmlOutput(outputId = "linRegVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "linRegVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "linRegAllAvailableVars"),
@@ -2000,8 +2111,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                       DTOutput(outputId = "linRegWeightVar"),
                                       tags$head(tags$style("#linRegWeightVar {white-space: nowrap;}"))
                                )
-                             ),
-                             br(), br(), br(), br()
+                             )
                       )
                     ),
                     fluidRow(
@@ -2020,28 +2130,32 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#linRegDepPVsAreBckg {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "linRegWgtsNotWgts"),
                              tags$head(tags$style("#linRegWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "linRegWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "linRegWarnMoreVars")
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(style = "margin-top: 40px",
+                                 uiOutput(outputId = "linRegStandardize")
+                             )
                       )
                     ),
                     fluidRow(
                       column(width = 6,
-                             uiOutput(outputId = "linRegStandardize")
-                      ),
-                      br(), br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "linRegShortcut")
-                      ),
-                      br(), br(), br(), br()
+                             div(style = "margin-top: 25px; padding-bottom: 44px;",
+                                 uiOutput(outputId = "linRegShortcut")
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "linRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "linRegOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   shinySaveButton(id = "linRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;", uiOutput(outputId = "linRegOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -2050,17 +2164,19 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", uiOutput(outputId = "copyLinRegSyntax")),
                              verbatimTextOutput(outputId = "linRegSyntax"),
                              tags$head(tags$style(HTML("#linRegSyntax {background-color: white; white-space: pre-wrap;}")))
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                      )
                     ),
                     conditionalPanel(condition = "output.linRegSyntax",
-                                     textOutput(outputId = "linRegExecBtnHead"),
-                                     uiOutput(outputId = "execLinReg"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "linRegExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execLinReg"),
+                                     )
                     ),
                     conditionalPanel(condition = "linRegSyntax",
                                      verbatimTextOutput(outputId = "consoleLinReg"),
-                                     tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px; ; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -2069,8 +2185,7 @@ var objDiv = document.getElementById("consoleLinReg"); /* Here we point to "cons
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             ),
             tabItem(tabName = "binLogReg", class = "active",
@@ -2086,15 +2201,17 @@ objDiv.scrollTop = objDiv.scrollHeight;
                       )
                     ),
                     fluidRow(
-                      br(), br(),
-                      column(width = 2,
-                             htmlOutput(outputId = "binLogRegStudyName"),
-                             htmlOutput(outputId = "binLogRegStudyCycle"),
-                      ),
-                      column(width = 10,
-                             htmlOutput(outputId = "binLogRegRespHead"),
-                             htmlOutput(outputId = "binLogRegRespAvailable"),
-                             br(), br()
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "binLogRegStudyName"),
+                            htmlOutput(outputId = "binLogRegStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "binLogRegRespHead"),
+                            htmlOutput(outputId = "binLogRegRespAvailable")
+                        )
                       )
                     ),
                     fluidRow(
@@ -2103,7 +2220,9 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#binLogRegNoWeights {color: red; font-weight: bold;}"))
                       )
                     ),
-                    htmlOutput(outputId = "binLogRegVariablesExplText"),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "binLogRegVariablesExplText")
+                    ),
                     fluidRow(
                       column(width = 6, align = "center",
                              DTOutput(outputId = "binLogRegAllAvailableVars"),
@@ -2196,8 +2315,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                       DTOutput(outputId = "binLogRegWeightVar"),
                                       tags$head(tags$style("#binLogRegWeightVar {white-space: nowrap;}"))
                                )
-                             ),
-                             br(), br()
+                             )
                       )
                     ),
                     fluidRow(
@@ -2216,34 +2334,40 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              tags$head(tags$style("#binLogRegDepNotBin {color: red; font-weight: bold;}")),
                              htmlOutput(outputId = "binLogRegWgtsNotWgts"),
                              tags$head(tags$style("#binLogRegWgtsNotWgts {color: red; font-weight: bold;}")),
-                             htmlOutput(outputId = "binLogRegWarnMoreVars"),
-                             br()
+                             htmlOutput(outputId = "binLogRegWarnMoreVars")
                       )
                     ),
                     fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "binLogRegWgtNorm")
-                      ),
-                      br(), br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "binLogRegStandardize")
-                      ),
-                      br(), br(), br(), br()
-                    ),
-                    fluidRow(
-                      column(width = 6,
-                             uiOutput(outputId = "binLogRegShortcut")
-                      ),
-                      br(), br(), br(), br()
+                      column(width = 12,
+                             div(style = "margin-top: 40px",
+                                 uiOutput(outputId = "binLogRegWgtNorm")
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
-                             div(style="display:inline-block", shinySaveButton(id = "binLogRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
-                             div(style="display:inline-block", uiOutput(outputId = "binLogRegOpenOutput"))
-                      ),
-                      br(), br(), br(), br()
+                             div(style = "margin-top: 25px",
+                                 uiOutput(outputId = "binLogRegStandardize")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(style = "margin-top: 25px; margin-bottom: 77px",
+                                 uiOutput(outputId = "binLogRegShortcut")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-bottom: 25px",
+                               div(style="display:inline-block",
+                                   shinySaveButton(id = "binLogRegChooseOutFile", label = "Define the output file name", title = "Define file name", icon = icon("file-export"), filetype = list(xlsx = "xlsx"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")),
+                               div(style="display:inline-block; margin-left: 15px; margin-top: 8px;",
+                                   uiOutput(outputId = "binLogRegOpenOutput"))
+                             )
+                      )
                     ),
                     fluidRow(
                       column(width = 12,
@@ -2251,19 +2375,20 @@ objDiv.scrollTop = objDiv.scrollHeight;
                              div(style="display:inline-block", shinySaveButton(id = "saveBinLogRegSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
                              div(style="display:inline-block", uiOutput(outputId = "copyBinLogRegSyntax")),
                              verbatimTextOutput(outputId = "binLogRegSyntax"),
-                             tags$head(tags$style(HTML("#binLogRegSyntax {background-color: white; white-space: pre-wrap;}"))),
-                             br(), br()
-                      ),
-                      br(), br(), br(), br(), br(), br()
+                             tags$head(tags$style(HTML("#binLogRegSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
                     ),
                     conditionalPanel(condition = "output.binLogRegSyntax",
-                                     textOutput(outputId = "binLogRegExecBtnHead"),
-                                     uiOutput(outputId = "execBinLogReg"),
-                                     br(), br(), br()
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "binLogRegExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execBinLogReg")
+                                     )
                     ),
                     conditionalPanel(condition = "binLogRegSyntax",
                                      verbatimTextOutput(outputId = "consoleBinLogReg"),
-                                     tags$head(tags$style("#consoleBinLogReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px;}")),
+                                     tags$head(tags$style("#consoleBinLogReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -2272,8 +2397,7 @@ var objDiv = document.getElementById("consoleBinLogReg"); /* Here we point to "c
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'
-                                     ),
-                                     br()
+                                     )
                     )
             )
           ),

@@ -1,3 +1,49 @@
+# RALSA v1.4.5 (2024-04-26)
+
+This update fixes a number of issues in the graphing capabilities of the descriptive functions and the GUI. In addition to these fixes, the GUI has received various visual improvements and optimizations. The support for ICCS 2022 cycle has been finalized.
+
+## Bug fixes
+
+* When switching between tabs in the GUI, the tab being switched to scrolls down to the position of the previous tab. Now the tabs are scrolled up to their top when the user switches between tabs.
+
+* The GUI part for `lsa.convert.data` does reports an error for unequal length of file names in folder for PISA 2018.
+
+* The GUI part for `lsa.convert.data` does not show newly released SAV files for PISA 2018.
+
+* The GUI part for `lsa.convert.data` does not show the files in the `inp.folder` for PISA 2022.
+
+* Following some changes in package `ggplot2`, the `lsa.pcts.means`, `lsa.prctls` and `lsa.bench` crash when `graphs = TRUE`.
+
+* Following the latest changes in R on POSIXCt date formats, `lsa.pcts.means`, `lsa.prctls` and `lsa.bench` were reporting incorrect total times.
+
+## Miscellaneous
+
+* Various code changes following the update of R to version 4.4.0.
+
+* Finalized support for the ICCS 2022 cycle.
+
+* Small rearrangement of the graphical elements in the variable dictionaries' tab in the GUI to make it consistent with the rest of the tabs.
+
+* Improved the welcoming screen animation on loading the GUI.
+
+* Various visual improvements and optimizations in the GUI:
+
+  * Positioning of elements in the workspace;
+
+  * Spacing between elements;
+
+  * Showing and hiding elements depending on user selections;
+
+  * Issuing warning messages;
+
+  * Navigation between fields.
+
+* Improved documentation.
+
+
+
+
+
 # RALSA v1.4.0 (2024-02-02)
 
 This update fixes a number of issues, completely revamps the conversion function, updates the conversion of PISA 2015 files, adds support for PISA 2022 and a studies, and countries' participation in studies and cycles reference table in the GUI help section.
@@ -13,7 +59,7 @@ This update fixes a number of issues, completely revamps the conversion function
 
 * `lsa.bench` crashes when benchmarks are not provided by the user, not using the default benchmarks.
 
-* `lsa.crosstabs` crashes when one or more of the countries has just one valid value in the `bckg.row.var` or `bckg.col.var` (i.e. insufficient data).
+* `lsa.crosstabs` crashes when one or more of the countries have just one valid value in the `bckg.row.var` or `bckg.col.var` (i.e. insufficient data).
 
 * `lsa.bin.log.reg` crashes when one or more of the countries does not have valid data in the analysis variables.
 
@@ -22,7 +68,7 @@ This update fixes a number of issues, completely revamps the conversion function
 * Following the latest changes in the `shiny`'s package update to version 1.8.0, when using categorical background variables in the GUI, `lsa.lin.reg` and `lsa.bin.log.reg` do not add the contrasts and reference categories in the syntax and do not update user selections.
 
 ## New functionality
-* A reference table with countries' participation in different studies and cycles was added in the GUI help section which is now split into two parts.
+* An interactive reference table with countries' participation in different studies and cycles was added in the GUI help section which is now split into two parts.
 
 ## Miscellaneous
 * The `lsa.convert.data` function was rewritten (almost) from scratch replacing the `foreign` package with `haven` when importing SPSS files. The conversion is much more efficient now and has a better handling of the user-defined missing values. The previous version is now deprecated and is available as `lsa.convert.data2` (to be removed in June of 2025).
@@ -44,7 +90,7 @@ This update fixes a number of issues, completely revamps the conversion function
 # RALSA v1.3.7 (2023-10-26)
 
 This update focuses mainly on some critical issues that were introduced after the changes in the last versions of R and CRAN policies on package documentation.
-
+       
 ## Bug fixes
 
 * When a file with school and teacher data merged is imported, the GUI crashes for all analysis functions.

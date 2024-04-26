@@ -749,7 +749,7 @@ save.graphs <- function(out.path) {
     percentage.plots.files <- paste0(names(get("perc.graphs.list", pos = parent.frame())), "_Percentages.png")
     assign(x = "percentage.plots.files", value = percentage.plots.files, pos = parent.frame())
     write.percentage.plots.files <- function(input1, input2) {
-      ggsave(filename = as.list(input1), plot = input2, width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.percentages)
+      ggsave(filename = input1, plot = input2, width = plot.width, height = plot.height, units = "mm", device = "png", path = out.dir.percentages)
     }
     Map(write.percentage.plots.files, input1 = percentage.plots.files, input2 = get("perc.graphs.list", pos = parent.frame()))
   }
@@ -2781,7 +2781,6 @@ aggregate.PV.estimates <- function(estimate.object, estimate.name, root.PV, PV.v
     setkeyv(x = i, cols = data.key.variables)
   })
 }
-
 compute.table.average <- function(output.obj, object.variables, data.key.variables, data.properties) {
   all.estimate.columns <- grep(pattern = "^Percentages$|Percentages_.*|Mean_.*|Median_.*|MAD_.*|Mode_.*|Prctl_.*|Variance_.*|SD_.*|Correlation_|Coefficients|Odds_|Wald_|t_value|p_value|Estimate|Crosstab_", x = names(output.obj), value = TRUE)
   all.estimate.columns <- grep(pattern = "_SVR$|_MVR$|_SE$", x = all.estimate.columns, value = TRUE, invert = TRUE)
@@ -2993,6 +2992,7 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
+
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",

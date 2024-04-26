@@ -259,7 +259,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       if(!is.null(perc.x.label) & length(perc.x.label) > 1 || !is.null(perc.y.label) & length(perc.y.label) > 1) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
       }
-      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | !is.atomic(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | !is.atomic(perc.y.label)) {
+      if(!is.null(perc.x.label) & !is.vector(perc.x.label) | is.recursive(perc.x.label) || !is.null(perc.y.label) & !is.vector(perc.y.label) | is.recursive(perc.y.label)) {
         stop('\nThe "perc.x.label" and "perc.y.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
       }
       if(!is.null(mean.x.labels) & !is.list(mean.x.labels) || !is.null(mean.y.labels) & !is.list(mean.y.labels)) {

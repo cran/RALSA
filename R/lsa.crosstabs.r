@@ -224,7 +224,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       if(!is.null(graph.row.label) & length(graph.row.label) > 1 || !is.null(graph.col.label) & length(graph.col.label) > 1) {
         stop('\nThe "graph.row.label" and "graph.col.label" arguments accept only vectors of length 1. Check your input.', call. = FALSE)
       }
-      if(!is.null(graph.row.label) & !is.vector(graph.row.label) | !is.atomic(graph.row.label) || !is.null(graph.col.label) & !is.vector(graph.col.label) | !is.atomic(graph.col.label)) {
+      if(!is.null(graph.row.label) & !is.vector(graph.row.label) | is.recursive(graph.row.label) || !is.null(graph.col.label) & !is.vector(graph.col.label) | is.recursive(graph.col.label)) {
         stop('\nThe "graph.row.label" and "graph.col.label" arguments accept only atomic vectors. Check your input.', call. = FALSE)
       }
     }
