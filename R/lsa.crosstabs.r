@@ -132,9 +132,13 @@
 #'
 #' @references
 #' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
+#'
 #' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
+#'
 #' Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, \emph{12}(1). https://doi.org/10.1214/aos/1176346391
+#'
 #' Rao, J. N. K., & Scott, A. J. (1987). On Simple Adjustments to Chi-Square Tests with Sample Survey Data. \emph{The Annals of Statistics}, \emph{15}(1), 385-397.
+#'
 #' Skinner, C. (2019). Analysis of Categorical Data for Complex Surveys. \emph{International Statistical Review}, \emph{87}(S1), S64-S78. https://doi.org/10.1111/insr.12285
 #'
 #' @seealso \code{\link{lsa.convert.data}}
@@ -283,7 +287,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       }
       rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
         unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
-      }))), collapse = "|")
+      }))), collapse = "|^")
       rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
       all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
       cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")

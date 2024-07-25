@@ -96,6 +96,9 @@
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+#'
+#' The \code{lsa.lin.reg} also provides model Wald F-Statistic, as this is the appropriate statistic with complex sampling designs. See Bate (2004) and Rao & Scott (1984). The Wald F-Statistic is computed using Chi-square distribution and tests only the null hypothesis.
+#'
 #' The function provides two-tailed \emph{t}-test and \emph{p}-values for the regression coefficients.
 #'
 #' @return
@@ -124,13 +127,13 @@
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
 #'   \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
-#'   \item Statistic - a column containing the R-Squared, adjusted R-Squared, F-Statistic and degrees of freedom estimates.
+#'   \item Statistic - a column containing the R-Squared, adjusted R-Squared, Chi-square, Wald F-Statistic and degrees of freedom estimates.
 #'   \item Estimate - the numerical estimates for each of the above.
 #'   \item Estimate_SE - the standard errors of the estimates from above.
 #'   \item Estimate_SVR - the sampling variance component if PVs were included in the model.
 #'   \item Estimate_MVR - the measurement variance component if PVs were included in the model.
-#'   \item t_value - the \emph{t}-test value for the regression coefficients, value only for the F-Statistic is provided.
-#'   \item p_value - the \emph{p}-value for the regression coefficients, value only for the F-Statistic is provided.
+#'   \item t_value - the \emph{t}-test value for the regression coefficients, value only for the Wald F-Statistic is provided.
+#'   \item p_value - the \emph{p}-value for the regression coefficients, values only for the Chi-Square and the Wald F-Statistic are provided.
 #' }
 #' The third sheet contains some additional information related to the analysis per country in columns:
 #' \itemize{
@@ -197,9 +200,15 @@
 #' }
 #'
 #' @references
-#' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
-#' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
-#' UCLA: Statistical Consulting Group. 2020. "R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES." \emph{IDRE Stats - Statistical Consulting Web Resources}. Retrieved June 16, 2020 (https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/).
+#' Bate, S. M. (2004). \emph{Generalized Linear Models for Large Dependent Data Sets} \[Doctoral Thesis\]. University of London.
+#'
+#' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
+#'
+#' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (p. 3.1-3.34). Lynch School of Education, Boston College.
+#'
+#' Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, 12(1). https://doi.org/10.1214/aos/1176346391
+#'
+#' UCLA: Statistical Consulting Group. (2020). \emph{R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES}. IDRE Stats - Statistical Consulting Web Resources. https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
@@ -535,7 +544,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       }
       rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
         unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
-      }))), collapse = "|")
+      }))), collapse = "|^")
       rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
       all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
       cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
@@ -594,6 +603,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
         lapply(X = bckg.regression, FUN = function(i) {
           setnames(x = i, old = "V1", new = "Variable")
         })
+        bckg.Wald.test.output <- copy(bckg.regression)
       } else if(!is.null(vars.list[["PV.names"]])) {
         PV.regression <- list(lapply(X = seq_along(data1), FUN = function(i) {
           compute.linear.regression.all.repwgt(data.object = data1[[i]], vars.vector = grep(pattern = paste(c(vars.list[["PV.root.dep"]], vars.list[["PV.root.indep"]], vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]]), collapse = "|"), x = colnames(data1[[i]]), value = TRUE), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula[[i]])
@@ -654,13 +664,14 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
             setnames(x = j, old = c("V1", all.weights), new = c("Variable", paste0("V", 1:length(all.weights))))
           })
         })
+        PV.Wald.test.output <- copy(PV.regression)
       }
       if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
         reshape.list.statistics.bckg(estimate.object = bckg.regression, estimate.name = "Coefficients", data.key.variables = key.vars, new.names.vector = "", bckg.vars.vector = vars.list[["bckg.indep.vars"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         bckg.regression <- bckg.regression[[1]]
-        country.model.stats <- bckg.regression[Variable %in% c("r.squared", "adj.r.squared", "fstatistic", "df"), ]
+        country.model.stats <- bckg.regression[Variable %in% c("r.squared", "adj.r.squared"), ]
         setnames(x = country.model.stats, old = c("Variable", "Coefficients", "Coefficients_SE"), new = c("Statistic", "Estimate", "Estimate_SE"))
-        bckg.regression <- bckg.regression[!Variable %in% c("r.squared", "adj.r.squared", "fstatistic", "df"), ]
+        bckg.regression <- bckg.regression[!Variable %in% c("r.squared", "adj.r.squared"), ]
       } else if(!is.null(vars.list[["PV.root.dep"]]) | !is.null(vars.list[["PV.root.indep"]])) {
         reshape.list.statistics.PV(estimate.object = PV.regression, estimate.name = "Coefficients", PV.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         reset.coefficients.colnames <- function(input1, input2) {
@@ -702,13 +713,19 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
             PV.regression
           }
         }
-        country.model.stats <- PV.regression[Variable %in% c("r.squared", "adj.r.squared", "fstatistic", "df"), ]
+        country.model.stats <- PV.regression[Variable %in% c("r.squared", "adj.r.squared"), ]
         setnames(x = country.model.stats, old = c("Variable", "Coefficients", grep(pattern = "Coefficients_", x = colnames(country.model.stats), value = TRUE)), new = c("Statistic", "Estimate", gsub(pattern = "Coefficients_", replacement = "Estimate_", x = grep(pattern = "Coefficients_", x = colnames(country.model.stats), value = TRUE))))
-        PV.regression <- PV.regression[!Variable %in% c("r.squared", "adj.r.squared", "fstatistic", "df"), ]
+        PV.regression <- PV.regression[!Variable %in% c("r.squared", "adj.r.squared"), ]
         merged.PV.estimates <- PV.regression
         PV.regression <- NULL
       }
-      country.model.stats[ , Statistic := factor(x = Statistic, levels = c("r.squared", "adj.r.squared", "fstatistic", "df"), labels = c("R-Squared", "Adjusted R-Squared", "F-Statistic", "DF"))]
+      if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
+        Wald.estimates <- compute.Wald.test.all.repwgt(Wald.object = bckg.Wald.test.output, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
+      } else if(!is.null(vars.list[["PV.root.dep"]]) | !is.null(vars.list[["PV.root.indep"]])) {
+        Wald.estimates <- compute.Wald.test.all.repwgt.PV(Wald.object = PV.Wald.test.output, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["PV.root.dep"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["PV.root.indep"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
+      }
+      country.model.stats[ , Statistic := factor(x = Statistic, levels = c("r.squared", "adj.r.squared"), labels = c("R-Squared", "Adjusted R-Squared"))]
+      country.model.stats <- rbindlist(l = list(country.model.stats, Wald.estimates[[1]]), fill = TRUE)
       setkeyv(x = country.model.stats, cols = c(key.vars, "Statistic"))
       cnt.model.name <- unique(country.model.stats[ , get(key.vars[1])])
       model.stats[[cnt.model.name]] <<- country.model.stats
@@ -723,8 +740,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       merged.outputs[ , t_value := lapply(.SD, function(i) {
         ifelse(test = is.infinite(i), yes = NA, no = i)
       }), .SDcols = "t_value"]
-      merged.outputs <- merge(x = merged.outputs, y = country.model.stats[Statistic == "DF", mget(c(key.vars, "Estimate"))], all = TRUE)
-      merged.outputs[ , p_value := 2 * pt(q = -abs(t_value), df = Estimate)]
+      merged.outputs[ , p_value := 2 * pt(q = -abs(t_value), df = n_Cases - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")])))]
       merged.outputs[ , (c("t_value", "p_value")) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
       }), .SDcols = c("t_value", "p_value")]
@@ -751,45 +767,28 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     }
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
+    degrees.of.freedom <- mean(estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", n_Cases])
     estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", t_value := Coefficients/Coefficients_SE]
-    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", p_value := 2 * pt(q = -abs(t_value), df = Estimate)]
-    estimates[ , Estimate := NULL]
+    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", p_value := 2 * pt(q = -abs(t_value), df = degrees.of.freedom - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")])))]
     if(standardize == TRUE) {
       if(!is.null(vars.list[["PV.names"]])) {
-        estimates[Variable == "(Intercept)", (c("Coefficients", "Coefficients_SE", "Coefficients_SVR", "Coefficients_MVR", "t_value", "p_value")) := NaN]
+        estimates[Variable == "(Intercept)", (c("Coefficients", "Coefficients_SE", "Coefficients_SVR", "Coefficients_MVR", "p_value")) := NaN]
       } else {
-        estimates[Variable == "(Intercept)", (c("Coefficients", "Coefficients_SE", "t_value", "p_value")) := NaN]
+        estimates[Variable == "(Intercept)", (c("Coefficients", "Coefficients_SE", "p_value")) := NaN]
       }
     }
     message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
     ptm.add.model.stats <- proc.time()
     model.stats <- rbindlist(l = model.stats)
     setkeyv(x = model.stats, cols = c(key.vars, "Statistic"))
-    model.stats[Statistic == "F-Statistic", t_value := Estimate/Estimate_SE]
-    model.stats[ , t_value := lapply(.SD, function(i) {
-      ifelse(test = is.infinite(i), yes = NA, no = i)
-    }), .SDcols = "t_value"]
-    DF.tmp.table <- model.stats[Statistic == "DF", mget(c(key.vars, "Estimate"))]
-    setkeyv(x = DF.tmp.table, cols = key.vars)
-    setnames(x = DF.tmp.table, old = "Estimate", new = "DF")
-    F.stat.tmp.table <- model.stats[Statistic == "F-Statistic", mget(c(key.vars, "Statistic", "t_value"))]
-    setkeyv(x = F.stat.tmp.table, cols = key.vars)
-    F.D.stats.table <- merge(x = DF.tmp.table, y = F.stat.tmp.table)
-    F.D.stats.table[ , p_value := 2 * pt(q = -abs(t_value), df = DF)]
-    F.D.stats.table[ , (c("DF", "t_value")) := NULL]
-    setkeyv(x = F.D.stats.table, cols = c(key.vars, "Statistic"))
-    model.stats <- merge(x = model.stats, y = F.D.stats.table, all = TRUE)
     model.stats <- compute.table.average(output.obj = model.stats, object.variables = vars.list, data.key.variables = c(key.vars, "Statistic"), data.properties = file.attributes)
-    DF.tmp.table <- model.stats[Statistic == "DF" & eval(parse(text = colnames(model.stats)[1])) == "Table Average", mget(c(key.vars, "Estimate"))]
-    setkeyv(x = DF.tmp.table, cols = key.vars)
-    setnames(x = DF.tmp.table, old = "Estimate", new = "DF")
-    F.stat.tmp.table <- model.stats[Statistic == "F-Statistic" & eval(parse(text = colnames(model.stats)[1])) == "Table Average", mget(c(key.vars, "Statistic", "Estimate", "Estimate_SE"))]
-    F.stat.tmp.table[ , t_value := Estimate/Estimate_SE]
-    F.stat.tmp.table[ , (c("Estimate", "Estimate_SE")) := NULL]
-    setkeyv(x = F.stat.tmp.table, cols = key.vars)
-    model.stats[F.stat.tmp.table, on = c(key.vars, "Statistic"), t_value := i.t_value]
-    suppressWarnings(model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average", p_value := 2 * pt(q = -abs(t_value), df = Estimate)])
-    model.stats[!Statistic %in% "F-Statistic", (c("t_value", "p_value")) := NaN]
+    model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Chi-Square", p_value := pchisq(q = model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Chi-Square", Estimate], df = model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Chi-Square DF", Estimate], lower.tail = FALSE)]
+    model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Wald F-statistic", p_value := pf(q = model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Wald F-statistic", Estimate], df1 = model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Wald F-statistic DF1", Estimate], df2 = model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic == "Wald F-statistic DF2", Estimate], lower.tail = FALSE)]
+    model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic %in% c("Chi-Square", "Chi-Square DF", "Wald F-statistic", "Wald F-statistic DF1", "Wald F-statistic DF2"), Estimate_SE := NA]
+    model.stats[eval(parse(text = colnames(model.stats)[1])) == "Table Average" & Statistic %in% c("R-Squared", "Adjusted R-Squared", "Chi-Square DF", "Wald F-statistic DF1", "Wald F-statistic DF2"), p_value := NA]
+    model.stats[ , c("Estimate_SE", "p_value") := lapply(.SD, function(i) {
+      ifelse(test = is.na(i), yes = NaN, no = i)
+    }), .SDcols = c("Estimate_SE", "p_value")]
     message('\nModel statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.model.stats}[[3]], "%H:%M:%OS3"), "\n")
     if(isTRUE(save.output)) {
       export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], model.stats.obj = model.stats, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))

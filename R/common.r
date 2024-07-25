@@ -107,7 +107,7 @@ reshape.imported <- function(object, to.NA, study, cycle, type) {
       return(i)
     }), .SDcols = rep.indicator]
   }
-  if(study %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS")) {
+  if(study %in% c("TIMSS", "PIRLS", "TIMSS Advanced", "RLII", "TiPi", "prePIRLS", "preTIMSS", "ePIRLS", "eTIMSS PSI", "CivED", "ICCS") || study %in% c("ICILS") & cycle %in% c("2023")) {
     idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
     if(isFALSE(to.NA)) {
       idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
@@ -115,7 +115,7 @@ reshape.imported <- function(object, to.NA, study, cycle, type) {
     idx.cnt.num.code <- match(unique(object[ , IDCNTRY]), cnt.ID.list[["Numeric"]])
     object[ , IDCNTRY := factor(x = IDCNTRY, labels = cnt.ID.list[["ISO"]][idx.cnt.num.code])]
     object[ , setattr(x = IDCNTRY, name = "variable.label", value = idcntry.var.lab)]
-  } else if(study %in% c("ICILS", "SITES", "TEDS-M", "TALIS", "REDS")) {
+  } else if(study %in% c("SITES", "TEDS-M", "TALIS", "REDS") || study %in% c("ICILS") & cycle %in% c("2013", "2018")) {
     idcntry.var.lab <- attr(x = object[ , IDCNTRY], which = "variable.label")
     if(isFALSE(to.NA)) {
       idcntry.missings <- attr(x = object[ , IDCNTRY], which = "missings")
@@ -159,8 +159,8 @@ reshape.imported <- function(object, to.NA, study, cycle, type) {
   }
 }
 cnt.ID.list <- list(
-  Numeric = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 9130, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106, 276005),
-  ISO = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein")
+  Numeric = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 9130, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106, 276005, 7843, 384, 368),
+  ISO = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq")
 )
 import.data <- function(path) {
   tmp <- load(path)
@@ -968,6 +968,7 @@ all.missing.values.combinations <- list("Invalid", "mis.", "miss.", "missing", "
                                         c("DONT KNOW", "OMITTED"),
                                         c("INVALID RESPONSE", "OMITTED"),
                                         c("Invalid", "Not administered", "Omitted"),
+                                        c("Not administered/not scored/score out of range", "Omitted"),
                                         c("Invalid", "Not administered/not scored/score out of range", "Omitted"),
                                         c("INVALID", "OMITTED OR INVALID"),
                                         c("INVALID", "OMITTED"),
@@ -2160,21 +2161,206 @@ compute.linear.regression.all.repwgt <- function(data.object, vars.vector, weigh
     regression <- regression[ , V1]
     regression <- lapply(X = regression, FUN = function(j) {
       reg.coefficients <- data.table(names(j[["coefficients"]]), j[["coefficients"]])
-      model.stats <- summary(j)[c("r.squared", "df", "adj.r.squared", "fstatistic")]
+      model.stats <- summary(j)[c("r.squared", "adj.r.squared")]
       model.stats[["r.squared"]] <- data.table(V1 = "r.squared", V2 = model.stats[["r.squared"]])
       model.stats[["adj.r.squared"]] <- data.table(V1 = "adj.r.squared", V2 = model.stats[["adj.r.squared"]])
-      model.stats[["fstatistic"]] <- data.table(V1 = "fstatistic", V2 = model.stats[["fstatistic"]][1])
-      model.stats[["df"]] <- data.table(V1 = "df", V2 = model.stats[["df"]][2])
       model.stats <- rbindlist(model.stats, fill = TRUE)
       return(rbindlist(l = list(reg.coefficients, model.stats), fill = TRUE))
     })
     regression <- rbindlist(l = Map(f = cbind, key.cols.table, regression))
     new.var.names <- grep(pattern = paste(vars.vector, collapse = "|"), x = regression[ , V1], value = TRUE)
-    regression[ , V1 := factor(x = V1, levels = c("(Intercept)", unique(new.var.names), "r.squared", "df", "adj.r.squared", "fstatistic"))]
+    regression[ , V1 := factor(x = V1, levels = c("(Intercept)", unique(new.var.names), "r.squared", "adj.r.squared"))]
     setkeyv(x = regression, cols = c(keys, "V1"))
     setnames(x = regression, old = "V2", new = i)
   })
   all.regressions <- Reduce(function(...) merge(..., all = TRUE), all.regressions)
+}
+compute.Wald.test.all.repwgt <- function(Wald.object, vars.vector, weight.var, reps.names, keys, study.name) {
+  if(study.name %in% c("TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "PIRLS", "ePIRLS", "prePIRLS", "TiPi", "RLII")) {
+    resamp.coef <- 0.5
+  } else if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+    resamp.coef <- 1
+  } else if(study.name %in% c("PISA", "PISA for Development", "TALIS", "TALIS 3S", "TEDS-M")) {
+    resamp.coef.corrected <- (1/(length(reps.names)/2))*2
+    resamp.coef <- 1
+  }
+  Wald.estimate <- lapply(X = Wald.object, FUN = function(i) {
+    interactions.and.contrasts <- unique(grep(pattern = ":|_DY[[:digit:]]+|_DN[[:digit:]]+|_SC[[:digit:]]+", x = i[ , Variable], value = TRUE))
+    vars.vector <- c(vars.vector, interactions.and.contrasts)
+    cleaned.object <- droplevels(i[Variable %in% c("(Intercept)", vars.vector), ])
+    cleaned.object <- split(x = cleaned.object, by = keys)
+    estimates <- lapply(X = cleaned.object, FUN = function(j) {
+      coef.var.covar.matrix <- copy(j)
+      coef.var.covar.matrix[ , (reps.names) := lapply(.SD, function(k) {
+        k - get(weight.var)
+      }), .SDcols = reps.names]
+      coef.var.covar.matrix[ , c(keys, "Variable", weight.var) := NULL]
+      coef.var.covar.matrix <- lapply(X = coef.var.covar.matrix, FUN = function(k) {
+        k %o% k
+      })
+      if(study.name %in% c("TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "PIRLS", "ePIRLS", "prePIRLS", "TiPi", "RLII", "CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+        coef.var.covar.matrix <- as.data.table(Reduce("+", coef.var.covar.matrix) * resamp.coef)
+      } else if(study.name %in% c("PISA", "PISA for Development", "TALIS", "TALIS 3S", "TEDS-M")) {
+        coef.var.covar.matrix <- as.data.table(Reduce("+", coef.var.covar.matrix) * resamp.coef.corrected)
+      }
+      model.terms <- rbindlist(sapply(X = 1:(length(vars.vector) - 1), FUN = function(j) {
+        setDT(as.list(rep(x = 0, times = length(vars.vector))))
+      }, simplify = FALSE))
+      setnames(x = model.terms, vars.vector)
+      diag(model.terms[ , 2:ncol(model.terms)]) <- 1
+      model.coefficients <- copy(j[ , mget(c("Variable", weight.var))])
+      Wald.matrix <- as.matrix(model.terms) %*% model.coefficients[ , get(weight.var)]
+      Wald.matrix.inversed <- qr.solve(as.matrix(model.terms) %*% as.matrix(coef.var.covar.matrix) %*% as.matrix(transpose(model.terms)))
+      chi.square.test <- as.vector(t(Wald.matrix) %*% Wald.matrix.inversed %*% Wald.matrix)
+      chi.square.test.p.value <- as.vector(pchisq(q = chi.square.test, df = length(vars.vector) - 1, lower.tail = FALSE))
+      DF1 <- length(vars.vector) - 1
+      DF2 <- (resamp.coef * length(reps.names)) - DF1
+      SDF <- (resamp.coef * length(reps.names)) - 1
+      Wald.F <- as.vector((DF2 * chi.square.test) / (DF1 * SDF))
+      Wald.F.p.value <- as.vector(pf(q = Wald.F, df1 = DF1, df2 = DF2, lower.tail = FALSE))
+      Wald.F <- data.table(head(x = j[ , mget(keys)], n = 1L), Statistic = c("Chi-Square", "Chi-Square DF", "Wald F-Statistic", "Wald F-Statistic DF1", "Wald F-Statistic DF2"), Estimate = c(chi.square.test, DF1, Wald.F, DF1, DF2), Estimate_SE = rep(NA_real_, times = 5), p_value = c(chi.square.test.p.value, NA_real_, Wald.F.p.value, NA_real_, NA_real_))
+    })
+    estimates <- rbindlist(l = estimates)
+  })
+}
+compute.Wald.test.all.repwgt.PV <- function(Wald.object, vars.vector, weight.var, reps.names, keys, study.name) {
+  if(study.name %in% c("TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "PIRLS", "ePIRLS", "prePIRLS", "TiPi", "RLII")) {
+    resamp.coef <- 0.5
+  } else if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+    resamp.coef <- 1
+  } else if(study.name %in% c("PISA", "PISA for Development", "TALIS", "TALIS 3S", "TEDS-M")) {
+    resamp.coef.corrected <- (1/(length(reps.names)/2))*2
+    resamp.coef <- 1
+  }
+  interactions.and.contrasts <- unique(grep(pattern = ":|_DY[[:digit:]]+|_DN[[:digit:]]+|_SC[[:digit:]]+", x = Wald.object[[1]][[1]][ , Variable], value = TRUE))
+  vars.vector <- c(vars.vector, interactions.and.contrasts)
+  Wald.object <- lapply(X = Wald.object, FUN = function(i) {
+    i <- lapply(X = i, FUN = function(j) {
+      j <- j[Variable %in% c("(Intercept)", vars.vector), ]
+      j <- droplevels(j[Variable %in% c("(Intercept)", vars.vector), ])
+      setnames(x = j, c(keys, "Variable", weight.var, reps.names))
+      split(x = j, by = keys)
+    })
+    names.i <- unique(unlist(lapply(X = i, FUN = names)))
+    i <- sapply(X = names.i, FUN = function(j) {
+      lapply(X = i, FUN = function(k) {
+        k[[j]]
+      })
+    }, simplify = FALSE)
+  })
+  Wald.estimates <- lapply(X = Wald.object, FUN = function(i) {
+    coef.sampling.var.matrix <- lapply(X = i, FUN = function(j) {
+      tmp <- copy(j)
+      tmp <- lapply(X = tmp, FUN = function(k) {
+        k[ , (reps.names) := lapply(.SD, function(l) {
+          l - get(weight.var)
+        }), .SDcols = reps.names]
+        k[ , c(keys, "Variable", weight.var) := NULL]
+        k <- lapply(X = k, FUN = function(l) {
+          l %o% l
+        })
+        if(study.name %in% c("TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "PIRLS", "ePIRLS", "prePIRLS", "TiPi", "RLII", "CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+          k <- Reduce("+", k) * resamp.coef
+        } else if(study.name %in% c("PISA", "PISA for Development", "TALIS", "TALIS 3S", "TEDS-M")) {
+          k <- Reduce("+", k) * resamp.coef.corrected
+        }
+      })
+    })
+    coef.sampling.var.matrix <- lapply(X = coef.sampling.var.matrix, FUN = function(j) {
+      (1 / length(j)) * Reduce("+", j)
+    })
+    coef.full.wgt.matrix <- lapply(X = i, FUN = function(j) {
+      rbindlist(l = lapply(X = j, FUN = function(k) {
+        k <- copy(k)
+        k[ , (reps.names) := NULL]
+      }))
+    })
+    coef.full.wgt.matrix <- lapply(X = coef.full.wgt.matrix, FUN = function(j) {
+      split(x = j, by = c(keys, "Variable"), keep.by = FALSE, drop = TRUE)
+    })
+    coef.full.wgt.matrix <- lapply(X = coef.full.wgt.matrix, FUN = function(j) {
+      as.matrix(setDT(unlist(j, recursive = FALSE), check.names = TRUE)[])
+    })
+    N.PVs <- unique(sapply(X = coef.full.wgt.matrix, FUN = nrow))
+    coef.full.wgt.matrix.averaged <- copy(coef.full.wgt.matrix)
+    coef.full.wgt.matrix.averaged <- lapply(X = coef.full.wgt.matrix.averaged, FUN = function(j) {
+      colMeans(j)
+    })
+    coef.full.wgt.matrix.averaged <- lapply(X = coef.full.wgt.matrix.averaged, FUN = function(j) {
+      names(j) <- vars.vector
+      return(j)
+    })
+    compute.differences <- function(coef.matrix, averaged.coef.matrix) {
+      tmp <- apply(X = coef.matrix, MARGIN = 1, FUN = function(i) {
+        i - averaged.coef.matrix
+      })
+      return(t(tmp))
+    }
+    coef.full.wgt.matrix.differences <- Map(f = compute.differences, coef.matrix = coef.full.wgt.matrix, averaged.coef.matrix = coef.full.wgt.matrix.averaged)
+    coef.imputation.var.matrix <- lapply(X = coef.full.wgt.matrix.differences, FUN = function(j) {
+      (1 / (N.PVs - 1)) * Reduce(f = "+", apply(X = j, MARGIN = 1, FUN = function(k) {k %o% k}, simplify = FALSE))
+    })
+    compute.var.covar.matrix <- function(samp.var.mat, imp.var.mat) {
+      samp.var.mat + ((N.PVs + 1) / N.PVs) * imp.var.mat
+    }
+    coef.var.covar.matrix <- Map(f = compute.var.covar.matrix, samp.var.mat = coef.sampling.var.matrix, imp.var.mat = coef.imputation.var.matrix)
+    model.terms <- rbindlist(sapply(X = 1:(length(vars.vector) - 1), FUN = function(j) {
+      setDT(as.list(rep(x = 0, times = length(vars.vector))))
+    }, simplify = FALSE))
+    setnames(x = model.terms, vars.vector)
+    diag(model.terms[ , 2:ncol(model.terms)]) <- 1
+    Wald.matrix <- lapply(X = coef.full.wgt.matrix.averaged, FUN = function(j) {
+      as.matrix(model.terms) %*% j
+    })
+    Wald.matrix.inversed <- lapply(X = coef.var.covar.matrix, FUN = function(j) {
+      qr.solve(as.matrix(model.terms) %*% as.matrix(j) %*% as.matrix(transpose(model.terms)))
+    })
+    compute.chi.square <- function(w.mat, w.mat.inv) {
+      as.vector(t(w.mat) %*% w.mat.inv %*% w.mat)
+    }
+    chi.square <- Map(f = compute.chi.square, w.mat = Wald.matrix, w.mat.inv = Wald.matrix.inversed)
+    chi.square.p.value <- lapply(X = chi.square, FUN = function(j) {
+      as.vector(pchisq(q = j, df = length(vars.vector) - 1, lower.tail = FALSE))
+    })
+    DF1 <- length(vars.vector) - 1
+    DF2 <- (resamp.coef * length(reps.names)) - DF1
+    SDF <- (resamp.coef * length(reps.names)) - 1
+    Wald.F <- lapply(X = chi.square, FUN = function(j) {
+      as.vector((DF2 * j) / (DF1 * SDF))
+    })
+    Wald.F.p.value <- lapply(X = Wald.F, FUN = function(j) {
+      as.vector(pf(q = j, df1 = DF1, df2 = DF2, lower.tail = FALSE))
+    })
+    chi.square <- lapply(X = chi.square, FUN = function(j) {
+      data.table(Statistic = "Chi-Square", Estimate = j)
+    })
+    chi.square.p.value <- lapply(X = chi.square.p.value, FUN = function(j) {
+      data.table(p_value = j)
+    })
+    chi.square.DF <- list(data.table(Statistic = "Chi-Square DF", Estimate = DF1))
+    Wald.F <- lapply(X = Wald.F, FUN = function(j) {
+      data.table(Statistic = "Wald F-Statistic", Estimate = j)
+    })
+    Wald.F.p.value <- lapply(X = Wald.F.p.value, FUN = function(j) {
+      data.table(p_value = j)
+    })
+    Wald.F.DF1 <- list(data.table(Statistic = "Wald F-Statistic DF1", Estimate = DF1))
+    Wald.F.DF2 <- list(data.table(Statistic = "Wald F-Statistic DF2", Estimate = DF2))
+    splits.table <- lapply(X = i, FUN = function(j) {
+      rbindlist(unique(lapply(X = j, FUN = function(k) {
+        unique(k[ , mget(keys)])
+      })))
+    })
+    chi.square <- Map(f = `cbind`, chi.square, chi.square.p.value)
+    Wald.F <- Map(f = `cbind`, Wald.F, Wald.F.p.value)
+    chi.square <- rbindlist(l = Map(f = `cbind`, splits.table, chi.square))
+    chi.square.DF <- rbindlist(l = Map(f = `cbind`, splits.table, chi.square.DF))
+    Wald.F <- rbindlist(l = Map(f = `cbind`, splits.table, Wald.F))
+    Wald.F.DF1 <- rbindlist(l = Map(f = `cbind`, splits.table, Wald.F.DF1))
+    Wald.F.DF2 <- rbindlist(l = Map(f = `cbind`, splits.table, Wald.F.DF2))
+    Wald.F <- rbindlist(l = list(chi.square, chi.square.DF, Wald.F, Wald.F.DF1, Wald.F.DF2), fill = TRUE)
+    setkeyv(x = Wald.F, cols = keys)
+  })
 }
 compute.logistic.regression.all.repwgt <- function(data.object, vars.vector, weight.var, keys, reg.formula) {
   all.regressions <- lapply(X = weight.var, FUN = function(i) {
@@ -2992,6 +3178,7 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
+
 
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",

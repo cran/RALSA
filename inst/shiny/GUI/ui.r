@@ -29,6 +29,7 @@ import::from(RALSA,
              lsa.lin.reg,
              lsa.bin.log.reg)
 
+
 ui <- tagList(
   
   load.app.CSS.screen <- "
@@ -47,7 +48,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-
+  
   useShinyjs(),
   rclipboardSetup(),
   inlineCSS(load.app.CSS.screen),

@@ -1,3 +1,23 @@
+# RALSA v1.4.7 (2024-07-25)
+
+This update replaces the F-statistic with Wald F-statistic in linear regression and fixes a bug in all analysis functions that crashes them when TALIS 3S data is used due to misidentified replicate weights.
+
+## Bug fixes
+
+* All analysis functions crashing with TALIS 3S data because of misidentified replicate weights.
+
+## New functionality
+
+* The F-statistic in `lsa.lin.reg` was replaced with Wald F-statistic as a suitable estimator for clustered data. The chi-square statistic is also provided.
+
+## Miscellaneous
+
+* Improved documentation.
+
+
+
+
+
 # RALSA v1.4.5 (2024-04-26)
 
 This update fixes a number of issues in the graphing capabilities of the descriptive functions and the GUI. In addition to these fixes, the GUI has received various visual improvements and optimizations. The support for ICCS 2022 cycle has been finalized.

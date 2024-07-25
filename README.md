@@ -16,4 +16,4 @@ install.packages("RALSA", dependencies = TRUE)
 [RALSA's dedicated website](http://ralsa.ineri.org)
 
 ### Contact
-For questions, feature requests, training requeests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>
+For questions, feature requests, training requests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>

@@ -356,6 +356,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "b"  && study.and.cycle == "i2") {
           study.attribute <- "ICILS"
           cycle.attribute <- "2018"
+        } else if(inp.file.first.char == "b"  && study.and.cycle == "i3") {
+          study.attribute <- "ICILS"
+          cycle.attribute <- "2023"
         } else if(inp.file.first.char == "b"  && study.and.cycle == "t1") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2008"
@@ -365,9 +368,15 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b", "c", "p")  && study.and.cycle == "t3") {
           study.attribute <- "TALIS"
           cycle.attribute <- "2018"
+        } else if(inp.file.first.char %in% c("a", "b", "c", "p")  && study.and.cycle == "t4") {
+          study.attribute <- "TALIS"
+          cycle.attribute <- "2024"
         } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s1" && "IEADATE" %in% colnames(tmp) && unique(tmp[ , "IEADATE"]) > 20191102) {
           study.attribute <- "TALIS 3S"
           cycle.attribute <- "2018"
+        } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s2" && "IEADATE" %in% colnames(tmp) && unique(tmp[ , "IEADATE"]) > 20191102) {
+          study.attribute <- "TALIS 3S"
+          cycle.attribute <- "2024"
         } else if(inp.file.first.char == "d"  && study.and.cycle == "t1") {
           study.attribute <- "TEDS-M"
           cycle.attribute <- "2008"

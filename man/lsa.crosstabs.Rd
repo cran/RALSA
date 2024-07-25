@@ -177,9 +177,13 @@ row.pcts = TRUE, column.pcts = TRUE, total.pcts = TRUE)
 }
 \references{
 LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
+
 LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
+
 Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, \emph{12}(1). https://doi.org/10.1214/aos/1176346391
+
 Rao, J. N. K., & Scott, A. J. (1987). On Simple Adjustments to Chi-Square Tests with Sample Survey Data. \emph{The Annals of Statistics}, \emph{15}(1), 385-397.
+
 Skinner, C. (2019). Analysis of Categorical Data for Complex Surveys. \emph{International Statistical Review}, \emph{87}(S1), S64-S78. https://doi.org/10.1111/insr.12285
 }
 \seealso{

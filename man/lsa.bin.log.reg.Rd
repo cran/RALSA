@@ -119,7 +119,7 @@ If \code{save.output = FALSE}, a list containing the estimates and analysis info
 \item Coefficients_SE - the standard error of the logistic regression coefficients (intercepts and slopes) for each independent variable (background/contextual or PV root names, or contrast coded variable names) in the model.
 \item Coefficients_SVR - the sampling variance component for the logistic regression coefficients if root PVs are specified either as dependent or independent variables.
 \item Coefficients_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement variance component for the logistic regression coefficients if root PVs are specified either as dependent or independent variables.
-\item Wald_Statistic - Wald (\emph{z}) statistic.
+\item Wald_Statistic - Wald (\emph{z}) statistic for each coefficient.
 \item p_value - the \emph{p}-value for the regression coefficients.
 \item Odds_Ratio - the odds ratios of the logistic regression.
 \item Odds_Ratio_SE - the standard errors for the odds ratios of the logistic regression.
@@ -235,8 +235,11 @@ interactions = list(c("ASBG12B", "ASBGSSB"), c("ASBG01", "ASRLIT")))
 }
 \references{
 LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
+
 LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
+
 UCLA: Statistical Consulting Group. 2020. "R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES." \emph{IDRE Stats - Statistical Consulting Web Resources}. Retrieved June 16, 2020 (https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/).
+
 Hilbe, J. M. (2015). \emph{Practical Guide to Logistic Regression}. CRC Press.
 }
 \seealso{

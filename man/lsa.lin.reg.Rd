@@ -128,13 +128,13 @@ The second sheet contains the model statistics:
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
 \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
-\item Statistic - a column containing the R-Squared, adjusted R-Squared, F-Statistic and degrees of freedom estimates.
+\item Statistic - a column containing the R-Squared, adjusted R-Squared, Chi-square, Wald F-Statistic and degrees of freedom estimates.
 \item Estimate - the numerical estimates for each of the above.
 \item Estimate_SE - the standard errors of the estimates from above.
 \item Estimate_SVR - the sampling variance component if PVs were included in the model.
 \item Estimate_MVR - the measurement variance component if PVs were included in the model.
-\item t_value - the \emph{t}-test value for the regression coefficients, value only for the F-Statistic is provided.
-\item p_value - the \emph{p}-value for the regression coefficients, value only for the F-Statistic is provided.
+\item t_value - the \emph{t}-test value for the regression coefficients, value only for the Wald F-Statistic is provided.
+\item p_value - the \emph{p}-value for the regression coefficients, values only for the Chi-Square and the Wald F-Statistic are provided.
 }
 The third sheet contains some additional information related to the analysis per country in columns:
 \itemize{
@@ -191,6 +191,9 @@ The function can also compute two-way interaction effects between independent va
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
+
+The \code{lsa.lin.reg} also provides model Wald F-Statistic, as this is the appropriate statistic with complex sampling designs. See Bate (2004) and Rao & Scott (1984). The Wald F-Statistic is computed using Chi-square distribution and tests only the null hypothesis.
+
 The function provides two-tailed \emph{t}-test and \emph{p}-values for the regression coefficients.
 }
 \examples{
@@ -242,9 +245,15 @@ interactions = list(c("ASBG01", "ASBGSSB"), c("ASBGHRL", "ASBGSSB")))
 
 }
 \references{
-LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
-LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
-UCLA: Statistical Consulting Group. 2020. "R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES." \emph{IDRE Stats - Statistical Consulting Web Resources}. Retrieved June 16, 2020 (https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/).
+Bate, S. M. (2004). \emph{Generalized Linear Models for Large Dependent Data Sets} [Doctoral Thesis]. University of London.
+
+LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
+
+LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (p. 3.1-3.34). Lynch School of Education, Boston College.
+
+Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, 12(1). https://doi.org/10.1214/aos/1176346391
+
+UCLA: Statistical Consulting Group. (2020). \emph{R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES}. IDRE Stats - Statistical Consulting Web Resources. https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/
 }
 \seealso{
 \code{\link{lsa.convert.data}}
