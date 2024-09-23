@@ -1,3 +1,15 @@
+# RALSA v1.5.0 (2024-09-23)
+
+This minimal update provides a fix for incorrect handling of user-defined missing values in the `lsa.data.diag` function.
+
+## Bug fixes
+
+- The `lsa.data.diag` reports incorrect statistics with user-defined missing values in some studies. Thanks to Daniel Gustafsson.
+
+
+
+
+
 # RALSA v1.4.7 (2024-07-25)
 
 This update replaces the F-statistic with Wald F-statistic in linear regression and fixes a bug in all analysis functions that crashes them when TALIS 3S data is used due to misidentified replicate weights.

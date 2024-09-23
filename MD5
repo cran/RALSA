@@ -1,6 +1,6 @@
-b830811d6864f9de453d884e6abe15d6 *DESCRIPTION
+011c62db4fe40884e05cf8f880cedcf0 *DESCRIPTION
 43b5cc170611cbe94ce5ccc371255ec9 *NAMESPACE
-fe392e200a20c180d1818f37b777db20 *NEWS.md
+dfc14692ffc1739df56313e97dca4860 *NEWS.md
 5165388a074d82c3bb7d0ed617b924e0 *R/RALSA.r
 9da9f3392d79eb16741f74f2d42e56e0 *R/common.r
 45d799a66459a396b58226221519b9c9 *R/lsa.bench.r
@@ -9,7 +9,7 @@ d5ca19bde0f2c17d2b9fbdf661f52211 *R/lsa.bin.log.reg.r
 8131078cd2d4479f546f166cb562f765 *R/lsa.convert.data2.r
 f117e067c22ad0424657b82ce7fffc12 *R/lsa.corr.r
 8899e761a5a67cfe718eb8940c8fbcb9 *R/lsa.crosstabs.r
-ea0a816e0e70532969d98167050cf2af *R/lsa.data.diag.r
+eb86893653c41d9e39b1c27dc29a6fd9 *R/lsa.data.diag.r
 79956fb9abd88d8c975619a6ef769718 *R/lsa.lin.reg.r
 a61189bf2da4b1ae6e1cec87b4526ad4 *R/lsa.merge.data.r
 2e66df6f68d5e5f47b010d56dddad4f8 *R/lsa.pcts.means.r

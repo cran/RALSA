@@ -375,7 +375,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
             return(z)
           } else {
             NA.data.table <- data.table(t(data.table(rep(x = NA, times = length(split.vars)))))
-            additional.row <- cbind(NA.data.table, i = factor("Total"), colSums(z[!is.na(i) & !i %in% analysis.vars.missings.attr[y], ncol(z), with = FALSE]))
+            additional.row <- cbind(NA.data.table, i = factor("Total"), colSums(z[!is.na(i) & !i %in% unlist(analysis.vars.missings.attr[y]), ncol(z), with = FALSE]))
             rbindlist(l = list(z, additional.row), use.names = FALSE)
           }
         }, USE.NAMES = TRUE, simplify = FALSE)
@@ -455,7 +455,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           freq.colname <- names(k)[length(colnames(k))]
           if(var.colname == "i") {
             k[!eval(parse(text = var.colname)) == "Total", Percent := (eval(parse(text = freq.colname))/sum(eval(parse(text = freq.colname))))*100]
-            k[is.na(Percent), Percent := sum(k[!i %in% c("<NA>", analysis.vars.missings.attr[j]), Percent], na.rm = TRUE)]
+            k[is.na(Percent), Percent := sum(k[!i %in% unlist(c("<NA>", analysis.vars.missings.attr[j])), Percent], na.rm = TRUE)]
           } else {
             return(k)
           }
@@ -483,12 +483,12 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           var.colname <- names(k)[length(colnames(k)) - 2]
           freq.colname <- names(k)[length(colnames(k)) - 1]
           if(var.colname == "i") {
-            if(any(levels(unlist(k[ , eval(parse(text = var.colname))])) %in% c("<NA>", analysis.vars.missings.attr[j]))) {
-              k[!eval(parse(text = var.colname)) %in% c("Total", "<NA>", analysis.vars.missings.attr[j]), Valid_Percent := (eval(parse(text = freq.colname))/sum(eval(parse(text = freq.colname))))*100]
+            if(any(levels(unlist(k[ , eval(parse(text = var.colname))])) %in% c("<NA>", unlist(analysis.vars.missings.attr[j])))) {
+              k[!eval(parse(text = var.colname)) %in% c("Total", "<NA>", unlist(analysis.vars.missings.attr[j])), Valid_Percent := (eval(parse(text = freq.colname))/sum(eval(parse(text = freq.colname))))*100]
             } else {
               k[!eval(parse(text = var.colname)) == "Total", Valid_Percent := (eval(parse(text = freq.colname))/sum(eval(parse(text = freq.colname))))*100]
             }
-            k[is.na(Valid_Percent) & !eval(parse(text = var.colname)) %in% c("<NA>", analysis.vars.missings.attr[j]), Valid_Percent := sum(k[ , Valid_Percent], na.rm = TRUE)]
+            k[is.na(Valid_Percent) & !eval(parse(text = var.colname)) %in% c("<NA>", unlist(analysis.vars.missings.attr[j])), Valid_Percent := sum(k[ , Valid_Percent], na.rm = TRUE)]
           } else {
             return(k)
           }
@@ -511,7 +511,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           var.colname <- names(k)[length(colnames(k)) - 3]
           freq.colname <- names(k)[length(colnames(k)) - 2]
           if(var.colname == "i") {
-            k[!eval(parse(text = var.colname)) %in% c("Total", "<NA>"), Cumulative_Percent := cumsum( Valid_Percent)]
+            k[!eval(parse(text = var.colname)) %in% c("Total", "<NA>", unlist(analysis.vars.missings.attr)), Cumulative_Percent := cumsum(Valid_Percent)]
           } else {
             return(k)
           }
@@ -569,7 +569,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
           var.colname <- names(j)[length(colnames(j)) - 4]
           if(var.colname == "i") {
             j[ , Value_Type := "Valid"]
-            j[eval(parse(text = var.colname)) %in% c("<NA>", analysis.vars.missings.attr[i]), Value_Type := "Missing"]
+            j[eval(parse(text = var.colname)) %in% unlist(c("<NA>", analysis.vars.missings.attr[i])), Value_Type := "Missing"]
             j[is.na(Valid_Percent) & eval(parse(text = var.colname)) == "Total", Value_Type := "Total"]
             setcolorder(x = j, neworder = c(split.vars, "Value_Type", "i", "N", "Percent", "Valid_Percent", "Cumulative_Percent"))
             j[ , Value_Type := factor(x = Value_Type, levels = c("Valid", "Missing", "Total"))]
