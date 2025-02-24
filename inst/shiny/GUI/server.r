@@ -39,6 +39,7 @@ server <- function(input, output, session) {
       asc = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       asg = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP", "JKINDIC", "STAFFWGT", paste0("SRWGT", 1:92)),
       ast = c("TCHWGT", "MATWGT", "SCIWGT", "REAWGT", "JKZONE", "JKREP"),
+      asp = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP", "JKINDIC"),
       atg = c("TCHWGT", paste0("TRWGT", 1:100)),
       alg = c("CNTRWGT", paste0("CRWGT", 1:92)),
       bsa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
@@ -48,6 +49,7 @@ server <- function(input, output, session) {
       btm = c("MTOTWGT", "JKZONE", "JKREP"),
       bts = c("STOTWGT", "JKZONE", "JKREP"),
       bst = c("MATWGT", "SCIWGT", "TCHWGT", "TOTWGT", "JKZONE", "JKREP"),
+      bsp = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
       blg = c("CNTRWGT", paste0("CRWGT", 1:92)),
       mcg = c("SCHWGT", "STOTWGT", "STOTWGTU", "JKCZONE", "JKCREP"),
       msa = c("TOTWGT", "HOUWGT", "SENWGT", "JKZONE", "JKREP"),
@@ -67,8 +69,8 @@ server <- function(input, output, session) {
     ),
     PV.roots = list(
       TIMSS = list(
-        G4 = c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA"),
-        G8 = c("BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA")
+        G4 = c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "ASSENV"),
+        G8 = c("BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "BSSENV")
       ),
       "TIMSS Advanced" = list(
         Mathematics = c("PSPPHY", "PSPPHY", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA"),
@@ -225,6 +227,36 @@ server <- function(input, output, session) {
       c("icg", "ise", "isg", "isa", "std.bckg.std.ach.EUM.sch.bckg"),
       c("icg", "isl", "isg", "isa", "std.bckg.std.ach.LAM.sch.bckg"),
       c("icg", "iss", "isg", "isa", "std.bckg.std.ach.AM.sch.bckg"),
+      c("isa", "isp", "std.ach.proc"),
+      c("isg", "isp", "std.bckg.proc"),
+      c("ise", "isp", "std.proc.EUM"),
+      c("isl", "isp", "std.proc.LAM"),
+      c("iss", "isp", "std.proc.AM"),
+      c("icg", "isp", "std.proc.sch.bckg"),
+      c("icg", "isa", "isp", "std.ach.proc.sch.bckg"),
+      c("isa", "ise", "isp", "std.ach.proc.EUM"),
+      c("isa", "isl", "isp", "std.ach.proc.LAM"),
+      c("isa", "iss", "isp", "std.ach.proc.AM"),
+      c("icg", "isg", "isp", "std.bckg.proc.sch.bckg"),
+      c("isg", "ise", "isp", "std.bckg.proc.EUM"),
+      c("isg", "isl", "isp", "std.bckg.proc.LAM"),
+      c("isg", "iss", "isp", "std.bckg.proc.AM"),
+      c("icg", "ise", "isp", "std.proc.EUM.sch.bckg"),
+      c("icg", "isl", "isp", "std.proc.LAM.sch.bckg"),
+      c("icg", "iss", "isp", "std.proc.AM.sch.bckg"),
+      c("isl", "isg", "isa", "isp", "std.bckg.proc.ach.LAM"),
+      c("ise", "isg", "isa", "isp", "std.bckg.proc.ach.EUM"),
+      c("iss", "isg", "isa", "isp", "std.bckg.proc.ach.AM"),
+      c("icg", "isg", "isa", "isp", "std.bckg.proc.ach.sch.bckg"),
+      c("icg", "isg", "ise", "isp", "std.bckg.proc.EUM.sch.bckg"),
+      c("icg", "isg", "isl", "isp", "std.bckg.proc.LAM.sch.bckg"),
+      c("icg", "isg", "iss", "isp", "std.bckg.proc.AM.sch.bckg"),
+      c("icg", "isa", "ise", "isp", "std.ach.proc.EUM.sch.bckg"),
+      c("icg", "isa", "isl", "isp", "std.ach.proc.LAM.sch.bckg"),
+      c("icg", "isa", "iss", "isp", "std.ach.proc.AM.sch.bckg"),
+      c("icg", "ise", "isg", "isa", "isp", "std.bckg.std.ach.proc.EUM.sch.bckg"),
+      c("icg", "isl", "isg", "isa", "isp", "std.bckg.std.ach.proc.LAM.sch.bckg"),
+      c("icg", "iss", "isg", "isa", "isp", "std.bckg.std.ach.proc.AM.sch.bckg"),
       c("jsa", "std.ach"),
       c("jse", "std.EUM"),
       c("jsg", "std.bckg"),
@@ -270,13 +302,42 @@ server <- function(input, output, session) {
       c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
       c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
       c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
-      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bck"),
+      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
       c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
       c("acg", "ash", "asa", "atg", "std.ach.home.sch.bckg.tch.bckg"),
       c("asg", "ash", "asa", "atg", "std.bckg.ach.home.tch.bckg"),
-      c("acg", "asg", "ash", "asa", "atg", "std.bckg.ach.home.sch.bckg.tch.bckg")
+      c("acg", "asg", "ash", "asa", "atg", "std.bckg.ach.home.sch.bckg.tch.bckg"),
+      c("asa", "asp", "std.ach.proc"),
+      c("asg", "asp", "std.bckg.proc"),
+      c("acg", "asp", "std.proc.sch.bckg"),
+      c("atg", "asp", "std.proc.tch.bckg"),
+      c("asg", "ash", "asp", "std.bckg.proc.home"),
+      c("asg", "asa", "asp", "std.bckg.proc.ach"),
+      c("ash", "asa", "asp", "std.ach.proc.home"),
+      c("acg", "asg", "asp", "std.bckg.proc.sch.bckg"),
+      c("acg", "ash", "asp", "std.proc.home.sch.bckg"),
+      c("acg", "asa", "asp", "std.ach.proc.sch.bckg"),
+      c("asg", "atg", "asp", "std.bckg.proc.tch.bckg"),
+      c("asa", "atg", "asp", "std.ach.proc.tch.bckg"),
+      c("ash", "atg", "asp", "std.proc.home.tch.bckg"),
+      c("asg", "ash", "asa", "asp", "std.bckg.proc.ach.home"),
+      c("asg", "ash", "atg", "asp", "std.bckg.proc.home.tch.bckg"),
+      c("asg", "asa", "atg", "asp", "std.bckg.proc.ach.tch.bckg"),
+      c("ash", "asa", "atg", "asp", "std.ach.proc.home.tch.bckg"),
+      c("acg", "asg", "asa", "asp", "std.bckg.proc.ach.sch.bckg"),
+      c("acg", "asg", "ash", "asp", "std.bckg.proc.home.sch.bckg"),
+      c("acg", "ash", "asa", "asp", "std.ach.proc.home.sch.bckg"),
+      c("acg", "asg", "atg", "asp", "std.bckg.proc.sch.bckg.tch.bckg"),
+      c("acg", "ash", "atg", "asp", "std.proc.home.sch.bckg.tch.bckg"),
+      c("acg", "asa", "atg", "asp", "std.ach.proc.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "asa", "asp", "std.bckg.proc.ach.home.sch.bckg"),
+      c("acg", "asg", "asa", "atg", "asp", "std.bckg.proc.ach.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "atg", "asp", "std.bckg.proc.home.sch.bckg.tch.bckg"),
+      c("acg", "ash", "asa", "atg", "asp", "std.ach.proc.home.sch.bckg.tch.bckg"),
+      c("asg", "ash", "asa", "atg", "asp", "std.bckg.proc.ach.home.tch.bckg"),
+      c("acg", "asg", "ash", "asa", "atg", "asp", "std.bckg.proc.ach.home.sch.bckg.tch.bckg")
     ),
     ePIRLS = list(
       c("acg", "sch.bckg"),
@@ -301,7 +362,7 @@ server <- function(input, output, session) {
       c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
       c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
       c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
-      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bck"),
+      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
       c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
@@ -332,7 +393,7 @@ server <- function(input, output, session) {
       c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
       c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
       c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
-      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bck"),
+      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
       c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
@@ -363,7 +424,7 @@ server <- function(input, output, session) {
       c("acg", "ash", "asa", "std.ach.home.sch.bckg"),
       c("acg", "asg", "atg", "std.bckg.sch.bckg.tch.bckg"),
       c("acg", "ash", "atg", "std.home.sch.bckg.tch.bckg"),
-      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bck"),
+      c("acg", "asa", "atg", "std.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "asa", "std.bckg.ach.home.sch.bckg"),
       c("acg", "asg", "asa", "atg", "std.bckg.ach.sch.bckg.tch.bckg"),
       c("acg", "asg", "ash", "atg", "std.bckg.home.sch.bckg.tch.bckg"),
@@ -441,6 +502,36 @@ server <- function(input, output, session) {
       c("asg", "ash", "atg", "std.bckg.home.tch.bckg"),
       c("asg", "asa", "atg", "std.bckg.ach.tch.bckg"),
       c("ash", "asa", "atg", "std.ach.home.tch.bckg"),
+      c("asp", "std.proc"),
+      c("asa", "asp", "std.ach.proc"),
+      c("asg", "asp", "std.bckg.proc"),
+      c("acg", "asp", "std.proc.sch.bckg"),
+      c("atg", "asp", "std.proc.tch.bckg"),
+      c("asg", "ash", "asp", "std.bckg.proc.home"),
+      c("asg", "asa", "asp", "std.bckg.proc.ach"),
+      c("ash", "asa", "asp", "std.ach.proc.home"),
+      c("acg", "asg", "asp", "std.bckg.proc.sch.bckg"),
+      c("acg", "ash", "asp", "std.proc.home.sch.bckg"),
+      c("acg", "asa", "asp", "std.ach.proc.sch.bckg"),
+      c("asg", "atg", "asp", "std.bckg.proc.tch.bckg"),
+      c("asa", "atg", "asp", "std.ach.proc.tch.bckg"),
+      c("ash", "atg", "asp", "std.proc.home.tch.bckg"),
+      c("asg", "ash", "asa", "asp", "std.bckg.proc.ach.home"),
+      c("asg", "ash", "atg", "asp", "std.bckg.proc.home.tch.bckg"),
+      c("asg", "asa", "atg", "asp", "std.bckg.proc.ach.tch.bckg"),
+      c("ash", "asa", "atg", "asp", "std.ach.proc.home.tch.bckg"),
+      c("acg", "asg", "asa", "asp", "std.bckg.proc.ach.sch.bckg"),
+      c("acg", "asg", "ash", "asp", "std.bckg.proc.home.sch.bckg"),
+      c("acg", "ash", "asa", "asp", "std.ach.proc.home.sch.bckg"),
+      c("acg", "asg", "atg", "asp", "std.bckg.proc.sch.bckg.tch.bckg"),
+      c("acg", "ash", "atg", "asp", "std.proc.home.sch.bckg.tch.bckg"),
+      c("acg", "asa", "atg", "asp", "std.ach.proc.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "asa", "asp", "std.bckg.proc.ach.home.sch.bckg"),
+      c("acg", "asg", "asa", "atg", "asp", "std.bckg.proc.ach.sch.bckg.tch.bckg"),
+      c("acg", "asg", "ash", "atg", "asp", "std.bckg.proc.home.sch.bckg.tch.bckg"),
+      c("acg", "ash", "asa", "atg", "asp", "std.ach.proc.home.sch.bckg.tch.bckg"),
+      c("asg", "ash", "asa", "atg", "asp", "std.bckg.proc.ach.home.tch.bckg"),
+      c("acg", "asg", "ash", "asa", "atg", "asp", "std.bckg.proc.ach.home.sch.bckg.tch.bckg"),
       c("bcg", "sch.bckg"),
       c("bsg", "std.bckg"),
       c("bsa", "std.ach"),
@@ -461,7 +552,31 @@ server <- function(input, output, session) {
       c("bsg", "bsa", "btm", "std.bckg.ach.math.tch.bckg"),
       c("bsg", "bsa", "bts", "std.bckg.ach.sci.tch.bckg"),
       c("bcg", "bsg", "bsa", "btm", "std.bckg.ach.sch.bckg.math.tch.bckg"),
-      c("bcg", "bsg", "bsa", "bts", "std.bckg.ach.sch.bckg.sci.tch.bckg")
+      c("bcg", "bsg", "bsa", "bts", "std.bckg.ach.sch.bckg.sci.tch.bckg"),
+      c("bsp", "std.proc"),
+      c("bsa", "bsp", "std.ach.proc"),
+      c("bsg", "bsp", "std.bckg.proc"),
+      c("bcg", "bsp", "std.proc.sch.bckg"),
+      c("btm", "bsp", "std.proc.math.tch.bckg"),
+      c("bts", "bsp", "std.proc.sci.tch.bckg"),
+      c("bsg", "bsa", "bsp", "std.bckg.proc.ach"),
+      c("bcg", "bsg", "bsp", "std.bckg.proc.sch.bckg"),
+      c("bcg", "bsa", "bsp", "std.ach.proc.sch.bckg"),
+      c("bcg", "bsg", "bsp", "bsa", "std.bckg.proc.ach.sch.bckg"),
+      c("bcg", "btm", "bsp", "sch.bckg.proc.math.tch.bckg"),
+      c("bcg", "bts", "bsp", "sch.bckg.proc.sci.tch.bckg"),
+      c("bsg", "btm", "bsp", "std.bckg.proc.math.tch.bckg"),
+      c("bsg", "bts", "bsp", "std.bckg.proc.sci.tch.bckg"),
+      c("bsa", "btm", "bsp", "std.ach.proc.math.tch.bckg"),
+      c("bsa", "bts", "bsp", "std.ach.proc.sci.tch.bckg"),
+      c("bcg", "bsg", "btm", "bsp", "std.bckg.proc.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsg", "bts", "bsp", "std.bckg.proc.sch.bckg.sci.tch.bckg"),
+      c("bcg", "bsa", "btm", "bsp", "std.ach.proc.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsa", "bts", "bsp", "std.ach.proc.sch.bckg.sci.tch.bckg"),
+      c("bsg", "bsa", "btm", "bsp", "std.bckg.proc.ach.math.tch.bckg"),
+      c("bsg", "bsa", "bts", "bsp", "std.bckg.proc.ach.sci.tch.bckg"),
+      c("bcg", "bsg", "bsa", "btm", "bsp", "std.bckg.proc.ach.sch.bckg.math.tch.bckg"),
+      c("bcg", "bsg", "bsa", "bts", "bsp", "std.bckg.proc.ach.sch.bckg.sci.tch.bckg")
     ),
     preTIMSS = list(
       c("acg", "sch.bckg"),
@@ -605,13 +720,10 @@ server <- function(input, output, session) {
                                     "std.AM.sch.bckg",
                                     "std.LAM.sch.bckg",
                                     "std.bckg.EUM",
-                                    "std.bckg.AM",
-                                    "std.bckg.LAM",
                                     "std.bckg.ach.EUM",
                                     "std.bckg.ach.AM",
                                     "std.bckg.ach.LAM",
                                     "std.ach.sch.bckg",
-                                    "std.bckg.EUM",
                                     "std.bckg.AM",
                                     "std.bckg.LAM",
                                     "std.ach",
@@ -643,7 +755,39 @@ server <- function(input, output, session) {
                                     "phys.std.bckg.ach",
                                     "phys.std.bckg.phys.sch.bckg",
                                     "phys.std.ach.phys.sch.bckg",
-                                    "phys.std.bckg.ach.phys.sch.bckg"),
+                                    "phys.std.bckg.ach.phys.sch.bckg",
+                                    "std.proc",
+                                    "std.bckg.proc",
+                                    "std.bckg.proc.home",
+                                    "std.bckg.proc.ach",
+                                    "std.bckg.proc.sch.bckg",
+                                    "std.ach.proc.sch.bckg",
+                                    "std.bckg.proc.ach.home",
+                                    "std.bckg.proc.ach.sch.bckg",
+                                    "std.bckg.proc.home.sch.bckg",
+                                    "std.ach.proc.home.sch.bckg",
+                                    "std.bckg.proc.ach.home.sch.bckg",
+                                    "std.ach.proc.EUM",
+                                    "std.ach.proc.LAM",
+                                    "std.ach.proc.AM",
+                                    "std.bckg.proc.EUM",
+                                    "std.bckg.proc.LAM",
+                                    "std.bckg.proc.AM",
+                                    "std.proc.EUM.sch.bckg",
+                                    "std.proc.LAM.sch.bckg",
+                                    "std.proc.AM.sch.bckg",
+                                    "std.bckg.proc.ach.LAM",
+                                    "std.bckg.proc.ach.EUM",
+                                    "std.bckg.proc.ach.AM",
+                                    "std.bckg.proc.EUM.sch.bckg",
+                                    "std.bckg.proc.LAM.sch.bckg",
+                                    "std.ach.proc.LAM.sch.bckg",
+                                    "std.ach.proc.AM.sch.bckg",
+                                    "std.ach.proc.EUM.sch.bckg",
+                                    "std.bckg.std.ach.proc.EUM.sch.bckg",
+                                    "std.bckg.std.ach.proc.LAM.sch.bckg",
+                                    "std.bckg.std.ach.proc.AM.sch.bckg"
+    ),
     IEA.JK2.dflt.std.bckg.wgts = c("TOTWGT",
                                    "TOTWGTS"),
     IEA.JK2.dflt.std.bckg.zones = c("JKZONE",
@@ -656,7 +800,9 @@ server <- function(input, output, session) {
                                     "math.sch.bckg",
                                     "math.sch.bckg.math.tch.bckg",
                                     "phys.sch.bckg",
-                                    "phys.sch.bckg.phys.tch.bckg"),
+                                    "phys.sch.bckg.phys.tch.bckg",
+                                    "std.proc.home.sch.bckg"
+    ),
     IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
                                    "SCHWGT",
                                    "TOTWGTT"),
@@ -713,7 +859,36 @@ server <- function(input, output, session) {
                                     "std.ach.sci.tch.bckg",
                                     "std.bckg.ach.sci.tch.bckg",
                                     "std.bckg.ach.sch.bckg.sci.tch.bckg",
-                                    "sch.bckg.sci.tch.bckg"),
+                                    "sch.bckg.sci.tch.bckg",
+                                    "std.bckg.proc.tch.bckg",
+                                    "std.ach.proc.tch.bckg",
+                                    "std.proc.home.tch.bckg",
+                                    "std.bckg.proc.home.tch.bckg",
+                                    "std.bckg.proc.ach.tch.bckg",
+                                    "std.ach.proc.home.tch.bckg",
+                                    "std.bckg.proc.sch.bckg.tch.bckg",
+                                    "std.proc.home.sch.bckg.tch.bckg",
+                                    "std.ach.proc.sch.bckg.tch.bckg",
+                                    "std.bckg.proc.ach.sch.bckg.tch.bckg",
+                                    "std.bckg.proc.home.sch.bckg.tch.bckg",
+                                    "std.ach.proc.home.sch.bckg.tch.bckg",
+                                    "std.bckg.proc.ach.home.tch.bckg",
+                                    "std.bckg.proc.ach.home.sch.bckg.tch.bckg",
+                                    "sch.bckg.proc.math.tch.bckg",
+                                    "sch.bckg.proc.sci.tch.bckg",
+                                    "std.bckg.proc.math.tch.bckg",
+                                    "std.bckg.proc.sci.tch.bckg",
+                                    "std.ach.proc.math.tch.bckg",
+                                    "std.ach.proc.sci.tch.bckg",
+                                    "std.bckg.proc.sch.bckg.math.tch.bckg",
+                                    "std.bckg.proc.sch.bckg.sci.tch.bckg",
+                                    "std.ach.proc.sch.bckg.math.tch.bckg",
+                                    "std.ach.proc.sch.bckg.sci.tch.bckg",
+                                    "std.bckg.proc.ach.math.tch.bckg",
+                                    "std.bckg.proc.ach.sci.tch.bckg",
+                                    "std.bckg.proc.ach.sch.bckg.math.tch.bckg",
+                                    "std.bckg.proc.ach.sch.bckg.sci.tch.bckg"
+    ),
     IEA.JK2.dflt.tch.bckg.wgts = c("TOTWGT",
                                    "TOTWGTT",
                                    "TCHWGT",
@@ -936,6 +1111,7 @@ server <- function(input, output, session) {
     }
   }
   
+  
   #Define global objects
   load.app.CSS.screen <- "
 #loading-content {
@@ -952,7 +1128,7 @@ color: #FFFFFF;
 "
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}'
-country.ISO.and.names <- data.table(ISOs = c("AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "AUS", "AUT", "AZE", "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLZ", "BRA", "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CNL", "CNS", "COL", "COT", "CQU", "CRI", "CSH", "CSK", "CYP", "CZE", "DEU", "DN3", "DNK", "DNW", "DOM", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IS5", "ISL", "ISR", "ITA", "JOR", "JPN", "KAZ", "KEN", "KOR", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL", "MQR", "MSL", "MTM", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAT", "RMO", "ROM", "ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG", "SCO", "SE3", "SG7", "SGP", "SLV", "SRB", "SVK", "SVN", "SWE", "SYR", "TDF", "THA", "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "TWN", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "XKX", "YE6", "YEM", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT", "ZWC"), Names = c("United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires", "United Arab Emirates (Dubai)", "Albania", "United Arab Emirates", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan, Republic of", "Belgium", "Burkina Faso", "Belgium (Flemish)", "Belgium (French)", "Bulgaria", "Bahrain", "Bosnia and Herzegovina", "Belize", "Brazil", "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada", "Canada (British Columbia)", "Switzerland", "Chile", "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Czech Republic", "Germany", "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia", "Dominican Republic", "Algeria", "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jordan", "Japan", "Kazakhstan", "Kenya", "Korea, Republic of", "Kuwait", "Lebanon", "Liechtenstein", "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR", "Morocco", "Moldova", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico", "Mexico (Jalisco)", "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Talis-Nacional)", "Malaysia", "Nicaragua", "Northern Ireland", "Netherlands", "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)", "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)", "New Zealand", "Oman", "Pakistan", "Peru", "Philippines", "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay", "Palestinian National Authority", "Qatar", "Russian Federation, Moscow", "Romania", "Romania", "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Serbia", "Slovak Republic", "Slovenia", "Sweden", "Syria, Arab Republic of", "Mexico (Telesecundaria-Distrito Federal)", "Thailand", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundarias)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Trinidad And Tobago", "Tunisia", "Turkey", "Chinese Taipei", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "Uganda", "United States (Indiana)", "England and Northern Ireland (UK)", "Ukraine", "United States (Massachusetts)", "United States (Minnesota)", "United States (North Carolina)", "Uruguay", "United States", "Uzbekistan", "Vietnam", "Kosovo", "Yemen (Grade 6)", "Yemen", "South Africa (Grade 4)", "South Africa (Eng/Afr)", "South Africa (Grade 6)", "South Africa", "South Africa (Gauteng)", "South Africa (Western Cape Province)"))
+country.ISO.and.names <- data.table(ISOs = c("ARG", "ARM", "AUS", "AUT", "BHR", "BSQ", "BFL", "BFR", "BEL", "BLZ", "BWA", "BGR", "CAN", "COT", "CQU", "CAB", "CBC", "CNS", "CHL", "TWN", "COL", "CYP", "CZE", "CSK", "DNK", "EGY", "ENG", "GBR", "EST", "FIN", "FRA", "GEO", "DEU", "GHA", "GRC", "HKG", "HUN", "ISL", "IS5", "UIN", "IDN", "IRN", "IRL", "ISR", "ITA", "JPN", "JOR", "KOR", "KWT", "LVA", "LBN", "LTU", "LUX", "MKD", "MYS", "MDA", "MAR", "NLD", "NZL", "NOR", "NO5", "PSE", "PHL", "POL", "PRT", "QAT", "ROM", "RUS", "RUM", "SAU", "SCO", "SCG", "SGP", "SVK", "SLV", "SVN", "ZAF", "ZA4", "ESP", "ECT", "SWE", "SE3", "CHE", "SYR", "THA", "TTO", "TUN", "TUR", "USA", "YEM", "MLT", "UMN", "UMA", "OMN", "UKR", "DZA", "KAZ", "MNG", "BIH", "ADU", "BRA", "MEX", "GMX", "TMX", "MXT", "DOM", "GTM", "LIE", "PRY", "PO2", "NO1", "NO2", "NO3", "NOM", "AAD", "ARE", "AZE", "EAN", "ECN", "FI7", "HND", "HRV", "MA6", "MLN", "NIR", "NLN", "NZ1", "SG7", "SRB", "UAL", "UCA", "UCO", "UCT", "UFL", "UNC", "YE6", "ABA", "UK1", "ROU", "MDF", "MET", "MJA", "MNL", "MQR", "MSL", "MTM", "TDF", "TJA", "TNL", "TQR", "TSL", "TTM", "CRI", "NIC", "PER", "CNL", "CNL", "CSH", "RTR", "NO4", "NO8", "DNW", "EMA", "MAC", "RMO", "ZA5", "DN3", "EMB", "ZGT", "VNM", "URY", "ECU", "ALB", "MNE", "PAK", "XKX", "ZWC", "BFA", "ETH", "IND", "KEN", "RWA", "UGA", "UZB", "ZA6", "DSH", "ASH", "CIV", "IRQ", "NGA", "SEN"), Names = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq", "Nigeria", "Senegal"))
 PISA.data.files <- list(
   PISA.pre2015.TXT.files = list(
     "2000" = c("intcogn_v4.txt",
@@ -1043,7 +1219,10 @@ PISA.data.files <- list(
                "CY08MSP_STU_COG.SAV",
                "CY08MSP_STU_QQQ.sav",
                "CY08MSP_STU_TIM.SAV",
-               "CY08MSP_TCH_QQQ.sav")
+               "CY08MSP_TCH_QQQ.sav",
+               "CY08MSP_FLT_COG.SAV",
+               "CY08MSP_FLT_QQQ.SAV",
+               "CY08MSP_FLT_TIM.SAV")
   )
 )
 PISA.for.Development.data.files <- list(
@@ -1059,7 +1238,7 @@ PISA.for.Development.data.files <- list(
 )
 studies.and.cycles <- list(
   TIMSS = list(
-    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "asp", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts", "bsp"), "1995" = "m1", "1999" = "m2", "2003" = "m3", "2007" = "m4", "2011" = "m5", "2015" = "m6", "2019" = "m7", "2023" = "m8", "2027" = "m9"
   ),
   "TIMSS Bridge" = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "bcg", "bsa", "bsg", "bsr", "bst", "btm", "bts"), "2007" = "b4", "2019" = "b7"),
@@ -1073,7 +1252,7 @@ studies.and.cycles <- list(
     first.chars = c("mcg", "msa", "msg", "msr", "mst", "mtg", "pcg", "psa", "psg", "psr", "pst", "ptg"), "1995" = "m1", "2008" = "m2", "2015" = "m3"
   ),
   PIRLS = list(
-    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2001" = "r1", "2006" = "r2", "2011" = "r3", "2016" = "r4", "2021" = "r5", "2026" = "r6"
+    first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg", "asp"), "2001" = "r1", "2006" = "r2", "2011" = "r3", "2016" = "r4", "2021" = "r5", "2026" = "r6"
   ),
   "PIRLS Bridge" = list(
     first.chars = c("acg", "asa", "asg", "ash", "asr", "ast", "atg"), "2021" = "a5"
@@ -1097,7 +1276,7 @@ studies.and.cycles <- list(
     first.chars = c("bc_", "bl_", "bs_", "bt_", "cs_"), "1999" = "f2"
   ),
   ICCS = list(
-    first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg", "jsa", "jse", "jsg", "jsl", "jss", "jsr"), "2009" = "c2", "2016" = "c3", "2022" = "c4"
+    first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg", "isp", "jsa", "jse", "jsg", "jsl", "jss", "jsr"), "2009" = "c2", "2016" = "c3", "2022" = "c4", "2027" = "c5"
   ),
   "ICCS Bridge" = list(
     first.chars = c("icg", "isa", "ise", "isg", "isl", "isr", "iss", "itg"), "2022" = "b4"
@@ -1264,6 +1443,14 @@ respondents.and.cycles <- list(
   "Future lower-secondary teacher background" = list(
     resp.type = "dsg",
     round = "t1"
+  ),
+  "Student process data" = list(
+    resp.type = c("isp", "asp", "bsp"),
+    round = c(
+      "c4",
+      "r5",
+      "m8"
+    )
   )
 )
 file.merged.respondents <- list(
@@ -1331,7 +1518,6 @@ file.merged.respondents <- list(
   "std.ach.sch.bckg"                              = "Student achievement<br/>School background",
   "std.ach.sch.bckg.math.tch.bckg"                = "Student achievement<br/>School background<br/>Mathematics teacher background",
   "std.ach.sch.bckg.sci.tch.bckg"                 = "Student achievement<br/>School background<br/>Science teacher background",
-  "std.ach.sch.bckg.tch.bck"                      = "Student achievement<br/>School background<br/>Teacher background",
   "std.ach.sch.bckg.tch.bckg"                     = "Student achievement<br/>School background<br/>Teacher background",
   "std.ach.sci.tch.bckg"                          = "Student achievement<br/>Science teacher background",
   "std.ach.tch.bckg"                              = "Student achievement<br/>Teacher background",
@@ -1375,7 +1561,75 @@ file.merged.respondents <- list(
   "std.home.sch.bckg.tch.bckg"                    = "Student home background<br/>School background<br/>Teacher background",
   "std.home.tch.bckg"                             = "Student home background<br/>Teacher background",
   "tch.bckg"                                      = "Teacher background",
-  "std.home"                                      = "Student home background"
+  "std.home"                                      = "Student home background",
+  "std.proc"                                      = "Student process data",
+  "std.bckg.proc"                                 = "Student background<br/>Student process data",
+  "std.ach.proc"                                  = "Student achievement<br/>Student process data",
+  "std.proc.sch.bckg"                             = "Student process data<br/>School background",
+  "std.proc.tch.bckg"                             = "Student process data<br/>Teacher background",
+  "std.proc.math.tch.bckg"                        = "Student process data<br/>Mathematics teacher background",
+  "std.proc.sci.tch.bckg"                        = "Student process data<br/>Science teacher background",
+  "std.bckg.proc.home"                            = "Student background<br/>Student process data",
+  "std.bckg.proc.ach"                             = "Student background<br/>Student achievement<br/>Student process data",
+  "std.bckg.proc.sch.bckg"                        = "Student background<br/>Student process data<br/>School background",
+  "std.ach.proc.sch.bckg"                         = "Student achievement<br/>Student process data<b/>School background",
+  "std.bckg.proc.ach.home"                        = "Student background<br/>Student achievement<br/>Student home background<br/>Student process data",
+  "std.bckg.proc.ach.sch.bckg"                    = "Student background<br/>Student achievement<br/>Student process data<br/>School background",
+  "std.bckg.proc.home.sch.bckg"                   = "Student background<br/>Student home background<br/>Student process data<br/>School background",
+  "std.ach.proc.home.sch.bckg"                    = "Student achievement<br/>Student process data<br/>Student home background<br/>School background",
+  "std.bckg.proc.ach.home.sch.bckg"               = "Student background<br/>Student achievement<br/>Student home background<br/>Student process data<br/>School background",
+  "std.proc.EUM"                                  = "European module<br/>Student process data",
+  "std.proc.LAM"                                  = "Latin American module<br/>Student process data",
+  "std.proc.AM"                                  = "Asian module<br/>Student process data",
+  "std.ach.proc.EUM"                              = "Student achievement<br/>European module<br/>Student process data",
+  "std.ach.proc.LAM"                              = "Student achievement<br/>Latin American module<br/>Student process data",
+  "std.ach.proc.AM"                               = "Student achievement<br/>Asian module<br/>Student process data",
+  "std.bckg.proc.EUM"                             = "Student background<br/>European module<br/>Student process data",
+  "std.bckg.proc.LAM"                             = "Student background<br/>Latin American module<br/>Student process data",
+  "std.bckg.proc.AM"                              = "Student background<br/>Asian module<br/>Student process data",
+  "std.proc.EUM.sch.bckg"                         = "European module<br/>Student process data<br/>School background",
+  "std.proc.LAM.sch.bckg"                         = "Latin American module<br/>Student process data<br/>School background",
+  "std.proc.AM.sch.bckg"                          = "Asian module<br/>Student process data<br/>School background",
+  "std.bckg.proc.ach.LAM"                         = "Student background<br/>Student achievement<br/>Latin American module<br/>Student process data",
+  "std.bckg.proc.ach.EUM"                         = "Student background<br/>Student achievement<br/>European module<br/>Student process data",
+  "std.bckg.proc.ach.AM"                          = "Student background<br/>Student achievement<br/>Asian module<br/>Student process data",
+  "std.bckg.proc.EUM.sch.bckg"                    = "Student background<br/>European module<br/>Student process data<br/>School background",
+  "std.bckg.proc.LAM.sch.bckg"                    = "Student background<br/>Latin American module<br/>Student process data<br/>School background",
+  "std.ach.proc.LAM.sch.bckg"                     = "Student achievement<br/>Latin American module<br/>Student process data<br/>School background",
+  "std.ach.proc.AM.sch.bckg"                      = "Student achievement<br/>Asian module<br/>Student process data<br/>School background",
+  "std.ach.proc.EUM.sch.bckg"                     = "Student achievement<br/>European module<br/>Student process data<br/>School background",
+  "std.bckg.std.ach.proc.EUM.sch.bckg"            = "Student background<br/>Student achievement<br/>European module<br/>Student process data<br/>School background",
+  "std.bckg.std.ach.proc.LAM.sch.bckg"            = "Student background<br/>Student achievement<br/>Latin American module<br/>Student process data<br/>School background",
+  "std.bckg.std.ach.proc.AM.sch.bckg"             = "Student background<br/>Student achievement<br/>Asian module<br/>Student process data<br/>School background",
+  "std.proc.home.sch.bckg"                        = "Student home background<br/>Student processdata<br/>School background",
+  "std.bckg.proc.tch.bckg"                        = "Student background<br/>Student process data<br/>Teacher background",
+  "std.ach.proc.tch.bckg"                         = "Student achievement<br/>Student process data<br/>Teacher background",
+  "std.proc.home.tch.bckg"                        = "Student home background<br/>Student process data<br/>Teacher background",
+  "std.bckg.proc.home.tch.bckg"                   = "Student background<br/>Student home background<br/>Student process data<br/>Teacher background",
+  "std.bckg.proc.ach.tch.bckg"                    = "Student background<br/>Student achievement<br/>Student process data<br/>Teacher background",
+  "std.ach.proc.home.tch.bckg"                    = "Student achievement<br/>Student home background<br/>Student process data<br/>Teacher background",
+  "std.bckg.proc.sch.bckg.tch.bckg"               = "Student background<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.proc.home.sch.bckg.tch.bckg"               = "Student home background<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.ach.proc.sch.bckg.tch.bckg"                = "Student achievement<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.bckg.proc.ach.sch.bckg.tch.bckg"           = "Student background<br/>Student achievement<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.bckg.proc.home.sch.bckg.tch.bckg"          = "Student background<br/>Student home background<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.ach.proc.home.sch.bckg.tch.bckg"           = "Student achievement<br/>Student home background<br/>Student process data<br/>School background<br/>Teacher background",
+  "std.bckg.proc.ach.home.tch.bckg"               = "Student background<br/>Student achievement<br/>Student home background<br/>Student process data<br/>Teacher background",
+  "std.bckg.proc.ach.home.sch.bckg.tch.bckg"      = "Student background<br/>Student achievement<br/>Student home background<br/>Student process data<br/>School backround<br/>Teacher background",
+  "sch.bckg.proc.math.tch.bckg"                   = "Student process data<br/>School background<br/>Mathematics teacher data",
+  "sch.bckg.proc.sci.tch.bckg"                    = "Student process data<br/>School background<br/>Science teacher data",
+  "std.bckg.proc.math.tch.bckg"                   = "Student background<br/>Student process data<br/>Mathematics teacher data",
+  "std.bckg.proc.sci.tch.bckg"                    = "Student background<br/>Student process data<br/>Science teacher data",
+  "std.ach.proc.math.tch.bckg"                    = "Student achievement<br/>Student process data<br/>Mathematics teacher data",
+  "std.ach.proc.sci.tch.bckg"                     = "Student achievement<br/>Student process data<br/>Science teacher data",
+  "std.bckg.proc.sch.bckg.math.tch.bckg"          = "Student background<br/>Student process data<br/>School background<br/>Mathematics teacher data",
+  "std.bckg.proc.sch.bckg.sci.tch.bckg"           = "Student background<br/>Student process data<br/>School background<br/>Science teacher data",
+  "std.ach.proc.sch.bckg.math.tch.bckg"           = "Student achievement<br/>Student process data<br/>School background<br/>Mathematics teacher data",
+  "std.ach.proc.sch.bckg.sci.tch.bckg"            = "Student achievement<br/>Student process data<br/>School background<br/>Science teacher data",
+  "std.bckg.proc.ach.math.tch.bckg"               = "Student background<br/>Student achievement<br/>Student process data<br/>Mathematics teacher data",
+  "std.bckg.proc.ach.sci.tch.bckg"                = "Student background<br/>Student achievement<br/>Student process data<br/>Science teacher data",
+  "std.bckg.proc.ach.sch.bckg.math.tch.bckg" = "Student background<br/>Student achievement<br/>Student process data<br/>School background<br/>Mathematics teacher data",
+  "std.bckg.proc.ach.sch.bckg.sci.tch.bckg" = "Student background<br/>Student achievement<br/>Student process data<br/>School background<br/>Science teacher data"
 )
 extract.IEA.study.and.cycle <- function(list.abbrev, file.string) {
   tmp <- lapply(X = list.abbrev, FUN = function(i) {
@@ -1446,7 +1700,7 @@ extract.PISA.for.Development.study.and.cycle <- function(list.abbrev, file.strin
   }
   list(study.ID, cycle.ID)
 }
-all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
+all.available.PVs <- c("ASMPV", "ASSPV", "ASMMAT", "ASMWHO", "ASMFAP", "ASMGEM", "ASMDAP", "ASSSCI", "ASSEAS", "ASSLIS", "ASSPHS", "ASMALG", "ASMFNS", "ASMGEO", "ASMMEA", "ASSPHY", "ASMAPP", "ASMKNO", "ASMREA", "ASMDAT", "ASMNUM", "ASSEAR", "ASSLIF", "ASSKNO", "ASSAPP", "ASSREA", "ASSENV", "BSMMAT", "BSSSCI", "BSMALG", "BSMDAP", "BSMFNS", "BSMGEO", "BSMMEA", "BSSCHE", "BSSEAS", "BSSLIS", "BSSPHY", "BSSERI", "BSSNOS", "BSMNBM", "BSSNBM", "BSMAPP", "BSMKNO", "BSMREA", "BSMDAT", "BSMNUM", "BSSEAR", "BSSBIO", "BSSKNO", "BSSAPP", "BSSREA", "BSSENV", "PSPPHY", "PSPELE", "PSPMEC", "PSPWAV", "PSPAPP", "PSPKNO", "PSPREA", "MSMMAT", "MSMALG", "MSMCAL", "MSMGEO", "MSMKNO", "MSMAPP", "MSMREA", "ASRREA", "ASRINF", "ASRLIT", "ASRIIE", "ASRRSI", "ASEREA", "ASERSI", "ASEIIE", "ASRDOC", "ASREXP", "ASRNAR", "PV[[:digit:]]+CIV", "PV[[:digit:]]+CIL", "PV[[:digit:]]+CT", "PV[[:digit:]]+MATH", "PV[[:digit:]]+READ", "PV[[:digit:]]+SCIE", "PV[[:digit:]]+PROB", "PV[[:digit:]]+INTR", "PV[[:digit:]]+SUPP", "PV[[:digit:]]+EPS", "PV[[:digit:]]+ISI", "PV[[:digit:]]+USE", "PV[[:digit:]]+MACC", "PV[[:digit:]]+MACQ", "PV[[:digit:]]+MACS", "PV[[:digit:]]+MACU", "PV[[:digit:]]+MAPE", "PV[[:digit:]]+MAPF", "PV[[:digit:]]+MAPI", "PV[[:digit:]]+SCEP", "PV[[:digit:]]+SCED", "PV[[:digit:]]+SCID", "PV[[:digit:]]+SKCO", "PV[[:digit:]]+SKPE", "PV[[:digit:]]+SSPH", "PV[[:digit:]]+SSLI", "PV[[:digit:]]+SSES", "PV[[:digit:]]+GLCM", "PV[[:digit:]]+RCLI", "PV[[:digit:]]+RCUN", "PV[[:digit:]]+RCER", "PV[[:digit:]]+RTSN", "PV[[:digit:]]+RTML")
 collapse.loaded.file.PV.names <- function(PV.vector, vars.object) {
   if(length(PV.vector) > 0) {
     tmp <- vars.object[get(colnames(vars.object)[1]) %in% PV.vector, ]
@@ -1546,16 +1800,16 @@ countries.studies.cycles.table <- data.table(
     "ISL", "ISR", "ITA", "JAM", "JOR", "JPN", "KAZ", "KEN", "KGZ", "KHM", "KOR",
     "KSV/XKX", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR",
     "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL",
-    "MQR", "MSL", "MTM", "MUS", "MXT", "MYS", "NIC", "NIR", "NLD", "NLN", "NO1",
-    "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN", "PAK",
-    "PAN", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAR", "QAT", "QAZ",
-    "QCH/QCI", "QCN", "QES", "QHP", "QMR", "QRS", "QRT", "QTN", "QUA", "QUB",
-    "QUC", "QUD", "QUE", "QUR", "QVE", "RMO", "ROM/ROU", "RTR", "RUM", "RUS",
-    "RWA", "SAU", "SCG/SRB", "SCO", "SE3", "SEN", "SG7", "SGP", "SLV", "SVK",
-    "SVN", "SWE", "SYR", "TAP/TWN", "TDF", "THA", "TJA", "TMX", "TNL", "TQR",
-    "TSL", "TTM", "TTO", "TUN", "TUR", "UAL", "UCA", "UCO", "UCT", "UFL", "UGA",
-    "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM", "YE6",
-    "YEM", "YUG", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT", "ZMB", "ZWC"
+    "MQR", "MSL", "MTM", "MUS", "MXT", "MYS", "NGA", "NIC", "NIR", "NLD", "NLN",
+    "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN",
+    "PAK", "PAN", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAR", "QAT",
+    "QAZ", "QCH/QCI", "QCN", "QES", "QHP", "QMR", "QRS", "QRT", "QTN", "QUA",
+    "QUB", "QUC", "QUD", "QUE", "QUR", "QVE", "RMO", "ROM/ROU", "RTR", "RUM",
+    "RUS", "RWA", "SAU", "SCG/SRB", "SCO", "SE3", "SEN", "SG7", "SGP", "SLV",
+    "SVK", "SVN", "SWE", "SYR", "TAP/TWN", "TDF", "THA", "TJA", "TMX", "TNL",
+    "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "UAL", "UCA", "UCO", "UCT", "UFL",
+    "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM",
+    "YE6", "YEM", "YUG", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT", "ZMB", "ZWC"
   ),
   `Numeric Code` = c(
     "7842", "32001", "7841", "8", "784", "32", "51", "7843", "36", "40", "31",
@@ -1569,7 +1823,7 @@ countries.studies.cycles.table <- data.table(
     "404", "417", "116", "410", "383/411", "414", "422", "438", "440", "442",
     "428", "6504", "446", "504", "498", "48411", "48420", "484", "48412", "807",
     "9470", "470", "499", "496", "48415", "48416", "48417", "48418", "480",
-    "48499", "458", "558", "928", "528", "9528", "57891", "57892", "57893",
+    "48499", "458", "566", "558", "928", "528", "9528", "57891", "57892", "57893",
     "5784", "9578", "5788", "57894", "578", "7554", "554", "512", "586", "591",
     "604", "608", "6162", "616", "620", "600", "275", "974", "634", "311",
     "970/975", "156", "971", "35601", "982", "6430059", "983", "35602", "8400100",
@@ -1610,7 +1864,7 @@ countries.studies.cycles.table <- data.table(
     "North Macedonia", "Malta (Maltese)", "Malta", "Montenegro", "Mongolia",
     "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)",
     "Mexico (Tamaulipas)", "Mauritius", "Mexico (Talis-Nacional)", "Malaysia",
-    "Nicaragua", "Northern Ireland", "Netherlands",
+    "Nigeria", "Nicaragua", "Northern Ireland", "Netherlands",
     "The Netherlands (50 additional schools)", "Norway (ALU)", "Norway (ALU +)",
     "Norway (PPU)", "Norway (4)", "Norway (Grade 5)", "Norway (8)",
     "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)",
@@ -1642,6 +1896,16 @@ countries.studies.cycles.table <- data.table(
     "South Africa (Eng/Afr)", "South Africa (Grade 6)", "South Africa",
     "South Africa (Gauteng)", "Zambia", "South Africa (Western Cape Province)"
   ),
+  `CivED 1999 G12` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(
+      27L, 2L, 3L, 1L, 4L, 2L, 2L, 1L, 13L, 1L, 10L, 1L, 10L, 1L, 15L, 1L, 32L, 1L,
+      8L, 2L, 24L, 1L, 10L, 2L, 39L
+    )
+  ),
   `CivED 1999 G8` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
@@ -1650,18 +1914,8 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       8L, 1L, 5L, 2L, 11L, 2L, 3L, 1L, 4L, 3L, 1L, 1L, 11L, 1L, 1L, 1L, 2L, 1L, 5L,
-      1L, 1L, 1L, 2L, 1L, 8L, 1L, 12L, 1L, 1L, 1L, 31L, 1L, 8L, 2L, 21L, 1L, 2L, 1L,
+      1L, 1L, 1L, 2L, 1L, 8L, 1L, 12L, 1L, 1L, 1L, 32L, 1L, 8L, 2L, 21L, 1L, 2L, 1L,
       9L, 3L, 26L, 1L, 12L
-    )
-  ),
-  `CivED 1999 G12` = rep(
-    c(
-      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
-      "X", NA, "X", NA, "X", NA, "X", NA
-    ),
-    c(
-      27L, 2L, 3L, 1L, 4L, 2L, 2L, 1L, 13L, 1L, 10L, 1L, 10L, 1L, 15L, 1L, 31L, 1L,
-      8L, 2L, 24L, 1L, 10L, 2L, 39L
     )
   ),
   `ICCS 2009 G8` = rep(
@@ -1673,11 +1927,11 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       9L, 1L, 3L, 1L, 1L, 1L, 11L, 2L, 3L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 9L, 3L, 2L,
-      1L, 5L, 3L, 3L, 1L, 1L, 1L, 5L, 1L, 7L, 1L, 3L, 4L, 6L, 1L, 3L, 1L, 11L, 1L,
+      1L, 5L, 3L, 3L, 1L, 1L, 1L, 5L, 1L, 7L, 1L, 3L, 4L, 6L, 1L, 3L, 1L, 12L, 1L,
       8L, 1L, 1L, 1L, 6L, 1L, 1L, 1L, 23L, 1L, 9L, 3L, 1L, 1L, 1L, 1L, 35L
     )
   ),
-  `ICCS 2009 G9` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(64L, 1L, 60L, 1L, 45L, 2L, 39L)),
+  `ICCS 2009 G9` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(64L, 1L, 61L, 1L, 45L, 2L, 39L)),
   `ICCS 2016 G8` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
@@ -1686,7 +1940,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       13L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 8L, 3L, 11L, 1L, 2L, 1L, 7L, 1L, 1L, 1L, 9L,
-      1L, 7L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 11L, 1L, 8L, 1L, 5L, 1L, 28L, 1L,
+      1L, 7L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 5L, 1L, 28L, 1L,
       10L, 2L, 1L, 1L, 37L
     )
   ),
@@ -1698,7 +1952,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       15L, 1L, 4L, 1L, 11L, 1L, 5L, 1L, 2L, 2L, 1L, 1L, 9L, 2L, 3L, 1L, 8L, 1L, 9L,
-      1L, 12L, 1L, 1L, 1L, 10L, 1L, 11L, 1L, 8L, 1L, 8L, 1L, 22L, 1L, 5L, 1L, 6L,
+      1L, 12L, 1L, 1L, 1L, 10L, 1L, 12L, 1L, 8L, 1L, 8L, 1L, 22L, 1L, 5L, 1L, 6L,
       3L, 1L, 1L, 37L
     )
   ),
@@ -1710,7 +1964,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       1L, 1L, 6L, 1L, 18L, 2L, 1L, 1L, 2L, 1L, 3L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 1L,
-      1L, 17L, 1L, 4L, 1L, 24L, 1L, 8L, 1L, 8L, 1L, 25L, 1L, 9L, 2L, 4L, 1L, 8L, 1L,
+      1L, 17L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 8L, 1L, 25L, 1L, 9L, 2L, 4L, 1L, 8L, 1L,
       26L
     )
   ),
@@ -1719,7 +1973,7 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA
     ),
-    c(28L, 1L, 10L, 1L, 1L, 2L, 15L, 2L, 18L, 1L, 3L, 1L, 3L, 1L, 5L, 1L, 42L, 1L, 20L, 1L, 41L, 2L, 12L)
+    c(28L, 1L, 10L, 1L, 1L, 2L, 15L, 2L, 18L, 1L, 3L, 1L, 3L, 1L, 5L, 1L, 43L, 1L, 20L, 1L, 41L, 2L, 12L)
   ),
   `ICILS 2023 G8` = rep(
     c(
@@ -1729,7 +1983,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       9L, 2L, 2L, 1L, 3L, 1L, 10L, 1L, 8L, 3L, 1L, 2L, 11L, 1L, 3L, 2L, 4L, 1L, 3L,
-      2L, 8L, 1L, 3L, 1L, 3L, 2L, 4L, 2L, 10L, 1L, 11L, 1L, 8L, 1L, 2L, 1L, 6L, 1L,
+      2L, 8L, 1L, 3L, 1L, 3L, 2L, 4L, 2L, 10L, 1L, 12L, 1L, 8L, 1L, 2L, 1L, 6L, 1L,
       21L, 1L, 5L, 1L, 6L, 3L, 1L, 1L, 23L, 2L, 12L
     )
   ),
@@ -1742,7 +1996,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       5L, 1L, 9L, 1L, 3L, 1L, 5L, 1L, 6L, 3L, 2L, 3L, 13L, 1L, 5L, 1L, 4L, 1L, 1L,
-      1L, 2L, 1L, 3L, 1L, 2L, 3L, 9L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 13L, 1L,
+      1L, 2L, 1L, 3L, 1L, 2L, 3L, 9L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 14L, 1L,
       8L, 1L, 1L, 1L, 29L, 1L, 2L, 1L, 3L, 2L, 2L, 1L, 1L, 3L, 12L, 1L, 13L, 1L,
       12L
     )
@@ -1758,7 +2012,7 @@ countries.studies.cycles.table <- data.table(
     c(
       9L, 1L, 3L, 3L, 8L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 11L, 2L, 4L,
       1L, 1L, 1L, 4L, 1L, 2L, 2L, 2L, 1L, 1L, 4L, 9L, 1L, 2L, 3L, 2L, 2L, 4L, 1L,
-      13L, 1L, 5L, 1L, 2L, 1L, 1L, 1L, 6L, 1L, 4L, 1L, 17L, 1L, 2L, 1L, 3L, 1L, 3L,
+      14L, 1L, 5L, 1L, 2L, 1L, 1L, 1L, 6L, 1L, 4L, 1L, 17L, 1L, 2L, 1L, 3L, 1L, 3L,
       1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 8L, 1L, 3L
     )
   ),
@@ -1767,17 +2021,17 @@ countries.studies.cycles.table <- data.table(
     c(
       1L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 2L, 7L, 3L, 6L, 3L, 2L, 1L, 1L, 1L, 1L, 1L,
       4L, 1L, 6L, 2L, 3L, 2L, 1L, 1L, 4L, 5L, 1L, 2L, 3L, 2L, 9L, 1L, 2L, 1L, 2L,
-      1L, 1L, 1L, 6L, 2L, 10L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L,
+      1L, 1L, 1L, 6L, 2L, 11L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L,
       1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 8L, 1L, 3L
     )
   ),
-  `prePIRLS 2011 G4` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(23L, 1L, 8L, 1L, 175L, 1L, 3L)),
+  `prePIRLS 2011 G4` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(23L, 1L, 8L, 1L, 176L, 1L, 3L)),
   `PIRLS 2016 G4` = rep(
     rep(c("X", NA), 39),
     c(
       3L, 1L, 1L, 3L, 3L, 2L, 4L, 8L, 1L, 2L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
       4L, 1L, 4L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 3L,
-      1L, 8L, 1L, 1L, 1L, 1L, 2L, 7L, 1L, 10L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L,
+      1L, 8L, 1L, 1L, 1L, 1L, 2L, 7L, 1L, 11L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L,
       3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 6L,
       1L, 5L
     )
@@ -1785,20 +2039,20 @@ countries.studies.cycles.table <- data.table(
   `ePIRLS 2016 G4` = rep(
     rep(c("X", NA), 14),
     c(
-      1L, 1L, 1L, 1L, 1L, 20L, 1L, 15L, 1L, 19L, 1L, 10L, 1L, 4L, 2L, 46L, 1L, 9L,
+      1L, 1L, 1L, 1L, 1L, 20L, 1L, 15L, 1L, 19L, 1L, 10L, 1L, 4L, 2L, 47L, 1L, 9L,
       1L, 32L, 1L, 2L, 2L, 1L, 1L, 24L, 1L, 12L
     )
   ),
   `prePIRLS 2016 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(40L, 1L, 9L, 1L, 22L, 1L, 14L, 1L, 7L, 1L, 111L, 1L, 3L)
+    c(40L, 1L, 9L, 1L, 22L, 1L, 14L, 1L, 7L, 1L, 112L, 1L, 3L)
   ),
   `PIRLS 2021 G4` = rep(
     rep(c("X", NA), 41),
     c(
       1L, 1L, 3L, 3L, 3L, 2L, 4L, 3L, 1L, 3L, 1L, 1L, 1L, 3L, 1L, 3L, 1L, 2L, 3L,
       1L, 1L, 8L, 1L, 2L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 2L, 2L, 3L, 2L, 1L,
-      1L, 1L, 1L, 4L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 5L, 1L, 1L, 2L, 9L, 2L, 8L, 1L,
+      1L, 1L, 1L, 4L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 5L, 1L, 1L, 2L, 10L, 2L, 8L, 1L,
       1L, 2L, 5L, 2L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L,
       1L, 13L, 2L, 6L, 2L, 3L
     )
@@ -1811,7 +2065,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       4L, 1L, 8L, 1L, 23L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 9L, 2L, 7L, 2L, 3L,
-      1L, 8L, 1L, 12L, 1L, 20L, 1L, 1L, 1L, 7L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L,
+      1L, 8L, 1L, 12L, 1L, 21L, 1L, 1L, 1L, 7L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L,
       5L, 1L, 1L, 3L, 1L, 1L, 37L
     )
   ),
@@ -1826,7 +2080,7 @@ countries.studies.cycles.table <- data.table(
     c(
       3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 1L,
       1L, 1L, 1L, 12L, 1L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 3L, 2L, 1L,
-      4L, 1L, 3L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 13L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L,
+      4L, 1L, 3L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 14L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L,
       2L, 21L, 1L, 2L, 1L, 11L, 1L, 3L, 1L, 22L, 1L, 12L
     )
   ),
@@ -1840,7 +2094,7 @@ countries.studies.cycles.table <- data.table(
     c(
       8L, 2L, 1L, 1L, 8L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L,
       3L, 3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 3L, 1L,
-      1L, 2L, 1L, 1L, 4L, 1L, 15L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 9L, 1L, 1L,
+      1L, 2L, 1L, 1L, 4L, 1L, 16L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 9L, 1L, 1L,
       1L, 3L, 1L, 7L, 2L, 12L, 2L, 4L, 1L, 7L
     )
   ),
@@ -1855,7 +2109,7 @@ countries.studies.cycles.table <- data.table(
     c(
       5L, 1L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 4L, 1L, 1L, 1L, 1L,
       1L, 12L, 2L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L, 1L, 2L, 2L, 1L,
-      1L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 10L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 3L,
+      1L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 11L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 3L,
       1L, 17L, 1L, 2L, 1L, 2L, 1L, 6L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 12L
     )
   ),
@@ -1871,7 +2125,7 @@ countries.studies.cycles.table <- data.table(
     c(
       3L, 3L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L, 1L, 1L,
       1L, 1L, 1L, 12L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L, 1L, 3L,
-      1L, 1L, 1L, 1L, 3L, 4L, 1L, 1L, 1L, 1L, 2L, 1L, 3L, 2L, 5L, 1L, 1L, 1L, 2L,
+      1L, 1L, 1L, 1L, 3L, 4L, 1L, 1L, 1L, 1L, 2L, 1L, 3L, 2L, 5L, 1L, 1L, 1L, 3L,
       1L, 8L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 3L, 1L, 2L, 1L, 1L, 1L, 3L, 1L, 6L, 1L,
       1L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L, 2L, 12L
     )
@@ -1888,7 +2142,7 @@ countries.studies.cycles.table <- data.table(
     c(
       3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 12L, 2L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L,
-      1L, 3L, 3L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 7L, 1L, 2L, 1L, 8L, 1L, 1L,
+      1L, 3L, 3L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 7L, 1L, 3L, 1L, 8L, 1L, 1L,
       1L, 3L, 1L, 2L, 2L, 3L, 1L, 2L, 1L, 3L, 1L, 2L, 3L, 5L, 1L, 2L, 1L, 2L, 1L,
       4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 1L, 1L, 10L
     )
@@ -1906,7 +2160,7 @@ countries.studies.cycles.table <- data.table(
       3L, 2L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 8L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L,
       1L, 1L, 3L, 3L, 1L, 2L, 4L, 2L, 1L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 1L, 1L,
-      1L, 1L, 2L, 10L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L,
+      1L, 1L, 2L, 11L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L,
       7L, 3L, 3L, 1L, 2L, 1L, 7L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L, 2L, 1L,
       1L, 10L
     )
@@ -1924,7 +2178,7 @@ countries.studies.cycles.table <- data.table(
       3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 2L, 1L, 2L, 3L, 1L, 1L, 2L, 3L, 1L, 2L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L,
       1L, 1L, 3L, 3L, 1L, 3L, 3L, 2L, 1L, 1L, 1L, 3L, 1L, 3L, 2L, 1L, 1L, 1L, 1L,
-      2L, 7L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 2L, 3L, 1L, 2L, 3L, 3L, 3L, 1L, 1L, 1L,
+      2L, 7L, 1L, 3L, 1L, 8L, 1L, 1L, 1L, 2L, 3L, 1L, 2L, 3L, 3L, 3L, 1L, 1L, 1L,
       9L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 8L, 1L, 8L, 1L, 3L,
       2L, 1L, 1L, 10L
     )
@@ -1940,37 +2194,37 @@ countries.studies.cycles.table <- data.table(
     c(
       3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 2L, 3L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L, 2L, 4L, 2L, 3L, 1L, 3L, 1L, 1L, 3L, 7L,
-      2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 1L, 1L, 3L, 6L, 1L, 2L, 1L, 8L,
+      2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 1L, 1L, 3L, 6L, 1L, 3L, 1L, 8L,
       1L, 1L, 1L, 2L, 3L, 1L, 4L, 1L, 2L, 13L, 1L, 2L, 1L, 4L, 2L, 4L, 5L, 1L, 1L,
       1L, 1L, 8L, 1L, 12L, 4L, 10L
     )
   ),
-  `PISA for Development 2019 in School` = rep(
+  `PISA for Development 2019 IS` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(49L, 1L, 15L, 1L, 1L, 1L, 17L, 1L, 50L, 1L, 29L, 1L, 43L, 1L, 1L)
+    c(49L, 1L, 15L, 1L, 1L, 1L, 17L, 1L, 51L, 1L, 29L, 1L, 43L, 1L, 1L)
   ),
-  `PISA for Development 2019 Out of School` = rep(
+  `PISA for Development 2019 OS` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(65L, 1L, 1L, 1L, 62L, 1L, 5L, 1L, 29L, 1L, 45L)
+    c(65L, 1L, 1L, 1L, 63L, 1L, 5L, 1L, 29L, 1L, 45L)
   ),
   `REDS 2021 G8` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(4L, 1L, 7L, 1L, 28L, 1L, 14L, 1L, 14L, 1L, 11L, 1L, 76L, 2L, 9L, 1L, 26L, 1L, 1L, 1L, 11L)
+    c(4L, 1L, 7L, 1L, 28L, 1L, 14L, 1L, 14L, 1L, 11L, 1L, 77L, 2L, 9L, 1L, 26L, 1L, 1L, 1L, 11L)
   ),
-  `RL II 1991 G4` = rep(
+  `RLII 1991 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 48L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
+    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
   ),
-  `RL II 2001 G4` = rep(
+  `RLII 2001 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 48L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
+    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
   ),
   `SITES 1998 M1 POP A` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA
     ),
-    c(25L, 1L, 12L, 1L, 19L, 2L, 6L, 1L, 9L, 3L, 2L, 1L, 43L, 1L, 1L, 1L, 40L, 1L, 2L, 1L, 2L, 1L, 37L)
+    c(25L, 1L, 12L, 1L, 19L, 2L, 6L, 1L, 9L, 3L, 2L, 1L, 44L, 1L, 1L, 1L, 40L, 1L, 2L, 1L, 2L, 1L, 37L)
   ),
   `SITES 1998 M1 POP B` = rep(
     c(
@@ -1980,7 +2234,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       14L, 2L, 9L, 1L, 11L, 2L, 2L, 1L, 16L, 2L, 6L, 1L, 2L, 1L, 6L, 3L, 2L, 1L, 9L,
-      2L, 32L, 1L, 1L, 1L, 32L, 1L, 7L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 31L, 1L, 3L
+      2L, 33L, 1L, 1L, 1L, 32L, 1L, 7L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 31L, 1L, 3L
     )
   ),
   `SITES 1998 M1 POP C` = rep(
@@ -1989,7 +2243,7 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      14L, 2L, 9L, 1L, 11L, 2L, 20L, 1L, 6L, 1L, 9L, 3L, 2L, 1L, 9L, 3L, 31L, 1L,
+      14L, 2L, 9L, 1L, 11L, 2L, 20L, 1L, 6L, 1L, 9L, 3L, 2L, 1L, 9L, 3L, 32L, 1L,
       34L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 33L, 1L, 3L
     )
   ),
@@ -2001,7 +2255,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       8L, 1L, 15L, 1L, 3L, 1L, 4L, 1L, 7L, 1L, 6L, 1L, 6L, 1L, 2L, 2L, 6L, 1L, 10L,
-      2L, 2L, 1L, 9L, 1L, 33L, 1L, 33L, 2L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 31L, 1L,
+      2L, 2L, 1L, 9L, 1L, 34L, 1L, 33L, 2L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 31L, 1L,
       3L
     )
   ),
@@ -2013,30 +2267,30 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       8L, 2L, 3L, 1L, 1L, 1L, 4L, 1L, 20L, 1L, 12L, 2L, 13L, 1L, 2L, 1L, 3L, 1L, 1L,
-      1L, 7L, 1L, 4L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 2L, 1L, 8L, 1L, 8L, 2L, 34L, 2L,
+      1L, 7L, 1L, 4L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 8L, 2L, 34L, 2L,
       13L, 1L, 26L
     )
   ),
   `TALIS 2013 ISCED 1` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(13L, 1L, 27L, 1L, 16L, 1L, 41L, 1L, 24L, 1L, 8L, 1L, 77L)
+    c(13L, 1L, 27L, 1L, 16L, 1L, 41L, 1L, 25L, 1L, 8L, 1L, 77L)
   ),
   `TALIS 2013 ISCED 2` = rep(
     rep(c("X", NA), 30),
     c(
       1L, 7L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 7L, 2L, 3L, 1L, 11L, 3L,
-      2L, 2L, 1L, 1L, 6L, 1L, 8L, 2L, 2L, 1L, 4L, 1L, 6L, 1L, 6L, 1L, 12L, 1L, 2L,
+      2L, 2L, 1L, 1L, 6L, 1L, 8L, 2L, 2L, 1L, 4L, 1L, 6L, 1L, 6L, 1L, 12L, 1L, 3L,
       1L, 8L, 1L, 1L, 1L, 6L, 2L, 21L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 1L, 1L, 1L,
       26L, 1L, 12L
     )
   ),
   `TALIS 2013 ISCED 3` = rep(
     rep(c("X", NA), 9),
-    c(1L, 7L, 1L, 32L, 1L, 16L, 1L, 19L, 1L, 21L, 1L, 24L, 1L, 8L, 1L, 33L, 1L, 43L)
+    c(1L, 7L, 1L, 32L, 1L, 16L, 1L, 19L, 1L, 21L, 1L, 25L, 1L, 8L, 1L, 33L, 1L, 43L)
   ),
   `TALIS 2013 PISA Link` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(8L, 1L, 45L, 1L, 3L, 1L, 34L, 1L, 6L, 1L, 34L, 1L, 21L, 1L, 10L, 1L, 43L)
+    c(8L, 1L, 45L, 1L, 3L, 1L, 34L, 1L, 6L, 1L, 35L, 1L, 21L, 1L, 10L, 1L, 43L)
   ),
   `TALIS 2018 ISCED 1` = rep(
     c(
@@ -2045,7 +2299,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       1L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 27L, 1L, 11L, 2L, 4L, 1L, 21L, 1L, 4L, 1L,
-      29L, 1L, 55L, 1L, 1L, 1L, 10L, 1L, 15L, 1L, 10L
+      30L, 1L, 55L, 1L, 1L, 1L, 10L, 1L, 15L, 1L, 10L
     )
   ),
   `TALIS 2018 ISCED 2` = rep(
@@ -2059,25 +2313,25 @@ countries.studies.cycles.table <- data.table(
     c(
       1L, 1L, 2L, 1L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 3L, 1L, 3L,
       3L, 2L, 1L, 11L, 3L, 2L, 2L, 1L, 1L, 6L, 2L, 7L, 2L, 2L, 2L, 3L, 1L, 4L, 1L,
-      1L, 1L, 6L, 1L, 3L, 1L, 11L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 1L,
+      1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 1L,
       1L, 5L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 1L, 1L, 6L, 1L, 3L
     )
   ),
   `TALIS 2018 ISCED 3` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(4L, 1L, 15L, 1L, 3L, 1L, 16L, 1L, 26L, 1L, 66L, 1L, 35L, 2L, 1L, 1L, 10L, 1L, 15L, 1L, 10L)
+    c(4L, 1L, 15L, 1L, 3L, 1L, 16L, 1L, 26L, 1L, 67L, 1L, 35L, 2L, 1L, 1L, 10L, 1L, 15L, 1L, 10L)
   ),
   `TALIS 2018 PISA Link` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(1L, 1L, 6L, 1L, 23L, 1L, 4L, 1L, 3L, 1L, 19L, 1L, 42L, 1L, 80L, 1L, 15L, 1L, 10L)
+    c(1L, 1L, 6L, 1L, 23L, 1L, 4L, 1L, 3L, 1L, 19L, 1L, 42L, 1L, 81L, 1L, 15L, 1L, 10L)
   ),
   `TALIS 3S 2018 ISCED 0.2` = rep(
-    c(NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(39L, 1L, 1L, 1L, 35L, 1L, 47L, 1L, 86L)
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(28L, 1L, 10L, 1L, 1L, 1L, 35L, 1L, 3L, 1L, 4L, 1L, 39L, 1L, 59L, 1L, 26L)
   ),
   `TALIS 3S 2018 ISCED U3` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(39L, 1L, 1L, 1L, 35L, 1L, 47L, 1L, 86L)
+    c(39L, 1L, 1L, 1L, 35L, 1L, 48L, 1L, 86L)
   ),
   `TEDS-M 2008` = rep(
     c(
@@ -2085,7 +2339,7 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      23L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 14L, 1L, 6L, 1L, 51L, 1L, 11L, 1L, 2L, 1L,
+      23L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 14L, 1L, 6L, 1L, 51L, 1L, 12L, 1L, 2L, 1L,
       3L, 1L, 1L, 1L, 25L, 1L, 7L, 1L, 5L, 1L, 1L, 1L, 22L, 1L, 12L
     )
   ),
@@ -2097,7 +2351,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       8L, 2L, 15L, 1L, 11L, 2L, 14L, 1L, 10L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L,
-      3L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 22L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 28L, 1L, 3L,
+      3L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 28L, 1L, 3L,
       1L, 2L, 1L, 4L, 1L, 22L, 1L, 12L
     )
   ),
@@ -2111,7 +2365,7 @@ countries.studies.cycles.table <- data.table(
     c(
       8L, 2L, 3L, 3L, 9L, 1L, 1L, 1L, 4L, 1L, 4L, 3L, 1L, 1L, 11L, 2L, 4L, 1L, 4L,
       1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 3L, 2L, 1L, 4L, 1L, 1L, 1L, 2L, 1L, 1L, 1L,
-      22L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
+      23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
       1L, 22L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2125,7 +2379,7 @@ countries.studies.cycles.table <- data.table(
     c(
       8L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 2L, 1L, 8L, 2L, 14L, 1L, 4L, 1L, 7L, 1L, 2L,
       2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 4L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L,
-      2L, 1L, 10L, 1L, 4L, 1L, 24L, 1L, 2L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 7L,
+      3L, 1L, 10L, 1L, 4L, 1L, 24L, 1L, 2L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 7L,
       2L, 13L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2138,7 +2392,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       6L, 1L, 1L, 1L, 4L, 1L, 19L, 2L, 3L, 1L, 14L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L,
-      1L, 2L, 1L, 9L, 1L, 1L, 1L, 2L, 2L, 18L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 27L, 1L,
+      1L, 2L, 1L, 9L, 1L, 1L, 1L, 2L, 2L, 19L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 27L, 1L,
       3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L, 9L, 1L, 7L, 1L, 6L, 1L, 3L, 1L, 8L
     )
   ),
@@ -2153,7 +2407,7 @@ countries.studies.cycles.table <- data.table(
     c(
       6L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 5L, 2L, 4L, 1L, 4L, 2L, 3L, 1L, 11L, 1L, 2L,
       1L, 1L, 1L, 6L, 1L, 3L, 1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 2L, 1L,
-      1L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 4L,
+      1L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L, 3L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 4L,
       1L, 19L, 1L, 2L, 1L, 1L, 3L, 3L, 1L, 1L, 5L, 9L, 1L, 7L, 1L, 6L, 1L, 8L, 1L,
       3L
     )
@@ -2169,7 +2423,7 @@ countries.studies.cycles.table <- data.table(
     c(
       2L, 1L, 3L, 1L, 1L, 2L, 14L, 1L, 1L, 1L, 5L, 3L, 2L, 1L, 1L, 1L, 1L, 1L, 3L,
       1L, 7L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 2L, 2L, 5L, 1L, 2L, 1L,
-      1L, 1L, 2L, 1L, 9L, 1L, 9L, 1L, 8L, 1L, 1L, 1L, 11L, 1L, 20L, 1L, 3L, 1L, 3L,
+      1L, 1L, 2L, 1L, 9L, 1L, 10L, 1L, 8L, 1L, 1L, 1L, 11L, 1L, 20L, 1L, 3L, 1L, 3L,
       5L, 1L, 1L, 9L, 1L, 9L, 3L, 2L, 1L, 3L, 1L, 8L
     )
   ),
@@ -2181,7 +2435,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       6L, 1L, 1L, 1L, 24L, 2L, 18L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 2L, 1L, 9L,
-      1L, 1L, 1L, 22L, 1L, 8L, 1L, 1L, 1L, 32L, 1L, 3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L,
+      1L, 1L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 32L, 1L, 3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L,
       9L, 1L, 14L, 1L, 12L
     )
   ),
@@ -2196,7 +2450,7 @@ countries.studies.cycles.table <- data.table(
     c(
       2L, 1L, 3L, 1L, 1L, 1L, 6L, 3L, 4L, 2L, 2L, 1L, 5L, 3L, 2L, 2L, 6L, 1L, 4L,
       1L, 2L, 1L, 7L, 2L, 3L, 1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 1L, 2L,
-      1L, 1L, 4L, 1L, 7L, 1L, 1L, 1L, 6L, 1L, 11L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 17L,
+      1L, 1L, 4L, 1L, 7L, 1L, 1L, 1L, 6L, 1L, 12L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 17L,
       1L, 2L, 1L, 1L, 3L, 3L, 2L, 1L, 4L, 1L, 1L, 7L, 2L, 8L, 3L, 2L, 1L, 12L
     )
   ),
@@ -2209,7 +2463,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       6L, 1L, 1L, 1L, 6L, 2L, 5L, 2L, 9L, 2L, 3L, 1L, 11L, 1L, 2L, 1L, 8L, 1L, 3L,
-      1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 2L, 1L, 1L, 1L, 21L, 1L, 11L, 1L,
+      1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 2L, 1L, 1L, 1L, 21L, 1L, 12L, 1L,
       11L, 1L, 19L, 1L, 2L, 1L, 2L, 2L, 3L, 1L, 2L, 2L, 1L, 1L, 9L, 1L, 14L, 1L,
       12L
     )
@@ -2219,7 +2473,7 @@ countries.studies.cycles.table <- data.table(
     c(
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 2L, 1L, 6L, 2L, 3L, 1L, 4L, 2L,
       2L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 1L, 2L, 1L, 4L, 4L, 2L, 2L, 4L, 1L, 2L,
-      2L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 7L, 1L, 10L, 2L, 8L, 1L, 1L, 2L, 5L, 2L,
+      2L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 7L, 1L, 11L, 2L, 8L, 1L, 1L, 2L, 5L, 2L,
       3L, 1L, 17L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 13L,
       1L, 2L, 2L, 8L
     )
@@ -2229,7 +2483,7 @@ countries.studies.cycles.table <- data.table(
     c(
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 2L, 3L, 1L, 4L, 2L, 18L, 1L,
       4L, 1L, 2L, 2L, 3L, 2L, 1L, 2L, 2L, 1L, 3L, 2L, 1L, 3L, 3L, 1L, 2L, 1L, 1L,
-      1L, 4L, 1L, 5L, 1L, 10L, 1L, 11L, 1L, 1L, 2L, 8L, 1L, 1L, 1L, 17L, 1L, 2L, 1L,
+      1L, 4L, 1L, 5L, 1L, 10L, 1L, 12L, 1L, 1L, 2L, 8L, 1L, 1L, 1L, 17L, 1L, 2L, 1L,
       1L, 1L, 5L, 1L, 2L, 4L, 1L, 1L, 7L, 2L, 8L, 1L, 4L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2238,29 +2492,29 @@ countries.studies.cycles.table <- data.table(
     c(
       3L, 1L, 1L, 1L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
       1L, 1L, 11L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 3L, 1L, 2L, 4L, 1L, 2L, 2L, 3L,
-      1L, 1L, 1L, 2L, 1L, 4L, 1L, 18L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 3L, 1L,
+      1L, 1L, 1L, 2L, 1L, 4L, 1L, 19L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 3L, 1L,
       20L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
-  ),
-  `preTIMSS 2015 G4` = rep(
-    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(1L, 1L, 14L, 1L, 53L, 1L, 2L, 1L, 6L, 1L, 7L, 1L, 7L, 1L, 111L, 1L, 3L)
   ),
   `TIMSS 2015 G8` = rep(
     rep(c("X", NA), 36),
     c(
       3L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 1L, 1L, 1L, 2L, 1L, 4L, 2L, 15L, 1L,
       2L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 2L, 1L,
-      1L, 4L, 1L, 7L, 1L, 8L, 1L, 9L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 20L, 1L, 1L, 1L,
+      1L, 4L, 1L, 7L, 1L, 8L, 1L, 10L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 20L, 1L, 1L, 1L,
       5L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 8L, 1L, 13L, 1L, 8L, 1L, 3L
     )
+  ),
+  `preTIMSS 2015 G4` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(1L, 1L, 14L, 1L, 53L, 1L, 2L, 1L, 6L, 1L, 7L, 1L, 7L, 1L, 112L, 1L, 3L)
   ),
   `TIMSS 2019 G4` = rep(
     rep(c("X", NA), 42),
     c(
       1L, 1L, 3L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 3L, 7L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
       1L, 1L, 9L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 2L, 2L, 4L, 1L, 2L,
-      2L, 3L, 3L, 2L, 1L, 1L, 1L, 2L, 1L, 5L, 1L, 1L, 2L, 9L, 2L, 8L, 1L, 1L, 3L,
+      2L, 3L, 3L, 2L, 1L, 1L, 1L, 2L, 1L, 5L, 1L, 1L, 2L, 10L, 2L, 8L, 1L, 1L, 3L,
       2L, 1L, 1L, 2L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 1L, 1L, 1L,
       1L, 10L, 1L, 13L, 1L, 8L, 1L, 3L
     )
@@ -2273,7 +2527,7 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       4L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 2L, 1L,
-      1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 24L, 1L, 8L, 1L, 9L, 1L, 3L, 1L,
+      1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 9L, 1L, 3L, 1L,
       20L, 1L, 7L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 12L
     )
   ),
@@ -2288,7 +2542,7 @@ countries.studies.cycles.table <- data.table(
     c(
       1L, 1L, 1L, 1L, 1L, 3L, 1L, 7L, 1L, 11L, 1L, 4L, 2L, 3L, 1L, 11L, 1L, 2L, 1L,
       4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 2L, 1L,
-      1L, 4L, 1L, 16L, 1L, 11L, 1L, 1L, 2L, 6L, 1L, 3L, 1L, 16L, 2L, 2L, 1L, 1L, 1L,
+      1L, 4L, 1L, 16L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 3L, 1L, 16L, 2L, 2L, 1L, 1L, 1L,
       5L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 8L, 2L, 1L, 1L
     )
   ),
@@ -2300,32 +2554,85 @@ countries.studies.cycles.table <- data.table(
     ),
     c(
       4L, 1L, 23L, 1L, 24L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 7L, 2L, 7L, 1L, 4L, 1L, 21L,
-      1L, 11L, 1L, 13L, 1L, 20L, 1L, 7L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
+      1L, 12L, 1L, 13L, 1L, 20L, 1L, 7L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
   ),
-  `TIMSS Advanced 1995` = rep(
+  `eTIMSS PSI 2019 G4` = rep(
+    rep(c("X", NA), 32),
+    c(
+      1L, 1L, 1L, 1L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
+      9L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 12L,
+      1L, 12L, 1L, 8L, 1L, 9L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 7L, 1L, 1L, 1L, 1L, 1L,
+      1L, 1L, 10L, 1L, 13L, 1L, 12L
+    )
+  ),
+  `eTIMSS PSI 2019 G8` = rep(
+    rep(c("X", NA), 24),
+    c(
+      1L, 1L, 1L, 1L, 1L, 23L, 1L, 4L, 2L, 18L, 1L, 4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L,
+      7L, 2L, 7L, 1L, 4L, 1L, 21L, 1L, 12L, 1L, 9L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 7L,
+      1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
+    )
+  ),
+  `TIMSS 2023 G4` = rep(
+    rep(c("X", NA), 38),
+    c(
+      1L, 1L, 3L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 1L, 4L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
+      1L, 1L, 11L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 4L, 1L, 1L, 3L, 3L,
+      3L, 2L, 1L, 1L, 1L, 1L, 2L, 5L, 1L, 2L, 1L, 11L, 1L, 8L, 1L, 1L, 2L, 5L, 2L,
+      3L, 1L, 17L, 1L, 4L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 2L, 7L, 1L, 3L
+    )
+  ),
+  `TIMSS 2023 G8` = rep(
+    rep(c("X", NA), 35),
+    c(
+      1L, 1L, 1L, 1L, 1L, 2L, 4L, 5L, 1L, 3L, 1L, 7L, 2L, 7L, 2L, 14L, 1L, 4L, 2L,
+      1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 1L, 2L, 1L, 4L,
+      1L, 7L, 1L, 8L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 1L, 1L, 17L, 1L, 4L, 1L,
+      5L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 2L, 7L, 1L, 3L
+    )
+  ),
+  `TIMSS Advanced Mathematics 1995` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
       8L, 2L, 15L, 1L, 1L, 1L, 9L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
-      68L, 1L, 10L, 2L, 26L, 1L, 12L
+      69L, 1L, 10L, 2L, 26L, 1L, 12L
     )
   ),
-  `TIMSS Advanced 2008` = rep(
-    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(6L, 1L, 66L, 1L, 4L, 1L, 10L, 1L, 26L, 1L, 8L, 1L, 6L, 1L, 27L, 1L, 10L, 2L, 39L)
+  `TIMSS Advanced Physics 1995` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(
+      8L, 2L, 15L, 1L, 1L, 1L, 9L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
+      69L, 1L, 10L, 2L, 26L, 1L, 12L
+    )
   ),
-  `TIMSS Advanced 2015` = rep(
+  `TIMSS Advanced Mathematics 2008` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(59L, 1L, 18L, 1L, 10L, 1L, 35L, 1L, 9L, 1L, 22L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
+    c(6L, 1L, 66L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 27L, 1L, 10L, 2L, 39L)
+  ),
+  `TIMSS Advanced Physics 2008` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(6L, 1L, 66L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 27L, 1L, 10L, 2L, 39L)
+  ),
+  `TIMSS Advanced Mathematics 2015` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(59L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 22L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
+  ),
+  `TIMSS Advanced Physics 2015` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(59L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 22L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
   ),
   `TiPi 2011 G4` = rep(
     rep(c("X", NA), 28),
     c(
       1L, 1L, 1L, 1L, 1L, 3L, 3L, 12L, 1L, 10L, 1L, 2L, 1L, 1L, 1L, 14L, 1L, 3L, 1L,
-      2L, 1L, 4L, 4L, 2L, 2L, 4L, 1L, 12L, 1L, 4L, 1L, 7L, 1L, 10L, 1L, 9L, 1L, 2L,
+      2L, 1L, 4L, 4L, 2L, 2L, 4L, 1L, 12L, 1L, 4L, 1L, 7L, 1L, 11L, 1L, 9L, 1L, 2L,
       1L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 37L
     )
   ),
@@ -2338,6 +2645,7 @@ countries.studies.cycles.table <- data.table(
 RALSA is a free and open source software licensed under GPL v2.0.<br/><br/>
 Use the menu on the left to:<br/><br/>
 <ul><li>Prepare data for analysis</li></ul>
+<ul><ul><li>Download studies\' SPSS datasets with option to convert them</li></ul></ul>
 <ul><ul><li>Convert data (SPSS, or text in case of PISA prior 2015)</li></ul></ul>
 <ul><ul><li>Merge study data files from different countries and/or respondents</li></ul></ul>
 <ul><ul><li>View variable properties (name, class, variable label, response categories/unique values, user-defined missing values)</li></ul></ul>
@@ -2372,6 +2680,463 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
 <ul><li>REDS</li></ul>
 <br>For questions, feature requests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>.<br/><br/><br/><br/><br/><br/>')})
   available.volumes <- getVolumes()()
+  output$h1DownloadData <- renderText("Download data")
+  output$downloadIntro <- renderText({HTML("Select study, cycle and population and download countries' large-scale assessment SPSS data files.<br/><br/>")})
+  working.cnt.table <- copy(countries.studies.cycles.table)
+  setnames(x = working.cnt.table, gsub(pattern = "[[:space:]]", replacement = "_", x = colnames(working.cnt.table)))
+  working.cnt.table[ , Numeric_Code := NULL]
+  downloadAllStdAndCnt <- reactiveValues(downloadAllAvailStdAndCnt = working.cnt.table, selectedStudy = NULL, selectedCycle = NULL, selectedPOP = NULL, selectedSnakeStdCycPOP = NULL, downloadFilteredPartCnt = data.table(), downloadSelectedCnt = data.table(), downloadSyntax = NULL)
+  observe({
+    downloadAllStdAndCnt$selectedStudy <- input$selectDownloadStudyDropdown
+    if(is.null(downloadAllStdAndCnt$selectedStudy) || !is.null(downloadAllStdAndCnt$selectedStudy) & downloadAllStdAndCnt$selectedStudy == "") {
+      NULL
+    } else {
+      downloadAllStdAndCnt$selectedCycle <- input$selectDownloadCycleDropdown
+    }
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle) == "")) {
+      NULL
+    } else {
+      downloadAllStdAndCnt$selectedPOP <- input$selectDownloadPopulationDropdown
+    }
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "")) {
+      NULL
+    } else {
+      if(!downloadAllStdAndCnt$selectedStudy %in% c("TALIS", "TALIS 3S", "PISA", "PISA for Development", "TIMSS Advanced Mathematics", "TIMSS Advanced Physics")) {
+        downloadAllStdAndCnt$selectedSnakeStdCycPOP <- gsub(pattern = "[[:space:]]", replacement = "_", x = gsub(pattern = "rade[[:space:]]", replacement = "", x = paste(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP, sep = "_")))
+      } else if(downloadAllStdAndCnt$selectedStudy %in% c("TALIS", "TALIS 3S")) {
+        downloadAllStdAndCnt$selectedSnakeStdCycPOP <- gsub(pattern = "[[:space:]]", replacement = "_", x = paste(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP, sep = "_"))
+      } else if(downloadAllStdAndCnt$selectedStudy == "PISA") {
+        downloadAllStdAndCnt$selectedSnakeStdCycPOP <- gsub(pattern = "\\_15[[:space:]]year\\-olds$", replacement = "", x = paste(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP, sep = "_"))
+      } else if(downloadAllStdAndCnt$selectedStudy == "PISA for Development") {
+        downloadAllStdAndCnt$selectedSnakeStdCycPOP <- gsub(pattern = "[[:space:]]for[[:space:]]|evelopment\\_", replacement = "_", x = gsub(pattern = "n school$|ut of school$", replacement = "S", x = paste(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP, sep = "_")))
+      } else if(downloadAllStdAndCnt$selectedStudy %in% c("TIMSS Advanced Mathematics", "TIMSS Advanced Physics")) {
+        downloadAllStdAndCnt$selectedSnakeStdCycPOP <- gsub(pattern = "[[:space:]]", replacement = "_", x = gsub(pattern = "\\_Grade 12$", replacement = "", x = paste(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP, sep = "_")))
+      }
+    }
+  })
+  output$selectDownloadStudyDropdown <- renderUI({
+    pickerInput(
+      inputId = "selectDownloadStudyDropdown", label = "Select study",
+      choices = c("", gsub(pattern = "\\_", replacement = " ", x = trimws(unique(gsub(pattern = "\\_[[:digit:]]{4}.*$", replacement = "", x = colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt)[!colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) %in% c("Alpha_3_ISO", "Country_Name")]))))),
+      options = list('actions-box' = TRUE),
+      width = "220px"
+    )
+  })
+  output$selectDownloadCycleDropdown <- renderUI({
+    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "") {
+      pickerInput(
+        inputId = "selectDownloadCycleDropdown", label = "Select cycle",
+        if(downloadAllStdAndCnt$selectedStudy == "PISA") {
+          choices = c("", intersect(sort(unique(gsub(pattern = ".*([0-9]{4}).*", replacement = "\\1", x = grep(pattern = downloadAllStdAndCnt$selectedStudy, x = colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt), value = TRUE)))), c("2015", "2018", "2022")))
+        } else if(downloadAllStdAndCnt$selectedStudy %in% c("PISA for Development", "TALIS 3S", "eTIMSS PSI", "TIMSS Advanced Mathematics", "TIMSS Advanced Physics")) {
+          choices = c("", sort(unique(gsub(pattern = ".*([0-9]{4}).*", replacement = "\\1", x = grep(pattern = paste0("^", gsub(pattern = "[[:space:]]", replacement = "_", x = downloadAllStdAndCnt$selectedStudy), "\\_[[:digit:]]+"), x = colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt), value = TRUE)))))
+        } else {
+          choices = c("", sort(unique(gsub(pattern = ".*([0-9]{4}).*", replacement = "\\1", x = grep(pattern = paste0("^", downloadAllStdAndCnt$selectedStudy, "\\_[[:digit:]]+"), x = colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt), value = TRUE)))))
+        }
+        ,
+        options = list('actions-box' = TRUE),
+        width = "220px"
+      )
+    } else {
+      NULL
+    }
+  })
+  observe({
+    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy == "TEDS-M") {
+      showNotification(ui = HTML("Due to confidentiality issues, the TEDS-M<br/>data is not available for download and can<br/>only be requested directly from the IEA."), duration = NULL, type = "error")
+    }
+  })
+  output$selectDownloadPopulationDropdown <- renderUI({
+    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "") {
+      pickerInput(
+        inputId = "selectDownloadPopulationDropdown", label = "Select population",
+        if(input$selectDownloadStudyDropdown == "CivED" & input$selectDownloadCycleDropdown == "1999") {
+          choices = c("", "Grade 8", "Grade 12")
+        } else if(input$selectDownloadStudyDropdown == "ICCS" & input$selectDownloadCycleDropdown == "2009") {
+          choices = c("", "Grade 8", "Grade 9")
+        } else if(input$selectDownloadStudyDropdown == "ICCS" & input$selectDownloadCycleDropdown %in% c("2016", "2022")) {
+          choices = c("", "Grade 8")
+        } else if(input$selectDownloadStudyDropdown == "ICILS" & input$selectDownloadCycleDropdown %in% c("2013", "2018", "2023")) {
+          choices = c("", "Grade 8")
+        } else if(input$selectDownloadStudyDropdown == "RLII" & input$selectDownloadCycleDropdown %in% c("1991", "2001")) {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "PIRLS" & input$selectDownloadCycleDropdown %in% c("2001", "2006", "2011", "2016", "2021")) {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "prePIRLS" & input$selectDownloadCycleDropdown %in% c("2011", "2016")) {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "ePIRLS" & input$selectDownloadCycleDropdown == "2016") {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "preTIMSS" & input$selectDownloadCycleDropdown == "2015") {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "TiPi" & input$selectDownloadCycleDropdown == "2011") {
+          choices = c("", "Grade 4")
+        } else if(input$selectDownloadStudyDropdown == "REDS" & input$selectDownloadCycleDropdown == "2021") {
+          choices = c("", "Grade 8")
+        } else if(input$selectDownloadStudyDropdown == "SITES" & input$selectDownloadCycleDropdown == "1998") {
+          choices = c("", "M1 POP A", "M1 POP B", "M1 POP C")
+        } else if(input$selectDownloadStudyDropdown == "SITES" & input$selectDownloadCycleDropdown == "2006") {
+          choices = c("", "M2")
+        } else if(input$selectDownloadStudyDropdown == "TALIS" & input$selectDownloadCycleDropdown == "2008") {
+          choices = c("", "ISCED 2")
+        } else if(input$selectDownloadStudyDropdown == "TALIS" & input$selectDownloadCycleDropdown %in% c("2013", "2018")) {
+          choices = c("", "ISCED 1", "ISCED 2", "ISCED 3", "PISA Link")
+        } else if(input$selectDownloadStudyDropdown == "TALIS 3S" & input$selectDownloadCycleDropdown == "2018") {
+          choices = c("", "ISCED 0.2", "ISCED U3")
+        } else if(input$selectDownloadStudyDropdown == "TIMSS" & input$selectDownloadCycleDropdown == "1999") {
+          choices = c("", "Grade 8")
+        } else if(input$selectDownloadStudyDropdown %in% c("TIMSS", "eTIMSS PSI") & input$selectDownloadCycleDropdown != "1999") {
+          choices = c("", "Grade 4", "Grade 8")
+        } else if(input$selectDownloadStudyDropdown %in% c("TIMSS Advanced Mathematics", "TIMSS Advanced Physics") & input$selectDownloadCycleDropdown %in% c("1995", "2008", "2015")) {
+          choices = c("", "Grade 12")
+        } else if(input$selectDownloadStudyDropdown == "PISA" & input$selectDownloadCycleDropdown %in% c("2015", "2018", "2022")) {
+          choices = c("", "15 year-olds")
+        } else if(input$selectDownloadStudyDropdown == "PISA for Development" & input$selectDownloadCycleDropdown == "2019") {
+          choices = c("", "In school", "Out of school")
+        } else if(input$selectDownloadStudyDropdown == "TEDS-M" & input$selectDownloadCycleDropdown == "2008") {
+          choices = c("", "Future primary teachers", "Future lower-secondary teachers")
+        }
+        ,
+        options = list('actions-box' = TRUE),
+        width = "220px"
+      )
+    } else {
+      NULL
+    }
+  })
+  output$downloadAvailableCntsText <- renderText({
+    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") && downloadAllStdAndCnt$selectedStudy != "SITES" && downloadAllStdAndCnt$selectedCycle != "1998") {
+      HTML('Use the panels below to select the countries for which the datasets shall be downloaded.')
+    } else if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M", "SITES") && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle %in% c("1998", "2015", "2018", "2019", "2022") && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "") {
+      HTML(paste0(downloadAllStdAndCnt$selectedStudy, " ", downloadAllStdAndCnt$selectedCycle, " provides combined files for all countries only."))
+    } else {
+      NULL
+    }
+  })
+  observe({
+    if(nrow(downloadAllStdAndCnt$downloadFilteredPartCnt) > 0) {
+      downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^KSV\\/", replacement = "", x = Alpha_3_ISO)]
+      downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^CSK\\/", replacement = "", x = Alpha_3_ISO)]
+      if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("ICCS_2009_G8", "ICCS_2009_G9", "ICCS_2016_G8", "ICCS_2022_G8", "ICILS_2013_G8", "ICILS_2018_G8", "ICILS_2023_G8")) {
+        downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^ROM\\/", replacement = "", x = Alpha_3_ISO)]
+      }
+      if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("ICCS_2009_G8", "ICCS_2009_G9", "ICCS_2016_G8", "ICCS_2022_G8", "ICILS_2013_G8", "ICILS_2018_G8", "ICILS_2023_G8", "PIRLS_2001_G4", "PIRLS_2006_G4", "PIRLS_2011_G4", "prePIRLS_2011_G4", "PIRLS_2016_G4", "ePIRLS_2016_G4", "prePIRLS_2016_G4", "PIRLS_2021_G4", "PIRLS_2021_G4_Bridge", "TALIS_2008_ISCED_2", "TALIS_2013_ISCED_1", "TALIS_2013_ISCED_2", "TALIS_2013_ISCED_3", "TALIS_2013_PISA_Link", "TALIS_2018_ISCED_1", "TALIS_2018_ISCED_2", "TALIS_2018_ISCED_3", "TALIS_2018_PISA_Link", "TALIS_3S_2018_ISCED_0.2", "TALIS_3S_2018_ISCED_U3", "TIMSS_2011_G4", "TIMSS_2011_G8", "TIMSS_2015_G4", "TIMSS_2015_G8", "preTIMSS_2015_G4", "TIMSS_2019_G4", "TIMSS_2019_G4_Bridge", "TIMSS_2019_G8", "TIMSS_2019_G8_Bridge", "eTIMSS_PSI_2019_G4", "eTIMSS_PSI_2019_G8", "TIMSS_2023_G4", "TIMSS_2023_G8")) {
+        downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^SCG\\/", replacement = "", x = Alpha_3_ISO)]
+      }
+      if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("TIMSS_2003_G4", "TIMSS_2003_G8", "TIMSS_2007_G4", "TIMSS_2007_G4_Bridge", "TIMSS_2007_G8", "TIMSS_2007_G8_Bridge")) {
+        downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "\\/SRB$", replacement = "", x = Alpha_3_ISO)]
+      }
+      downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^TAP\\/", replacement = "", x = Alpha_3_ISO)]
+    }
+  })
+  observe({
+    if(!is.null(downloadAllStdAndCnt$selectedSnakeStdCycPOP) && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(working.cnt.table)) {
+      downloadAllStdAndCnt$downloadFilteredPartCnt <- setkeyv(x = na.omit(cbind(downloadAllStdAndCnt$downloadAllAvailStdAndCnt[ , mget(c("Alpha_3_ISO", "Country_Name", downloadAllStdAndCnt$selectedSnakeStdCycPOP))], order_col = 1:nrow(downloadAllStdAndCnt$downloadAllAvailStdAndCnt))), cols = "order_col")
+      downloadAllStdAndCnt$downloadSelectedCnt <- data.table()
+    }
+  })
+  observe({
+    if(nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && nrow(downloadAllStdAndCnt$downloadFilteredPartCnt) == 0) {
+      downloadAllStdAndCnt$downloadFilteredPartCnt <- data.table()
+    } else if(nrow(downloadAllStdAndCnt$downloadSelectedCnt) == 0 && nrow(downloadAllStdAndCnt$downloadFilteredPartCnt) > 0) {
+      downloadAllStdAndCnt$downloadSelectedCnt <- data.table()
+    }
+  })
+  output$downloadArrowRight <- renderUI({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      return(NULL)
+    } else {
+      actionButton(inputId = "downloadArrowRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    }
+  })
+  output$downloadDblArrowRight <- renderUI({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      return(NULL)
+    } else {
+      actionButton(inputId = "downloadDblArrowRight", label = NULL, icon("angle-double-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    }
+  })
+  output$downloadArrowLeft <- renderUI({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      return(NULL)
+    } else {
+      actionButton(inputId = "downloadArrowLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    }
+  })
+  output$downloadDblArrowLeft <- renderUI({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      return(NULL)
+    } else {
+      actionButton(inputId = "downloadDblArrowLeft", label = NULL, icon("angle-double-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    }
+  })
+  observeEvent(input$downloadArrowRight, {
+    req(input$downloadFilteredPartCnt_rows_selected)
+    downloadAllStdAndCnt$downloadSelectedCnt <- rbind(isolate(downloadAllStdAndCnt$downloadSelectedCnt), downloadAllStdAndCnt$downloadFilteredPartCnt[input$downloadFilteredPartCnt_rows_selected, , drop = FALSE])
+    downloadAllStdAndCnt$downloadSelectedCnt <- downloadAllStdAndCnt$downloadSelectedCnt[complete.cases(downloadAllStdAndCnt$downloadSelectedCnt), , drop = FALSE]
+    downloadAllStdAndCnt$downloadFilteredPartCnt <- isolate(downloadAllStdAndCnt$downloadFilteredPartCnt[-input$downloadFilteredPartCnt_rows_selected, , drop = FALSE])
+  })
+  observeEvent(input$downloadDblArrowRight, {
+    downloadAllStdAndCnt$downloadSelectedCnt <- rbindlist(l = list(isolate(downloadAllStdAndCnt$downloadFilteredPartCnt), downloadAllStdAndCnt$downloadSelectedCnt), use.names = FALSE)
+    downloadAllStdAndCnt$downloadFilteredPartCnt <- data.table(V1 = as.character(), V2 = as.character(), V3 = as.character(), V4 = as.character())
+  })
+  observeEvent(input$downloadArrowLeft, {
+    req(input$downloadSelectedCnt_rows_selected)
+    downloadAllStdAndCnt$downloadFilteredPartCnt <- rbind(isolate(downloadAllStdAndCnt$downloadFilteredPartCnt), downloadAllStdAndCnt$downloadSelectedCnt[input$downloadSelectedCnt_rows_selected, , drop = FALSE])
+    downloadAllStdAndCnt$downloadFilteredPartCnt <- downloadAllStdAndCnt$downloadFilteredPartCnt[complete.cases(downloadAllStdAndCnt$downloadFilteredPartCnt), , drop = FALSE]
+    downloadAllStdAndCnt$downloadSelectedCnt <- isolate(downloadAllStdAndCnt$downloadSelectedCnt[-input$downloadSelectedCnt_rows_selected, , drop = FALSE])
+  })
+  observeEvent(input$downloadDblArrowLeft, {
+    downloadAllStdAndCnt$downloadFilteredPartCnt <- rbind(downloadAllStdAndCnt$downloadFilteredPartCnt, isolate(downloadAllStdAndCnt$downloadSelectedCnt))
+    downloadAllStdAndCnt$downloadSelectedCnt <- data.table(V1 = as.character(), V2 = as.character(), V3 = as.character(), V4 = as.character())
+  })
+  output$downloadFilteredPartCnt <- renderDT({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      NULL
+    } else {
+      if(nrow(downloadAllStdAndCnt$downloadFilteredPartCnt) > 0) {
+        setkeyv(x = downloadAllStdAndCnt$downloadFilteredPartCnt, cols = "order_col")
+      } else {
+        data.table(V1 = as.character(), V2 = as.character(), V3 = as.character(), V4 = as.character())
+      }
+    }
+  },
+  caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Available countries"),
+  rownames = FALSE,
+  filter = "top",
+  colnames = c("ISO codes", "Country names", "participation", "sortingcol"),
+  class = "cell-border stripe;compact cell-border;",
+  extensions = list("Scroller"),
+  options = list(
+    language = list(zeroRecords = "No countries available"),
+    initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+    dom = "ti",
+    searchHighlight = FALSE,
+    searchDelay = 100,
+    ordering = FALSE,
+    pageLength = 5000,
+    autoWidth = TRUE,
+    columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = c(2, 3))),
+    rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+    deferRender = TRUE, scrollY = 400, scroller = TRUE
+  ))
+  output$downloadSelectedCnt <- renderDT({
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+      return(NULL)
+    } else if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "") {
+      if(nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0) {
+        setkeyv(x = downloadAllStdAndCnt$downloadSelectedCnt, cols = "order_col")
+      } else {
+        data.table(V1 = as.character(), V2 = as.character(), V3 = as.character(), V4 = as.character())
+      }
+    }
+  },
+  caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Selected countries"),
+  rownames = FALSE,
+  filter = "top",
+  colnames = c("ISO codes", "Country names", "participation", "sortingcol"),
+  class = "cell-border stripe;compact cell-border;",
+  extensions = list("Scroller"),
+  options = list(
+    language = list(zeroRecords = "No countries have been selected"),
+    initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+    dom = "ti",
+    searchHighlight = FALSE,
+    searchDelay = 100,
+    ordering = FALSE,
+    pageLength = 5000,
+    autoWidth = TRUE,
+    columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = c(2, 3))),
+    rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+    deferRender = TRUE, scrollY = 400, scroller = TRUE
+  ))
+  shinyDirChoose(input, "downloadChooseOutDir", roots = available.volumes, filetype = list(sav = "sav", RData = "RData"), updateFreq = 1000)
+  output$downloadOutPathDisplay <- renderText({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008")
+    ) {
+      parseDirPath(available.volumes, input$downloadChooseOutDir)
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0
+    ) {
+      parseDirPath(available.volumes, input$downloadChooseOutDir)
+    } else {
+      return(NULL)
+    }
+  })
+  syntaxDownloadData <- reactive({
+    if(
+      length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0 &&
+      !is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" &&
+      !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" &&
+      !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
+      !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
+      !is.null(downloadAllStdAndCnt$downloadSelectedCnt) && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0
+    ) {
+      downloadAllStdAndCnt$downloadSyntax <- paste0(
+        'lsa.download.data(study = "',
+        downloadAllStdAndCnt$selectedStudy,
+        '", cycle = ', downloadAllStdAndCnt$selectedCycle,
+        ', POP = "',
+        gsub(pattern = "rade[[:space:]]|SCED[[:space:]]|ISA Link$", replacement = "", x = downloadAllStdAndCnt$selectedPOP),
+        if(length(downloadAllStdAndCnt$downloadFilteredPartCnt) >  0 && length(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]) == 1) {
+          paste0('", ISO = "', tolower(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]))
+        } else if(length(downloadAllStdAndCnt$downloadFilteredPartCnt) >  0 && length(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]) > 1) {
+          paste0('", ISO = c("', paste(tolower(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]), collapse = '", "'), '")')
+        } else if(length(downloadAllStdAndCnt$downloadFilteredPartCnt) ==  0 && length(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]) > 1) {
+          ''
+        },
+        if(length(downloadAllStdAndCnt$downloadFilteredPartCnt) >  0 && length(downloadAllStdAndCnt$downloadSelectedCnt[ , Alpha_3_ISO]) > 1) {
+          ''
+        } else {
+          '"'
+        },
+        if(isTRUE(input$downloadAppend)) {
+          ''
+        } else {
+          ', append = FALSE'
+        },
+        if(isTRUE(input$downloadConvert)) {
+          ''
+        } else {
+          ', convert = FALSE'
+        },
+        if(isTRUE(input$downloadConvert) && isTRUE(input$downloadMissToNA)) {
+          ', convert = TRUE, missing.to.NA = TRUE'
+        } else if(isTRUE(input$downloadConvert) && isFALSE(input$downloadMissToNA)) {
+          ''
+        },
+        paste0(', out.folder = "', parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath, '")')
+      )
+    } else if(
+      length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0 &&
+      !is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" &&
+      !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" &&
+      !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
+      !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
+      downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008")
+    ) {
+      downloadAllStdAndCnt$downloadSyntax <- paste0(
+        'lsa.download.data(study = "',
+        downloadAllStdAndCnt$selectedStudy,
+        '", cycle = ', downloadAllStdAndCnt$selectedCycle,
+        ', POP = "',
+        if(downloadAllStdAndCnt$selectedStudy == "PISA") {
+          gsub(pattern = "15 year-olds", replacement = "Y15", x = downloadAllStdAndCnt$selectedPOP)
+        } else if(downloadAllStdAndCnt$selectedStudy == "PISA for Development") {
+          gsub(pattern = "n school$|ut of school$", replacement = "S", x = downloadAllStdAndCnt$selectedPOP)
+        } else if(downloadAllStdAndCnt$selectedStudy == "SITES") {
+          downloadAllStdAndCnt$selectedPOP
+        },
+        if(isTRUE(input$downloadAppend)) {
+          '"'
+        } else {
+          '", append = FALSE'
+        },
+        if(isTRUE(input$downloadConvert)) {
+          ''
+        } else {
+          ', convert = FALSE'
+        },
+        if(isTRUE(input$downloadConvert) && isTRUE(input$downloadMissToNA)) {
+          ', convert = TRUE, missing.to.NA = TRUE'
+        } else if(isTRUE(input$downloadConvert) && isFALSE(input$downloadMissToNA)) {
+          ''
+        },
+        paste0(', out.folder = "', parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath, '")')
+      )
+    }
+  })
+  output$downloadSyntaxHead <- renderText({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      HTML("Syntax")
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      HTML("Syntax")
+    } else {
+      return(NULL)
+    }
+  })
+  output$copyDownloadSyntax <- renderUI({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      rclipButton(inputId = "copyDownloadSyntax", label = "Copy syntax", clipText = syntaxDownloadData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      rclipButton(inputId = "copyDownloadSyntax", label = "Copy syntax", clipText = syntaxDownloadData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+    } else {
+      return(NULL)
+    }
+  })
+  output$downloadSyntax <- renderText({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      syntaxDownloadData()
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      syntaxDownloadData()
+    } else {
+      return(NULL)
+    }
+  })
+  output$downloadExecBtnHead <- renderText({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      HTML("Press the button below to execute the syntax")
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      HTML("Press the button below to execute the syntax")
+    } else {
+      return(NULL)
+    }
+  })
+  output$execDownloadData <- renderUI({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      actionButton(inputId = "execDownloadData", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    ) {
+      actionButton(inputId = "execDownloadData", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+    } else {
+      return(NULL)
+    }
+  })
+  observeEvent(input$execDownloadData, {
+    showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
+    withCallingHandlers({html("consoleDownloadData", "")
+      expr = eval(parse(text = downloadAllStdAndCnt$downloadSyntax))
+    },
+    message = function(i) {
+      shinyjs::html(id = "consoleDownloadData", html = i$message, add = TRUE)
+    },
+    warning = function(w) {
+      shinyjs::html(id = "consoleDownloadData", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
+    })
+    session$sendCustomMessage(type = "scrollCallback", 1)
+    showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+  }, ignoreInit = TRUE)
+  observe({
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") ||
+       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0
+    ) {
+      show("downloadChooseOutDir")
+    } else {
+      hide("downloadChooseOutDir")
+    }
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C") && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0 ||
+       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0
+    ) {
+      show("downloadAppend")
+      show("downloadConvert")
+      show("downloadMissToNA")
+      show("saveDownloadSyntax")
+      show("consoleDownloadData")
+    } else {
+      hide("downloadAppend")
+      hide("downloadConvert")
+      hide("downloadMissToNA")
+      hide("saveDownloadSyntax")
+      hide("consoleDownloadData")
+    }
+  })
   hide("convertMissToNA")
   hide("convertChooseOutDir")
   hide("consoleConvertData")
@@ -11297,22 +12062,24 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   })
   output$helpSectionRALSAWebsiteLinks <- renderText({
     HTML(
-      "<a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a><br/>
-<a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a><br/><br/>
-Prepare data for analysis:<br/>
-<ul><li><a href = https://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
-Perform analyses:<br/>
-<ul><li><a href = https://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
-<ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
+      "General:
+      <ul><li><a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a></li></ul>
+      Prepare data for analysis:<br/>
+      <ul><li><a href = https://ralsa.ineri.org/download-data-files, target = '_blank'>Download data files</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
+      Perform analyses:<br/>
+      <ul><li><a href = https://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
+      <ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
     )
   })
   output$partCountriesHeading <- renderText("Countries' study participation")
@@ -11344,6 +12111,7 @@ Note: Some countries have more than one numeric code in PISA. These appear with 
       }
     }
   },
+  server = FALSE,
   callback=JS('$("button.buttons-excel").css("background","black").css("color", "white").css("font-size", "14px").css("border-radius", "10px").css("height", "33px").css("padding-top", "5px").css("margin-top", "10px").css("margin-right", "15px");'),
   rownames = FALSE,
   select = "none",

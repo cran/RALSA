@@ -1,4 +1,5 @@
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(data.table, warn.conflicts = FALSE, quietly = TRUE))))
+suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(archive, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(openxlsx, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(Hmisc, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(stringr, warn.conflicts = FALSE, quietly = TRUE))))
@@ -21,6 +22,7 @@ import::from(RALSA,
              lsa.select.countries.PISA,
              lsa.merge.data, lsa.vars.dict,
              lsa.data.diag, lsa.recode.vars,
+             lsa.download.data,
              lsa.pcts.means,
              lsa.prctls,
              lsa.bench,
@@ -30,7 +32,9 @@ import::from(RALSA,
              lsa.bin.log.reg)
 
 
+
 ui <- tagList(
+  
   
   load.app.CSS.screen <- "
 #loading-content {
@@ -48,6 +52,7 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
+  
   
   useShinyjs(),
   rclipboardSetup(),
@@ -90,6 +95,7 @@ background-color: #000000;"),
                          ),
                          sidebarMenu(id = "dataMenu",
                                      menuItem(text = "Data preparation", icon = icon("database"), tabName = "dataPreparation",
+                                              menuSubItem(text = "Download data", icon = icon("cloud-arrow-down"), tabName = "downloadData"),
                                               menuSubItem(text = "Convert data", icon = icon("random"), tabName = "convertData"),
                                               menuSubItem(text = "Merge data", icon = icon("puzzle-piece"), tabName = "mergeData"),
                                               menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
@@ -196,6 +202,7 @@ Shiny.unbindAll($table.DataTable().table().node());
                     div(
                       style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
                       div(uiOutput("selectStudyCycleDropdown")),
+                      tags$head(tags$style(HTML("#selectStudyCycleDropdown .dropdown-toggle {background-color: white; font-color: black; font-weight: bold;}"))),
                       div(style = "width: 30px;"),
                       div(checkboxInput(inputId = "partCountriesFilterParticipating", label = "Filter only the participating countries", value = FALSE), style = " padding-top: 30px;")
                     ),
@@ -206,6 +213,83 @@ Shiny.unbindAll($table.DataTable().table().node());
                     h1(textOutput(outputId = "exitHeading")),
                     extendShinyjs(text = jscode.close.RALSA.GUI, functions = c("closeWindow")),
                     actionButton(inputId = "closeGUI", label = "Exit", icon = icon("power-off"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+            ),
+            tabItem(tabName = "downloadData", class = "active",
+                    h1(textOutput(outputId = "h1DownloadData")),
+                    htmlOutput(outputId = "downloadIntro"),
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      div(uiOutput("selectDownloadStudyDropdown")),
+                      tags$head(tags$style(HTML("#selectDownloadStudyDropdown .dropdown-toggle {background-color: white; font-color: black; font-weight: bold;}"))),
+                      div(style = "width: 10px;"),
+                      div(uiOutput("selectDownloadCycleDropdown")),
+                      tags$head(tags$style(HTML("#selectDownloadCycleDropdown .dropdown-toggle {background-color: white; font-color: black; font-weight: bold;}"))),
+                      div(style = "width: 10px;"),
+                      div(uiOutput("selectDownloadPopulationDropdown")),
+                      tags$head(tags$style(HTML("#selectDownloadPopulationDropdown .dropdown-toggle {background-color: white; font-color: black; font-weight: bold;}"))),
+                      div(style = "width: 10px;")
+                    ),
+                    div(style = "display: inline-block; padding-top: 5px; padding-bottom:15px;",
+                        htmlOutput(outputId = "downloadAvailableCntsText")
+                    ),
+                    fluidRow(
+                      column(width = 6,
+                             DTOutput(outputId = "downloadFilteredPartCnt"),
+                             tags$head(tags$style("#downloadFilteredPartCnt {white-space: nowrap;}"))
+                      ),
+                      column(width = 1, align = "center",
+                             div(style = "margin-top: 175px;",
+                                 uiOutput(outputId = "downloadArrowRight")),
+                             uiOutput(outputId = "downloadDblArrowRight"),
+                             div(style = "margin-top: 45px;",
+                                 uiOutput(outputId = "downloadArrowLeft")),
+                             uiOutput(outputId = "downloadDblArrowLeft")
+                      ),
+                      column(width = 5,
+                             DTOutput(outputId = "downloadSelectedCnt"),
+                             tags$head(tags$style("#downloadSelectedCnt {white-space: nowrap;}"))
+                      )
+                    ),
+                    conditionalPanel(condition = "input.selectDownloadStudyDropdown != 'TEDS-M'",
+                                     div(
+                                       style = "display:-webkit-flex; display:-ms-flexbox; display:flex; padding-top: 30px;",
+                                       shinyDirButton(id = "downloadChooseOutDir", label = "Choose destination folder", title = "Navigate and select a folder", icon = icon("folder-open"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                                       div(style = "width: 30px;"),
+                                       conditionalPanel(condition = "input.downloadChooseOutDir",
+                                                        div(style = "width: 30px;"),
+                                                        div(verbatimTextOutput(outputId = "downloadOutPathDisplay"), style = "min-width: 750px;"),
+                                                        tags$head(tags$style("#downloadOutPathDisplay {background-color: white;}"))
+                                       )
+                                     ),
+                                     div(style = "margin-top: 30px;",
+                                         checkboxInput(inputId = "downloadAppend", label = "Append only new files in the folder", value = TRUE)),
+                                     div(style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                                         checkboxInput(inputId = "downloadConvert", label = "Convert the files after downloading", value = TRUE),
+                                         conditionalPanel(condition = "input.downloadConvert",
+                                                          checkboxInput(inputId = "downloadMissToNA", label = "Convert user-defined missings to NA", value = FALSE))
+                                     ),
+                                     div(style="display:inline-block", textOutput(outputId = "downloadSyntaxHead")),
+                                     div(style="display:inline-block", shinySaveButton(id = "saveDownloadSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
+                                     div(style="display:inline-block", uiOutput(outputId = "copyDownloadSyntax")),
+                                     verbatimTextOutput(outputId = "downloadSyntax"),
+                                     tags$head(tags$style(HTML("#downloadSyntax {background-color: white; white-space: pre-wrap;}"))),
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "downloadExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execDownloadData")
+                                     ),
+                                     verbatimTextOutput(outputId = "consoleDownloadData"),
+                                     tags$head(tags$style("#consoleDownloadData {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$script(
+                                       '
+Shiny.addCustomMessageHandler("scrollCallback",
+function(color) {
+var objDiv = document.getElementById("consoleDownloadData"); /* Here we point to "console" output, adapt in other cases */
+objDiv.scrollTop = objDiv.scrollHeight;
+}
+);')
+                    )
             ),
             tabItem(tabName = "convertData", class = "active",
                     h1(textOutput(outputId = "h1ConvertData")),
@@ -333,7 +417,7 @@ Shiny.unbindAll($table.DataTable().table().node());
                                               ),
                                               conditionalPanel(condition = "output.execConvertData != 0",
                                                                verbatimTextOutput(outputId = "consoleConvertData"),
-                                                               tags$head(tags$style("#consoleConvertData {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                                               tags$head(tags$style("#consoleConvertData {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                                                tags$script(
                                                                  '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -341,8 +425,7 @@ function(color) {
 var objDiv = document.getElementById("consoleConvertData"); /* Here we point to "console" output, adapt in other cases */
 objDiv.scrollTop = objDiv.scrollHeight;
 }
-);'
-                                                               ),
+);')
                                               ),
                              )
                       )),
@@ -452,7 +535,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "output.execMergeData != 0",
                                      verbatimTextOutput(outputId = "consoleMergeData"),
-                                     tags$head(tags$style("#consoleMergeData {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleMergeData {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -541,7 +624,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                                      ),
                                      conditionalPanel(condition = "varPropsSyntax",
                                                       verbatimTextOutput(outputId = "consoleVarProps"),
-                                                      tags$head(tags$style("#consoleVarProps {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                                      tags$head(tags$style("#consoleVarProps {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                                       tags$script(
                                                         '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -672,7 +755,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "dataDiagSyntax",
                                      verbatimTextOutput(outputId = "consoleDataDiag"),
-                                     tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleDataDiag {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -809,7 +892,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "recodeSyntax",
                                      verbatimTextOutput(outputId = "consoleRecode"),
-                                     tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleRecode {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -894,7 +977,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "selectPISACountriesSyntax",
                                      verbatimTextOutput(outputId = "consoleSelectPISACountries"),
-                                     tags$head(tags$style("#consoleSelectPISACountries {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleSelectPISACountries {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1110,7 +1193,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "pctsMeansSyntax",
                                      verbatimTextOutput(outputId = "consolePctsMeans"),
-                                     tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consolePctsMeans {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1346,7 +1429,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "prctlsSyntax",
                                      verbatimTextOutput(outputId = "consolePrctls"),
-                                     tags$head(tags$style("#consolePrctls {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px;}")),
+                                     tags$head(tags$style("#consolePrctls {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px;}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1601,7 +1684,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "benchSyntax",
                                      verbatimTextOutput(outputId = "consoleBench"),
-                                     tags$head(tags$style("#consoleBench {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleBench {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1789,7 +1872,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "crossTabsSyntax",
                                      verbatimTextOutput(outputId = "consoleCrossTabs"),
-                                     tags$head(tags$style("#consoleCrossTabs {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleCrossTabs {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -1959,7 +2042,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "corrSyntax",
                                      verbatimTextOutput(outputId = "consoleCorr"),
-                                     tags$head(tags$style("#consoleCorr {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleCorr {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -2177,7 +2260,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "linRegSyntax",
                                      verbatimTextOutput(outputId = "consoleLinReg"),
-                                     tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px; ; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleLinReg {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; ; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",
@@ -2389,7 +2472,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     ),
                     conditionalPanel(condition = "binLogRegSyntax",
                                      verbatimTextOutput(outputId = "consoleBinLogReg"),
-                                     tags$head(tags$style("#consoleBinLogReg {color:red; background-color: white; overflow-y:scroll; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$head(tags$style("#consoleBinLogReg {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
                                      tags$script(
                                        '
 Shiny.addCustomMessageHandler("scrollCallback",

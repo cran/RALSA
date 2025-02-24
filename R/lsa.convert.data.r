@@ -162,7 +162,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         }
         if(any(sapply(X = ISO, FUN = nchar) == 12 )) {
           full.inp.file.path <- file.path(inp.folder, ISO)
-          study.and.cycle <- unique(x = substr(x = ISO, start = 7, stop = 8))
+          study.and.cycle <- unique(x = tolower(substr(x = ISO, start = 7, stop = 8)))
           if(length(x = study.and.cycle) > 1) {
             message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
             stop()
@@ -175,7 +175,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           } else {
             study.and.cycle <- unique(x = substr(x = tolower(ISO), start = 1, stop = 3))
           }
-          if(length(x = study.and.cycle) > 1) {
+          if(length(x = tolower(study.and.cycle)) > 1) {
             message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
             stop()
           }
@@ -193,8 +193,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             message("\nError:\nThe input folder does not exist. Check your input.\n\n")
           }
         }
-        study.and.cycle <- unique(x = substr(x = files, start = 7, stop = 8))
-        if(length(x = study.and.cycle) > 1) {
+        study.and.cycle <- unique(x = tolower(substr(x = files, start = 7, stop = 8)))
+        if(length(x = tolower(study.and.cycle)) > 1) {
           message("\nError:\nThe input folder contains data files from more than one study and/or cycle. The input folder must contain files from single study and cycle only.\n\n")
           stop()
         }
@@ -350,6 +350,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "i" && study.and.cycle == "b4") {
           study.attribute <- "ICCS"
           cycle.attribute <- "2022"
+        } else if(inp.file.first.char == "i" && study.and.cycle == "c5") {
+          study.attribute <- "ICCS"
+          cycle.attribute <- "2027"
         } else if(inp.file.first.char == "b"  && study.and.cycle == "i1") {
           study.attribute <- "ICILS"
           cycle.attribute <- "2013"
@@ -478,6 +481,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "inst.bckg"
         } else if(inp.file.abbrev == "DEG") {
           file.type.attribute <- "educ.bckg"
+        } else if(inp.file.abbrev %in% c("isp", "ISP", "asp", "ASP", "bsp", "BSP")) {
+          file.type.attribute <- "std.proc"
         } else if(inp.file.abbrev %in% c("SCH_QQQ", "scq_qqq")) {
           file.type.attribute <- "sch.bckg"
         } else if(inp.file.abbrev %in% c("STU_QTM", "stu_qtm")) {

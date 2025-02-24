@@ -112,7 +112,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     any(i == ".RData")
   })
   if(any(nonexiting.file.types.to.merge == TRUE)) {
-    stop('One or more file types specified in "file.types" argument exists for the countries specified in the "ISO" argument. Check your input.', call. = FALSE)
+    stop('One or more file types specified in "file.types" argument does not exist for the countries specified in the "ISO" argument. Check your input.', call. = FALSE)
   }
   study.name <- unique(sapply(X = file.types.to.merge, FUN = function(i) {
     sapply(X = i[1], FUN = function(j) {
@@ -300,7 +300,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
       collapsed.all.vars.miss <- lapply(X = collapsed.all.vars.miss, FUN = function(i) {
         lapply(X = i, FUN = function(j) {
           if(is.numeric(j)) {
-            setNames(object = j, nm = gsub(pattern = "^[[:alnum:]]+\\.", replacement = "", x = names(j)))
+            setNames(object = j, nm = gsub(pattern = "^[[:alnum:]]+\\.|^[[:alnum:]]+\\_[[:alnum:]]+\\.", replacement = "", x = names(j)))
           } else if(is.character(j)) {
             if(length(j) > 1) {
               setNames(object = j, nm = gsub(pattern = "[[:digit:]]$", replacement = "", x = names(j)))
@@ -365,7 +365,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         future.sec.teacher.quest.file.type = "dsg"
       )
       if(study.name != "TALIS 3S") {
-        all.file.types[["student.file.types"]] <- c("ash", "asa", "asg", "asc", "bs_", "bsa", "bsg", "cs_", "isg", "isa", "ise", "iss", "isl", "jsa", "jsg", "jse", "msa", "msg", "psa", "psg")
+        all.file.types[["student.file.types"]] <- c("ash", "asa", "asg", "asc", "asp", "bs_", "bsa", "bsg", "bsp", "cs_", "isg", "isa", "ise", "iss", "isl", "isp", "jsa", "jsg", "jse", "msa", "msg", "psa", "psg")
       } else {
         all.file.types[["staff.file.types"]] <- c("asg", "bsg")
       }
@@ -376,7 +376,8 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         ach.file.names <- intersect(c("asa", "bsa", "isa", "jsa", "msa", "psa"), names(student.level.data))
         bckg.file.names <- intersect(c("asg", "asc", "bs_", "bsg", "cs_", "isg", "ise", "iss", "isl", "jsg", "jse", "msg", "psg"), names(student.level.data))
         home.file.name <- "ash"
-        student.level.data <- Filter(Negate(is.null), student.level.data[c(bckg.file.names, home.file.name, ach.file.names)])
+        process.file.names <- intersect(c("asp", "bsp", "isp"), names(student.level.data))
+        student.level.data <- Filter(Negate(is.null), student.level.data[c(bckg.file.names, home.file.name, ach.file.names, process.file.names)])
         all.common.columns <- lapply(X = student.level.data, FUN = colnames)
         all.common.columns <- setDT(stack(setNames(all.common.columns, seq_along(all.common.columns))))[ , if(uniqueN(ind) > 1) {
           values
@@ -641,7 +642,9 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
     final.merged.data <- merge.respondents(data.obj = all.data.imported, imported.files = names(all.data.imported), design.obj = studies.all.design.variables, key.var = key.attribute, add.key.1 = "IDSTUD", add.key.2 = c("IDTEACH", "IDLINK"), add.key.3 = "IDSCHOOL", add.key.4 = "IDTPU", add.key.5 = "IDCENTRE")
     message('\n   Files from all respondents merged in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.merge}[[3]], "%H:%M:%OS3"), "\n")
     if(exists("all.miss.statements") == TRUE) {
-      all.miss.statements <- grep(pattern = paste0("\\<", paste(colnames(final.merged.data), collapse = "\\>|\\<"), "\\>"), x = all.miss.statements, value = TRUE)
+      all.miss.statements <- unique(unname(unlist(sapply(X = colnames(final.merged.data), FUN = function(i) {
+        grep(pattern = paste0("\\<", i, "\\>"), x = all.miss.statements, value = TRUE)
+      }))))
       eval(parse(text = all.miss.statements))
       duplicated.num.miss.codes.names <- names(Filter(isTRUE, Filter(length, lapply(X = final.merged.data, FUN = function(i) {
         any(duplicated(names(attr(i, "missings"))) == TRUE)

@@ -398,7 +398,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
             })
           }
         }
-      } else if (include.missing == TRUE) {
+      } else if(include.missing == TRUE) {
         bckg.avg.vars.all.NA <- names(Filter(function(i) {all(is.na(i))}, data))
         if(length(bckg.avg.vars.all.NA) > 0) {
           data1 <- copy(data)

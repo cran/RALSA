@@ -1,10 +1,52 @@
+# RALSA v1.5.5 (2025-02-24)
+
+When large-scale assessments' data are needed, an entire database with all data files, documentation and reports has to be downloaded. It would be nice if one is able to download only the data files for a country per study, cycle, and population of interest, but nothing else. This version brings exactly this. For example, an analyst can now download the data files for TIMSS 2023 Grade 8 just for the countries he or she needs without downloading the entire archive. This release also brings bug fixes and improvements.
+
+## Bug fixes
+
+* When using PVs as independent variables, `lsa.lin.reg` crashes with an error message. Thanks to Zan Lep.
+
+* `lsa.convert.data` exits with an error, saying that the input folder contains data files from more than one study and/or cycle for PIRLS 2001.
+
+## New functionality
+
+* A new function, `lsa.download.data`, to download studies' data files. It is also available in the GUI. Note that the function can download only the required countries' data files from the respective cycle and population of a study without downloading the entire database. This applies to all IEA studies, as well as OECD TALIS and TALIS 3S.
+
+* Added full support for student process data files in PIRLS 2021, ICCS 2022 and TIMSS 2023 (converting, merging and analyzing).
+
+## Miscellaneous
+
+* Added support for TIMSS 2023 database.
+
+* Updated the countries' study and cycle participation in the help section of the GUI.
+
+* Fixed the GUI console graying out for all data preparation and analysis tabs following the updates of package dependencies.
+
+* Fixed the sporadic partial Excel export of the countries' study and cycle participation in the help section of the GUI.
+
+* Improved documentation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # RALSA v1.5.0 (2024-09-23)
 
 This minimal update provides a fix for incorrect handling of user-defined missing values in the `lsa.data.diag` function.
 
 ## Bug fixes
 
-- The `lsa.data.diag` reports incorrect statistics with user-defined missing values in some studies. Thanks to Daniel Gustafsson.
+* The `lsa.data.diag` reports incorrect statistics with user-defined missing values in some studies. Thanks to Daniel Gustafsson.
 
 
 
