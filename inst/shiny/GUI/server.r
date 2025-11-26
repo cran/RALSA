@@ -1112,6 +1112,7 @@ server <- function(input, output, session) {
   }
   
   
+  
   #Define global objects
   load.app.CSS.screen <- "
 #loading-content {
@@ -1128,7 +1129,7 @@ color: #FFFFFF;
 "
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }"
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}'
-country.ISO.and.names <- data.table(ISOs = c("ARG", "ARM", "AUS", "AUT", "BHR", "BSQ", "BFL", "BFR", "BEL", "BLZ", "BWA", "BGR", "CAN", "COT", "CQU", "CAB", "CBC", "CNS", "CHL", "TWN", "COL", "CYP", "CZE", "CSK", "DNK", "EGY", "ENG", "GBR", "EST", "FIN", "FRA", "GEO", "DEU", "GHA", "GRC", "HKG", "HUN", "ISL", "IS5", "UIN", "IDN", "IRN", "IRL", "ISR", "ITA", "JPN", "JOR", "KOR", "KWT", "LVA", "LBN", "LTU", "LUX", "MKD", "MYS", "MDA", "MAR", "NLD", "NZL", "NOR", "NO5", "PSE", "PHL", "POL", "PRT", "QAT", "ROM", "RUS", "RUM", "SAU", "SCO", "SCG", "SGP", "SVK", "SLV", "SVN", "ZAF", "ZA4", "ESP", "ECT", "SWE", "SE3", "CHE", "SYR", "THA", "TTO", "TUN", "TUR", "USA", "YEM", "MLT", "UMN", "UMA", "OMN", "UKR", "DZA", "KAZ", "MNG", "BIH", "ADU", "BRA", "MEX", "GMX", "TMX", "MXT", "DOM", "GTM", "LIE", "PRY", "PO2", "NO1", "NO2", "NO3", "NOM", "AAD", "ARE", "AZE", "EAN", "ECN", "FI7", "HND", "HRV", "MA6", "MLN", "NIR", "NLN", "NZ1", "SG7", "SRB", "UAL", "UCA", "UCO", "UCT", "UFL", "UNC", "YE6", "ABA", "UK1", "ROU", "MDF", "MET", "MJA", "MNL", "MQR", "MSL", "MTM", "TDF", "TJA", "TNL", "TQR", "TSL", "TTM", "CRI", "NIC", "PER", "CNL", "CNL", "CSH", "RTR", "NO4", "NO8", "DNW", "EMA", "MAC", "RMO", "ZA5", "DN3", "EMB", "ZGT", "VNM", "URY", "ECU", "ALB", "MNE", "PAK", "XKX", "ZWC", "BFA", "ETH", "IND", "KEN", "RWA", "UGA", "UZB", "ZA6", "DSH", "ASH", "CIV", "IRQ", "NGA", "SEN"), Names = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq", "Nigeria", "Senegal"))
+country.ISO.and.names <- data.table(ISOs = c("ARG", "ARM", "AUS", "AUT", "BHR", "BSQ", "BFL", "BFR", "BEL", "BLZ", "BWA", "BGR", "CAN", "COT", "CQU", "CAB", "CBC", "CNS", "CHL", "TWN", "COL", "CYP", "CZE", "CSK", "DNK", "EGY", "ENG", "GBR", "EST", "FIN", "FRA", "GEO", "DEU", "GHA", "GRC", "HKG", "HUN", "ISL", "IS5", "UIN", "IDN", "IRN", "IRL", "ISR", "ITA", "JPN", "JOR", "KOR", "KWT", "LVA", "LBN", "LTU", "LUX", "MKD", "MYS", "MDA", "MAR", "NLD", "NZL", "NOR", "NO5", "PSE", "PHL", "POL", "PRT", "QAT", "ROM", "RUS", "RUM", "SAU", "SCO", "SCG", "SGP", "SVK", "SLV", "SVN", "ZAF", "ZA4", "ESP", "ECT", "SWE", "SE3", "CHE", "SYR", "THA", "TTO", "TUN", "TUR", "USA", "YEM", "MLT", "UMN", "UMA", "OMN", "UKR", "DZA", "KAZ", "MNG", "BIH", "ADU", "BRA", "MEX", "GMX", "TMX", "MXT", "DOM", "GTM", "LIE", "PRY", "PO2", "NO1", "NO2", "NO3", "NOM", "AAD", "ARE", "AZE", "EAN", "ECN", "FI7", "HND", "HRV", "MA6", "MLN", "NIR", "NLN", "NZ1", "SG7", "SRB", "UAL", "UCA", "UCO", "UCT", "UFL", "UNC", "YE6", "ABA", "UK1", "ROU", "MDF", "MET", "MJA", "MNL", "MQR", "MSL", "MTM", "TDF", "TJA", "TNL", "TQR", "TSL", "TTM", "CRI", "NIC", "PER", "CNL", "CSH", "RTR", "NO4", "NO8", "DNW", "EMA", "MAC", "RMO", "ZA5", "DN3", "EMB", "ZGT", "VNM", "URY", "ECU", "ALB", "MNE", "PAK", "XKX", "ZWC", "BFA", "ETH", "IND", "KEN", "RWA", "UGA", "UZB", "ZA6", "DSH", "ASH", "CIV", "IRQ", "NGA", "SEN", "CNB", "QAA", "QBR", "QCA"), Names = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq", "Nigeria", "Senegal", "Canada (New Brunswick)", "Baku, Sumgait (Azerbaijan)", "Ceará, Pará, São Paulo (Brazil)", "Hangzhou (China)"))
 PISA.data.files <- list(
   PISA.pre2015.TXT.files = list(
     "2000" = c("intcogn_v4.txt",
@@ -1288,7 +1289,7 @@ studies.and.cycles <- list(
     first.chars = c("bcg", "bsg", "btg"), "2021" = "v1"
   ),
   TALIS = list(
-    first.chars = c("acg", "atg", "bcg", "btg", "ccg", "ctg", "pcg", "ptg"), "2008" = "t1", "2013" = "t2", "2018" = "t3"
+    first.chars = c("acg", "atg", "bcg", "btg", "ccg", "ctg", "pcg", "ptg"), "2008" = "t1", "2013" = "t2", "2018" = "t3", "2024" = "t4"
   ),
   "TALIS 3S" = list(
     first.chars = c("alg", "asg", "blg", "bsg"), "2018" = "s1"
@@ -1418,7 +1419,7 @@ respondents.and.cycles <- list(
   ),
   "Physics school background" = list(
     resp.type = "pcg",
-    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9") 
   ),
   "Leader background data" = list(
     resp.type = c("alg", "blg"),
@@ -1792,48 +1793,50 @@ countries.studies.cycles.table <- data.table(
   `Alpha 3 ISO` = c(
     "AAD", "ABA", "ADU", "ALB", "ARE", "ARG", "ARM", "ASH", "AUS", "AUT", "AZE",
     "BEL", "BFA", "BFL", "BFR", "BGR", "BHR", "BIH", "BLR", "BLZ", "BRA", "BRN",
-    "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CIV", "CNL", "CNS", "COL",
-    "COT", "CQU", "CRI", "CSH", "CSK/CZE", "CYP", "DEU", "DN3", "DNK", "DNW",
-    "DOM", "DSH", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB", "ENG",
-    "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX", "GRC",
-    "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IRQ", "IS5",
-    "ISL", "ISR", "ITA", "JAM", "JOR", "JPN", "KAZ", "KEN", "KGZ", "KHM", "KOR",
-    "KSV/XKX", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC", "MAR",
-    "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG", "MNL",
-    "MQR", "MSL", "MTM", "MUS", "MXT", "MYS", "NGA", "NIC", "NIR", "NLD", "NLN",
-    "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL", "OMN",
-    "PAK", "PAN", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAR", "QAT",
-    "QAZ", "QCH/QCI", "QCN", "QES", "QHP", "QMR", "QRS", "QRT", "QTN", "QUA",
-    "QUB", "QUC", "QUD", "QUE", "QUR", "QVE", "RMO", "ROM/ROU", "RTR", "RUM",
-    "RUS", "RWA", "SAU", "SCG/SRB", "SCO", "SE3", "SEN", "SG7", "SGP", "SLV",
-    "SVK", "SVN", "SWE", "SYR", "TAP/TWN", "TDF", "THA", "TJA", "TMX", "TNL",
-    "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "UAL", "UCA", "UCO", "UCT", "UFL",
-    "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY", "USA", "UZB", "VNM",
-    "YE6", "YEM", "YUG", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT", "ZMB", "ZWC"
+    "BSQ", "BWA", "CAB", "CAN", "CBC", "CHE", "CHL", "CIV", "CNB", "CNL", "CNS",
+    "COL", "COT", "CQU", "CRI", "CSH", "CSK/CZE", "CYP", "DEU", "DN3", "DNK",
+    "DNW", "DOM", "DSH", "DZA", "EAN", "ECN", "ECT", "ECU", "EGY", "EMA", "EMB",
+    "ENG", "ESP", "EST", "ETH", "FI7", "FIN", "FRA", "GBR", "GEO", "GHA", "GMX",
+    "GRC", "GTM", "HKG", "HND", "HRV", "HUN", "IDN", "IND", "IRL", "IRN", "IRQ",
+    "IS5", "ISL", "ISR", "ITA", "JAM", "JOR", "JPN", "KAZ", "KEN", "KGZ", "KHM",
+    "KOR", "KSV/XKX", "KWT", "LBN", "LIE", "LTU", "LUX", "LVA", "MA6", "MAC",
+    "MAR", "MDA", "MDF", "MET", "MEX", "MJA", "MKD", "MLN", "MLT", "MNE", "MNG",
+    "MNL", "MQR", "MSL", "MTM", "MUS", "MXT", "MYS", "NGA", "NIC", "NIR", "NLD",
+    "NLN", "NO1", "NO2", "NO3", "NO4", "NO5", "NO8", "NOM", "NOR", "NZ1", "NZL",
+    "OMN", "PAK", "PAN", "PER", "PHL", "PO2", "POL", "PRT", "PRY", "PSE", "QAA",
+    "QAR", "QAT", "QAZ", "QBR", "QCA", "QCH/QCI", "QCN", "QES", "QHP", "QMR",
+    "QRS", "QRT", "QTN", "QUA", "QUB", "QUC", "QUD", "QUE", "QUR", "QVE", "RMO",
+    "ROM/ROU", "RTR", "RUM", "RUS", "RWA", "SAU", "SCG/SRB", "SCO", "SE3", "SEN",
+    "SG7", "SGP", "SLV", "SVK", "SVN", "SWE", "SYR", "TAP/TWN", "TDF", "THA",
+    "TJA", "TMX", "TNL", "TQR", "TSL", "TTM", "TTO", "TUN", "TUR", "UAL", "UCA",
+    "UCO", "UCT", "UFL", "UGA", "UIN", "UK1", "UKR", "UMA", "UMN", "UNC", "URY",
+    "USA", "UZB", "VNM", "YE6", "YEM", "YUG", "ZA4", "ZA5", "ZA6", "ZAF", "ZGT",
+    "ZMB", "ZWC"
   ),
   `Numeric Code` = c(
     "7842", "32001", "7841", "8", "784", "32", "51", "7843", "36", "40", "31",
     "56", "854", "956", "957", "100", "48", "70", "112", "84", "76", "96", "3724",
-    "72", "9134", "124", "9135", "756", "152", "384", "9137/9130", "9136", "170",
-    "9132", "9133", "188", "156001", "200/203", "196", "276", "208001", "208",
-    "276001", "214", "276005", "12", "72401", "72404", "7241", "218", "818",
-    "724005", "724004", "926", "724", "233", "231", "7246", "246", "250", "826",
-    "268", "288", "48401", "300", "320", "344", "340", "191", "348", "360", "356",
-    "372", "364", "368", "9352", "352", "376", "380", "388", "400", "392", "398",
-    "404", "417", "116", "410", "383/411", "414", "422", "438", "440", "442",
-    "428", "6504", "446", "504", "498", "48411", "48420", "484", "48412", "807",
-    "9470", "470", "499", "496", "48415", "48416", "48417", "48418", "480",
-    "48499", "458", "566", "558", "928", "528", "9528", "57891", "57892", "57893",
-    "5784", "9578", "5788", "57894", "578", "7554", "554", "512", "586", "591",
-    "604", "608", "6162", "616", "620", "600", "275", "974", "634", "311",
-    "970/975", "156", "971", "35601", "982", "6430059", "983", "35602", "8400100",
-    "8400200", "8400300", "630", "973", "901", "862", "643001", "642/9642",
-    "643002", "6431", "643", "646", "682", "891/688", "927", "3752", "686",
-    "7702", "702", "222", "703", "705", "752", "760", "158", "48421", "764",
-    "48422", "48402", "48425", "48426", "48427", "48428", "780", "788", "792",
-    "10400", "11100", "10800", "10900", "11200", "800", "11800", "8261", "804",
-    "12500", "12700", "13700", "858", "840", "860", "704", "6887", "887", "891",
-    "4710", "7105", "7106", "710", "710003", "894", "710004"
+    "72", "9134", "124", "9135", "756", "152", "384", "124008", "9137/9130",
+    "9136", "170", "9132", "9133", "188", "156001", "200/203", "196", "276",
+    "208001", "208", "276001", "214", "276005", "12", "72401", "72404", "7241",
+    "218", "818", "724005", "724004", "926", "724", "233", "231", "7246", "246",
+    "250", "826", "268", "288", "48401", "300", "320", "344", "340", "191", "348",
+    "360", "356", "372", "364", "368", "9352", "352", "376", "380", "388", "400",
+    "392", "398", "404", "417", "116", "410", "383/411", "414", "422", "438",
+    "440", "442", "428", "6504", "446", "504", "498", "48411", "48420", "484",
+    "48412", "807", "9470", "470", "499", "496", "48415", "48416", "48417",
+    "48418", "480", "48499", "458", "566", "558", "928", "528", "9528", "57891",
+    "57892", "57893", "5784", "9578", "5788", "57894", "578", "7554", "554",
+    "512", "586", "591", "604", "608", "6162", "616", "620", "600", "275",
+    "310001", "974", "634", "311", "760005", "156003", "970/975", "156", "971",
+    "35601", "982", "6430059", "983", "35602", "8400100", "8400200", "8400300",
+    "630", "973", "901", "862", "643001", "642/9642", "643002", "6431", "643",
+    "646", "682", "891/688", "927", "3752", "686", "7702", "702", "222", "703",
+    "705", "752", "760", "158", "48421", "764", "48422", "48402", "48425",
+    "48426", "48427", "48428", "780", "788", "792", "10400", "11100", "10800",
+    "10900", "11200", "800", "11800", "8261", "804", "12500", "12700", "13700",
+    "858", "840", "860", "704", "6887", "887", "891", "4710", "7105", "7106",
+    "710", "710003", "894", "710004"
   ),
   `Country Name` = c(
     "United Arab Emirates (Abu Dhabi)", "Argentina, Buenos Aires",
@@ -1844,19 +1847,19 @@ countries.studies.cycles.table <- data.table(
     "Bosnia and Herzegovina", "Belarus", "Belize", "Brazil", "Brunei Darussalam",
     "Spain (Basque Country)", "Botswana", "Canada (Alberta)", "Canada",
     "Canada (British Columbia)", "Switzerland", "Chile", "Ivory Coast",
-    "Canada (Newfoundland and Labrador)", "Canada (Nova Scotia)", "Colombia",
-    "Canada (Ontario)", "Canada (Quebec)", "Costa Rica", "China (Shanghai)",
-    "Czech Republic", "Cyprus", "Germany", "Denmark (Grade 3)", "Denmark",
-    "Germany, North-Rhine Westphalia", "Dominican Republic",
-    "Germany, Schleswig-Holstein", "Algeria", "Spain (Andalucia)",
-    "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador", "Egypt",
-    "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain", "Estonia",
-    "Ethiopia", "Finland (Grade 7)", "Finland", "France", "United Kingdom",
-    "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)", "Greece",
-    "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia", "Hungary",
-    "Indonesia", "India", "Ireland", "Iran, Islamic Republic of", "Iraq",
-    "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jamaica", "Jordan",
-    "Japan", "Kazakhstan", "Kenya", "Kyrgyzstan", "Cambodia",
+    "Canada (New Brunswick)", "Canada (Newfoundland and Labrador)",
+    "Canada (Nova Scotia)", "Colombia", "Canada (Ontario)", "Canada (Quebec)",
+    "Costa Rica", "China (Shanghai)", "Czech Republic", "Cyprus", "Germany",
+    "Denmark (Grade 3)", "Denmark", "Germany, North-Rhine Westphalia",
+    "Dominican Republic", "Germany, Schleswig-Holstein", "Algeria",
+    "Spain (Andalucia)", "Spain (Canary Islands)", "Spain (Catalonia)", "Ecuador",
+    "Egypt", "Spain, Madrid", "Spain, Madrid, Bilingual", "England", "Spain",
+    "Estonia", "Ethiopia", "Finland (Grade 7)", "Finland", "France",
+    "United Kingdom", "Georgia", "Ghana", "Mexico (Generales/Tecnicas/Privadas)",
+    "Greece", "Guatemala", "Hong Kong, SAR", "Honduras, Republic of", "Croatia",
+    "Hungary", "Indonesia", "India", "Ireland", "Iran, Islamic Republic of",
+    "Iraq", "Iceland (Grade 5)", "Iceland", "Israel", "Italy", "Jamaica",
+    "Jordan", "Japan", "Kazakhstan", "Kenya", "Kyrgyzstan", "Cambodia",
     "Korea, Republic of", "Kosovo", "Kuwait", "Lebanon", "Liechtenstein",
     "Lithuania", "Luxembourg", "Latvia", "Morocco (Grade 6)", "Macao SAR",
     "Morocco", "Moldova", "Mexico (Distrito Federal)",
@@ -1870,15 +1873,17 @@ countries.studies.cycles.table <- data.table(
     "Norway (MASTERS)", "Norway", "New Zealand (TIMSS data processing)",
     "New Zealand", "Oman", "Pakistan", "Panama", "Peru", "Philippines",
     "Poland (Second-Cycle Programs)", "Poland", "Portugal", "Paraguay",
-    "Palestinian National Authority", "Argentina (Ciudad Autonoma de Buenos)",
-    "Qatar", "Baku (Azerbaijan)", "B-S-J-G (China)", "Shanghai-China",
-    "Spain (Regions)", "Himachal Pradesh-India", "Moscow Region (RUS)",
-    "Perm (Russian Federation)", "Tatarstan (RUS)", "Tamil Nadu-India",
-    "Florida (USA)", "Connecticut (USA)", "Massachusetts (USA)",
-    "Puerto Rico (USA)", "North Carolina (USA)", "Ukrainian regions (18 of 27)",
-    "Miranda-Venezuela", "Russian Federation, Moscow", "Romania",
-    "Russia (8+ sample)", "Russian Federation (Moscow)", "Russian Federation",
-    "Rwanda", "Saudi Arabia", "Serbia", "Scotland", "Sweden (Grade 3)", "Senegal",
+    "Palestinian National Authority", "Baku, Sumgait (Azerbaijan)",
+    "Argentina (Ciudad Autonoma de Buenos)", "Qatar", "Baku (Azerbaijan)",
+    "Cear\U{E1}, Par\U{E1}, S\U{E3}o Paulo (Brazil)", "Hangzhou (China)",
+    "B-S-J-G (China)", "Shanghai-China", "Spain (Regions)",
+    "Himachal Pradesh-India", "Moscow Region (RUS)", "Perm (Russian Federation)",
+    "Tatarstan (RUS)", "Tamil Nadu-India", "Florida (USA)", "Connecticut (USA)",
+    "Massachusetts (USA)", "Puerto Rico (USA)", "North Carolina (USA)",
+    "Ukrainian regions (18 of 27)", "Miranda-Venezuela",
+    "Russian Federation, Moscow", "Romania", "Russia (8+ sample)",
+    "Russian Federation (Moscow)", "Russian Federation", "Rwanda", "Saudi Arabia",
+    "Serbia", "Scotland", "Sweden (Grade 3)", "Senegal",
     "Singapore (Chinese Grade 7)", "Singapore", "El Salvador", "Slovak Republic",
     "Slovenia", "Sweden", "Syria, Arab Republic of", "Chinese Taipei",
     "Mexico (Telesecundaria-Distrito Federal)", "Thailand",
@@ -1902,8 +1907,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      27L, 2L, 3L, 1L, 4L, 2L, 2L, 1L, 13L, 1L, 10L, 1L, 10L, 1L, 15L, 1L, 32L, 1L,
-      8L, 2L, 24L, 1L, 10L, 2L, 39L
+      27L, 2L, 4L, 1L, 4L, 2L, 2L, 1L, 13L, 1L, 10L, 1L, 10L, 1L, 15L, 1L, 32L, 1L,
+      8L, 2L, 27L, 1L, 10L, 2L, 39L
     )
   ),
   `CivED 1999 G8` = rep(
@@ -1913,8 +1918,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 1L, 5L, 2L, 11L, 2L, 3L, 1L, 4L, 3L, 1L, 1L, 11L, 1L, 1L, 1L, 2L, 1L, 5L,
-      1L, 1L, 1L, 2L, 1L, 8L, 1L, 12L, 1L, 1L, 1L, 32L, 1L, 8L, 2L, 21L, 1L, 2L, 1L,
+      8L, 1L, 5L, 2L, 11L, 2L, 4L, 1L, 4L, 3L, 1L, 1L, 11L, 1L, 1L, 1L, 2L, 1L, 5L,
+      1L, 1L, 1L, 2L, 1L, 8L, 1L, 12L, 1L, 1L, 1L, 32L, 1L, 8L, 2L, 24L, 1L, 2L, 1L,
       9L, 3L, 26L, 1L, 12L
     )
   ),
@@ -1926,12 +1931,12 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA
     ),
     c(
-      9L, 1L, 3L, 1L, 1L, 1L, 11L, 2L, 3L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 9L, 3L, 2L,
+      9L, 1L, 3L, 1L, 1L, 1L, 11L, 2L, 4L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 9L, 3L, 2L,
       1L, 5L, 3L, 3L, 1L, 1L, 1L, 5L, 1L, 7L, 1L, 3L, 4L, 6L, 1L, 3L, 1L, 12L, 1L,
-      8L, 1L, 1L, 1L, 6L, 1L, 1L, 1L, 23L, 1L, 9L, 3L, 1L, 1L, 1L, 1L, 35L
+      8L, 1L, 1L, 1L, 6L, 1L, 1L, 1L, 26L, 1L, 9L, 3L, 1L, 1L, 1L, 1L, 35L
     )
   ),
-  `ICCS 2009 G9` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(64L, 1L, 61L, 1L, 45L, 2L, 39L)),
+  `ICCS 2009 G9` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(65L, 1L, 61L, 1L, 48L, 2L, 39L)),
   `ICCS 2016 G8` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
@@ -1939,8 +1944,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      13L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 8L, 3L, 11L, 1L, 2L, 1L, 7L, 1L, 1L, 1L, 9L,
-      1L, 7L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 5L, 1L, 28L, 1L,
+      13L, 1L, 1L, 1L, 12L, 1L, 4L, 1L, 8L, 3L, 11L, 1L, 2L, 1L, 7L, 1L, 1L, 1L, 9L,
+      1L, 7L, 1L, 4L, 1L, 1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 5L, 1L, 31L, 1L,
       10L, 2L, 1L, 1L, 37L
     )
   ),
@@ -1951,8 +1956,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      15L, 1L, 4L, 1L, 11L, 1L, 5L, 1L, 2L, 2L, 1L, 1L, 9L, 2L, 3L, 1L, 8L, 1L, 9L,
-      1L, 12L, 1L, 1L, 1L, 10L, 1L, 12L, 1L, 8L, 1L, 8L, 1L, 22L, 1L, 5L, 1L, 6L,
+      15L, 1L, 4L, 1L, 12L, 1L, 5L, 1L, 2L, 2L, 1L, 1L, 9L, 2L, 3L, 1L, 8L, 1L, 9L,
+      1L, 12L, 1L, 1L, 1L, 10L, 1L, 12L, 1L, 8L, 1L, 8L, 1L, 25L, 1L, 5L, 1L, 6L,
       3L, 1L, 1L, 37L
     )
   ),
@@ -1963,8 +1968,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA
     ),
     c(
-      1L, 1L, 6L, 1L, 18L, 2L, 1L, 1L, 2L, 1L, 3L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 1L,
-      1L, 17L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 8L, 1L, 25L, 1L, 9L, 2L, 4L, 1L, 8L, 1L,
+      1L, 1L, 6L, 1L, 18L, 2L, 2L, 1L, 2L, 1L, 3L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 1L,
+      1L, 17L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 8L, 1L, 28L, 1L, 9L, 2L, 4L, 1L, 8L, 1L,
       26L
     )
   ),
@@ -1973,7 +1978,7 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA
     ),
-    c(28L, 1L, 10L, 1L, 1L, 2L, 15L, 2L, 18L, 1L, 3L, 1L, 3L, 1L, 5L, 1L, 43L, 1L, 20L, 1L, 41L, 2L, 12L)
+    c(28L, 1L, 11L, 1L, 1L, 2L, 15L, 2L, 18L, 1L, 3L, 1L, 3L, 1L, 5L, 1L, 43L, 1L, 23L, 1L, 41L, 2L, 12L)
   ),
   `ICILS 2023 G8` = rep(
     c(
@@ -1982,9 +1987,9 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      9L, 2L, 2L, 1L, 3L, 1L, 10L, 1L, 8L, 3L, 1L, 2L, 11L, 1L, 3L, 2L, 4L, 1L, 3L,
+      9L, 2L, 2L, 1L, 3L, 1L, 10L, 1L, 9L, 3L, 1L, 2L, 11L, 1L, 3L, 2L, 4L, 1L, 3L,
       2L, 8L, 1L, 3L, 1L, 3L, 2L, 4L, 2L, 10L, 1L, 12L, 1L, 8L, 1L, 2L, 1L, 6L, 1L,
-      21L, 1L, 5L, 1L, 6L, 3L, 1L, 1L, 23L, 2L, 12L
+      24L, 1L, 5L, 1L, 6L, 3L, 1L, 1L, 23L, 2L, 12L
     )
   ),
   `PIRLS 2001 G4` = rep(
@@ -1995,9 +2000,9 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA
     ),
     c(
-      5L, 1L, 9L, 1L, 3L, 1L, 5L, 1L, 6L, 3L, 2L, 3L, 13L, 1L, 5L, 1L, 4L, 1L, 1L,
+      5L, 1L, 9L, 1L, 3L, 1L, 5L, 1L, 7L, 3L, 2L, 3L, 13L, 1L, 5L, 1L, 4L, 1L, 1L,
       1L, 2L, 1L, 3L, 1L, 2L, 3L, 9L, 1L, 2L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 14L, 1L,
-      8L, 1L, 1L, 1L, 29L, 1L, 2L, 1L, 3L, 2L, 2L, 1L, 1L, 3L, 12L, 1L, 13L, 1L,
+      8L, 1L, 1L, 1L, 32L, 1L, 2L, 1L, 3L, 2L, 2L, 1L, 1L, 3L, 12L, 1L, 13L, 1L,
       12L
     )
   ),
@@ -2010,50 +2015,50 @@ countries.studies.cycles.table <- data.table(
       NA
     ),
     c(
-      9L, 1L, 3L, 3L, 8L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 11L, 2L, 4L,
+      9L, 1L, 3L, 3L, 8L, 1L, 1L, 1L, 5L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 11L, 2L, 4L,
       1L, 1L, 1L, 4L, 1L, 2L, 2L, 2L, 1L, 1L, 4L, 9L, 1L, 2L, 3L, 2L, 2L, 4L, 1L,
-      14L, 1L, 5L, 1L, 2L, 1L, 1L, 1L, 6L, 1L, 4L, 1L, 17L, 1L, 2L, 1L, 3L, 1L, 3L,
+      14L, 1L, 5L, 1L, 2L, 1L, 1L, 1L, 6L, 1L, 5L, 1L, 19L, 1L, 2L, 1L, 3L, 1L, 3L,
       1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 8L, 1L, 3L
     )
   ),
   `PIRLS 2011 G4` = rep(
     rep(c("X", NA), 36),
     c(
-      1L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 2L, 7L, 3L, 6L, 3L, 2L, 1L, 1L, 1L, 1L, 1L,
+      1L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 2L, 7L, 3L, 7L, 3L, 2L, 1L, 1L, 1L, 1L, 1L,
       4L, 1L, 6L, 2L, 3L, 2L, 1L, 1L, 4L, 5L, 1L, 2L, 3L, 2L, 9L, 1L, 2L, 1L, 2L,
-      1L, 1L, 1L, 6L, 2L, 11L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L,
+      1L, 1L, 1L, 6L, 2L, 11L, 2L, 8L, 1L, 1L, 2L, 5L, 2L, 4L, 1L, 19L, 1L, 2L, 1L,
       1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 8L, 1L, 3L
     )
   ),
-  `prePIRLS 2011 G4` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(23L, 1L, 8L, 1L, 176L, 1L, 3L)),
+  `prePIRLS 2011 G4` = rep(c(NA, "X", NA, "X", NA, "X", NA), c(23L, 1L, 9L, 1L, 179L, 1L, 3L)),
   `PIRLS 2016 G4` = rep(
     rep(c("X", NA), 39),
     c(
-      3L, 1L, 1L, 3L, 3L, 2L, 4L, 8L, 1L, 2L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
+      3L, 1L, 1L, 3L, 3L, 2L, 4L, 8L, 1L, 2L, 1L, 5L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
       4L, 1L, 4L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 3L,
       1L, 8L, 1L, 1L, 1L, 1L, 2L, 7L, 1L, 11L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L,
-      3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 6L,
+      4L, 1L, 18L, 1L, 3L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 8L, 1L, 15L, 1L, 6L,
       1L, 5L
     )
   ),
   `ePIRLS 2016 G4` = rep(
     rep(c("X", NA), 14),
     c(
-      1L, 1L, 1L, 1L, 1L, 20L, 1L, 15L, 1L, 19L, 1L, 10L, 1L, 4L, 2L, 47L, 1L, 9L,
-      1L, 32L, 1L, 2L, 2L, 1L, 1L, 24L, 1L, 12L
+      1L, 1L, 1L, 1L, 1L, 20L, 1L, 16L, 1L, 19L, 1L, 10L, 1L, 4L, 2L, 47L, 1L, 9L,
+      1L, 35L, 1L, 2L, 2L, 1L, 1L, 24L, 1L, 12L
     )
   ),
   `prePIRLS 2016 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(40L, 1L, 9L, 1L, 22L, 1L, 14L, 1L, 7L, 1L, 112L, 1L, 3L)
+    c(41L, 1L, 9L, 1L, 22L, 1L, 14L, 1L, 7L, 1L, 115L, 1L, 3L)
   ),
   `PIRLS 2021 G4` = rep(
     rep(c("X", NA), 41),
     c(
-      1L, 1L, 3L, 3L, 3L, 2L, 4L, 3L, 1L, 3L, 1L, 1L, 1L, 3L, 1L, 3L, 1L, 2L, 3L,
+      1L, 1L, 3L, 3L, 3L, 2L, 4L, 3L, 1L, 3L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 2L, 3L,
       1L, 1L, 8L, 1L, 2L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 2L, 2L, 3L, 2L, 1L,
       1L, 1L, 1L, 4L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 5L, 1L, 1L, 2L, 10L, 2L, 8L, 1L,
-      1L, 2L, 5L, 2L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L,
+      1L, 2L, 5L, 2L, 4L, 1L, 18L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L,
       1L, 13L, 2L, 6L, 2L, 3L
     )
   ),
@@ -2064,8 +2069,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      4L, 1L, 8L, 1L, 23L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 9L, 2L, 7L, 2L, 3L,
-      1L, 8L, 1L, 12L, 1L, 21L, 1L, 1L, 1L, 7L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 1L,
+      4L, 1L, 8L, 1L, 24L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L, 1L, 9L, 2L, 7L, 2L, 3L,
+      1L, 8L, 1L, 12L, 1L, 21L, 1L, 1L, 1L, 7L, 1L, 4L, 1L, 18L, 1L, 3L, 1L, 1L, 1L,
       5L, 1L, 1L, 3L, 1L, 1L, 37L
     )
   ),
@@ -2078,10 +2083,10 @@ countries.studies.cycles.table <- data.table(
       NA
     ),
     c(
-      3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 1L,
+      3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 9L, 1L, 1L,
       1L, 1L, 1L, 12L, 1L, 3L, 3L, 3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 3L, 2L, 1L,
       4L, 1L, 3L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 14L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L,
-      2L, 21L, 1L, 2L, 1L, 11L, 1L, 3L, 1L, 22L, 1L, 12L
+      2L, 24L, 1L, 2L, 1L, 11L, 1L, 3L, 1L, 22L, 1L, 12L
     )
   ),
   `PISA 2003` = rep(
@@ -2092,9 +2097,9 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 1L, 1L, 8L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L,
+      8L, 2L, 1L, 1L, 8L, 1L, 4L, 1L, 1L, 1L, 10L, 1L, 1L, 1L, 1L, 1L, 12L, 1L, 3L,
       3L, 3L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 3L, 1L,
-      1L, 2L, 1L, 1L, 4L, 1L, 16L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 9L, 1L, 1L,
+      1L, 2L, 1L, 1L, 4L, 1L, 16L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 27L, 1L, 9L, 1L, 1L,
       1L, 3L, 1L, 7L, 2L, 12L, 2L, 4L, 1L, 7L
     )
   ),
@@ -2107,10 +2112,10 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      5L, 1L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 4L, 1L, 1L, 1L, 1L,
+      5L, 1L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 4L, 1L, 1L, 1L, 1L,
       1L, 12L, 2L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L, 1L, 2L, 2L, 1L,
-      1L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 11L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 3L,
-      1L, 17L, 1L, 2L, 1L, 2L, 1L, 6L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 12L
+      1L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 11L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 4L,
+      1L, 19L, 1L, 2L, 1L, 2L, 1L, 6L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 12L
     )
   ),
   `PISA 2009` = rep(
@@ -2123,10 +2128,10 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      3L, 3L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L, 1L, 1L,
+      3L, 3L, 2L, 4L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 2L, 1L, 1L, 1L, 1L,
       1L, 1L, 1L, 12L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L, 1L, 3L,
       1L, 1L, 1L, 1L, 3L, 4L, 1L, 1L, 1L, 1L, 2L, 1L, 3L, 2L, 5L, 1L, 1L, 1L, 3L,
-      1L, 8L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 3L, 1L, 2L, 1L, 1L, 1L, 3L, 1L, 6L, 1L,
+      1L, 8L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 4L, 1L, 4L, 1L, 1L, 1L, 3L, 1L, 6L, 1L,
       1L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L, 2L, 12L
     )
   ),
@@ -2140,10 +2145,10 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA
     ),
     c(
-      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
+      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 12L, 2L, 2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 1L, 1L, 3L, 3L,
       1L, 3L, 3L, 1L, 3L, 4L, 1L, 1L, 4L, 1L, 4L, 1L, 7L, 1L, 3L, 1L, 8L, 1L, 1L,
-      1L, 3L, 1L, 2L, 2L, 3L, 1L, 2L, 1L, 3L, 1L, 2L, 3L, 5L, 1L, 2L, 1L, 2L, 1L,
+      1L, 3L, 1L, 2L, 2L, 4L, 1L, 4L, 1L, 3L, 1L, 2L, 3L, 5L, 1L, 2L, 1L, 2L, 1L,
       4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 12L, 2L, 1L, 1L, 10L
     )
   ),
@@ -2157,10 +2162,10 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      3L, 2L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
+      3L, 2L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 4L, 1L, 1L, 2L, 4L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 8L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L,
       1L, 1L, 3L, 3L, 1L, 2L, 4L, 2L, 1L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 2L, 1L, 1L,
-      1L, 1L, 2L, 11L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L,
+      1L, 1L, 2L, 11L, 1L, 8L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 3L, 2L, 3L, 1L, 1L, 1L,
       7L, 3L, 3L, 1L, 2L, 1L, 7L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 6L, 3L, 12L, 2L, 1L,
       1L, 10L
     )
@@ -2172,15 +2177,15 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
-      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 2L, 1L, 2L, 3L, 1L, 1L, 2L, 3L, 1L, 2L,
+      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 2L, 1L, 2L, 3L, 1L, 1L, 2L, 4L, 1L, 2L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L, 2L, 4L, 2L, 1L, 1L, 1L, 1L, 3L,
       1L, 1L, 3L, 3L, 1L, 3L, 3L, 2L, 1L, 1L, 1L, 3L, 1L, 3L, 2L, 1L, 1L, 1L, 1L,
-      2L, 7L, 1L, 3L, 1L, 8L, 1L, 1L, 1L, 2L, 3L, 1L, 2L, 3L, 3L, 3L, 1L, 1L, 1L,
-      9L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 8L, 1L, 8L, 1L, 3L,
-      2L, 1L, 1L, 10L
+      2L, 7L, 1L, 3L, 1L, 8L, 1L, 1L, 1L, 2L, 3L, 1L, 2L, 4L, 2L, 2L, 1L, 3L, 1L,
+      1L, 1L, 9L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 8L, 1L, 8L,
+      1L, 3L, 2L, 1L, 1L, 10L
     )
   ),
   `PISA 2022` = rep(
@@ -2192,39 +2197,39 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 2L, 3L, 1L, 1L, 2L, 3L, 1L, 2L, 1L, 1L,
+      3L, 3L, 2L, 2L, 1L, 1L, 3L, 1L, 4L, 2L, 3L, 1L, 1L, 2L, 4L, 1L, 2L, 1L, 1L,
       1L, 1L, 1L, 1L, 1L, 1L, 1L, 10L, 2L, 2L, 4L, 2L, 3L, 1L, 3L, 1L, 1L, 3L, 7L,
       2L, 3L, 3L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 1L, 1L, 3L, 6L, 1L, 3L, 1L, 8L,
-      1L, 1L, 1L, 2L, 3L, 1L, 4L, 1L, 2L, 13L, 1L, 2L, 1L, 4L, 2L, 4L, 5L, 1L, 1L,
+      1L, 1L, 1L, 2L, 3L, 1L, 4L, 2L, 2L, 15L, 1L, 2L, 1L, 4L, 2L, 4L, 5L, 1L, 1L,
       1L, 1L, 8L, 1L, 12L, 4L, 10L
     )
   ),
   `PISA for Development 2019 IS` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(49L, 1L, 15L, 1L, 1L, 1L, 17L, 1L, 51L, 1L, 29L, 1L, 43L, 1L, 1L)
+    c(50L, 1L, 15L, 1L, 1L, 1L, 17L, 1L, 51L, 1L, 32L, 1L, 43L, 1L, 1L)
   ),
   `PISA for Development 2019 OS` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(65L, 1L, 1L, 1L, 63L, 1L, 5L, 1L, 29L, 1L, 45L)
+    c(66L, 1L, 1L, 1L, 63L, 1L, 5L, 1L, 32L, 1L, 45L)
   ),
   `REDS 2021 G8` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(4L, 1L, 7L, 1L, 28L, 1L, 14L, 1L, 14L, 1L, 11L, 1L, 77L, 2L, 9L, 1L, 26L, 1L, 1L, 1L, 11L)
+    c(4L, 1L, 7L, 1L, 29L, 1L, 14L, 1L, 14L, 1L, 11L, 1L, 80L, 2L, 9L, 1L, 26L, 1L, 1L, 1L, 11L)
   ),
   `RLII 1991 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
+    c(65L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 43L, 1L, 2L, 2L, 26L, 1L, 12L)
   ),
   `RLII 2001 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(64L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 40L, 1L, 2L, 2L, 26L, 1L, 12L)
+    c(65L, 1L, 4L, 1L, 6L, 1L, 1L, 1L, 49L, 1L, 43L, 1L, 2L, 2L, 26L, 1L, 12L)
   ),
   `SITES 1998 M1 POP A` = rep(
     c(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
       "X", NA, "X", NA, "X", NA
     ),
-    c(25L, 1L, 12L, 1L, 19L, 2L, 6L, 1L, 9L, 3L, 2L, 1L, 44L, 1L, 1L, 1L, 40L, 1L, 2L, 1L, 2L, 1L, 37L)
+    c(25L, 1L, 13L, 1L, 19L, 2L, 6L, 1L, 9L, 3L, 2L, 1L, 44L, 1L, 1L, 1L, 43L, 1L, 2L, 1L, 2L, 1L, 37L)
   ),
   `SITES 1998 M1 POP B` = rep(
     c(
@@ -2233,8 +2238,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA
     ),
     c(
-      14L, 2L, 9L, 1L, 11L, 2L, 2L, 1L, 16L, 2L, 6L, 1L, 2L, 1L, 6L, 3L, 2L, 1L, 9L,
-      2L, 33L, 1L, 1L, 1L, 32L, 1L, 7L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 31L, 1L, 3L
+      14L, 2L, 9L, 1L, 12L, 2L, 2L, 1L, 16L, 2L, 6L, 1L, 2L, 1L, 6L, 3L, 2L, 1L, 9L,
+      2L, 33L, 1L, 1L, 1L, 35L, 1L, 7L, 1L, 2L, 1L, 2L, 1L, 1L, 1L, 31L, 1L, 3L
     )
   ),
   `SITES 1998 M1 POP C` = rep(
@@ -2243,8 +2248,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      14L, 2L, 9L, 1L, 11L, 2L, 20L, 1L, 6L, 1L, 9L, 3L, 2L, 1L, 9L, 3L, 32L, 1L,
-      34L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 33L, 1L, 3L
+      14L, 2L, 9L, 1L, 12L, 2L, 20L, 1L, 6L, 1L, 9L, 3L, 2L, 1L, 9L, 3L, 32L, 1L,
+      37L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 33L, 1L, 3L
     )
   ),
   `SITES 2006 M2` = rep(
@@ -2254,8 +2259,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA
     ),
     c(
-      8L, 1L, 15L, 1L, 3L, 1L, 4L, 1L, 7L, 1L, 6L, 1L, 6L, 1L, 2L, 2L, 6L, 1L, 10L,
-      2L, 2L, 1L, 9L, 1L, 34L, 1L, 33L, 2L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 31L, 1L,
+      8L, 1L, 15L, 1L, 3L, 1L, 5L, 1L, 7L, 1L, 6L, 1L, 6L, 1L, 2L, 2L, 6L, 1L, 10L,
+      2L, 2L, 1L, 9L, 1L, 34L, 1L, 36L, 2L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 31L, 1L,
       3L
     )
   ),
@@ -2266,31 +2271,31 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 3L, 1L, 1L, 1L, 4L, 1L, 20L, 1L, 12L, 2L, 13L, 1L, 2L, 1L, 3L, 1L, 1L,
-      1L, 7L, 1L, 4L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 8L, 2L, 34L, 2L,
+      8L, 2L, 3L, 1L, 1L, 1L, 4L, 1L, 21L, 1L, 12L, 2L, 13L, 1L, 2L, 1L, 3L, 1L, 1L,
+      1L, 7L, 1L, 4L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 3L, 1L, 8L, 1L, 8L, 2L, 37L, 2L,
       13L, 1L, 26L
     )
   ),
   `TALIS 2013 ISCED 1` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(13L, 1L, 27L, 1L, 16L, 1L, 41L, 1L, 25L, 1L, 8L, 1L, 77L)
+    c(13L, 1L, 28L, 1L, 16L, 1L, 41L, 1L, 25L, 1L, 8L, 1L, 80L)
   ),
   `TALIS 2013 ISCED 2` = rep(
     rep(c("X", NA), 30),
     c(
-      1L, 7L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 7L, 2L, 3L, 1L, 11L, 3L,
+      1L, 7L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 8L, 2L, 3L, 1L, 11L, 3L,
       2L, 2L, 1L, 1L, 6L, 1L, 8L, 2L, 2L, 1L, 4L, 1L, 6L, 1L, 6L, 1L, 12L, 1L, 3L,
-      1L, 8L, 1L, 1L, 1L, 6L, 2L, 21L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 1L, 1L, 1L,
+      1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 2L, 1L, 2L, 1L, 4L, 1L, 1L, 1L, 1L, 1L,
       26L, 1L, 12L
     )
   ),
   `TALIS 2013 ISCED 3` = rep(
     rep(c("X", NA), 9),
-    c(1L, 7L, 1L, 32L, 1L, 16L, 1L, 19L, 1L, 21L, 1L, 25L, 1L, 8L, 1L, 33L, 1L, 43L)
+    c(1L, 7L, 1L, 33L, 1L, 16L, 1L, 19L, 1L, 21L, 1L, 25L, 1L, 8L, 1L, 36L, 1L, 43L)
   ),
   `TALIS 2013 PISA Link` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(8L, 1L, 45L, 1L, 3L, 1L, 34L, 1L, 6L, 1L, 35L, 1L, 21L, 1L, 10L, 1L, 43L)
+    c(8L, 1L, 46L, 1L, 3L, 1L, 34L, 1L, 6L, 1L, 35L, 1L, 24L, 1L, 10L, 1L, 43L)
   ),
   `TALIS 2018 ISCED 1` = rep(
     c(
@@ -2298,8 +2303,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      1L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 27L, 1L, 11L, 2L, 4L, 1L, 21L, 1L, 4L, 1L,
-      30L, 1L, 55L, 1L, 1L, 1L, 10L, 1L, 15L, 1L, 10L
+      1L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 28L, 1L, 11L, 2L, 4L, 1L, 21L, 1L, 4L, 1L,
+      30L, 1L, 58L, 1L, 1L, 1L, 10L, 1L, 15L, 1L, 10L
     )
   ),
   `TALIS 2018 ISCED 2` = rep(
@@ -2311,27 +2316,55 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA
     ),
     c(
-      1L, 1L, 2L, 1L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 3L, 1L, 3L,
+      1L, 1L, 2L, 1L, 3L, 2L, 1L, 1L, 3L, 1L, 4L, 1L, 3L, 1L, 3L, 1L, 4L, 1L, 3L,
       3L, 2L, 1L, 11L, 3L, 2L, 2L, 1L, 1L, 6L, 2L, 7L, 2L, 2L, 2L, 3L, 1L, 4L, 1L,
-      1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 1L,
+      1L, 1L, 6L, 1L, 3L, 1L, 12L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 24L, 1L, 2L, 1L, 1L,
       1L, 5L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 1L, 1L, 6L, 1L, 3L
     )
   ),
   `TALIS 2018 ISCED 3` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(4L, 1L, 15L, 1L, 3L, 1L, 16L, 1L, 26L, 1L, 67L, 1L, 35L, 2L, 1L, 1L, 10L, 1L, 15L, 1L, 10L)
+    c(4L, 1L, 15L, 1L, 3L, 1L, 17L, 1L, 26L, 1L, 67L, 1L, 38L, 2L, 1L, 1L, 10L, 1L, 15L, 1L, 10L)
   ),
   `TALIS 2018 PISA Link` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(1L, 1L, 6L, 1L, 23L, 1L, 4L, 1L, 3L, 1L, 19L, 1L, 42L, 1L, 81L, 1L, 15L, 1L, 10L)
+    c(1L, 1L, 6L, 1L, 24L, 1L, 4L, 1L, 3L, 1L, 19L, 1L, 42L, 1L, 84L, 1L, 15L, 1L, 10L)
+  ),
+  `TALIS 2024 ISCED 1` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(
+      4L, 1L, 3L, 1L, 2L, 1L, 1L, 2L, 5L, 1L, 34L, 1L, 4L, 1L, 21L, 1L, 4L, 1L, 9L,
+      1L, 20L, 1L, 10L, 1L, 37L, 1L, 8L, 1L, 13L, 1L, 26L
+    )
+  ),
+  `TALIS 2024 ISCED 2` = rep(
+    c(
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X",
+      NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA,
+      "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
+    ),
+    c(
+      3L, 2L, 3L, 4L, 1L, 4L, 3L, 1L, 3L, 1L, 3L, 1L, 4L, 1L, 2L, 4L, 2L, 1L, 12L,
+      2L, 2L, 2L, 8L, 2L, 6L, 3L, 2L, 2L, 3L, 2L, 3L, 1L, 1L, 1L, 2L, 1L, 5L, 1L,
+      1L, 2L, 11L, 1L, 8L, 1L, 1L, 1L, 6L, 2L, 24L, 1L, 4L, 2L, 4L, 1L, 1L, 3L, 12L,
+      1L, 13L, 3L, 6L, 1L, 3L
+    )
+  ),
+  `TALIS 2024 ISCED 3` = rep(
+    c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
+    c(4L, 1L, 8L, 1L, 28L, 1L, 26L, 1L, 67L, 1L, 29L, 1L, 8L, 1L, 13L, 1L, 26L)
   ),
   `TALIS 3S 2018 ISCED 0.2` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(28L, 1L, 10L, 1L, 1L, 1L, 35L, 1L, 3L, 1L, 4L, 1L, 39L, 1L, 59L, 1L, 26L)
+    c(28L, 1L, 11L, 1L, 1L, 1L, 35L, 1L, 3L, 1L, 4L, 1L, 39L, 1L, 62L, 1L, 26L)
   ),
   `TALIS 3S 2018 ISCED U3` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(39L, 1L, 1L, 1L, 35L, 1L, 48L, 1L, 86L)
+    c(40L, 1L, 1L, 1L, 35L, 1L, 48L, 1L, 89L)
   ),
   `TEDS-M 2008` = rep(
     c(
@@ -2339,8 +2372,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      23L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 14L, 1L, 6L, 1L, 51L, 1L, 12L, 1L, 2L, 1L,
-      3L, 1L, 1L, 1L, 25L, 1L, 7L, 1L, 5L, 1L, 1L, 1L, 22L, 1L, 12L
+      23L, 1L, 1L, 1L, 1L, 2L, 11L, 1L, 14L, 1L, 6L, 1L, 51L, 1L, 12L, 1L, 2L, 1L,
+      3L, 1L, 1L, 1L, 28L, 1L, 7L, 1L, 5L, 1L, 1L, 1L, 22L, 1L, 12L
     )
   ),
   `TIMSS 1995 G4` = rep(
@@ -2350,8 +2383,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 15L, 1L, 11L, 2L, 14L, 1L, 10L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L,
-      3L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 28L, 1L, 3L,
+      8L, 2L, 15L, 1L, 12L, 2L, 14L, 1L, 10L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L,
+      3L, 1L, 4L, 1L, 1L, 1L, 4L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 31L, 1L, 3L,
       1L, 2L, 1L, 4L, 1L, 22L, 1L, 12L
     )
   ),
@@ -2363,9 +2396,9 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 3L, 3L, 9L, 1L, 1L, 1L, 4L, 1L, 4L, 3L, 1L, 1L, 11L, 2L, 4L, 1L, 4L,
+      8L, 2L, 3L, 3L, 9L, 1L, 1L, 1L, 5L, 1L, 4L, 3L, 1L, 1L, 11L, 2L, 4L, 1L, 4L,
       1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 3L, 2L, 1L, 4L, 1L, 1L, 1L, 2L, 1L, 1L, 1L,
-      23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 21L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
+      23L, 1L, 8L, 1L, 1L, 1L, 7L, 1L, 24L, 1L, 2L, 1L, 3L, 1L, 3L, 1L, 1L, 3L, 3L,
       1L, 22L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2377,9 +2410,9 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 2L, 1L, 8L, 2L, 14L, 1L, 4L, 1L, 7L, 1L, 2L,
+      8L, 1L, 4L, 1L, 1L, 1L, 9L, 1L, 2L, 1L, 9L, 2L, 14L, 1L, 4L, 1L, 7L, 1L, 2L,
       2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 4L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L,
-      3L, 1L, 10L, 1L, 4L, 1L, 24L, 1L, 2L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 7L,
+      3L, 1L, 10L, 1L, 4L, 1L, 27L, 1L, 2L, 1L, 7L, 1L, 1L, 2L, 2L, 1L, 1L, 1L, 7L,
       2L, 13L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2391,8 +2424,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA
     ),
     c(
-      6L, 1L, 1L, 1L, 4L, 1L, 19L, 2L, 3L, 1L, 14L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L,
-      1L, 2L, 1L, 9L, 1L, 1L, 1L, 2L, 2L, 19L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 27L, 1L,
+      6L, 1L, 1L, 1L, 4L, 1L, 20L, 2L, 3L, 1L, 14L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L,
+      1L, 2L, 1L, 9L, 1L, 1L, 1L, 2L, 2L, 19L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 30L, 1L,
       3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L, 9L, 1L, 7L, 1L, 6L, 1L, 3L, 1L, 8L
     )
   ),
@@ -2405,10 +2438,10 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      6L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 5L, 2L, 4L, 1L, 4L, 2L, 3L, 1L, 11L, 1L, 2L,
+      6L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 5L, 2L, 4L, 1L, 5L, 2L, 3L, 1L, 11L, 1L, 2L,
       1L, 1L, 1L, 6L, 1L, 3L, 1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 2L, 1L,
       1L, 1L, 1L, 1L, 2L, 2L, 4L, 1L, 10L, 1L, 3L, 1L, 8L, 1L, 1L, 1L, 4L, 1L, 4L,
-      1L, 19L, 1L, 2L, 1L, 1L, 3L, 3L, 1L, 1L, 5L, 9L, 1L, 7L, 1L, 6L, 1L, 8L, 1L,
+      1L, 22L, 1L, 2L, 1L, 1L, 3L, 3L, 1L, 1L, 5L, 9L, 1L, 7L, 1L, 6L, 1L, 8L, 1L,
       3L
     )
   ),
@@ -2421,9 +2454,9 @@ countries.studies.cycles.table <- data.table(
       NA
     ),
     c(
-      2L, 1L, 3L, 1L, 1L, 2L, 14L, 1L, 1L, 1L, 5L, 3L, 2L, 1L, 1L, 1L, 1L, 1L, 3L,
+      2L, 1L, 3L, 1L, 1L, 2L, 14L, 1L, 1L, 1L, 6L, 3L, 2L, 1L, 1L, 1L, 1L, 1L, 3L,
       1L, 7L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 2L, 2L, 5L, 1L, 2L, 1L,
-      1L, 1L, 2L, 1L, 9L, 1L, 10L, 1L, 8L, 1L, 1L, 1L, 11L, 1L, 20L, 1L, 3L, 1L, 3L,
+      1L, 1L, 2L, 1L, 9L, 1L, 10L, 1L, 8L, 1L, 1L, 1L, 12L, 1L, 22L, 1L, 3L, 1L, 3L,
       5L, 1L, 1L, 9L, 1L, 9L, 3L, 2L, 1L, 3L, 1L, 8L
     )
   ),
@@ -2434,8 +2467,8 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      6L, 1L, 1L, 1L, 24L, 2L, 18L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 2L, 1L, 9L,
-      1L, 1L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 32L, 1L, 3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L,
+      6L, 1L, 1L, 1L, 25L, 2L, 18L, 1L, 12L, 1L, 2L, 1L, 3L, 1L, 4L, 1L, 2L, 1L, 9L,
+      1L, 1L, 1L, 23L, 1L, 8L, 1L, 1L, 1L, 35L, 1L, 3L, 1L, 3L, 1L, 2L, 1L, 2L, 1L,
       9L, 1L, 14L, 1L, 12L
     )
   ),
@@ -2448,9 +2481,9 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      2L, 1L, 3L, 1L, 1L, 1L, 6L, 3L, 4L, 2L, 2L, 1L, 5L, 3L, 2L, 2L, 6L, 1L, 4L,
+      2L, 1L, 3L, 1L, 1L, 1L, 6L, 3L, 4L, 2L, 2L, 1L, 6L, 3L, 2L, 2L, 6L, 1L, 4L,
       1L, 2L, 1L, 7L, 2L, 3L, 1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 1L, 2L,
-      1L, 1L, 4L, 1L, 7L, 1L, 1L, 1L, 6L, 1L, 12L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 17L,
+      1L, 1L, 4L, 1L, 7L, 1L, 1L, 1L, 6L, 1L, 12L, 1L, 2L, 1L, 8L, 1L, 2L, 1L, 19L,
       1L, 2L, 1L, 1L, 3L, 3L, 2L, 1L, 4L, 1L, 1L, 7L, 2L, 8L, 3L, 2L, 1L, 12L
     )
   ),
@@ -2462,60 +2495,60 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA
     ),
     c(
-      6L, 1L, 1L, 1L, 6L, 2L, 5L, 2L, 9L, 2L, 3L, 1L, 11L, 1L, 2L, 1L, 8L, 1L, 3L,
+      6L, 1L, 1L, 1L, 6L, 2L, 5L, 2L, 10L, 2L, 3L, 1L, 11L, 1L, 2L, 1L, 8L, 1L, 3L,
       1L, 2L, 2L, 2L, 1L, 3L, 2L, 1L, 2L, 4L, 1L, 2L, 1L, 1L, 1L, 21L, 1L, 12L, 1L,
-      11L, 1L, 19L, 1L, 2L, 1L, 2L, 2L, 3L, 1L, 2L, 2L, 1L, 1L, 9L, 1L, 14L, 1L,
+      11L, 1L, 22L, 1L, 2L, 1L, 2L, 2L, 3L, 1L, 2L, 2L, 1L, 1L, 9L, 1L, 14L, 1L,
       12L
     )
   ),
   `TIMSS 2011 G4` = rep(
     rep(c("X", NA), 40),
     c(
-      1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 2L, 1L, 6L, 2L, 3L, 1L, 4L, 2L,
+      1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 3L, 2L, 1L, 2L, 1L, 6L, 2L, 3L, 1L, 5L, 2L,
       2L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 1L, 2L, 1L, 4L, 4L, 2L, 2L, 4L, 1L, 2L,
       2L, 3L, 1L, 1L, 1L, 2L, 1L, 4L, 1L, 7L, 1L, 11L, 2L, 8L, 1L, 1L, 2L, 5L, 2L,
-      3L, 1L, 17L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 13L,
+      4L, 1L, 19L, 1L, 2L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 1L, 1L, 7L, 2L, 13L,
       1L, 2L, 2L, 8L
     )
   ),
   `TIMSS 2011 G8` = rep(
     rep(c("X", NA), 37),
     c(
-      1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 2L, 3L, 1L, 4L, 2L, 18L, 1L,
+      1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 2L, 3L, 1L, 5L, 2L, 18L, 1L,
       4L, 1L, 2L, 2L, 3L, 2L, 1L, 2L, 2L, 1L, 3L, 2L, 1L, 3L, 3L, 1L, 2L, 1L, 1L,
-      1L, 4L, 1L, 5L, 1L, 10L, 1L, 12L, 1L, 1L, 2L, 8L, 1L, 1L, 1L, 17L, 1L, 2L, 1L,
+      1L, 4L, 1L, 5L, 1L, 10L, 1L, 12L, 1L, 1L, 2L, 8L, 1L, 2L, 1L, 19L, 1L, 2L, 1L,
       1L, 1L, 5L, 1L, 2L, 4L, 1L, 1L, 7L, 2L, 8L, 1L, 4L, 1L, 8L, 1L, 3L
     )
   ),
   `TIMSS 2015 G4` = rep(
     rep(c("X", NA), 36),
     c(
-      3L, 1L, 1L, 1L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
+      3L, 1L, 1L, 1L, 1L, 1L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 2L, 1L, 5L, 2L, 2L, 3L,
       1L, 1L, 11L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 3L, 1L, 2L, 4L, 1L, 2L, 2L, 3L,
-      1L, 1L, 1L, 2L, 1L, 4L, 1L, 19L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 3L, 1L,
-      20L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
+      1L, 1L, 1L, 2L, 1L, 4L, 1L, 19L, 2L, 4L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 4L, 1L,
+      22L, 1L, 1L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
   ),
   `TIMSS 2015 G8` = rep(
     rep(c("X", NA), 36),
     c(
-      3L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 1L, 1L, 1L, 2L, 1L, 4L, 2L, 15L, 1L,
+      3L, 1L, 1L, 1L, 1L, 1L, 1L, 7L, 1L, 6L, 1L, 1L, 1L, 2L, 1L, 5L, 2L, 15L, 1L,
       2L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 2L, 1L,
-      1L, 4L, 1L, 7L, 1L, 8L, 1L, 10L, 1L, 1L, 1L, 1L, 2L, 10L, 1L, 20L, 1L, 1L, 1L,
+      1L, 4L, 1L, 7L, 1L, 8L, 1L, 10L, 1L, 1L, 1L, 1L, 2L, 11L, 1L, 22L, 1L, 1L, 1L,
       5L, 1L, 2L, 2L, 1L, 1L, 1L, 1L, 8L, 1L, 13L, 1L, 8L, 1L, 3L
     )
   ),
   `preTIMSS 2015 G4` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(1L, 1L, 14L, 1L, 53L, 1L, 2L, 1L, 6L, 1L, 7L, 1L, 7L, 1L, 112L, 1L, 3L)
+    c(1L, 1L, 14L, 1L, 54L, 1L, 2L, 1L, 6L, 1L, 7L, 1L, 7L, 1L, 115L, 1L, 3L)
   ),
   `TIMSS 2019 G4` = rep(
     rep(c("X", NA), 42),
     c(
-      1L, 1L, 3L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 3L, 7L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
+      1L, 1L, 3L, 1L, 1L, 1L, 3L, 2L, 1L, 1L, 3L, 7L, 1L, 2L, 1L, 5L, 2L, 2L, 3L,
       1L, 1L, 9L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 2L, 2L, 4L, 1L, 2L,
       2L, 3L, 3L, 2L, 1L, 1L, 1L, 2L, 1L, 5L, 1L, 1L, 2L, 10L, 2L, 8L, 1L, 1L, 3L,
-      2L, 1L, 1L, 2L, 3L, 1L, 16L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 1L, 1L, 1L,
+      2L, 1L, 1L, 2L, 4L, 1L, 18L, 1L, 3L, 1L, 1L, 2L, 4L, 1L, 1L, 1L, 1L, 1L, 1L,
       1L, 10L, 1L, 13L, 1L, 8L, 1L, 3L
     )
   ),
@@ -2526,9 +2559,9 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      4L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 8L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 2L, 1L,
-      1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 9L, 1L, 3L, 1L,
-      20L, 1L, 7L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 12L
+      4L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 9L, 1L, 1L, 1L, 1L, 1L, 11L, 2L, 3L, 2L, 1L,
+      1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 25L, 1L, 8L, 1L, 9L, 1L, 4L, 1L,
+      22L, 1L, 7L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 24L, 1L, 12L
     )
   ),
   `TIMSS 2019 G8` = rep(
@@ -2540,9 +2573,9 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X"
     ),
     c(
-      1L, 1L, 1L, 1L, 1L, 3L, 1L, 7L, 1L, 11L, 1L, 4L, 2L, 3L, 1L, 11L, 1L, 2L, 1L,
+      1L, 1L, 1L, 1L, 1L, 3L, 1L, 7L, 1L, 11L, 1L, 5L, 2L, 3L, 1L, 11L, 1L, 2L, 1L,
       4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 2L, 1L,
-      1L, 4L, 1L, 16L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 3L, 1L, 16L, 2L, 2L, 1L, 1L, 1L,
+      1L, 4L, 1L, 16L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 4L, 1L, 18L, 2L, 2L, 1L, 1L, 1L,
       5L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 8L, 2L, 1L, 1L
     )
   ),
@@ -2553,42 +2586,42 @@ countries.studies.cycles.table <- data.table(
       NA, "X", NA
     ),
     c(
-      4L, 1L, 23L, 1L, 24L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 7L, 2L, 7L, 1L, 4L, 1L, 21L,
-      1L, 12L, 1L, 13L, 1L, 20L, 1L, 7L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
+      4L, 1L, 23L, 1L, 25L, 1L, 7L, 1L, 4L, 1L, 2L, 1L, 7L, 2L, 7L, 1L, 4L, 1L, 21L,
+      1L, 12L, 1L, 14L, 1L, 22L, 1L, 7L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
   ),
   `eTIMSS PSI 2019 G4` = rep(
     rep(c("X", NA), 32),
     c(
-      1L, 1L, 1L, 1L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 4L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
+      1L, 1L, 1L, 1L, 1L, 4L, 1L, 15L, 1L, 2L, 1L, 5L, 2L, 2L, 1L, 1L, 1L, 1L, 1L,
       9L, 1L, 1L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 1L, 2L, 8L, 1L, 7L, 1L, 4L, 1L, 12L,
-      1L, 12L, 1L, 8L, 1L, 9L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 7L, 1L, 1L, 1L, 1L, 1L,
+      1L, 12L, 1L, 8L, 1L, 9L, 1L, 4L, 1L, 18L, 1L, 3L, 1L, 7L, 1L, 1L, 1L, 1L, 1L,
       1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
   ),
   `eTIMSS PSI 2019 G8` = rep(
     rep(c("X", NA), 24),
     c(
-      1L, 1L, 1L, 1L, 1L, 23L, 1L, 4L, 2L, 18L, 1L, 4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L,
-      7L, 2L, 7L, 1L, 4L, 1L, 21L, 1L, 12L, 1L, 9L, 1L, 3L, 1L, 16L, 1L, 3L, 1L, 7L,
+      1L, 1L, 1L, 1L, 1L, 23L, 1L, 5L, 2L, 18L, 1L, 4L, 2L, 1L, 1L, 4L, 1L, 2L, 1L,
+      7L, 2L, 7L, 1L, 4L, 1L, 21L, 1L, 12L, 1L, 9L, 1L, 4L, 1L, 18L, 1L, 3L, 1L, 7L,
       1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 1L, 12L
     )
   ),
   `TIMSS 2023 G4` = rep(
     rep(c("X", NA), 38),
     c(
-      1L, 1L, 3L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 1L, 4L, 1L, 2L, 1L, 4L, 2L, 2L, 3L,
+      1L, 1L, 3L, 1L, 3L, 1L, 1L, 2L, 5L, 2L, 1L, 4L, 1L, 2L, 1L, 5L, 2L, 2L, 3L,
       1L, 1L, 11L, 2L, 3L, 2L, 1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 4L, 1L, 1L, 3L, 3L,
       3L, 2L, 1L, 1L, 1L, 1L, 2L, 5L, 1L, 2L, 1L, 11L, 1L, 8L, 1L, 1L, 2L, 5L, 2L,
-      3L, 1L, 17L, 1L, 4L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 2L, 7L, 1L, 3L
+      4L, 1L, 19L, 1L, 4L, 2L, 4L, 1L, 1L, 3L, 1L, 1L, 10L, 1L, 13L, 2L, 7L, 1L, 3L
     )
   ),
   `TIMSS 2023 G8` = rep(
     rep(c("X", NA), 35),
     c(
-      1L, 1L, 1L, 1L, 1L, 2L, 4L, 5L, 1L, 3L, 1L, 7L, 2L, 7L, 2L, 14L, 1L, 4L, 2L,
+      1L, 1L, 1L, 1L, 1L, 2L, 4L, 5L, 1L, 3L, 1L, 7L, 2L, 8L, 2L, 14L, 1L, 4L, 2L,
       1L, 1L, 4L, 1L, 2L, 1L, 2L, 2L, 3L, 2L, 1L, 3L, 3L, 1L, 1L, 1L, 2L, 1L, 4L,
-      1L, 7L, 1L, 8L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 1L, 1L, 17L, 1L, 4L, 1L,
+      1L, 7L, 1L, 8L, 1L, 12L, 1L, 1L, 2L, 6L, 1L, 1L, 1L, 2L, 1L, 19L, 1L, 4L, 1L,
       5L, 1L, 3L, 1L, 1L, 1L, 10L, 1L, 13L, 2L, 7L, 1L, 3L
     )
   ),
@@ -2598,8 +2631,8 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 15L, 1L, 1L, 1L, 9L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
-      69L, 1L, 10L, 2L, 26L, 1L, 12L
+      8L, 2L, 15L, 1L, 1L, 1L, 10L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
+      72L, 1L, 10L, 2L, 26L, 1L, 12L
     )
   ),
   `TIMSS Advanced Physics 1995` = rep(
@@ -2608,37 +2641,42 @@ countries.studies.cycles.table <- data.table(
       "X", NA, "X", NA, "X", NA, "X", NA
     ),
     c(
-      8L, 2L, 15L, 1L, 1L, 1L, 9L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
-      69L, 1L, 10L, 2L, 26L, 1L, 12L
+      8L, 2L, 15L, 1L, 1L, 1L, 10L, 3L, 1L, 1L, 17L, 1L, 4L, 1L, 12L, 2L, 12L, 1L,
+      72L, 1L, 10L, 2L, 26L, 1L, 12L
     )
   ),
   `TIMSS Advanced Mathematics 2008` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(6L, 1L, 66L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 27L, 1L, 10L, 2L, 39L)
+    c(6L, 1L, 67L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 30L, 1L, 10L, 2L, 39L)
   ),
   `TIMSS Advanced Physics 2008` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(6L, 1L, 66L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 27L, 1L, 10L, 2L, 39L)
+    c(6L, 1L, 67L, 1L, 4L, 1L, 10L, 1L, 27L, 1L, 8L, 1L, 6L, 1L, 30L, 1L, 10L, 2L, 39L)
   ),
   `TIMSS Advanced Mathematics 2015` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(59L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 22L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
+    c(60L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 25L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
   ),
   `TIMSS Advanced Physics 2015` = rep(
     c(NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA, "X", NA),
-    c(59L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 22L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
+    c(60L, 1L, 18L, 1L, 10L, 1L, 36L, 1L, 9L, 1L, 25L, 1L, 1L, 1L, 10L, 2L, 26L, 1L, 12L)
   ),
   `TiPi 2011 G4` = rep(
     rep(c("X", NA), 28),
     c(
-      1L, 1L, 1L, 1L, 1L, 3L, 3L, 12L, 1L, 10L, 1L, 2L, 1L, 1L, 1L, 14L, 1L, 3L, 1L,
+      1L, 1L, 1L, 1L, 1L, 3L, 3L, 12L, 1L, 11L, 1L, 2L, 1L, 1L, 1L, 14L, 1L, 3L, 1L,
       2L, 1L, 4L, 4L, 2L, 2L, 4L, 1L, 12L, 1L, 4L, 1L, 7L, 1L, 11L, 1L, 9L, 1L, 2L,
-      1L, 5L, 2L, 3L, 1L, 17L, 1L, 2L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 37L
+      1L, 5L, 2L, 4L, 1L, 19L, 1L, 2L, 1L, 1L, 1L, 5L, 1L, 1L, 3L, 1L, 1L, 37L
     )
   ),
   key = "Alpha 3 ISO"
 )
 
+  
+  
+  
+  
+  
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   output$welcomeToRALSA <- renderText("Welcome to RALSA")
   output$welcomeText <- renderText({HTML('The R Analyzer for Large-Scale Assessments (RALSA) is an R package for preparation and analysis of data from large-scale assessments and surveys which use complex sampling and assessment design. Currently, RALSA supports a number of studies with different design and a number of analysis types (see below). Both of these will increase in future.<br/>
@@ -2651,6 +2689,7 @@ Use the menu on the left to:<br/><br/>
 <ul><ul><li>View variable properties (name, class, variable label, response categories/unique values, user-defined missing values)</li></ul></ul>
 <ul><ul><li>Data diagnostic tables (quick weighted or unweighted frequencies and descriptives for inspecting the data and elaborate hypotheses)</li></ul></ul>
 <ul><ul><li>Recode variables</li></ul></ul>
+<ul><ul><li>Cut variables</li></ul></ul>
 <ul><ul><li>Select PISA countries for analysis</li></ul></ul>
 <ul><li>Perform analyses (more analysis types will be added in future)</li></ul>
 <ul><ul><li>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</li></ul></ul>
@@ -2780,6 +2819,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           choices = c("", "ISCED 2")
         } else if(input$selectDownloadStudyDropdown == "TALIS" & input$selectDownloadCycleDropdown %in% c("2013", "2018")) {
           choices = c("", "ISCED 1", "ISCED 2", "ISCED 3", "PISA Link")
+        } else if(input$selectDownloadStudyDropdown == "TALIS" & input$selectDownloadCycleDropdown %in% c("2024")) {
+          choices = c("", "ISCED 1", "ISCED 2", "ISCED 3")
         } else if(input$selectDownloadStudyDropdown == "TALIS 3S" & input$selectDownloadCycleDropdown == "2018") {
           choices = c("", "ISCED 0.2", "ISCED U3")
         } else if(input$selectDownloadStudyDropdown == "TIMSS" & input$selectDownloadCycleDropdown == "1999") {
@@ -2804,9 +2845,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$downloadAvailableCntsText <- renderText({
-    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") && downloadAllStdAndCnt$selectedStudy != "SITES" && downloadAllStdAndCnt$selectedCycle != "1998") {
+    if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") && downloadAllStdAndCnt$selectedStudy != "SITES" && downloadAllStdAndCnt$selectedCycle != "1998" && downloadAllStdAndCnt$selectedStudy != "TALIS" && downloadAllStdAndCnt$selectedCycle != "2024") {
       HTML('Use the panels below to select the countries for which the datasets shall be downloaded.')
-    } else if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M", "SITES") && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle %in% c("1998", "2015", "2018", "2019", "2022") && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "") {
+    } else if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M", "SITES", "TALIS") && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle %in% c("1998", "2015", "2018", "2019", "2022", "2024") && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "") {
       HTML(paste0(downloadAllStdAndCnt$selectedStudy, " ", downloadAllStdAndCnt$selectedCycle, " provides combined files for all countries only."))
     } else {
       NULL
@@ -2819,7 +2860,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("ICCS_2009_G8", "ICCS_2009_G9", "ICCS_2016_G8", "ICCS_2022_G8", "ICILS_2013_G8", "ICILS_2018_G8", "ICILS_2023_G8")) {
         downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^ROM\\/", replacement = "", x = Alpha_3_ISO)]
       }
-      if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("ICCS_2009_G8", "ICCS_2009_G9", "ICCS_2016_G8", "ICCS_2022_G8", "ICILS_2013_G8", "ICILS_2018_G8", "ICILS_2023_G8", "PIRLS_2001_G4", "PIRLS_2006_G4", "PIRLS_2011_G4", "prePIRLS_2011_G4", "PIRLS_2016_G4", "ePIRLS_2016_G4", "prePIRLS_2016_G4", "PIRLS_2021_G4", "PIRLS_2021_G4_Bridge", "TALIS_2008_ISCED_2", "TALIS_2013_ISCED_1", "TALIS_2013_ISCED_2", "TALIS_2013_ISCED_3", "TALIS_2013_PISA_Link", "TALIS_2018_ISCED_1", "TALIS_2018_ISCED_2", "TALIS_2018_ISCED_3", "TALIS_2018_PISA_Link", "TALIS_3S_2018_ISCED_0.2", "TALIS_3S_2018_ISCED_U3", "TIMSS_2011_G4", "TIMSS_2011_G8", "TIMSS_2015_G4", "TIMSS_2015_G8", "preTIMSS_2015_G4", "TIMSS_2019_G4", "TIMSS_2019_G4_Bridge", "TIMSS_2019_G8", "TIMSS_2019_G8_Bridge", "eTIMSS_PSI_2019_G4", "eTIMSS_PSI_2019_G8", "TIMSS_2023_G4", "TIMSS_2023_G8")) {
+      if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("ICCS_2009_G8", "ICCS_2009_G9", "ICCS_2016_G8", "ICCS_2022_G8", "ICILS_2013_G8", "ICILS_2018_G8", "ICILS_2023_G8", "PIRLS_2001_G4", "PIRLS_2006_G4", "PIRLS_2011_G4", "prePIRLS_2011_G4", "PIRLS_2016_G4", "ePIRLS_2016_G4", "prePIRLS_2016_G4", "PIRLS_2021_G4", "PIRLS_2021_G4_Bridge", "TALIS_2008_ISCED_2", "TALIS_2013_ISCED_1", "TALIS_2013_ISCED_2", "TALIS_2013_ISCED_3", "TALIS_2013_PISA_Link", "TALIS_2018_ISCED_1", "TALIS_2018_ISCED_2", "TALIS_2018_ISCED_3", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3", "TALIS_2018_PISA_Link", "TALIS_3S_2018_ISCED_0.2", "TALIS_3S_2018_ISCED_U3", "TIMSS_2011_G4", "TIMSS_2011_G8", "TIMSS_2015_G4", "TIMSS_2015_G8", "preTIMSS_2015_G4", "TIMSS_2019_G4", "TIMSS_2019_G4_Bridge", "TIMSS_2019_G8", "TIMSS_2019_G8_Bridge", "eTIMSS_PSI_2019_G4", "eTIMSS_PSI_2019_G8", "TIMSS_2023_G4", "TIMSS_2023_G8")) {
         downloadAllStdAndCnt$downloadFilteredPartCnt[ , Alpha_3_ISO := gsub(pattern = "^SCG\\/", replacement = "", x = Alpha_3_ISO)]
       }
       if(downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("TIMSS_2003_G4", "TIMSS_2003_G8", "TIMSS_2007_G4", "TIMSS_2007_G4_Bridge", "TIMSS_2007_G8", "TIMSS_2007_G8_Bridge")) {
@@ -2842,28 +2883,28 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$downloadArrowRight <- renderUI({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       return(NULL)
     } else {
       actionButton(inputId = "downloadArrowRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
     }
   })
   output$downloadDblArrowRight <- renderUI({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       return(NULL)
     } else {
       actionButton(inputId = "downloadDblArrowRight", label = NULL, icon("angle-double-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
     }
   })
   output$downloadArrowLeft <- renderUI({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       return(NULL)
     } else {
       actionButton(inputId = "downloadArrowLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
     }
   })
   output$downloadDblArrowLeft <- renderUI({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       return(NULL)
     } else {
       actionButton(inputId = "downloadDblArrowLeft", label = NULL, icon("angle-double-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
@@ -2890,7 +2931,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     downloadAllStdAndCnt$downloadSelectedCnt <- data.table(V1 = as.character(), V2 = as.character(), V3 = as.character(), V4 = as.character())
   })
   output$downloadFilteredPartCnt <- renderDT({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       NULL
     } else {
       if(nrow(downloadAllStdAndCnt$downloadFilteredPartCnt) > 0) {
@@ -2920,7 +2961,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     deferRender = TRUE, scrollY = 400, scroller = TRUE
   ))
   output$downloadSelectedCnt <- renderDT({
-    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998") {
+    if(any(is.null(downloadAllStdAndCnt$selectedStudy), is.null(downloadAllStdAndCnt$selectedCycle), is.null(downloadAllStdAndCnt$selectedPOP)) || any(c(downloadAllStdAndCnt$selectedStudy, downloadAllStdAndCnt$selectedCycle, downloadAllStdAndCnt$selectedPOP) == "") || !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% colnames(downloadAllStdAndCnt$downloadAllAvailStdAndCnt) || downloadAllStdAndCnt$selectedStudy %in% c("PISA", "PISA for Development", "TEDS-M") || downloadAllStdAndCnt$selectedStudy == "SITES" & downloadAllStdAndCnt$selectedCycle == "1998" || downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
       return(NULL)
     } else if(!is.null(downloadAllStdAndCnt$selectedStudy) && downloadAllStdAndCnt$selectedStudy != "" && !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "") {
       if(nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0) {
@@ -3011,7 +3052,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       !is.null(downloadAllStdAndCnt$selectedCycle) && downloadAllStdAndCnt$selectedCycle != "" &&
       !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
       !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" &&
-      downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008")
+      downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3")
     ) {
       downloadAllStdAndCnt$downloadSyntax <- paste0(
         'lsa.download.data(study = "',
@@ -3024,6 +3065,8 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           gsub(pattern = "n school$|ut of school$", replacement = "S", x = downloadAllStdAndCnt$selectedPOP)
         } else if(downloadAllStdAndCnt$selectedStudy == "SITES") {
           downloadAllStdAndCnt$selectedPOP
+        } else if(downloadAllStdAndCnt$selectedStudy == "TALIS" & downloadAllStdAndCnt$selectedCycle == "2024") {
+          gsub(pattern = "SCED ", replacement = "", x = downloadAllStdAndCnt$selectedPOP)
         },
         if(isTRUE(input$downloadAppend)) {
           '"'
@@ -3045,10 +3088,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$downloadSyntaxHead <- renderText({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       HTML("Syntax")
-    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       HTML("Syntax")
     } else {
@@ -3056,10 +3099,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$copyDownloadSyntax <- renderUI({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       rclipButton(inputId = "copyDownloadSyntax", label = "Copy syntax", clipText = syntaxDownloadData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
-    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       rclipButton(inputId = "copyDownloadSyntax", label = "Copy syntax", clipText = syntaxDownloadData(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
     } else {
@@ -3067,10 +3110,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$downloadSyntax <- renderText({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       syntaxDownloadData()
-    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       syntaxDownloadData()
     } else {
@@ -3078,10 +3121,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$downloadExecBtnHead <- renderText({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       HTML("Press the button below to execute the syntax")
-    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       HTML("Press the button below to execute the syntax")
     } else {
@@ -3089,10 +3132,10 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     }
   })
   output$execDownloadData <- renderUI({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       actionButton(inputId = "execDownloadData", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
-    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
+    } else if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseDirPath(available.volumes, input$downloadChooseOutDir)) > 0
     ) {
       actionButton(inputId = "execDownloadData", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
     } else {
@@ -3114,15 +3157,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
   }, ignoreInit = TRUE)
   observe({
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") ||
-       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") ||
+       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TEDS-M_2008", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0
     ) {
       show("downloadChooseOutDir")
     } else {
       hide("downloadChooseOutDir")
     }
-    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C") && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0 ||
-       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0
+    if(downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0 ||
+       downloadAllStdAndCnt$selectedStudy != "" && downloadAllStdAndCnt$selectedCycle != "" && !is.null(downloadAllStdAndCnt$selectedPOP) && downloadAllStdAndCnt$selectedPOP != "" && !downloadAllStdAndCnt$selectedSnakeStdCycPOP %in% c("PISA_2015", "PISA_2018", "PISA_2022", "PISA_D_2019_IS", "PISA_D_2019_OS", "SITES_1998_M1_POP_A", "SITES_1998_M1_POP_B", "SITES_1998_M1_POP_C", "TALIS_2024_ISCED_1", "TALIS_2024_ISCED_2", "TALIS_2024_ISCED_3") && nrow(downloadAllStdAndCnt$downloadSelectedCnt) > 0 && length(parseSavePath(available.volumes, input$downloadChooseOutDir)$datapath) > 0
     ) {
       show("downloadAppend")
       show("downloadConvert")
@@ -5048,6 +5091,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   hide("saveRecodeSyntax")
   hide("recodeExecBtnHead")
   hide("execRecode")
+  hide("recodeNewVarNames")
   output$h1RecodeVars <- renderText("Recode variables")
   output$recodeIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
   file.var.recode <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, var.levels = NULL, var.num.values = NULL, var.char.values = NULL, var.missings = NULL, var.classes = NULL, recode.syntax = NULL)
@@ -5059,10 +5103,15 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     file.var.recode$study <- NULL
     file.var.recode$cycle <- NULL
     file.var.recode$var.classes <- NULL
-    file.var.recode$recodeSyntax <- NULL
+    file.var.recode$recode.syntax <- NULL
+    file.var.recode$var.levels <- NULL
+    file.var.recode$var.num.values <- NULL
+    file.var.recode$var.char.values <- NULL
+    file.var.recode$var.missings <- NULL
     if(length(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) > 104857600) {
       showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
     }
+    session$sendCustomMessage("unbindDT", "recodeVarsSelection")
     session$sendCustomMessage("unbindDT", "recodeSchemeFAC")
     session$sendCustomMessage("unbindDT", "recodeSchemeNUM")
     session$sendCustomMessage("unbindDT", "recodeSchemeCHAR")
@@ -5124,9 +5173,9 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     output$recodeSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath})
   }, ignoreInit = TRUE)
   observe({
-    if(!is.null(file.var.recode$loaded) && file.var.recode$is.lsa.data == FALSE) {
+    if(!is.null(file.var.recode$loaded) && isFALSE(file.var.recode$is.lsa.data)) {
       showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
-    } else if (!is.null(file.var.recode$loaded) && file.var.recode$is.lsa.data == TRUE) {
+    } else if (!is.null(file.var.recode$loaded) && isTRUE(file.var.recode$is.lsa.data)) {
       output$recodeStudyName <- renderText({
         if(is.null(file.var.recode$resp.type)) {
           return(NULL)
@@ -5584,10 +5633,12 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
             new.values.and.labels.mismatch$label <- FALSE
           }
         }
-        if(is.null(file.var.recode$loaded) || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE) {
+        if(is.null(file.var.recode$loaded) || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE
+        ) {
           hide("recodeNewMissings")
           hide("recodeMissingsWarn")
-        } else if(nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE) {
+        } else if(nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE
+        ) {
           show("recodeNewMissings")
           show("recodeMissingsWarn")
         }
@@ -5636,14 +5687,27 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
         }
         if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE) {
           hide("recodeInNewVars")
-          hide("recodeOverwriteWarn")
-          hide("recodeNewVarNames")
-          hide("recodeNewVarLabels")
         } else if(!is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == FALSE || nrow(recodeAllVars$recodeSelectedVars) > 0 || all(new.recoding.values.FAC$values != "") & all(new.recoding.values.NUM$values != "") & all(new.recoding.values.CHAR$values != "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) == 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) == 0 || new.values.and.labels.mismatch$diff.count == FALSE || new.values.and.labels.mismatch$value == FALSE || new.values.and.labels.mismatch$label == FALSE) {
           show("recodeInNewVars")
-          show("recodeOverwriteWarn")
-          show("recodeNewVarNames")
-          show("recodeNewVarLabels")
+        }
+        if(!is.null(new.recoding.values.FAC$values)) {
+          if(new.values.and.labels.mismatch$diff.count == TRUE | all(new.recoding.values.FAC$values %in% "")) {
+            hide("recodeNewVarNames")
+          } else if(new.values.and.labels.mismatch$diff.count == FALSE | !all(new.recoding.values.FAC$values %in% "")) {
+            show("recodeNewVarNames")
+          }
+        } else if(!is.null(new.recoding.values.NUM$values)) {
+          if(new.values.and.labels.mismatch$diff.count == TRUE | all(new.recoding.values.NUM$values %in% "")) {
+            hide("recodeNewVarNames")
+          } else if(new.values.and.labels.mismatch$diff.count == FALSE | !all(new.recoding.values.NUM$values %in% "")) {
+            show("recodeNewVarNames")
+          }
+        } else if(!is.null(new.recoding.values.CHAR$values)) {
+          if(new.values.and.labels.mismatch$diff.count == TRUE | all(new.recoding.values.CHAR$values %in% "")) {
+            hide("recodeNewVarNames")
+          } else if(new.values.and.labels.mismatch$diff.count == FALSE | !all(new.recoding.values.CHAR$values %in% "")) {
+            show("recodeNewVarNames")
+          }
         }
         if(is.null(file.var.recode$loaded) || new.values.and.labels.mismatch$diff.missings == TRUE || nrow(recodeAllVars$recodeSelectedVars) == 0 || all(new.recoding.values.FAC$values == "") & all(new.recoding.values.NUM$values == "") & all(new.recoding.values.CHAR$values == "") || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.FAC$values, invert = TRUE)) > 0 || length(grep(pattern = "^[[:digit:]]+$|^$", x = new.recoding.values.NUM$values, invert = TRUE)) > 0 || new.values.and.labels.mismatch$diff.count == TRUE || new.values.and.labels.mismatch$value == TRUE || new.values.and.labels.mismatch$label == TRUE || input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "")) {
           hide("recodeChooseOutFile")
@@ -5660,7 +5724,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
           show("execRecode")
           show("consoleRecode")
         }
-        if(is.null(file.var.recode$recodeSyntax) ||
+        if(is.null(file.var.recode$recode.syntax) ||
            input$recodeInNewVars == TRUE & any(new.recoded.var.names$names == "") ||
            input$recodeInNewVars == TRUE & is.null(new.recoded.var.names$names) ||
            length(parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath) == 0 ||
@@ -5674,7 +5738,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
       })
       shinyFileSave(input, "recodeChooseOutFile", filetype = list(RData = "RData"), session = session, roots = available.volumes, updateFreq = 100000)
       syntaxRecodeVars <- reactive({
-        file.var.recode$recodeSyntax <- paste0(
+        file.var.recode$recode.syntax <- paste0(
           'lsa.recode.vars(data.file = "', parseFilePaths(available.volumes, input$recodeChooseSrcFile)$datapath,
           if(nrow(recodeAllVars$recodeSelectedVars) == 1) {
             paste0(paste0('", src.variables = "', recodeAllVars$recodeSelectedVars[ , Variables]), '"')
@@ -5757,7 +5821,7 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
     withCallingHandlers({html("consoleRecode", "")
       tryCatch({
-        expr = eval(parse(text = file.var.recode$recodeSyntax))
+        expr = eval(parse(text = file.var.recode$recode.syntax))
         showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
       }, error = function(e) {
         message("", e)
@@ -5772,12 +5836,945 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
     })
     session$sendCustomMessage(type = "scrollCallback", 1)
   }, ignoreInit = TRUE)
+  hide("cutVarsChooseOutFile")
+  hide("saveCutVarsSyntax")
+  output$h1cutVars <- renderText("Cut continuous variables into discrete categories")
+  output$cutVarsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
+  file.select.cut.vars <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, var.classes = NULL, cutVarsSyntax = NULL)
+  shinyFileChoose(input, "cutVarsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
+  observeEvent(eventExpr = input$cutVarsChooseSrcFile, {
+    file.select.cut.vars$loaded <- NULL
+    file.select.cut.vars$is.lsa.data <- FALSE
+    file.select.cut.vars$resp.type <- NULL
+    file.select.cut.vars$study <- NULL
+    file.select.cut.vars$cycle <- NULL
+    file.select.cut.vars$var.classes <- NULL
+    file.select.cut.vars$cutVarsSyntax <- NULL
+    if(length(parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath) > 104857600) {
+      showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
+    }
+    session$sendCustomMessage("unbindDT", "cutVarsNewVarNames")
+    session$sendCustomMessage("unbindDT", "cutVarsNewValLables")
+    if(length(parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath) > 0) {
+      file.select.cut.vars$loaded <- get(load(parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath))
+      file.select.cut.vars$var.classes <- lapply(X = file.select.cut.vars$loaded, FUN = class)
+      if("lsa.data" %in% class(file.select.cut.vars$loaded)) {
+        file.select.cut.vars$is.lsa.data <- TRUE
+      } else {
+        file.select.cut.vars$is.lsa.data <- FALSE
+      }
+      file.select.cut.vars$study <- attr(x = file.select.cut.vars$loaded, which = "study")
+      file.select.cut.vars$cycle <- attr(x = file.select.cut.vars$loaded, which = "cycle")
+      file.select.cut.vars$resp.type <- attr(x = file.select.cut.vars$loaded, which = "file.type")
+      file.select.cut.vars$loaded <- data.table(Variables = names(file.select.cut.vars$loaded), Variable_Labels = sapply(X = file.select.cut.vars$loaded, FUN = function(j) {
+        if(is.null(attr(x = j, which = "variable.label"))) {
+          return(NA_character_)
+        } else {
+          attr(x = j, which = "variable.label")
+        }
+      }),
+      order_col = 1:ncol(file.select.cut.vars$loaded))
+    }
+    output$cutVarsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath})
+  }, ignoreInit = TRUE)
+  observe({
+    if(!is.null(file.select.cut.vars$loaded) && file.select.cut.vars$is.lsa.data == FALSE) {
+      showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
+    } else if (!is.null(file.select.cut.vars$loaded) && file.select.cut.vars$is.lsa.data == TRUE) {
+      output$cutVarsStudyName <- renderText({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Study: ', file.select.cut.vars$study))
+        }
+      })
+      output$cutVarsStudyCycle <- renderText({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Cycle: ', file.select.cut.vars$cycle))
+        }
+      })
+      output$cutVarsRespHead <- renderText({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('<u>The file contains data from the following respondents:</u>')
+        }
+      })
+      output$cutVarsRespAvailable <- renderText({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(file.merged.respondents[[file.select.cut.vars$resp.type]])
+        }
+      })
+      output$cutVarsVariablesExplText <- renderText({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('Use the panels below to select the variables which shall be into new discrete onses.<br/>Notes:</br>&emsp;1. The selected variables <u>must</u> be continuous and not categorical. No plausible values are accepted; and</br>&emsp;2. The cut points need to be within the ranges of the selected variables.<br/>Running the "Data diagnostics" module in advance can be helpful to identify the structure of the variables of interest.</br>')
+        }
+      })
+      cut.initial.available.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      cut.initial.selected.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      cutAllVars <- reactiveValues(cutAvailVars = cut.initial.available.vars, cutSelectedVars = cut.initial.selected.vars)
+      observe({
+        if(!is.null(file.select.cut.vars$loaded)) {
+          cutAllVars$cutAvailVars <- file.select.cut.vars$loaded
+        }
+      })
+      output$cutVarsArrowSelVarsRight <- renderUI({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "cutVarsArrowSelVarsRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$cutVarsArrowSelVarsLeft <- renderUI({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "cutVarsArrowSelVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$cutVarsAllAvailableVars <- renderDT({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          setkeyv(x = cutAllVars$cutAvailVars, cols = "order_col")
+        }
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Available variables"),
+      rownames = FALSE,
+      filter = "top",
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "All variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 400, scroller = TRUE
+      ))
+      output$cutVarsSelection <- renderDT({
+        if(is.null(file.select.cut.vars$resp.type)) {
+          return(NULL)
+        } else {
+          setkeyv(x = cutAllVars$cutSelectedVars, cols = "order_col")
+        }
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Selected variables"),
+      rownames = FALSE,
+      filter = "top",
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 400, scroller = TRUE
+      ))
+      observeEvent(input$cutVarsArrowSelVarsRight, {
+        req(input$cutVarsAllAvailableVars_rows_selected)
+        cutAllVars$cutSelectedVars <- rbind(isolate(cutAllVars$cutSelectedVars), cutAllVars$cutAvailVars[input$cutVarsAllAvailableVars_rows_selected, , drop = FALSE])
+        cutAllVars$cutSelectedVars <- cutAllVars$cutSelectedVars[complete.cases(cutAllVars$cutSelectedVars[ , "Variables"]), , drop = FALSE]
+        cutAllVars$cutAvailVars <- isolate(cutAllVars$cutAvailVars[-input$cutVarsAllAvailableVars_rows_selected, , drop = FALSE])
+        session$sendCustomMessage("unbindDT", "cutVarsNewVarNames")
+        session$sendCustomMessage("unbindDT", "cutVarsNewValLables")
+      })
+      observeEvent(input$cutVarsArrowSelVarsLeft, {
+        req(input$cutVarsSelection_rows_selected)
+        cutAllVars$cutAvailVars <- rbind(isolate(cutAllVars$cutAvailVars), cutAllVars$cutSelectedVars[input$cutVarsSelection_rows_selected, , drop = FALSE])
+        cutAllVars$cutAvailVars <- cutAllVars$cutAvailVars[complete.cases(cutAllVars$cutAvailVars[ , "Variables"]), , drop = FALSE]
+        cutAllVars$cutSelectedVars <- isolate(cutAllVars$cutSelectedVars[-input$cutVarsSelection_rows_selected, , drop = FALSE])
+        session$sendCustomMessage("unbindDT", "cutVarsNewVarNames")
+        session$sendCustomMessage("unbindDT", "cutVarsNewValLables")
+      })
+      output$cutVarsNonNumericWarn <- renderText({
+        if(nrow(cutAllVars$cutSelectedVars) > 0 & any(file.select.cut.vars$var.classes[intersect(cutAllVars$cutSelectedVars[ , Variables], names(file.select.cut.vars$var.classes))] != "numeric")) {
+          HTML('Some of the selected variables are <u>not</u> numeric. Only numeric variables can be selected for cutting into discrete categorical ones.')
+        } else if(nrow(cutAllVars$cutSelectedVars) > 0 & all(file.select.cut.vars$var.classes[intersect(cutAllVars$cutSelectedVars[ , Variables], names(file.select.cut.vars$var.classes))] == "numeric")) {
+          return(NULL)
+        }
+      })
+      output$cutVarsPVsWarn <- renderText({
+        if(nrow(cutAllVars$cutSelectedVars) > 0 & any(cutAllVars$cutSelectedVars[ , Variables] %in% grep(pattern = paste(all.available.PVs, collapse = "|"), x = cutAllVars$cutSelectedVars[ , Variables], value = TRUE))) {
+          HTML('Some of the selected variables are PVs. PVs <u>cannot</u> be selected for cutting into discrete categorical variables.')
+        } else if(nrow(cutAllVars$cutSelectedVars) > 0 & any(!cutAllVars$cutSelectedVars[ , Variables] %in% grep(pattern = paste(all.available.PVs, collapse = "|"), x = cutAllVars$cutSelectedVars[ , Variables], value = TRUE))) {
+          return(NULL)
+        }
+      })
+      generate.cut.new.inputs <- function(obj, input.type, pix.width) {
+        unlist(lapply(X = seq_along(obj), FUN = function(i) {
+          i <- paste0(textInput(inputId = paste0(input.type, i), label = NULL, value = NULL, width = pix.width))
+        }))
+      }
+      gather.cut.new.inputs.data <- function(id, len) {
+        unlist(lapply(seq_len(len), function(i) {
+          input[[paste0(id, i)]]
+        }))
+      }
+      cut.initial.new.var.names <- reactiveValues(names = NULL)
+      cut.entered.new.var.names <- reactiveValues(names = NULL)
+      cut.new.var.names <- reactiveValues(names = NULL)
+      observe({
+        cut.entered.new.var.names$names <- data.table(
+          V1 = cutAllVars$cutSelectedVars[ , Variables],
+          V2 = rep(x = as.character(icon(name = "arrow-right")), times = length(cutAllVars$cutSelectedVars[ , Variables])),
+          V3 = generate.cut.new.inputs(obj = cutAllVars$cutSelectedVars[ , Variables], input.type = "newvarnames", pix.width = "100%"),
+          V4 = generate.cut.new.inputs(obj = cutAllVars$cutSelectedVars[ , Variables], input.type = "newvarlabels", pix.width = "100%")
+        )
+        cut.new.var.names$names <- gather.cut.new.inputs.data(id = "newvarnames", len = length(cutAllVars$cutSelectedVars[ , Variables]))
+      })
+      output$cutVarsInstructionVarNames <- renderText({
+        if(!is.null(file.select.cut.vars$loaded) & nrow(cutAllVars$cutSelectedVars) > 0 & all(file.select.cut.vars$var.classes[intersect(cutAllVars$cutSelectedVars[ , Variables], names(file.select.cut.vars$var.classes))] == "numeric") & any(!cutAllVars$cutSelectedVars[ , Variables] %in% grep(pattern = paste(all.available.PVs, collapse = "|"), x = cutAllVars$cutSelectedVars[ , Variables], value = TRUE))) {
+          HTML('Use the table below to input the new variable names and their labels. If no variable labels are specified, they will be copied over from the original variables.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$cutVarsWarnIncompleteVarLabs <- renderText({
+        if(nrow(cutAllVars$cutSelectedVars) > 0 &
+           !all(cut.new.var.labels$labels == "") & length(cutAllVars$cutSelectedVars[ , Variables]) != length(cut.new.var.labels$labels[!cut.new.var.labels$labels %in% ""])
+        ) {
+          HTML('Either all or none of the variable labels must be defined.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$cutVarsNewVarNames <- renderDT({
+        if(!is.null(file.select.cut.vars$loaded) & nrow(cutAllVars$cutSelectedVars) > 0 & all(file.select.cut.vars$var.classes[intersect(cutAllVars$cutSelectedVars[ , Variables], names(file.select.cut.vars$var.classes))] == "numeric") & any(!cutAllVars$cutSelectedVars[ , Variables] %in% grep(pattern = paste(all.available.PVs, collapse = "|"), x = cutAllVars$cutSelectedVars[ , Variables], value = TRUE))) {
+          cut.entered.new.var.names$names
+        } else {
+          return(NULL)
+        }
+      },
+      rownames = FALSE,
+      colnames = c("Old variable names", as.character(icon(name = "arrow-right")), "New variable names", "New variable labels (optional)"),
+      class = "cell-border stripe;compact cell-border;",
+      selection="none",
+      escape = FALSE,
+      options = list(
+        pageLength = 5000,
+        dom = 'BRrt',
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '190px', targets = 0), list(width = '50px', targets = 1), list(width = '175px', targets = 2), list(className = 'dt-center', targets = 1:2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
+        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
+      ))
+      cut.initial.new.var.labels <- reactiveValues(labels = NULL)
+      cut.entered.new.var.labels <- reactiveValues(labels = NULL)
+      cut.new.var.labels <- reactiveValues(labels = NULL)
+      observe({
+        cut.entered.new.var.labels$labels <- data.table(
+          V1 = cutAllVars$cutSelectedVars[ , Variables],
+          V2 = generate.cut.new.inputs(obj = cutAllVars$cutSelectedVars[ , Variables], input.type = "newvarlabels", pix.width = "100%")
+        )
+        cut.new.var.labels$labels <- gather.cut.new.inputs.data(id = "newvarlabels", len = length(cutAllVars$cutSelectedVars[ , Variables]))
+      })
+      output$cutVarsCutPoints <- renderUI({
+        if(is.null(file.select.cut.vars$loaded) | nrow(cutAllVars$cutSelectedVars) == 0 |
+           nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+           !all(cut.new.var.labels$labels == "") & length(cutAllVars$cutSelectedVars[ , Variables]) != length(cut.new.var.labels$labels[!cut.new.var.labels$labels %in% ""])
+        ) {
+          return(NULL)
+        } else {
+          textInput(inputId = "cutVarsCutPoints", label = "Define cut points", value = numeric(), width = "350px")
+        }
+      })
+      output$cutVarsCutPointsReset <- renderUI({
+        if(is.null(file.select.cut.vars$loaded) | nrow(cutAllVars$cutSelectedVars) == 0 |
+           nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+           !all(cut.new.var.labels$labels == "") & length(cutAllVars$cutSelectedVars[ , Variables]) != length(cut.new.var.labels$labels[!cut.new.var.labels$labels %in% ""])
+        ) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "cutVarsCutPointsReset", label = "Reset", icon = icon("undo-alt"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      cut.points.not.numbers <- reactiveVal()
+      observe({
+        if(!is.null(input$cutVarsCutPoints) && grepl(pattern = "[[:alpha:]]|(?=[^.[:^punct:]])", x = input$cutVarsCutPoints, perl = TRUE) == TRUE) {
+          cut.points.not.numbers(TRUE)
+        } else if(!is.null(input$cutVarsCutPoints) && grepl(pattern = "[[:alpha:]]|(?=[^.[:^punct:]])", x = input$cutVarsCutPoints, perl = TRUE) == FALSE) {
+          cut.points.not.numbers(FALSE)
+        }
+      })
+      output$cutVarsCutPointsNotNum <- renderText({
+        if(!is.null(input$cutVarsCutPoints) && cut.points.not.numbers() == TRUE) {
+          HTML('<br/>Warning: The values passed to the field on the left can contain <u>only</u> numbers and spaces. Please check the input.')
+        } else {
+          return(NULL)
+        }
+      })
+      observeEvent(input$cutVarsCutPointsReset, {
+        shinyjs::reset("cutVarsCutPoints")
+      })
+      initial.cut.new.values <- reactiveValues(values = NULL)
+      cut.entered.new.values <- reactiveValues(values = NULL)
+      new.cut.labels <- reactiveValues(labels = NULL)
+      generate.cut.pairs <- function(obj) {
+        if(!is.null(obj)) {
+          tmp <- unlist(str_split(string = obj, pattern = "[[:space:]]+"))
+          tmp <- c("From lowest", tmp, "highest")
+          tmp <- cbind(tmp[-length(tmp)], tmp[-1])
+          tmp <- apply(X = tmp, MARGIN = 1, FUN = paste, collapse = " up to ")
+          tmp[2:length(tmp)] <- paste0("From above ", tmp[2:length(tmp)])
+          return(tmp)
+        }
+      }
+      observe({
+        cut.entered.new.values$values <- cbind(
+          V1 = data.table(generate.cut.pairs(obj = trimws(x = input$cutVarsCutPoints))),
+          V2 = data.table(1:(length(unlist(str_split(string = trimws(x = input$cutVarsCutPoints), pattern = "[[:space:]]+"))) + 1)),
+          V3 = data.table(generate.cut.new.inputs(obj = 1:(length(unlist(str_split(string = trimws(input$cutVarsCutPoints), pattern = "[[:space:]]+"))) + 1), input.type = "labinp", pix.width = "100%")))
+        new.cut.labels$labels <- gather.cut.new.inputs.data(id = "labinp", len = length(1:(length(unlist(str_split(string = trimws(x = input$cutVarsCutPoints), pattern = "[[:space:]]+"))) + 1)))
+      })
+      output$cutVarsInstructionLabels <- renderText({
+        if(
+          is.null(file.select.cut.vars$loaded) | nrow(cutAllVars$cutSelectedVars) == 0 | nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+          !all(cut.new.var.labels$labels == "") && !all(cut.new.var.labels$labels != "") | is.null(input$cutVarsCutPoints) || input$cutVarsCutPoints == ""
+        ) {
+          return(NULL)
+        } else {
+          HTML('Define the labels of the levels in the new categorical variables. If no labels are defined, the resulting variables will be numeric.')
+        }
+      })
+      output$cutVarsWarnIncompleteLabels <- renderText({
+        if(!is.null(file.select.cut.vars$loaded) & nrow(cutAllVars$cutSelectedVars) > 0 & !is.null(cut.new.var.names$names) & !"" %in% cut.new.var.names$names & length(cut.new.var.names$names) == nrow(cutAllVars$cutSelectedVars) & !is.null(input$cutVarsCutPoints) && input$cutVarsCutPoints != "" & !is.null(new.cut.labels$labels) & !all(new.cut.labels$labels == "") & "" %in% new.cut.labels$labels) {
+          HTML('If new value labels are to be assigned, they need to be assigned to all new levels.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$cutVarsNewValLables <- renderDT({
+        if(
+          is.null(file.select.cut.vars$loaded) | nrow(cutAllVars$cutSelectedVars) == 0 | nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+          !all(cut.new.var.labels$labels == "") && !all(cut.new.var.labels$labels != "") | is.null(input$cutVarsCutPoints) || input$cutVarsCutPoints == ""
+        ) {
+          return(NULL)
+        } else {
+          cut.entered.new.values$values
+        }
+      },
+      rownames = FALSE,
+      colnames = c("Cut categories", "New levels", "New labels"),
+      class = "cell-border stripe;compact cell-border;",
+      selection = "none",
+      escape = FALSE,
+      options = list(
+        pageLength = 5000,
+        dom = 'BRrt',
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '150px', targets = 0), list(width = "15px", targets = 1), list(className = 'dt-center', targets = 1)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
+        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
+      ))
+      observe({
+        if(nrow(cutAllVars$cutSelectedVars) == 0) {
+          session$sendCustomMessage("unbindDT", "cutVarsNewVarNames")
+          session$sendCustomMessage("unbindDT", "cutVarsNewValLables")
+        }
+      })
+      observe({
+        if(
+          is.null(file.select.cut.vars$loaded) | is.null(new.cut.labels$labels) | is.null(input$cutVarsCutPoints) || input$cutVarsCutPoints == "" |
+          !all(cut.new.var.labels$labels == "") && "" %in% cut.new.var.labels$labels | nrow(cutAllVars$cutSelectedVars) == 0 |
+          nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+          !is.null(new.cut.labels$labels) && !all(new.cut.labels$labels == "") && "" %in% new.cut.labels$labels
+        ) {
+          hide("cutVarsChooseOutFile")
+        } else {
+          show("cutVarsChooseOutFile")
+        }
+        if(
+          is.null(file.select.cut.vars$loaded) | length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) < 1 |
+          is.null(new.cut.labels$labels) | is.null(input$cutVarsCutPoints) || input$cutVarsCutPoints == "" |
+          !all(cut.new.var.labels$labels == "") && "" %in% cut.new.var.labels$labels | nrow(cutAllVars$cutSelectedVars) == 0 |
+          nrow(cutAllVars$cutSelectedVars) != length(cut.new.var.names$names[!cut.new.var.names$names %in% ""]) |
+          !is.null(new.cut.labels$labels) && !all(new.cut.labels$labels == "") && "" %in% new.cut.labels$labels
+        ) {
+          hide("cutVarsSyntaxHead")
+          hide("saveCutVarsSyntax")
+          hide("copyCutVarsSyntax")
+          hide("cutVarsSyntax")
+          hide("cutVarsExecBtnHead")
+          hide("execCutVars")
+          hide("consoleCutVars")
+        } else {
+          show("cutVarsSyntaxHead")
+          show("saveCutVarsSyntax")
+          show("copyCutVarsSyntax")
+          show("cutVarsSyntax")
+          show("cutVarsExecBtnHead")
+          show("execCutVars")
+          show("consoleCutVars")
+        }
+      })
+      shinyFileSave(input, "cutVarsChooseOutFile", filetype = list(RData = "RData"), session = session, roots = available.volumes, updateFreq = 100000)
+      syntaxCutVars <- reactive({
+        file.select.cut.vars$cutVarsSyntax <- paste0(
+          'lsa.cut.vars(data.file = "', parseFilePaths(available.volumes, input$cutVarsChooseSrcFile)$datapath,
+          if(nrow(cutAllVars$cutSelectedVars) == 1) {
+            paste0(paste0('", src.variables = "', cutAllVars$cutSelectedVars[ , Variables]), '"')
+          } else if(nrow(cutAllVars$cutSelectedVars) > 1) {
+            paste0(paste0('", src.variables = c("', paste(cutAllVars$cutSelectedVars[ , Variables], collapse = '", "')), '")')
+          },
+          if(!is.null(cut.new.var.names$names) && !all(cut.new.var.names$names %in% "") && length(cut.new.var.names$names) > 1) {
+            paste0(', new.variables = c("', paste(cut.new.var.names$names, collapse = '", "'), '")')
+          } else if(!is.null(cut.new.var.names$names) && !all(cut.new.var.names$names %in% "") && length(cut.new.var.names$names) == 1) {
+            paste0(', new.variables = "', cut.new.var.names$names, '"')
+          },
+          if(!is.null(cut.new.var.labels$labels) && any(cut.new.var.labels$labels != "")) {
+            if(length(cut.new.var.labels$labels) == 1) {
+              paste0(', new.var.labels = "', paste(cut.new.var.labels$labels, collapse = '", "'), '"')
+            } else if(length(cut.new.var.labels$labels) > 1) {
+              paste0(', new.var.labels = c("', paste(cut.new.var.labels$labels, collapse = '", "'), '")')
+            }
+          },
+          if(!is.null(cut.new.var.names$names) && all(cut.new.var.names$names != "") && length(unlist(str_split(string = trimws(input$cutVarsCutPoints), pattern = "[[:space:]]"))) > 1) {
+            paste0(', cut.points = c(', gsub(pattern = "[[:space:]]+", replacement = ", ", x = trimws(unlist(input$cutVarsCutPoints))), ')')
+          } else if(!is.null(cut.new.var.names$names) && all(cut.new.var.names$names != "") && length(unlist(str_split(string = trimws(input$cutVarsCutPoints), pattern = "[[:space:]]"))) == 1) {
+            paste0(', cut.points = ', paste(unlist(str_split(string = trimws(input$cutVarsCutPoints), pattern = "[[:space:]]")), collapse = '", "'), '')
+          },
+          if(!is.null(new.cut.labels$labels) & all(new.cut.labels$labels != "")) {
+            paste0(', value.labels = c("', paste(new.cut.labels$labels, collapse = '", "'), '")')
+          },
+          if(length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) == 1) {
+            paste0(', out.file = "', parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath, '")')
+          }
+        )
+      })
+      output$cutVarsSyntaxHead <- renderText({
+        if(!is.null(file.select.cut.vars$loaded) && length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) == 1) {
+          HTML("Syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$copyCutVarsSyntax <- renderUI({
+        rclipButton(inputId = "copyCutVarsSyntax", label = "Copy syntax", clipText = syntaxCutVars(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
+      output$cutVarsSyntax <- renderText({
+        if(!is.null(file.select.cut.vars$loaded) && length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) == 1) {
+          syntaxCutVars()
+        } else {
+          return(NULL)
+        }
+      })
+      output$cutVarsExecBtnHead <- renderText({
+        if(!is.null(file.select.cut.vars$loaded) && length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) == 1) {
+          HTML("Press the button below to execute the syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$execCutVars <- renderUI({
+        if(!is.null(file.select.cut.vars$loaded) && length(parseSavePath(available.volumes, input$cutVarsChooseOutFile)$datapath) == 1) {
+          actionButton(inputId = "execCutVars", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        } else {
+          return(NULL)
+        }
+      })
+      observeEvent(input$execCutVars, {
+        showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
+        withCallingHandlers({html("consoleCutVars", "")
+          tryCatch({
+            expr = eval(parse(text = file.select.cut.vars$cutVarsSyntax))
+            showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+          }, error = function(e) {
+            message("", e)
+            showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+          })
+        },
+        message = function(i) {
+          shinyjs::html(id = "consoleCutVars", html = i$message, add = TRUE)
+        },
+        warning = function(w) {
+          shinyjs::html(id = "consoleCutVars", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
+        })
+        session$sendCustomMessage(type = "scrollCallback", 1)
+      }, ignoreInit = TRUE)
+    }
+  })
+  hide("aggrVarsChooseOutFile")
+  hide("aggrVarsMeansSyntax")
+  hide("copyAggrVarsSyntax")
+  hide("saveAggrVarsSyntax")
+  output$h1AggrVars <- renderText("Aggregate variables by group")
+  output$aggrVarsIntro <- renderText({HTML("Select large-scale assessment .RData file to load.")})
+  file.aggr.vars <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, var.classes = NULL, src.not.allowed = NULL, aggr.vars.syntax = NULL)
+  shinyFileChoose(input, "aggrVarsChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
+  observeEvent(eventExpr = input$aggrVarsChooseSrcFile, {
+    file.aggr.vars$loaded <- NULL
+    file.aggr.vars$study <- NULL
+    file.aggr.vars$cycle <- NULL
+    file.aggr.vars$resp.type <- NULL
+    file.aggr.vars$var.classes <- NULL
+    file.aggr.vars$src.not.allowed <- NULL
+    if(length(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath) > 0 && file.size(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath) > 104857600) {
+      showNotification(ui = HTML('The size of the selected<br/>file is rather large. Please<br/>wait until the file is loaded.'), type = "message")
+    }
+    session$sendCustomMessage("unbindDT", "aggrVarsGroupVars")
+    session$sendCustomMessage("unbindDT", "aggrVarsSrcVars")
+    session$sendCustomMessage("unbindDT", "aggrVarsNewVarNames")
+    if(length(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath) > 0) {
+      file.aggr.vars$loaded <- get(load(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath))
+      file.aggr.vars$var.classes <- lapply(X = file.aggr.vars$loaded, FUN = class)
+      if("lsa.data" %in% class(file.aggr.vars$loaded)) {
+        file.aggr.vars$is.lsa.data <- TRUE
+      } else {
+        file.aggr.vars$is.lsa.data <- FALSE
+      }
+      file.aggr.vars$study <- attr(x = file.aggr.vars$loaded, which = "study")
+      file.aggr.vars$cycle <- attr(x = file.aggr.vars$loaded, which = "cycle")
+      file.aggr.vars$resp.type <- attr(x = file.aggr.vars$loaded, which = "file.type")
+      file.aggr.vars$loaded <- data.table(Variables = names(file.aggr.vars$loaded), Variable_Labels = sapply(X = file.aggr.vars$loaded, FUN = function(j) {
+        if(is.null(attr(x = j, which = "variable.label"))) {
+          return(NA_character_)
+        } else {
+          attr(x = j, which = "variable.label")
+        }
+      }),
+      order_col = 1:ncol(file.aggr.vars$loaded))
+      file.aggr.vars$country.ID <- NULL
+      if("IDCNTRY" %in% file.aggr.vars$loaded[ , Variables]) {
+        file.aggr.vars$country.ID <- "IDCNTRY"
+      } else {
+        file.aggr.vars$country.ID <- "CNT"
+      }
+      file.aggr.vars$src.not.allowed <- c(grep(pattern = paste(c(unique(gsub(pattern = "[[:digit:]]+$", replacement = "", x = unique(unlist(studies.all.design.variables[["sampling.vars"]])))), unique(unlist(studies.all.design.variables[["PV.roots"]]))), collapse = "|"), x = file.aggr.vars$loaded[ , Variables], value = TRUE), grep(pattern = "^WGTADJ", x = file.aggr.vars$loaded[ , Variables], value = TRUE))
+    }
+    output$aggrVarsSrcPathDisplay <- renderText({parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath})
+  }, ignoreInit = TRUE)
+  observe({
+    if(!is.null(file.aggr.vars$loaded) && file.aggr.vars$is.lsa.data == FALSE) {
+      showNotification(ui = HTML('The data is not of class "lsa.data".<br/>Please check the file content.'), type = "error")
+    } else if (!is.null(file.aggr.vars$loaded) && file.aggr.vars$is.lsa.data == TRUE) {
+      output$aggrVarsStudyName <- renderText({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Study: ', file.aggr.vars$study))
+        }
+      })
+      output$aggrVarsStudyCycle <- renderText({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(paste0('Cycle: ', file.aggr.vars$cycle))
+        }
+      })
+      output$aggrVarsRespHead <- renderText({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('<u>The file contains data from the following respondents:</u>')
+        }
+      })
+      output$aggrVarsRespAvailable <- renderText({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML(file.merged.respondents[[file.aggr.vars$resp.type]])
+        }
+      })
+      output$aggrVarsVariablesExplText <- renderText({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          HTML('Use the panels below to select the variables to aggregate by groups specified by grouping variables.')
+        }
+      })
+      aggr.vars.initial.available.vars <- file.aggr.vars$loaded[!Variables %in% file.aggr.vars$country.ID, ]
+      aggr.vars.initial.selected.group.vars <- file.aggr.vars$loaded[Variables == file.aggr.vars$country.ID, ]
+      aggr.vars.initial.selected.src.vars <- data.table(Variables = as.character(), Variable_Labels = as.character(), order_col = as.numeric())
+      aggrVarsAllVars <- reactiveValues(aggrVarsAvailVars = aggr.vars.initial.available.vars, aggrVarsSelectedGroupVars = aggr.vars.initial.selected.group.vars, aggrVarsSelectedSrcVars = aggr.vars.initial.selected.src.vars)
+      output$aggrVarsArrowSelGroupVarsRight <- renderUI({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "aggrVarsArrowSelGroupVarsRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$aggrVarsArrowSelGroupVarsLeft <- renderUI({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "aggrVarsArrowSelGroupVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$aggrVarsArrowSelSrcVarsRight <- renderUI({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "aggrVarsArrowSelSrcVarsRight", label = NULL, icon("angle-right"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      output$aggrVarsArrowSelSrcVarsLeft <- renderUI({
+        if(is.null(file.aggr.vars$resp.type)) {
+          return(NULL)
+        } else {
+          actionButton(inputId = "aggrVarsArrowSelSrcVarsLeft", label = NULL, icon("angle-left"), width = "50px", style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        }
+      })
+      observeEvent(input$aggrVarsArrowSelGroupVarsRight, {
+        req(input$aggrVarsAllAvailableVars_rows_selected)
+        aggrVarsAllVars$aggrVarsSelectedGroupVars <- rbind(isolate(aggrVarsAllVars$aggrVarsSelectedGroupVars), aggrVarsAllVars$aggrVarsAvailVars[input$aggrVarsAllAvailableVars_rows_selected, , drop = FALSE])
+        aggrVarsAllVars$aggrVarsSelectedGroupVars <- aggrVarsAllVars$aggrVarsSelectedGroupVars[complete.cases(aggrVarsAllVars$aggrVarsSelectedGroupVars[ , "Variables"]), , drop = FALSE]
+        aggrVarsAllVars$aggrVarsAvailVars <- isolate(aggrVarsAllVars$aggrVarsAvailVars[-input$aggrVarsAllAvailableVars_rows_selected, , drop = FALSE])
+        session$sendCustomMessage("unbindDT", "aggrVarsNewVarNames")
+      })
+      observeEvent(input$aggrVarsArrowSelGroupVarsLeft, {
+        req(input$aggrVarsGroupVars_rows_selected)
+        aggrVarsAllVars$aggrVarsAvailVars <- rbind(isolate(aggrVarsAllVars$aggrVarsAvailVars),        aggrVarsAllVars$aggrVarsSelectedGroupVars[input$aggrVarsGroupVars_rows_selected, , drop = FALSE])
+        aggrVarsAllVars$aggrVarsAvailVars <- aggrVarsAllVars$aggrVarsAvailVars[complete.cases(aggrVarsAllVars$aggrVarsAvailVars[ , "Variables"]), , drop = FALSE]
+        if(nrow(aggrVarsAllVars$aggrVarsSelectedGroupVars) > 0) {
+          aggrVarsAllVars$aggrVarsSelectedGroupVars <- isolate(aggrVarsAllVars$aggrVarsSelectedGroupVars[-input$aggrVarsGroupVars_rows_selected, , drop = FALSE])
+        }
+        if(!file.aggr.vars$country.ID %in% aggrVarsAllVars$aggrVarsSelectedGroupVars[ , Variables]) {
+          showNotification(ui = HTML("Country ID <b>must always be</b> the first grouping variable!"), type = "error")
+        }
+        aggrVarsAllVars$aggrVarsSelectedGroupVars <- rbindlist(l = list(aggrVarsAllVars$aggrVarsSelectedGroupVars, aggrVarsAllVars$aggrVarsAvailVars[Variables == file.aggr.vars$country.ID, ]))
+        aggrVarsAllVars$aggrVarsAvailVars <- aggrVarsAllVars$aggrVarsAvailVars[Variables != file.aggr.vars$country.ID, ]
+        session$sendCustomMessage("unbindDT", "aggrVarsNewVarNames")
+      })
+      observeEvent(input$aggrVarsArrowSelSrcVarsRight, {
+        req(input$aggrVarsAllAvailableVars_rows_selected)
+        aggrVarsAllVars$aggrVarsSelectedSrcVars <- rbind(isolate(aggrVarsAllVars$aggrVarsSelectedSrcVars), aggrVarsAllVars$aggrVarsAvailVars[input$aggrVarsAllAvailableVars_rows_selected, , drop = FALSE])
+        aggrVarsAllVars$aggrVarsSelectedSrcVars <- aggrVarsAllVars$aggrVarsSelectedSrcVars[complete.cases(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , "Variables"]), , drop = FALSE]
+        aggrVarsAllVars$aggrVarsAvailVars <- isolate(aggrVarsAllVars$aggrVarsAvailVars[-input$aggrVarsAllAvailableVars_rows_selected, , drop = FALSE])
+      })
+      observeEvent(input$aggrVarsArrowSelSrcVarsLeft, {
+        req(input$aggrVarsSrcVars_rows_selected)
+        aggrVarsAllVars$aggrVarsAvailVars <- rbind(isolate(aggrVarsAllVars$aggrVarsAvailVars),        aggrVarsAllVars$aggrVarsSelectedSrcVars[input$aggrVarsSrcVars_rows_selected, , drop = FALSE])
+        aggrVarsAllVars$aggrVarsAvailVars <- aggrVarsAllVars$aggrVarsAvailVars[complete.cases(aggrVarsAllVars$aggrVarsAvailVars[ , "Variables"]), , drop = FALSE]
+        aggrVarsAllVars$aggrVarsSelectedSrcVars <- isolate(aggrVarsAllVars$aggrVarsSelectedSrcVars[-input$aggrVarsSrcVars_rows_selected, , drop = FALSE])
+      })
+      output$aggrVarsAllAvailableVars <- renderDT({
+        if(!is.null(file.aggr.vars$loaded)) {
+          setkeyv(x = aggrVarsAllVars$aggrVarsAvailVars, cols = "order_col")
+        } else {
+          NULL
+        }
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Available variables"),
+      rownames = FALSE,
+      filter = "top",
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables available"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 400, scroller = TRUE
+      ))
+      output$aggrVarsGroupVars <- renderDT({
+        if(!is.null(file.aggr.vars$loaded)) {
+          aggrVarsAllVars$aggrVarsSelectedGroupVars
+        } else {
+          NULL
+        }
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Group variables"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 100, scroller = TRUE
+      ))
+      output$aggrVarsSrcVars <- renderDT({
+        if(!is.null(file.aggr.vars$loaded)) {
+          aggrVarsAllVars$aggrVarsSelectedSrcVars
+        } else {
+          NULL
+        }
+      },
+      caption = htmltools::tags$caption(style = "color: black; font-weight: bold;", "Source variables"),
+      rownames = FALSE,
+      colnames = c("Names", "Labels", "sortingcol"),
+      class = "cell-border stripe;compact cell-border;",
+      extensions = list("Scroller"),
+      options = list(
+        language = list(zeroRecords = "No variables have been selected"),
+        initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
+        dom = "ti",
+        searchHighlight = FALSE,
+        searchDelay = 100,
+        ordering = FALSE,
+        pageLength = 5000,
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '75px', targets = 0), list(visible = FALSE, targets = 2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        deferRender = TRUE, scrollY = 226, scroller = TRUE
+      ))
+      output$aggrVarsNonNumericWarn <- renderText({
+        if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & any(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] != "numeric")) {
+          HTML('<u>Non-numeric</u> variable(s) selected. Only numeric variables can be selected for aggregation.')
+        } else if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric")) {
+          return(NULL)
+        }
+      })
+      output$aggrVarsDesignWarn <- renderText({
+        if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & any(file.aggr.vars$src.not.allowed %in% aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables])) {
+          HTML('PVs, weights or weight design variable(s) selected. Such variables <u>cannot</u> be selected for aggregation.')
+        } else if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & !any(file.aggr.vars$src.not.allowed %in% aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables])) {
+          return(NULL)
+        }
+      })
+      generate.aggr.new.inputs <- function(obj, input.type, pix.width) {
+        unlist(lapply(X = seq_along(obj), FUN = function(i) {
+          i <- paste0(textInput(inputId = paste0(input.type, i), label = NULL, value = NULL, width = pix.width))
+        }))
+      }
+      gather.aggr.new.inputs.data <- function(id, len) {
+        unlist(lapply(seq_len(len), function(i) {
+          input[[paste0(id, i)]]
+        }))
+      }
+      aggr.initial.new.var.names <- reactiveValues(names = NULL)
+      aggr.entered.new.var.names <- reactiveValues(names = NULL)
+      aggr.new.var.names <- reactiveValues(names = NULL)
+      observe({
+        aggr.entered.new.var.names$names <- data.table(
+          V1 = aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables],
+          V2 = rep(x = as.character(icon(name = "arrow-right")), times = length(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables])),
+          V3 = generate.aggr.new.inputs(obj = aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], input.type = "newvarnames", pix.width = "100%"),
+          V4 = generate.aggr.new.inputs(obj = aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], input.type = "newvarlabels", pix.width = "100%")
+        )
+        aggr.new.var.names$names <- gather.aggr.new.inputs.data(id = "newvarnames", len = length(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables]))
+      })
+      output$aggrVarsInstructionVarNames <- renderText({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed)) {
+          HTML('Use the table below to input the new variable names and their labels. If no variable labels are specified, they will be copied over from the original variables.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$aggrVarsWarnIncompleteVarLabs <- renderText({
+        if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 &
+           !all(aggr.new.var.labels$labels == "") & length(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables]) != length(aggr.new.var.labels$labels[!aggr.new.var.labels$labels %in% ""])
+        ) {
+          HTML('Either all or none of the variable labels must be defined.')
+        } else {
+          return(NULL)
+        }
+      })
+      output$aggrVarsNewVarNames <- renderDT({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed)) {
+          aggr.entered.new.var.names$names
+        } else {
+          return(NULL)
+        }
+      },
+      rownames = FALSE,
+      colnames = c("Old variable names", as.character(icon(name = "arrow-right")), "New variable names", "New variable labels (optional)"),
+      class = "cell-border stripe;compact cell-border;",
+      selection="none",
+      escape = FALSE,
+      options = list(
+        pageLength = 5000,
+        dom = 'BRrt',
+        autoWidth = TRUE,
+        columnDefs = list(list(width = '190px', targets = 0), list(width = '50px', targets = 1), list(width = '175px', targets = 2), list(className = 'dt-center', targets = 1:2)),
+        rowCallback = JS("function(r,d) {$(r).attr('height', '40px')}"),
+        preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
+        drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
+      ))
+      aggr.initial.new.var.labels <- reactiveValues(labels = NULL)
+      aggr.entered.new.var.labels <- reactiveValues(labels = NULL)
+      aggr.new.var.labels <- reactiveValues(labels = NULL)
+      observe({
+        aggr.entered.new.var.labels$labels <- data.table(
+          V1 = aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables],
+          V2 = generate.aggr.new.inputs(obj = aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], input.type = "newvarlabels", pix.width = "100%")
+        )
+        aggr.new.var.labels$labels <- gather.aggr.new.inputs.data(id = "newvarlabels", len = length(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables]))
+      })
+      output$aggrVarsAggregationFunction <- renderUI({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1) {
+          radioButtons(inputId = "aggrVarsAggregationFunction", label = "Aggregation function", choices = c("Mean", "Median", "Mode"), width = "200px", selected = "Mean")
+        } else {
+          return(NULL)
+        }
+      })
+      output$aggrVarsAggregationFunctionExpl <- renderText({
+        if(!is.null(file.aggr.vars$loaded) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1) {
+          if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Mean") {
+            HTML('<br/><br/>Use the mean function to aggregate continuous variables.')
+          } else if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Median") {
+            HTML('<br/><br/>Use the median function to aggregate continuous variables.')
+          } else if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Mode") {
+            HTML('<br/><br/>Use the mode function to aggregate continuous variables.')
+          }
+        } else {
+          return(NULL)
+        }
+      })
+      observe({
+        if(!is.null(aggrVarsAllVars$aggrVarsSelectedSrcVars) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) == 0) {
+          session$sendCustomMessage("unbindDT", "aggrVarsNewVarNames")
+        }
+      })
+      shinyFileSave(input, "aggrVarsChooseOutFile", filetype = list(RData = "RData"), session = session, roots = available.volumes, updateFreq = 100000)
+      observe({
+        if(!is.null(file.aggr.vars$loaded) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1) {
+          show("aggrVarsChooseOutFile")
+        } else {
+          hide("aggrVarsChooseOutFile")
+        }
+        if(!is.null(file.aggr.vars$loaded) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1 & length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) > 0) {
+          show("aggrVarsSyntaxHead")
+          show("aggrVarsSyntax")
+          show("saveAggrVarsSyntax")
+          show("copyAggrVarsSyntax")
+          show("consoleAggrVars")
+        } else {
+          hide("aggrVarsSyntaxHead")
+          hide("aggrVarsSyntax")
+          hide("saveAggrVarsSyntax")
+          hide("copyAggrVarsSyntax")
+          hide("consoleAggrVars")
+        }
+      })
+      syntaxAggrVars <- reactive({
+        file.aggr.vars$aggr.vars.syntax <- paste0(
+          'lsa.aggregate.vars(data.file = "', parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath, '", ',
+          if(nrow(aggrVarsAllVars$aggrVarsSelectedGroupVars) == 0) {
+            NULL
+          } else if(nrow(aggrVarsAllVars$aggrVarsSelectedGroupVars) == 1) {
+            paste0('group.vars = "', aggrVarsAllVars$aggrVarsSelectedGroupVars[ , Variables], '", ')
+          } else if(nrow(aggrVarsAllVars$aggrVarsSelectedGroupVars) > 0) {
+            paste0('group.vars = c("', paste(aggrVarsAllVars$aggrVarsSelectedGroupVars[ , Variables], collapse = '", "'), '"), ')
+          },
+          if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) == 1) {
+            paste0('src.variables = "', aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], '", ')
+          } else if(nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 1) {
+            paste0('src.variables = c("', paste(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], collapse = '", "'), '"), ')
+          },
+          if(nrow(aggr.entered.new.var.names$names) == 1) {
+            paste0('new.variables = "', aggr.new.var.names$names, '", ')
+          } else if(nrow(aggr.entered.new.var.names$names) > 1) {
+            paste0('new.variables = c("', paste(aggr.new.var.names$names, collapse = '", "'), '"), ')
+          },
+          if(!"" %in% aggr.new.var.labels$labels & length(aggr.new.var.labels$labels) == 1) {
+            paste0('new.var.labels = "', aggr.new.var.labels$labels, '", ')
+          } else if(!"" %in% aggr.new.var.labels$labels & length(aggr.new.var.labels$labels) > 1) {
+            paste0('new.var.labels = c("', paste(aggr.new.var.labels$labels, collapse = '", "'), '"), ')
+          },
+          if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Mean") {
+            'aggr.fun = "mean", '
+          } else if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Median") {
+            'aggr.fun = "median", '
+          } else if(!is.null(input$aggrVarsAggregationFunction) && input$aggrVarsAggregationFunction == "Mode") {
+            'aggr.fun = "mode", '
+          },
+          if(length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) == 1) {
+            paste0('out.file = "', parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath, '")')
+          }
+        )
+      })
+      output$aggrVarsSyntaxHead <- renderText({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1 &
+           length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) == 1 && length(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath) > 0) {
+          HTML("Syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      observe.syntax.save.button <- eval(parse(text = string.observe.syntax.save.button))
+      observe.syntax.save.button(input = input, session = session, syntax.ID = "saveAggrVarsSyntax", syntax.object = "syntaxAggrVars()", volumes = available.volumes)
+      output$copyAggrVarsSyntax <- renderUI({
+        rclipButton(inputId = "copyAggrVarsSyntax", label = "Copy syntax", clipText = syntaxAggrVars(), icon = icon("copy"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-top: 1px")
+      })
+      output$aggrVarsSyntax <- renderText({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1 &
+           length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) == 1 && length(parseFilePaths(available.volumes, input$aggrVarsChooseSrcFile)$datapath) > 0) {
+          syntaxAggrVars()
+        } else {
+          return(NULL)
+        }
+      })
+      output$aggrVarsExecBtnHead <- renderText({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1 &
+           length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) == 1) {
+          HTML("Press the button below to execute the syntax")
+        } else {
+          return(NULL)
+        }
+      })
+      output$execAggrVars <- renderUI({
+        if(!is.null(file.aggr.vars$loaded) & nrow(aggrVarsAllVars$aggrVarsSelectedSrcVars) > 0 & all(file.aggr.vars$var.classes[intersect(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables], names(file.aggr.vars$var.classes))] == "numeric") & !any(aggrVarsAllVars$aggrVarsSelectedSrcVars[ , Variables] %in% file.aggr.vars$src.not.allowed) & !is.null(aggr.new.var.names$names) & !"" %in% aggr.new.var.names$names & length(unique(aggr.new.var.labels$labels %in% "")) == 1 &
+           length(parseSavePath(available.volumes, input$aggrVarsChooseOutFile)$datapath) == 1) {
+          actionButton(inputId = "execAggrVars", label = "Execute syntax", icon = icon("cogs"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+        } else {
+          return(NULL)
+        }
+      })
+    }
+  })
+  observeEvent(input$execAggrVars, {
+    showNotification(ui = HTML("<br/>   Execution started.   <br/><br/>"), type = "message")
+    withCallingHandlers({html("consoleAggrVars", "")
+      tryCatch({
+        expr = eval(parse(text = file.aggr.vars$aggr.vars.syntax))
+        showNotification(ui = HTML("<br/>   All operations complete!   <br/><br/>"), type = "message", duration = NULL)
+      }, error = function(e) {
+        message("", e)
+        showNotification(ui = HTML(paste0("Something went wrong. Possible reasons: <br/>", paste(gsub(pattern = "\\n|Error: ", replacement = "<br/>", x = e)))), type = "error", duration = NULL)
+      })
+    },
+    message = function(i) {
+      shinyjs::html(id = "consoleAggrVars", html = i$message, add = TRUE)
+    },
+    warning = function(w) {
+      shinyjs::html(id = "consoleAggrVars", html = paste0("Warning: ", w$message, "\n"), add = TRUE)
+    })
+    session$sendCustomMessage(type = "scrollCallback", 1)
+  }, ignoreInit = TRUE)
   output$h1selectPISACountries <- renderText("Select PISA countries' data")
   hide("selectPISACountriesChooseOutFile")
   hide("saveSelectPISACountriesSyntax")
   hide("copySelectPISACountriesSyntax")
   hide("consoleSelectPISACountries")
-  output$selectPISACountriesIntro <- renderText({HTML("Select  PISA .RData file to load.")})
+  output$selectPISACountriesIntro <- renderText({HTML("Select PISA .RData file to load.")})
   file.select.PISA <- reactiveValues(loaded = NULL, is.lsa.data = NULL, resp.type = NULL, study = NULL, cycle = NULL, country.ID = NULL, default.weight = NULL, select.PISA.syntax = NULL)
   shinyFileChoose(input, "selectPISACountriesChooseSrcFile", roots = available.volumes, filetype = list(RData = "RData"))
   observeEvent(eventExpr = input$selectPISACountriesChooseSrcFile, {
@@ -12063,23 +13060,26 @@ Currently, RALSA can work with data for all cycles of the following studies (mor
   output$helpSectionRALSAWebsiteLinks <- renderText({
     HTML(
       "General:
-      <ul><li><a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a></li></ul>
-      Prepare data for analysis:<br/>
-      <ul><li><a href = https://ralsa.ineri.org/download-data-files, target = '_blank'>Download data files</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
-      Perform analyses:<br/>
-      <ul><li><a href = https://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
-      <ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
+<ul><li><a href = https://ralsa.ineri.org/installation-instructions, target = '_blank'>Installation instructions</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/getting-started-with-ralsa, target = '_blank'>Getting started with RALSA</a></li></ul>
+Prepare data for analysis:<br/>
+<ul><li><a href = https://ralsa.ineri.org/download-data-files, target = '_blank'>Download data files</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/convert-data, target = '_blank'>Convert data (SPSS, or text in case of PISA prior 2015), print data properties on screen, select PISA countries for analysis</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/merge-data, target = '_blank'>Merge study data files from different countries and/or respondents</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/variable-dictionaries, target = '_blank'>Variable dictionaries (name, class, variable label, response categories/unique values, user-defined missing values)</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/data-diagnostics, target = '_blank'>Data diagnostic tables</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/recode-variables, target = '_blank'>Recode variables</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/cut-continuous-variables-into-discrete-categorical/, target = '_blank'>Cut continuous variables into discrete categorical</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/aggregate-variables/, target = '_blank'>Aggregate variables</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/select-pisa-countries/, target = '_blank'>Select PISA countries</a></li></ul>
+Perform analyses:<br/>
+<ul><li><a href = https://ralsa.ineri.org/percentages-and-means, target = '_blank'>Percentages of respondents in certain groups and averages (means, medians or modes) on variables of interest, per group</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/percentiles, target = '_blank'>Percentiles of continuous variables within groups of respondents</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/benchmarks, target = '_blank'>Percentages of respondents reaching or surpassing benchmarks of achievement</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/crosstabulations, target = '_blank'>Crosstabulations with Rao-Scott first- and second-order chi-square adjustments</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/correlations, target = '_blank'>Correlations (Pearson or Spearman)</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/linear-regression, target = '_blank'>Linear regression</a></li></ul>
+<ul><li><a href = https://ralsa.ineri.org/binary-logistic-regression, target = '_blank'>Binary logistic regression</a></li></ul>"
     )
   })
   output$partCountriesHeading <- renderText("Countries' study participation")
@@ -12112,17 +13112,16 @@ Note: Some countries have more than one numeric code in PISA. These appear with 
     }
   },
   server = FALSE,
-  callback=JS('$("button.buttons-excel").css("background","black").css("color", "white").css("font-size", "14px").css("border-radius", "10px").css("height", "33px").css("padding-top", "5px").css("margin-top", "10px").css("margin-right", "15px");'),
   rownames = FALSE,
   select = "none",
   filter = "top",
   class = "cell-border stripe;compact cell-border;",
-  extensions = c("Scroller", "Buttons"),
+  extensions = c("Scroller"),
   options = list(
     buttons = list(list(extend = "excel", text = "Download Excel", title = "Participating_Countries")),
     language = list(zeroRecords = "No study and cycle is selected"),
     initComplete = JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000000', 'color': '#ffffff'});", "}"),
-    dom = "tB",
+    dom = "t",
     searchHighlight = FALSE,
     searchDelay = 100,
     ordering = FALSE,
@@ -12132,6 +13131,20 @@ Note: Some countries have more than one numeric code in PISA. These appear with 
     deferRender = TRUE,
     scrollY = 700, scrollX = TRUE, scroller = TRUE
   ))
+  output$downloadHelpCntList <- downloadHandler(filename = "Participating_Countries.xlsx", content = function(con) {
+    if(input$partCountriesFilterParticipating == FALSE) {
+      write.xlsx(x = filter.studies.and.cycles(), file = con)
+    } else if(input$partCountriesFilterParticipating == TRUE) {
+      write.xlsx(x = na.omit(filter.studies.and.cycles()), file = con)
+    }
+  })
+  observe({
+    if(is.null(input$selectStudyCycleDropdown)) {
+      hide("downloadHelpCntList")
+    } else {
+      show("downloadHelpCntList")
+    }
+  })
   output$exitHeading <- renderText("Press the button below to exit RALSA")
   observeEvent(input$closeGUI, {
     js$closeWindow()

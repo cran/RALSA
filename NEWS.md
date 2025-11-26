@@ -1,3 +1,37 @@
+# RALSA v1.6.0 (2025-11-26)
+
+This version brings two new data preparation functionalities, a number of bug fixes and improvements. The two new functions, also accessible via the GUI create categorical variables from continuous ones, and aggregate continuous variables by groups.
+
+## Bug fixes
+
+* When downloading TALIS 2008 data, no files were downloaded.
+
+* When first using the "Participating countries" sub-section in the "Help" section of the GUI, then the "Recode variables" sub-section shows some extra buttons at the bottom of the screen where they don't belong.
+
+* When the file is loaded for the first time in the "Recode variables" section, no elements are shown on the screen until the file is loaded for the second time.
+
+* `lsa.download.data` crashes when attempting to download the ICILS 2023 data.
+
+## New functionality
+
+* A new function, `lsa.cut.vars`, to cut continuous variables' values into discrete categories and save them under new files.
+
+* A new function, `lsa.aggregate.vars` to aggregate continuous variables by groups defined by categorical variables. Thanks to Ines Perovic.
+
+* Added support for TALIS 2024.
+
+## Miscellaneous
+
+* The deprecated `lsa.convert.data2` is now removed from the package. Use `lsa.convert.data` instead.
+
+* Improved documentation.
+
+* Various improvements in the GUI workflow.
+
+
+
+
+
 # RALSA v1.5.5 (2025-02-24)
 
 When large-scale assessments' data are needed, an entire database with all data files, documentation and reports has to be downloaded. It would be nice if one is able to download only the data files for a country per study, cycle, and population of interest, but nothing else. This version brings exactly this. For example, an analyst can now download the data files for TIMSS 2023 Grade 8 just for the countries he or she needs without downloading the entire archive. This release also brings bug fixes and improvements.
@@ -25,16 +59,6 @@ When large-scale assessments' data are needed, an entire database with all data 
 * Fixed the sporadic partial Excel export of the countries' study and cycle participation in the help section of the GUI.
 
 * Improved documentation.
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -159,8 +159,8 @@ reshape.imported <- function(object, to.NA, study, cycle, type) {
   }
 }
 cnt.ID.list <- list(
-  Numeric = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9137, 9130, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106, 276005, 7843, 384, 368, 566, 686),
-  ISO = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq", "Nigeria", "Senegal")
+  Numeric = c(32, 51, 36, 40, 48, 3724, 956, 957, 56, 84, 72, 100, 124, 9132, 9133, 9134, 9135, 9136, 152, 158, 170, 196, 203, 200, 208, 818, 926, 826, 233, 246, 250, 268, 276, 288, 300, 344, 348, 352, 9352, 11800, 360, 364, 372, 376, 380, 392, 400, 410, 414, 428, 422, 440, 442, 807, 458, 498, 504, 528, 554, 578, 9578, 275, 608, 616, 620, 634, 642, 643, 6431, 682, 927, 891, 702, 703, 222, 705, 710, 4710, 724, 7241, 752, 3752, 756, 760, 764, 780, 788, 792, 840, 887, 470, 12700, 12500, 512, 804, 12, 398, 496, 70, 7841, 76, 484, 48401, 48402, 48499, 214, 320, 438, 600, 6162, 57891, 57892, 57893, 57894, 7842, 784, 31, 72401, 72404, 7246, 340, 191, 6504, 9470, 928, 9528, 7554, 7702, 688, 10400, 11100, 10800, 10900, 11200, 13700, 6887, 32001, 8261, 9642, 48411, 48420, 48412, 48415, 48416, 48417, 48418, 48421, 48422, 48425, 48426, 48427, 48428, 188, 558, 604, 9130, 156001, 643002, 5784, 5788, 276001, 724005, 446, 643001, 7105, 208001, 724004, 710003, 704, 858, 218, 8, 499, 586, 411, 710004, 854, 231, 356, 404, 646, 800, 860, 7106, 276005, 7843, 384, 368, 566, 686, 124008, 310001, 760005, 156003),
+  ISO = c("Argentina", "Armenia", "Australia", "Austria", "Bahrain", "Spain (Basque Country)", "Belgium (Flemish)", "Belgium (French)", "Belgium", "Belize", "Botswana", "Bulgaria", "Canada", "Canada (Ontario)", "Canada (Quebec)", "Canada (Alberta)", "Canada (British Columbia)", "Canada (Nova Scotia)", "Chile", "Chinese Taipei", "Colombia", "Cyprus", "Czech Republic", "Czech Republic", "Denmark", "Egypt", "England", "United Kingdom", "Estonia", "Finland", "France", "Georgia", "Germany", "Ghana", "Greece", "Hong Kong, SAR", "Hungary", "Iceland", "Iceland (Grade 5)", "United States (Indiana)", "Indonesia", "Iran, Islamic Republic of", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Korea, Republic of", "Kuwait", "Latvia", "Lebanon", "Lithuania", "Luxembourg", "North Macedonia", "Malaysia", "Moldova", "Morocco", "Netherlands", "New Zealand", "Norway", "Norway (Grade 5)", "Palestinian National Authority", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russian Federation", "Russian Federation (Moscow)", "Saudi Arabia", "Scotland", "Serbia", "Singapore", "Slovak Republic", "El Salvador", "Slovenia", "South Africa", "South Africa (Grade 4)", "Spain", "Spain (Catalonia)", "Sweden", "Sweden (Grade 3)", "Switzerland", "Syria, Arab Republic of", "Thailand", "Trinidad And Tobago", "Tunisia", "Turkey", "United States", "Yemen", "Malta", "United States (Minnesota)", "United States (Massachusetts)", "Oman", "Ukraine", "Algeria", "Kazakhstan", "Mongolia", "Bosnia and Herzegovina", "United Arab Emirates (Dubai)", "Brazil", "Mexico", "Mexico (Generales/Tecnicas/Privadas)", "Mexico (Telesecundarias)", "Mexico (Talis-Nacional)", "Dominican Republic", "Guatemala", "Liechtenstein", "Paraguay", "Poland (Second-Cycle Programs)", "Norway (ALU)", "Norway (ALU +)", "Norway (PPU)", "Norway (MASTERS)", "United Arab Emirates (Abu Dhabi)", "United Arab Emirates", "Azerbaijan, Republic of", "Spain (Andalucia)", "Spain (Canary Islands)", "Finland (Grade 7)", "Honduras, Republic of", "Croatia", "Morocco (Grade 6)", "Malta (Maltese)", "Northern Ireland", "The Netherlands (50 additional schools)", "New Zealand (TIMSS data processing)", "Singapore (Chinese Grade 7)", "Serbia", "United States (Alabama)", "United States (California)", "United States (Colorado)", "United States (Connecticut)", "United States (Florida)", "United States (North Carolina)", "Yemen (Grade 6)", "Argentina, Buenos Aires", "England and Northern Ireland (UK)", "Romania", "Mexico (Distrito Federal)", "Mexico (International Telesecundaria)", "Mexico (Jalisco)", "Mexico (Nuevo Leon)", "Mexico (Quintana Roo)", "Mexico (San Luis Potosi)", "Mexico (Tamaulipas)", "Mexico (Telesecundaria-Distrito Federal)", "Mexico (Telesecundaria-Jalisco)", "Mexico (Telesecundaria-Nuevo Leon)", "Mexico (Telesecundaria-Quintana Roo)", "Mexico (Telesecundaria-San Luis Potosi)", "Mexico (Telesecundaria-Tamaulipas)", "Costa Rica", "Nicaragua", "Peru", "Canada (Newfoundland and Labrador)", "China (Shanghai)", "Russia (8+ sample)", "Norway (4)", "Norway (8)", "Germany, North-Rhine Westphalia", "Spain, Madrid", "Macao SAR", "Russian Federation, Moscow", "South Africa (Eng/Afr)", "Denmark (Grade 3)", "Spain, Madrid, Bilingual", "South Africa (Gauteng)", "Vietnam", "Uruguay", "Ecuador", "Albania", "Montenegro", "Pakistan", "Kosovo", "South Africa (Western Cape Province)", "Burkina Faso", "Ethiopia", "India", "Kenya", "Rwanda", "Uganda", "Uzbekistan", "South Africa (Grade 6)", "Germany, Schleswig-Holstein", "United Arab Emirates (Sharjah)", "Ivory Coast", "Iraq", "Nigeria", "Senegal", "Canada (New Brunswick)", "Baku, Sumgait (Azerbaijan)", "Cear\u00e1, Par\u00e1, S\u00e3o Paulo (Brazil)", "Hangzhou (China)")
 )
 import.data <- function(path) {
   tmp <- load(path)
@@ -203,6 +203,10 @@ study.dataset.files <- list(
     ICILS_2018 = list(
       ICILS_2018_G8 = list("ICILS2018_IDB_SPSS/Data",
                            c("BCGCHLI2.sav", "BCGDEUI2.sav", "BCGDNKI2.sav", "BCGDNWI2.sav", "BCGFINI2.sav", "BCGFRAI2.sav", "BCGITAI2.sav", "BCGKAZI2.sav", "BCGKORI2.sav", "BCGLUXI2.sav", "BCGPRTI2.sav", "BCGRMOI2.sav", "BCGURYI2.sav", "BCGUSAI2.sav", "BSGCHLI2.sav", "BSGDEUI2.sav", "BSGDNKI2.sav", "BSGDNWI2.sav", "BSGFINI2.sav", "BSGFRAI2.sav", "BSGITAI2.sav", "BSGKAZI2.sav", "BSGKORI2.sav", "BSGLUXI2.sav", "BSGPRTI2.sav", "BSGRMOI2.sav", "BSGURYI2.sav", "BSGUSAI2.sav", "BTGCHLI2.sav", "BTGDEUI2.sav", "BTGDNKI2.sav", "BTGDNWI2.sav", "BTGFINI2.sav", "BTGFRAI2.sav", "BTGITAI2.sav", "BTGKAZI2.sav", "BTGKORI2.sav", "BTGLUXI2.sav", "BTGPRTI2.sav", "BTGRMOI2.sav", "BTGURYI2.sav", "BTGUSAI2.sav")
+      )),
+    ICILS_2023 = list(
+      ICILS_2023_G8 = list("ICILS2023_IDB_SPSS/Data",
+                           c("BCGAUTI3.sav", "BCGAZEI3.sav", "BCGBFLI3.sav", "BCGBIHI3.sav", "BCGCHLI3.sav", "BCGCYPI3.sav", "BCGCZEI3.sav", "BCGDEUI3.sav", "BCGDNKI3.sav", "BCGDNWI3.sav", "BCGESPI3.sav", "BCGFINI3.sav", "BCGFRAI3.sav", "BCGGRCI3.sav", "BCGHRVI3.sav", "BCGHUNI3.sav", "BCGITAI3.sav", "BCGKAZI3.sav", "BCGKORI3.sav", "BCGLUXI3.sav", "BCGLVAI3.sav", "BCGMLTI3.sav", "BCGNLDI3.sav", "BCGNORI3.sav", "BCGOMNI3.sav", "BCGPRTI3.sav", "BCGROUI3.sav", "BCGSRBI3.sav", "BCGSVKI3.sav", "BCGSVNI3.sav", "BCGSWEI3.sav", "BCGTWNI3.sav", "BCGURYI3.sav", "BCGUSAI3.sav", "BCGXKXI3.sav", "BSGAUTI3.sav", "BSGAZEI3.sav", "BSGBFLI3.sav", "BSGBIHI3.sav", "BSGCHLI3.sav", "BSGCYPI3.sav", "BSGCZEI3.sav", "BSGDEUI3.sav", "BSGDNKI3.sav", "BSGDNWI3.sav", "BSGESPI3.sav", "BSGFINI3.sav", "BSGFRAI3.sav", "BSGGRCI3.sav", "BSGHRVI3.sav", "BSGHUNI3.sav", "BSGITAI3.sav", "BSGKAZI3.sav", "BSGKORI3.sav", "BSGLUXI3.sav", "BSGLVAI3.sav", "BSGMLTI3.sav", "BSGNLDI3.sav", "BSGNORI3.sav", "BSGOMNI3.sav", "BSGPRTI3.sav", "BSGROUI3.sav", "BSGSRBI3.sav", "BSGSVKI3.sav", "BSGSVNI3.sav", "BSGSWEI3.sav", "BSGTWNI3.sav", "BSGURYI3.sav", "BSGUSAI3.sav", "BSGXKXI3.sav", "BTGAUTI3.sav", "BTGAZEI3.sav", "BTGBFLI3.sav", "BTGBIHI3.sav", "BTGCHLI3.sav", "BTGCYPI3.sav", "BTGCZEI3.sav", "BTGDEUI3.sav", "BTGDNKI3.sav", "BTGDNWI3.sav", "BTGESPI3.sav", "BTGFINI3.sav", "BTGFRAI3.sav", "BTGGRCI3.sav", "BTGHRVI3.sav", "BTGHUNI3.sav", "BTGITAI3.sav", "BTGKAZI3.sav", "BTGKORI3.sav", "BTGLUXI3.sav", "BTGLVAI3.sav", "BTGMLTI3.sav", "BTGNLDI3.sav", "BTGNORI3.sav", "BTGOMNI3.sav", "BTGPRTI3.sav", "BTGROUI3.sav", "BTGSRBI3.sav", "BTGSVKI3.sav", "BTGSVNI3.sav", "BTGSWEI3.sav", "BTGTWNI3.sav", "BTGURYI3.sav", "BTGUSAI3.sav", "BTGXKXI3.sav")
       )),
     PIRLS_2001 = list(
       PIRLS_2001_G4 = list("PIRLS2001_IDB_SPSS/Data",
@@ -301,6 +305,17 @@ study.dataset.files <- list(
         ".",
         c("PCGABAT3.sav", "PCGAUST3.sav", "PCGCOLT3.sav", "PCGCZET3.sav", "PCGDNKT3.sav", "PCGGEOT3.sav", "PCGMLTT3.sav", "PCGTURT3.sav", "PCGVNMT3.sav", "PTGABAT3.sav", "PTGAUST3.sav", "PTGCOLT3.sav", "PTGCZET3.sav", "PTGDNKT3.sav", "PTGGEOT3.sav", "PTGMLTT3.sav", "PTGTURT3.sav", "PTGVNMT3.sav")
       )),
+    TALIS_2024 = list(
+      TALIS_2024_I1 = list(".",
+                           c("acgintt4.sav", "atgintt4.sav")
+      ),
+      TALIS_2024_I2 = list(".",
+                           c("bcgintt4.sav", "btgintt4.sav")
+      ),
+      TALIS_2024_I3 = list(".",
+                           c("ccgintt4.sav", "ctgintt4.sav")
+      )
+    ),
     TALIS_3S_2018 = list(
       TALIS_3S_2018_I0.2 = list("TALIS-Starting-Strong-By-country-SPSS/SPSS",
                                 c("BLGCHLS1.sav", "BLGDEUS1.sav", "BLGDNKS1.sav", "BLGISRS1.sav", "BLGJPNS1.sav", "BLGKORS1.sav", "BLGNORS1.sav", "BLGTURS1.sav", "BSGCHLS1.sav", "BSGDEUS1.sav", "BSGDNKS1.sav", "BSGISRS1.sav", "BSGJPNS1.sav", "BSGKORS1.sav", "BSGNORS1.sav", "BSGTURS1.sav")
@@ -438,7 +453,8 @@ study.dataset.files <- list(
     ),
     "ICILS" = list(
       "2013" = list(G8 = "ICILS/ICILS2013/ICILS2013_IDB_SPSS.zip"),
-      "2018" = list(G8 = "ICILS/ICILS2018/ICILS2018_IDB_SPSS.zip")
+      "2018" = list(G8 = "ICILS/ICILS2018/ICILS2018_IDB_SPSS.zip"),
+      "2023" = list(G8 = "ICILS/ICILS2023/ICILS2023_IDB_SPSS.zip")
     ),
     "PIRLS" = list(
       "2001" = list(G4 = "PIRLS/PIRLS2001/PIRLS2001_IDB_SPSS.zip"),
@@ -495,9 +511,10 @@ study.dataset.files <- list(
       "2019" = list(G4 = "TIMSS/TIMSS2019/TIMSS2019_IDB_SPSS_G4.zip", G8 = "TIMSS/TIMSS2019/TIMSS2019_IDB_SPSS_G8.zip")
     ),
     "TALIS" = list(
-      "2008" = list(I2 = "SPSS_2013_national.zip"),
+      "2008" = list(I2 = "SPSS_2008_national.zip"),
       "2013" = list(I1 = "SPSS_2013_national.zip", I2 = "SPSS_2013_national.zip", I3 = "SPSS_2013_national.zip", P = "SPSS_2013_national.zip"),
-      "2018" = list(I1 = "SPSS_2018_national.zip", I2 = "SPSS_2018_national.zip", I3 = "SPSS_2018_national.zip", P = "SPSS_2018_national.zip")
+      "2018" = list(I1 = "SPSS_2018_national.zip", I2 = "SPSS_2018_national.zip", I3 = "SPSS_2018_national.zip", P = "SPSS_2018_national.zip"),
+      "2024" = list(I1 = c("TALIS2024_principals_NoESE_SPSS.zip", "TALIS2024_teachers_NoESE_SPSS.zip"), I2 = c("TALIS2024_principals_NoESE_SPSS.zip", "TALIS2024_teachers_NoESE_SPSS.zip"), I3 = c("TALIS2024_principals_NoESE_SPSS.zip", "TALIS2024_teachers_NoESE_SPSS.zip"))
     ),
     "TALIS 3S" = list(
       "2018" = list(I0.2 = "TALIS-Starting-Strong-By-country-SPSS.zip", IU3 = "TALIS-Starting-Strong-By-country-SPSS.zip")
@@ -613,7 +630,7 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type, perc.gr
                                                  plot.title = element_text(hjust = 0.5))
       tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
                                                          width = 0.2,
-                                                         size = 1,
+                                                         linewidth = 1,
                                                          position = position_dodge(0.9))
       tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
         str_wrap(string = j, width = 20)
@@ -648,7 +665,7 @@ produce.percentages.plots <- function(data.obj, split.vars.vector, type, perc.gr
                                                  plot.title = element_text(hjust = 0.5))
       tmp.percentages <- tmp.percentages + geom_errorbar(aes(ymin = !!y.var - 1.96 * !!y.var.SE, ymax = !!y.var + 1.96 * !!y.var.SE),
                                                          width = 0.2,
-                                                         size = 1,
+                                                         linewidth = 1,
                                                          position = position_dodge(0.9))
       tmp.percentages <- tmp.percentages + scale_x_discrete(labels = function(j) {
         str_wrap(string = j, width = 20)
@@ -748,7 +765,7 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!y.var[[j]], color = factor(x = !!color.var, levels = !!color.var)))
         cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                              width = 0.3,
-                                             size = 1.3,
+                                             linewidth = 1.3,
                                              position = position_dodge(.9),
                                              show.legend = FALSE)
         if(type == "ordinary") {
@@ -788,7 +805,7 @@ produce.means.plots <- function(data.obj, estimates.obj, split.vars.vector, type
         cnt.plot <- ggplot(data = i, aes(x = !!x.var, y= !!y.var[[j]], color = !!color.var))
         cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[j]] - 1.96 * !!sym(paste0(y.var[[j]], "_SE")), ymax = !!y.var[[j]] + 1.96 * !!sym(paste0(y.var[[j]], "_SE"))),
                                              width = 0.3,
-                                             size = 1.3,
+                                             linewidth = 1.3,
                                              position = position_dodge(.9),
                                              show.legend = FALSE)
         if(nrow(i) <= 100) {
@@ -986,18 +1003,19 @@ produce.missing.patterns.plots <- function(data.obj, split.vars.vector, var.name
       ) +
       coord_equal(clip = "off") +
       {if(length(split.vars.vector) > 1) {
-        ggtitle(label = unique(i[ , get(split.vars.vector[1])]), subtitle = paste(unique(i[ , mget(split.vars.vector)]), collapse = " // "))
+        width.split <- floor(nchar(paste(unique(i[ , mget(split.vars.vector)]), collapse = " // ")) / length(var.names) * 3)
+        ggtitle(label = unique(i[ , get(split.vars.vector[1])]), subtitle = str_wrap(paste(unique(i[ , mget(split.vars.vector)]), collapse = " // "), width = width.split))
       } else {
         ggtitle(label = unique(i[ , get(split.vars.vector[1])]))
       }
       } +
-      annotate(geom = "text", x = Inf, y = -Inf, label = unique(i.total[ , Missings_in_Pattern]), vjust = 1.8, family = "mono", size = font.scaled.size / .pt) +
+      annotate(geom = "text", x = Inf, y = -Inf, label = unique(i.total[ , Missings_in_Pattern]), hjust = -0.06, vjust = 1.8, family = "mono", size = font.scaled.size / .pt) +
       theme(
         panel.grid = element_blank(),
         plot.background = element_rect(fill = "#e2e2e2"),
         panel.background = element_rect(fill = "#e2e2e2", colour = "#e2e2e2", linewidth = 2),
         axis.text.x.top = element_text(angle = 90, color = "black", size = font.scaled.size, vjust = 0.5, hjust = 0),
-        axis.text.x.bottom = element_text(angle = 270, color = "black", size = font.scaled.size, vjust = 0.5, hjust = 1),
+        axis.text.x.bottom = element_text(angle = 270, color = "black", family = "mono", size = font.scaled.size, vjust = 0.5, hjust = 1),
         axis.text.y = element_text(color = "black", family = "mono", size = font.scaled.size),
         axis.text.y.right = element_text(color = "black", family = "mono", size = font.scaled.size),
         legend.position="none",
@@ -1009,6 +1027,56 @@ produce.missing.patterns.plots <- function(data.obj, split.vars.vector, var.name
       )
   })
   return(tmp.patterns)
+}
+produce.flux.plots <- function(data.obj, split.vars.vector, weighted) {
+  x.var <- sym("Influx")
+  y.var <- sym("Outflux")
+  facet.var <- split.vars.vector[length(split.vars.vector)]
+  if(length(split.vars.vector) == 1) {
+    font.size <- 5
+  } else if(length(split.vars.vector) == 2) {
+    font.size <- 4
+  } else if(length(split.vars.vector) > 2) {
+    font.size <- 3
+  }
+  tmp.fluxplots <- lapply(X = data.obj, FUN = function(i) {
+    if(length(split.vars.vector) == 1) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var, label = Variables))
+    } else if(length(split.vars.vector) == 2) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var, group = i[ , get(split.vars.vector[length(split.vars.vector)])], label = Variables))
+      cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ .)
+    } else if(length(split.vars.vector) > 2) {
+      cnt.plot <- ggplot(data = i, aes(x = !!x.var, y = !!y.var, group = interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - "), label = Variables))
+      cnt.plot <- cnt.plot + facet_wrap(i[ , get(facet.var)] ~ interaction(i[ , mget(split.vars.vector[2:length(split.vars.vector)])], sep = " - "), labeller = function(df) {list(str_wrap(string = as.character(df[ , 2]), width = 25))})
+    }
+    cnt.plot <- cnt.plot + geom_vline(aes(xintercept = .5), linetype = "longdash", color = "#bfbfbf") +
+      geom_hline(aes(yintercept = .5), linetype = "longdash", color = "#bfbfbf") +
+      geom_abline(aes(intercept = 1, slope = -1), linetype = "longdash", color = "black", linewidth = 0.8)
+    cnt.plot <- cnt.plot + geom_point(shape = 21, fill = "red", size = 3) +
+      geom_text(hjust = -0.15, vjust = -0.15, size = font.size) +
+      ggtitle(label = unique(i[ , get(split.vars.vector[1])]))
+    if(isTRUE(weighted)) {
+      cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = i[ , Outflux] - 1.96 * i[ , Outflux_SE], ymax = i[ , Outflux] + 1.96 * i[ , Outflux_SE]), width = 0.02) +
+        geom_errorbarh(aes(xmin = i[ , Influx] - 1.96 * i[ , Influx_SE], xmax = i[ , Influx] + 1.96 * i[ , Influx_SE]), height = 0.02)
+    }
+    cnt.plot <- cnt.plot + xlab(label = "Influx")
+    cnt.plot <- cnt.plot + ylab(label = "Outflux")
+    cnt.plot <- cnt.plot + coord_equal(xlim = c(0, 1), ylim = c(0, 1))
+    cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
+                                 panel.grid.major = element_line(colour = "#e2e2e2", linetype = "longdash"),
+                                 panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+                                 plot.background = element_rect(fill = "#e2e2e2"),
+                                 strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth = 1, linetype = "solid"),
+                                 legend.background = element_rect(fill = "#e2e2e2"),
+                                 legend.key = element_blank(),
+                                 plot.title = element_text(hjust = 0.5))
+  })
+  if(isTRUE(weighted)) {
+    names(tmp.fluxplots) <- paste0(names(tmp.fluxplots), "_Fluxplots_Weighted")
+  } else if(isFALSE(weighted)) {
+    names(tmp.fluxplots) <- paste0(names(tmp.fluxplots), "_Fluxplots_Unweighted")
+  }
+  return(tmp.fluxplots)
 }
 save.graphs <- function(out.path) {
   key.vars.length <- length(get(x = "key.vars", envir = parent.frame()))
@@ -1125,6 +1193,32 @@ save.graphs <- function(out.path) {
       ggsave(filename = paste0(i, ".png"), plot = missing.patterns.obj.copy[[i]], width = height.width, height = height.width, units = "mm", dpi = missing.pattern.scaled.dpi, device = "png", path = out.dir.missing.patterns)
     })
   }
+  if(exists("unweighted.fluxplots.list", where = parent.frame())) {
+    unweighted.fluxplots.obj.copy <- get("unweighted.fluxplots.list", pos = parent.frame())
+    unweighted.fluxplots.files <- paste0(names(unweighted.fluxplots.obj.copy), ".png")
+    assign(x = "unweighted.fluxplots.files", value = unweighted.fluxplots.files, pos = parent.frame())
+    if(is.null(out.path)) {
+      out.dir.fluxplots <- getwd()
+    } else {
+      out.dir.fluxplots <- dirname(out.path)
+    }
+    lapply(X = names(unweighted.fluxplots.obj.copy), FUN = function(i) {
+      ggsave(filename = paste0(i, ".png"), plot = unweighted.fluxplots.obj.copy[[i]], width = plot.width, height = plot.width, units = "mm", device = "png", path = out.dir.fluxplots)
+    })
+  }
+  if(exists("weighted.fluxplots.list", where = parent.frame())) {
+    weighted.fluxplots.obj.copy <- get("weighted.fluxplots.list", pos = parent.frame())
+    weighted.fluxplots.files <- paste0(names(weighted.fluxplots.obj.copy), ".png")
+    assign(x = "weighted.fluxplots.files", value = weighted.fluxplots.files, pos = parent.frame())
+    if(is.null(out.path)) {
+      out.dir.fluxplots <- getwd()
+    } else {
+      out.dir.fluxplots <- dirname(out.path)
+    }
+    lapply(X = names(weighted.fluxplots.obj.copy), FUN = function(i) {
+      ggsave(filename = paste0(i, ".png"), plot = weighted.fluxplots.obj.copy[[i]], width = plot.width, height = plot.width, units = "mm", device = "png", path = out.dir.fluxplots)
+    })
+  }
 }
 delete.graphs <- function(out.path) {
   if(is.null(out.path)) {
@@ -1175,6 +1269,36 @@ delete.graphs <- function(out.path) {
     }
     lapply(X = get("crosstabs.plots.files", pos = parent.frame()), FUN = function(i) {
       file.remove(file.path(out.dir.crosstabs, i))
+    })
+  }
+  if(exists("missing.patterns.plots.files", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.explore.missings <- getwd()
+    } else {
+      out.dir.explore.missings <- dirname(out.path)
+    }
+    lapply(X = get("missing.patterns.plots.files", pos = parent.frame()), FUN = function(i) {
+      file.remove(file.path(out.dir.explore.missings, i))
+    })
+  }
+  if(exists("unweighted.fluxplots.files", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.explore.missings <- getwd()
+    } else {
+      out.dir.explore.missings <- dirname(out.path)
+    }
+    lapply(X = get("unweighted.fluxplots.files", pos = parent.frame()), FUN = function(i) {
+      file.remove(file.path(out.dir.explore.missings, i))
+    })
+  }
+  if(exists("weighted.fluxplots.files", where = parent.frame())) {
+    if(is.null(out.path)) {
+      out.dir.explore.missings <- getwd()
+    } else {
+      out.dir.explore.missings <- dirname(out.path)
+    }
+    lapply(X = get("weighted.fluxplots.files", pos = parent.frame()), FUN = function(i) {
+      file.remove(file.path(out.dir.explore.missings, i))
     })
   }
 }
@@ -1384,7 +1508,7 @@ fac.to.num.missing.codes <- c(99999991, 99999991, 99999991, 99999991, 99999991, 
 names(fac.to.num.missing.codes) <- c(" not appl.", "Default", "log.not appl.", "LOGICALLY NOT APPLICABLE", "Logically not applicable", "not appl", "not appl.", "Not Applicable", "Not applicable", "not applicable", "don't know", "No Response", "Valid Skip", "n. rea.", "n. reach.", "n. reached", "n.rea.", "n.reach.", "NOT REACHED", "Not Reached", "Not reached", "not reached", "Not reached (default during data processing)", "crossed out, not interpretable", "INVALID", "Invalid", "INVALID RESPONSE", "Presented but not answered/invalid", "Presented but not answered or invalid", "two or more responses, not interpretable", "two or more responses, uninterpretable", "TWO OR MORE RESPONSES, UNINTERPRETABLE", "two or more responses, uninterpretable, ...", "uninterpretable", "n. adm.", "n. admin.", "not admin", "not admin.", "Not administered", "not administered", "Not administered/missing by design", "Not administered or missing by design", "Not stated", "Notadministered/missing by design", "noz admin", "missing", "MISSING", "MISSING (BLANK ONLY)", "NOT EXCLUDED", "OMITTED", "Omitted", "omitted", "omitted (blank only)", "OMITTED OR INVALID", "Omitted or invalid", "Omitted or Invalid")
 get.analysis.and.design.vars <- function(x) {
   passed.args <- as.list(sys.call(which = -1))
-  passed.args <- passed.args[c("split.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "bckg.row.var", "bckg.col.var", "weight.var", "interactions", "variables")]
+  passed.args <- passed.args[c("split.vars", "group.vars", "bckg.var", "bckg.avg.vars", "bckg.prctls.vars", "bckg.corr.vars", "bckg.dep.var", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "bin.dep.var", "PV.root.avg", "PV.root.prctls", "PV.root.bench", "PV.root.corr", "PV.root.dep", "PV.root.indep", "bckg.row.var", "bckg.col.var", "weight.var", "interactions", "variables", "src.variables")]
   if(is.na(names(passed.args["weight.var"])) == TRUE) {
     if(attr(x, "study") %in% design.weight.variables[["IEA.JK2.studies"]]) {
       if(attr(x, "file.type") %in% design.weight.variables[["IEA.JK2.dflt.std.bckg.types"]]) {
@@ -2550,6 +2674,18 @@ compute.multiple.means.all.repwgt <- function(data.object, vars.vector, weight.v
   }
   return(tmp)
 }
+compute.unweighted.mode <- function(x, na.rm = TRUE) {
+  if(isTRUE(na.rm)) {
+    tmp <- table(x, useNA = "no")
+  } else {
+    tmp <- table(x, useNA = "always")
+  }
+  tmp <- as.numeric(names(which.max(x = tmp)))
+  if(length(tmp) > 1) {
+    tmp <- tmp[1]
+  }
+  return(tmp)
+}
 compute.multiple.modes.all.repwgt <- function(data.object, vars.vector, weight.var, keys) {
   all.modes <- lapply(X = vars.vector, FUN = function(i) {
     modes.tmp <- lapply(X = weight.var, FUN = function(j) {
@@ -3269,7 +3405,10 @@ recode.missing.data.values <- function(data.obj, vars.to.recode, user.missing.to
     setattr(x = i, name = "variable.label", value = var.label.i)
   }), .SDcols = vars.to.recode]
 }
-compute.missing.data.patterns.unweighted <- function(data.obj, var.names, keys, keys.no.NA) {
+compute.missing.data.patterns.unweighted <- function(data.obj, var.names, keys, keys.no.NA, pattern.cell.counts.miss = FALSE, pattern.cell.counts.valid = FALSE) {
+  if(isTRUE(pattern.cell.counts.miss) & isTRUE(pattern.cell.counts.valid)) {
+    stop('Both "pattern.cell.counts.miss" and "pattern.cell.counts.valid" are true, choose just one of them.', call. = FALSE)
+  }
   data.missings <- copy(data.obj[ , mget(c(keys, var.names))])
   if(isFALSE(keys.no.NA)) {
     data.missings <- na.omit(object = data.missings, cols = keys)
@@ -3301,6 +3440,8 @@ compute.missing.data.patterns.unweighted <- function(data.obj, var.names, keys, 
     missing.matrix <- cbind(missing.matrix, data.table(Total_Missings_per_Pattern = missings.per.pattern[ , Total_Missings_per_Pattern]))
     bottom.row <- i[ , lapply(.SD, function(j) {sum(j == 0, na.rm = TRUE)}), by = keys]
     bottom.row <- cbind(Pattern_Counts = NA_integer_, bottom.row, data.table(Missings_in_Pattern = NA_integer_), data.table(Total_Missings_per_Pattern = rowSums(bottom.row[ , mget(colnames(bottom.row)[!colnames(bottom.row) %in% keys])], na.rm = TRUE)))
+    bottom.row[ , (keys) := lapply(.SD, droplevels), .SDcols = keys]
+    bottom.row[ , (keys[length(keys)]) := factor(x = get(keys[length(keys)]), labels = paste0(levels(get(keys[length(keys)])), " Total"))]
     setcolorder(x = bottom.row, neworder = c(keys, "Pattern_Counts", names(sort(unlist(bottom.row[ , mget(cols.to.use)]))), "Missings_in_Pattern", "Total_Missings_per_Pattern"))
     setcolorder(x = missing.matrix, neworder = c(keys, "Pattern_Counts", grep(pattern = paste(cols.to.use, collapse = "|"), x = colnames(bottom.row), value = TRUE), "Missings_in_Pattern", "Total_Missings_per_Pattern"))
     setkeyv(x = missing.matrix, cols = grep(pattern = paste(cols.to.use, collapse = "|"), x = colnames(missing.matrix), value = TRUE))
@@ -3309,11 +3450,44 @@ compute.missing.data.patterns.unweighted <- function(data.obj, var.names, keys, 
     setorderv(x = missing.matrix, cols = "seq_row")
     missing.matrix[ , seq_row := NULL]
     missing.matrix <- rbindlist(l = list(missing.matrix, bottom.row))
-    return(missing.matrix)
+    if(isTRUE(pattern.cell.counts.miss)) {
+      patterns.count.miss <- rbindlist(lapply(X = split.i.per.pattern, FUN = function(j) {
+        j[ , lapply(.SD, function(k) {
+          sum(k == 0)
+        }), .SDcols = cols.to.use, keyby = c(keys, cols.to.use)]
+      }))
+      setnames(x = patterns.count.miss, c(keys, cols.to.use, paste0(cols.to.use, "_M_Counts")))
+      colorder.pattern <- grep(pattern = paste0(paste(cols.to.use, collapse = "$|"), "$"), x = colnames(bottom.row), value = TRUE)
+      colorder.miss.counts <- paste0(colorder.pattern, "_M_Counts")
+      setcolorder(x = patterns.count.miss, neworder = c(keys, colorder.pattern, colorder.miss.counts))
+      setorderv(x = patterns.count.miss, cols = grep(pattern = paste(cols.to.use, collapse = "|"), x = colnames(patterns.count.miss), value = TRUE), order = -1L)
+    }
+    if(isTRUE(pattern.cell.counts.valid)) {
+      patterns.count.valid <- rbindlist(lapply(X = split.i.per.pattern, FUN = function(j) {
+        j[ , lapply(.SD, function(k) {
+          sum(k == 1)
+        }), .SDcols = cols.to.use, keyby = c(keys, cols.to.use)]
+      }))
+      setnames(x = patterns.count.valid, c(keys, cols.to.use, paste0(cols.to.use, "_V_Counts")))
+      colorder.pattern <- grep(pattern = paste0(paste(cols.to.use, collapse = "$|"), "$"), x = colnames(bottom.row), value = TRUE)
+      colorder.valid.counts <- paste0(colorder.pattern, "_V_Counts")
+      setcolorder(x = patterns.count.valid, neworder = c(keys, colorder.pattern, colorder.valid.counts))
+      setorderv(x = patterns.count.valid, cols = grep(pattern = paste(cols.to.use, collapse = "|"), x = colnames(patterns.count.valid), value = TRUE), order = -1L)
+    }
+    if(isTRUE(pattern.cell.counts.miss)) {
+      return(patterns.count.miss)
+    } else if(isTRUE(pattern.cell.counts.valid)) {
+      return(patterns.count.valid)
+    } else if(isFALSE(pattern.cell.counts.miss) & isFALSE(pattern.cell.counts.valid)) {
+      return(missing.matrix)
+    }
   })
   return(table.missing.patterns)
 }
-compute.missing.data.patterns.all.repwgt <- function(data.object, var.names, keys, weight.var, keys.no.NA) {
+compute.missing.data.patterns.all.repwgt <- function(data.object, var.names, keys, weight.var, keys.no.NA, pattern.cell.counts.miss = FALSE, pattern.cell.counts.valid = FALSE) {
+  if(isTRUE(pattern.cell.counts.miss) & isTRUE(pattern.cell.counts.valid)) {
+    stop('Both "pattern.cell.counts.miss" and "pattern.cell.counts.valid" are true, choose just one of them.', call. = FALSE)
+  }
   data.missings <- copy(data.object[ , mget(c(keys, var.names, weight.var))])
   if(isFALSE(keys.no.NA)) {
     data.missings <- na.omit(object = data.missings, cols = keys)
@@ -3340,9 +3514,17 @@ compute.missing.data.patterns.all.repwgt <- function(data.object, var.names, key
     data.missings[ , mget(c(keys, i, weight.var))]
   })
   total.rows <- lapply(X = data.missings.per.var, FUN = function(i) {
+    head.cols <- unique(i[ , mget(keys)])
     i <- na.omit(i)
     var.col <- colnames(i)[colnames(i) %in% var.names]
-    i <- i[ , lapply(.SD, sum), .SDcols = weight.var, by = keys]
+    if(nrow(i) > 0) {
+      i <- i[ , lapply(.SD, sum), .SDcols = weight.var, by = keys]
+    } else {
+      i[ , (keys) := NULL]
+      i <- cbind(head.cols, i)
+      i[ , (weight.var) := lapply(.SD, function(j) {j <- as.double(0)}), .SDcols = weight.var]
+      i <- i[ , lapply(.SD, sum), .SDcols = weight.var, by = keys]
+    }
     i[ , Variables := var.col]
     setcolorder(x = i, neworder = c(keys, "Variables", weight.var))
   })
@@ -3403,7 +3585,49 @@ compute.missing.data.patterns.all.repwgt <- function(data.object, var.names, key
   setkeyv(x = total.rows, cols = c(keys, "Variables"))
   setkeyv(x = missings.per.pattern, cols = keys)
   all.missing.pattern.estimates <- list(Missing_Patterns = missing.patterns.N, Total_Rows = total.rows, Missings_per_Pattern = missings.per.pattern)
-  return(all.missing.pattern.estimates)
+  if(isTRUE(pattern.cell.counts.valid)) {
+    data.missings[ , (var.names) := lapply(.SD, function(i) {
+      ifelse(test = i == 0, yes = 1, no = 0)
+    }), .SDcols = var.names]
+    data.valid.per.pattern <- split(x = data.missings, by = c(keys, var.names), drop = TRUE)
+    patterns.count.valid <- lapply(X = data.valid.per.pattern, FUN = function(i) {
+      lapply(X = var.names, FUN = function(j) {
+        i <- i[ , lapply(.SD, function(k) {
+          if(unique(get(j)) == 1) {
+            sum(k)
+          } else {
+            0
+          }
+        }), .SDcols = weight.var, keyby = c(keys, colnames(i)[colnames(i) %in% var.names])]
+        i[ , (colnames(i)[!colnames(i) %in% c(keys, j, weight.var)]) := NULL]
+      })
+    })
+  }
+  if(isTRUE(pattern.cell.counts.miss)) {
+    data.missings[ , (var.names) := lapply(.SD, function(i) {
+      ifelse(test = i == 0, yes = 1, no = 0)
+    }), .SDcols = var.names]
+    data.miss.per.pattern <- split(x = data.missings, by = c(keys, var.names), drop = TRUE)
+    patterns.count.miss <- lapply(X = data.miss.per.pattern, FUN = function(i) {
+      lapply(X = var.names, FUN = function(j) {
+        i <- i[ , lapply(.SD, function(k) {
+          if(unique(get(j)) == 0) {
+            sum(k)
+          } else {
+            0
+          }
+        }), .SDcols = weight.var, keyby = c(keys, colnames(i)[colnames(i) %in% var.names])]
+        i[ , (colnames(i)[!colnames(i) %in% c(keys, j, weight.var)]) := NULL]
+      })
+    })
+  }
+  if(isTRUE(pattern.cell.counts.valid)) {
+    return(patterns.count.valid)
+  } else if(isTRUE(pattern.cell.counts.miss)) {
+    return(patterns.count.miss)
+  } else if(isFALSE(pattern.cell.counts.valid) & isFALSE(pattern.cell.counts.miss)) {
+    return(all.missing.pattern.estimates)
+  }
 }
 compute.unweighted.missing.data.pairs <- function(data.object, var.names, keys, keys.no.NA) {
   data.object <- data.object[ , mget(c(keys, var.names))]
@@ -3519,65 +3743,47 @@ compute.missing.data.pairs.all.repwgt <- function(data.object, var.names, keys, 
       i
     }
   }), .SDcols = keys]
-  response.response.data <- copy(data.object)
-  response.response.data <- lapply(X = var.pairs, FUN = function(i) {
-    i <- response.response.data[ , mget(c(keys, i, weight.var))]
-    setnames(x = i, make.unique(names = colnames(i), sep = "_"))
-    i[ , colnames(i)[!colnames(i) %in% c(keys, weight.var)] := lapply(.SD, function(i) {
-      ifelse(test = is.na(i), yes = NA_real_, no = 1)
-    }), .SDcols = colnames(i)[!colnames(i) %in% c(keys, weight.var)], by = keys]
-  })
-  missing.missing.data <- copy(data.object)
-  missing.missing.data <- lapply(X = var.pairs, FUN = function(i) {
-    i <- missing.missing.data[ , mget(c(keys, i, weight.var))]
-    setnames(x = i, make.unique(names = colnames(i), sep = "_"))
-    i[ , colnames(i)[!colnames(i) %in% c(keys, weight.var)] := lapply(.SD, function(i) {
-      ifelse(test = is.na(i), yes = 1, no = NA_real_)
-    }), .SDcols = colnames(i)[!colnames(i) %in% c(keys, weight.var)], by = keys]
-  })
-  missing.response.data <- copy(data.object)
-  missing.response.data <- lapply(X = var.pairs, FUN = function(i) {
-    i <- missing.response.data[ , mget(c(keys, i, weight.var))]
-    setnames(x = i, make.unique(names = colnames(i), sep = "_"))
-    i[ , colnames(i)[length(keys) + 1] := ifelse(test = is.na(get(colnames(i)[length(keys) + 1])), yes = 1, no = NA_real_), by = keys]
-    i[ , colnames(i)[length(keys) + 2] := ifelse(test = is.na(get(colnames(i)[length(keys) + 2])), yes = NA_real_, no = 1), by = keys]
-  })
-  response.missing.data <- copy(data.object)
-  response.missing.data <- lapply(X = var.pairs, FUN = function(i) {
-    i <- response.missing.data[ , mget(c(keys, i, weight.var))]
-    setnames(x = i, make.unique(names = colnames(i), sep = "_"))
-    i[ , colnames(i)[length(keys) + 1] := ifelse(test = is.na(get(colnames(i)[length(keys) + 1])), yes = NA_real_, no = 1), by = keys]
-    i[ , colnames(i)[length(keys) + 2] := ifelse(test = is.na(get(colnames(i)[length(keys) + 2])), yes = 1, no = NA_real_), by = keys]
-  })
-  zero.the.weights.in.pairs <- function(pairs.object) {
-    lapply(X = pairs.object, FUN = function(i) {
-      var.cols <- colnames(i)[!colnames(i) %in% c(keys, weight.var)]
-      i[is.na(eval(parse(text = var.cols[1]))) | is.na(eval(parse(text = var.cols[2]))), (weight.var) := lapply(.SD, function(j) {
+  compute.pairs.stat <- function(obj, pairs.obj, pairs.type, all.weights.vector, all.keys) {
+    stat <- lapply(X = pairs.obj, FUN = function(i) {
+      tmp <- copy(obj[ , mget(c(all.keys, i, weight.var))])
+      setnames(x = tmp, make.unique(names = colnames(tmp), sep = "_"))
+      if(pairs.type == "Response-Response") {
+        tmp[ , colnames(tmp)[!colnames(tmp) %in% c(all.keys, weight.var)] := lapply(.SD, function(j) {
+          ifelse(test = is.na(j), yes = NA_real_, no = 1)
+        }), .SDcols = colnames(tmp)[!colnames(tmp) %in% c(all.keys, weight.var)], by = all.keys]
+      } else if(pairs.type == "Missing-Missing") {
+        tmp[ , colnames(tmp)[!colnames(tmp) %in% c(all.keys, weight.var)] := lapply(.SD, function(j) {
+          ifelse(test = is.na(j), yes = 1, no = NA_real_)
+        }), .SDcols = colnames(tmp)[!colnames(tmp) %in% c(all.keys, weight.var)], by = all.keys]
+      } else if(pairs.type == "Missing-Response") {
+        tmp[ , colnames(tmp)[length(all.keys) + 1] := ifelse(test = is.na(get(colnames(tmp)[length(all.keys) + 1])), yes = 1, no = NA_real_), by = all.keys]
+        tmp[ , colnames(tmp)[length(all.keys) + 2] := ifelse(test = is.na(get(colnames(tmp)[length(all.keys) + 2])), yes = NA_real_, no = 1), by = all.keys]
+      } else if(pairs.type == "Response-Missing") {
+        tmp[ , colnames(tmp)[length(all.keys) + 1] := ifelse(test = is.na(get(colnames(tmp)[length(all.keys) + 1])), yes = NA_real_, no = 1), by = all.keys]
+        tmp[ , colnames(tmp)[length(all.keys) + 2] := ifelse(test = is.na(get(colnames(tmp)[length(all.keys) + 2])), yes = 1, no = NA_real_), by = all.keys]
+      }
+      var.cols <- colnames(tmp)[!colnames(tmp) %in% c(keys, weight.var)]
+      tmp[is.na(eval(parse(text = var.cols[1]))) | is.na(eval(parse(text = var.cols[2]))), (weight.var) := lapply(.SD, function(j) {
         j <- 0
       }), .SDcols = weight.var]
-    })
-  }
-  response.response.data <- zero.the.weights.in.pairs(pairs.object = response.response.data)
-  missing.missing.data <- zero.the.weights.in.pairs(pairs.object = missing.missing.data)
-  response.missing.data <- zero.the.weights.in.pairs(pairs.object = response.missing.data)
-  missing.response.data <- zero.the.weights.in.pairs(pairs.object = missing.response.data)
-  compute.pair.stats <- function(pair.data, weights.vector) {
-    lapply(X = pair.data, FUN = function(i) {
-      pair.cols <- colnames(i)[!colnames(i) %in% c(keys, weights.vector)]
-      pair.cols <- gsub(pattern = "_1$", replacement = "", x = pair.cols)
-      i <- i[ , lapply(.SD, function(j) {
+      tmp <- tmp[ , lapply(.SD, function(j) {
         sum(j)
-      }), .SDcols = weights.vector, keyby = keys]
-      i <- cbind(i, Variables = pair.cols[1], variable = pair.cols[2])
-      setcolorder(x = i, neworder = c(keys, "Variables", "variable", weights.vector))
+      }), .SDcols = weight.var, keyby = keys]
+      tmp <- cbind(tmp, Variables = i[1], variable = i[2])
+      setcolorder(x = tmp, neworder = c(keys, "Variables", "variable", weight.var))
     })
+    stat <- rbindlist(l = stat)
+    stat[ , Missing_Pairs := pairs.type]
+    setcolorder(x = stat, neworder = c(keys, "Missing_Pairs", "Variables", "variable", weight.var))
   }
-  response.response.stat <- cbind(data.table(Missing_Pairs = "Response-Response"), rbindlist(l = compute.pair.stats(pair.data = response.response.data, weights.vector = weight.var)))
-  missing.missing.stat <- cbind(data.table(Missing_Pairs = "Missing-Missing"), rbindlist(l = compute.pair.stats(pair.data = missing.missing.data, weights.vector = weight.var)))
-  response.missing.stat <- cbind(data.table(Missing_Pairs = "Response-Missing"), rbindlist(l = compute.pair.stats(pair.data = response.missing.data, weights.vector = weight.var)))
-  missing.response.stat <- cbind(data.table(Missing_Pairs = "Missing-Response"), rbindlist(l = compute.pair.stats(pair.data = missing.response.data, weights.vector = weight.var)))
+  response.response.stat <- compute.pairs.stat(obj = data.object, pairs.obj = var.pairs, pairs.type = "Response-Response", all.keys = keys, all.weights.vector = weight.var)
+  missing.missing.stat <- compute.pairs.stat(obj = data.object, pairs.obj = var.pairs, pairs.type = "Missing-Missing", all.keys = keys, all.weights.vector = weight.var)
+  response.missing.stat <- compute.pairs.stat(obj = data.object, pairs.obj = var.pairs, pairs.type = "Response-Missing", all.keys = keys, all.weights.vector = weight.var)
+  missing.response.stat <- compute.pairs.stat(obj = data.object, pairs.obj = var.pairs, pairs.type = "Missing-Response", all.keys = keys, all.weights.vector = weight.var)
   all.pairs.stats <- rbindlist(l = list(response.response.stat, response.missing.stat, missing.response.stat, missing.missing.stat))
   all.pairs.stats[ , Missing_Pairs := factor(x = Missing_Pairs, levels = c("Response-Response", "Response-Missing", "Missing-Response", "Missing-Missing"))]
+  all.pairs.stats[ , Variables := factor(x = Variables, levels = Variables, labels = Variables)]
+  all.pairs.stats[ , variable := factor(x = variable, levels = variable, labels = variable)]
   setkeyv(x = all.pairs.stats, cols = c("Missing_Pairs", keys, "Variables", "variable"))
   return(all.pairs.stats)
 }
@@ -3634,11 +3840,11 @@ compute.influx.outflux.unweighted <- function(data.object, miss.pairs.object, va
     influx.stat <- cbind(key.cols, data.table(Variables = var.names, Influx = rowSums(i[Missing_Pairs == "Missing-Response", mget(var.names)])/(rowSums(i[Missing_Pairs == "Missing-Response", mget(var.names)] + i[Missing_Pairs == "Response-Response", mget(var.names)]))))
     outflux.stat <- cbind(key.cols, data.table(Variables = var.names, Outflux = rowSums(i[Missing_Pairs == "Response-Missing", mget(var.names)])/(rowSums(i[Missing_Pairs == "Response-Missing", mget(var.names)] + i[Missing_Pairs == "Missing-Missing", mget(var.names)]))))
     average.inbound.stat <- i[Missing_Pairs == "Missing-Response", mget(var.names)]/(i[Missing_Pairs == "Missing-Response", mget(var.names)] + i[Missing_Pairs == "Missing-Missing", mget(var.names)])
-    average.inbound.stat[ , Average_Inbound := rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)]
+    average.inbound.stat[ , Average_Inbound := (rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)) * 100]
     average.inbound.stat[ , grep(pattern = "Average_Inbound", x = colnames(average.inbound.stat), value = TRUE, invert = TRUE) := NULL]
     average.inbound.stat <- cbind(key.cols, Variables = var.names, average.inbound.stat)
     average.outbound.stat <- i[Missing_Pairs == "Response-Missing", mget(var.names)]/(i[Missing_Pairs == "Response-Missing", mget(var.names)] + i[Missing_Pairs == "Response-Response", mget(var.names)])
-    average.outbound.stat[ , Average_Outbound := rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)]
+    average.outbound.stat[ , Average_Outbound := (rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)) * 100]
     average.outbound.stat[ , grep(pattern = "Average_Outbound", x = colnames(average.outbound.stat), value = TRUE, invert = TRUE) := NULL]
     average.outbound.stat <- cbind(key.cols, Variables = var.names, average.outbound.stat)
     setkeyv(x = influx.stat, cols = c(keys, "Variables"))
@@ -3715,52 +3921,48 @@ compute.influx.outflux.all.repwgt <- function(data.object, miss.pairs.object, va
     dcast.formula <- formula(paste0("Missing_Pairs + ", paste(keys, collapse = " + "), " + Variables ~ variable"))
     dcast(data = miss.pairs.object[ , mget(c(key(miss.pairs.object), i))], formula = dcast.formula, value.var = i)
   })
+  lapply(X = miss.pairs.object, FUN = function(i) {
+    i[ , Variables := factor(x = Variables, levels = var.names)]
+  })
   names(miss.pairs.object) <- weight.var
   influx.stats <- lapply(X = miss.pairs.object, FUN = function(i) {
-    i <- split(x = i, by = c(keys), drop = TRUE)
-    influx <- lapply(X = i, FUN = function(j) {
-      key.cols <- unique(j[ , mget(keys)])
-      j <- cbind(key.cols, data.table(Variables = var.names, Influx = rowSums(j[Missing_Pairs == "Missing-Response", mget(var.names)])/(rowSums(j[Missing_Pairs == "Missing-Response", mget(var.names)] + j[Missing_Pairs == "Response-Response", mget(var.names)]))))
-      setkeyv(x = j, cols = c(keys, "Variables"))
-    })
-    outflux <- lapply(X = i, FUN = function(j) {
-      key.cols <- unique(j[ , mget(keys)])
-      j <- cbind(key.cols, data.table(Variables = var.names, Outflux = rowSums(j[Missing_Pairs == "Response-Missing", mget(var.names)])/(rowSums(j[Missing_Pairs == "Response-Missing", mget(var.names)] + j[Missing_Pairs == "Missing-Missing", mget(var.names)]))))
-      setkeyv(x = j, cols = c(keys, "Variables"))
-    })
-    average.inbound <- lapply(X = i, FUN = function(j) {
-      key.cols <- unique(j[ , mget(keys)])
-      j <- j[Missing_Pairs == "Missing-Response", mget(var.names)]/(j[Missing_Pairs == "Missing-Response", mget(var.names)] + j[Missing_Pairs == "Missing-Missing", mget(var.names)])
-      j[ , Average_Inbound := rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)]
-      j[ , grep(pattern = "Average_Inbound", x = colnames(j), value = TRUE, invert = TRUE) := NULL]
-      j <- cbind(key.cols, Variables = var.names, j)
-      setkeyv(x = j, cols = c(keys, "Variables"))
-    })
-    average.outbound <- lapply(X = i, FUN = function(j) {
-      key.cols <- unique(j[ , mget(keys)])
-      j <- j[Missing_Pairs == "Response-Missing", mget(var.names)]/(j[Missing_Pairs == "Response-Missing", mget(var.names)] + j[Missing_Pairs == "Response-Response", mget(var.names)])
-      j[ , Average_Outbound := rowSums(x = .SD, na.rm = TRUE)/(length(var.names) - 1)]
-      j[ , grep(pattern = "Average_Outbound", x = colnames(j), value = TRUE, invert = TRUE) := NULL]
-      j <- cbind(key.cols, Variables = var.names, j)
-      setkeyv(x = j, cols = c(keys, "Variables"))
-    })
-    return(c(influx, outflux, average.inbound, average.outbound))
+    influx.numerator <- i[Missing_Pairs == "Missing-Response", rowSums(.SD), .SDcols = var.names, keyby = c(keys, "Variables")]
+    influx.denominator <- i[Missing_Pairs %in% c("Missing-Response", "Response-Response"), sum(.SD), .SDcols = var.names, keyby = c(keys, "Variables")]
+    influx <- merge(x = influx.numerator, y = influx.denominator, by = c(keys, "Variables"))
+    influx[ , Influx := V1.x / V1.y, keyby = c(keys, "Variables")]
+    influx[ , colnames(influx)[!colnames(influx) %in% c(keys, "Variables", "Influx")] := NULL]
+    outflux.numerator <- i[Missing_Pairs == "Response-Missing", rowSums(.SD), .SDcols = var.names, keyby = c(keys, "Variables")]
+    outflux.denominator <- i[Missing_Pairs %in% c("Response-Missing", "Missing-Missing"), sum(.SD), .SDcols = var.names, keyby = c(keys, "Variables")]
+    outflux <- merge(x = outflux.numerator, y = outflux.denominator, by = c(keys, "Variables"))
+    outflux[ , Outflux := V1.x / V1.y, keyby = c(keys, "Variables")]
+    outflux[ , colnames(outflux)[!colnames(outflux) %in% c(keys, "Variables", "Outflux")] := NULL]
+    average.inbound.numerator <- i[Missing_Pairs == "Missing-Response", mget(var.names), keyby = c(keys, "Variables")]
+    average.inbound.denominator <- i[Missing_Pairs %in% c("Missing-Response", "Missing-Missing"), lapply(.SD, sum), .SDcols = var.names, keyby = c(keys, "Variables")]
+    average.inbound.head.cols <- average.inbound.numerator[ , mget(c(keys, "Variables"))]
+    average.inbound <- (average.inbound.numerator[ , mget(var.names)] / average.inbound.denominator[ , mget(var.names)]) / (length(var.names) - 1)
+    average.inbound <- cbind(average.inbound.head.cols, average.inbound)
+    average.inbound[ , Average_Inbound := rowSums(.SD) * 100, .SDcols = var.names, keyby = c(keys, "Variables")]
+    average.inbound[ , (var.names) := NULL]
+    average.outbound.numerator <- i[Missing_Pairs == "Response-Missing", mget(var.names), keyby = c(keys, "Variables")]
+    average.outbound.denominator <- i[Missing_Pairs %in% c("Response-Missing", "Response-Response"), lapply(.SD, sum), .SDcols = var.names, keyby = c(keys, "Variables")]
+    average.outbound.head.cols <- average.outbound.numerator[ , mget(c(keys, "Variables"))]
+    average.outbound <- (average.outbound.numerator[ , mget(var.names)] / average.outbound.denominator[ , mget(var.names)]) / (length(var.names) - 1)
+    average.outbound <- cbind(average.outbound.head.cols, average.outbound)
+    average.outbound[ , Average_Outbound := rowSums(.SD) * 100, .SDcols = var.names, keyby = c(keys, "Variables")]
+    average.outbound[ , (var.names) := NULL]
+    return(list(influx, outflux, average.inbound, average.outbound))
   })
   influx <- lapply(X = influx.stats, FUN = function(i) {
-    i <- lapply(X = i, FUN = function(j) {if("Influx" %in% colnames(j)) {j}})
-    Filter(Negate(is.null), i)
+    Filter(Negate(is.null), lapply(X = i, FUN = function(j) {if("Influx" %in% colnames(j)) {j}}))
   })
   outflux <- lapply(X = influx.stats, FUN = function(i) {
-    i <- lapply(X = i, FUN = function(j) {if("Outflux" %in% colnames(j)) {j}})
-    Filter(Negate(is.null), i)
+    Filter(Negate(is.null), lapply(X = i, FUN = function(j) {if("Outflux" %in% colnames(j)) {j}}))
   })
   average.inbound <- lapply(X = influx.stats, FUN = function(i) {
-    i <- lapply(X = i, FUN = function(j) {if("Average_Inbound" %in% colnames(j)) {j}})
-    Filter(Negate(is.null), i)
+    Filter(Negate(is.null), lapply(X = i, FUN = function(j) {if("Average_Inbound" %in% colnames(j)) {j}}))
   })
   average.outbound <- lapply(X = influx.stats, FUN = function(i) {
-    i <- lapply(X = i, FUN = function(j) {if("Average_Outbound" %in% colnames(j)) {j}})
-    Filter(Negate(is.null), i)
+    Filter(Negate(is.null), lapply(X = i, FUN = function(j) {if("Average_Outbound" %in% colnames(j)) {j}}))
   })
   influx <- lapply(X = names(influx), FUN = function(i) {
     rbindlist(l = lapply(X = influx[[i]], FUN = function(j) {
@@ -3791,22 +3993,39 @@ compute.influx.outflux.all.repwgt <- function(data.object, miss.pairs.object, va
   FICO <- lapply(X = data.object, FUN = function(i) {
     incomplete.case.indicator <- !complete.cases(i[ , mget(var.names)])
     key.cols <- unique(i[ , mget(keys)])
-    stat <- lapply(X = weight.var, FUN = function(j) {
+    stat <- i[ , lapply(.SD, function(j) {
       tmp <- transpose(l = i[ , lapply(.SD, function(k) {
-        (sum((as.numeric(!is.na(k)) * i[ , get(j)]) & incomplete.case.indicator * i[ , get(j)])/sum(!is.na(k) * i[ , get(j)]))*100
+        (sum((as.numeric(!is.na(k)) * j) & incomplete.case.indicator * j)/sum(!is.na(k) * j))*100
       }), .SDcols = var.names], keep.names = "Variables")
-      tmp <- cbind(key.cols, tmp)
-      setnames(x = tmp, old = "V1", new = j)
-      setkeyv(x = tmp, cols = c(keys, "Variables"))
-    })
+    }), .SDcols = weight.var]
+    cols.to.delete <- grep(pattern = "\\.Variables$", x = colnames(stat), value = TRUE)
+    stat[ , cols.to.delete[2:length(cols.to.delete)] := NULL]
+    setnames(x = stat, old = grep(pattern = "\\.Variables$", x = colnames(stat), value = TRUE), new = "Variables")
+    setnames(x = stat, old = grep(pattern = "\\.V1$", x = colnames(stat), value = TRUE), new = gsub(pattern = "\\.V1", replacement = "", x = grep(pattern = "\\.V1$", x = colnames(stat), value = TRUE)))
+    stat <- cbind(key.cols, stat)
   })
-  FICO <- rbindlist(l = lapply(X = FICO, FUN = function(i) {
-    Reduce(function(...) merge(..., all = TRUE), i)
-  }))
+  FICO <- rbindlist(l = FICO)
   setkeyv(x = FICO, cols = c(keys, "Variables"))
   FICO <- list(FICO = FICO)
   all.influx.stats <- c(proportion.valid.values, influx.stats, FICO)
   return(all.influx.stats)
+}
+compute.predictor.correlations <- function(pairs, data, weights, keys, correlation.method, weighted) {
+  lapply(X = pairs, FUN = function(i) {
+    tmp.data <- na.omit(data[ , mget(c(keys, i, weights))])
+    if(identical(i[1], i[2])) {
+      setnames(x = tmp.data, c(keys, i[1], paste0(i[2], "dupl"), weights))
+    }
+    if(isFALSE(weighted)) {
+      tmp.data[ , (weights[2:length(weights)]) := NULL]
+      tmp.data[ , (weights[1]) := 1]
+    }
+    if(isTRUE(weighted)) {
+      all.cors <- compute.correlations.all.repwgt(data.object = tmp.data, vars.vector = i, weight.var = weights, keys = keys, method = correlation.method)
+    } else if(isFALSE(weighted)) {
+      all.cors <- compute.correlations.all.repwgt(data.object = tmp.data, vars.vector = colnames(tmp.data)[!colnames(tmp.data) %in% c(keys, weights)], weight.var = weights[1], keys = keys, method = correlation.method)
+    }
+  })
 }
 reshape.list.statistics.bckg <- function(estimate.object, estimate.name, bckg.vars.vector, weighting.variable, data.key.variables, new.names.vector, replication.weights, study.name, SE.design, multiply.columns = 1) {
   object.type <- deparse(substitute(estimate.object))
@@ -4161,7 +4380,7 @@ produce.analysis.info <- function(data, cnt.ID, study, cycle, weight.variable, r
     gsub(pattern = "^[[:digit:]]+\\-[[:digit:]]+\\-[[:digit:]]+[[:space:]]|\\.[[:digit:]]+$", replacement = "", x = i)
   }), .SDcols = c("START_TIME", "END_TIME")]
 }
-export.results <- function(output.object, analysis.type, add.graphs = FALSE, perc.graphs = NULL, non.perc.graphs = NULL, analysis.info.obj, model.stats.obj, Rao.Scott.adj.chi.sq.obj, destination.file, warns.list, open.exported.file) {
+export.results <- function(output.object, analysis.type, add.graphs = FALSE, perc.graphs = NULL, non.perc.graphs = NULL, simple.desc.graphs = NULL, unwgt.miss.pattern.graphs = NULL, wgt.miss.pattern.graphs = NULL, unwgt.flux.graphs = NULL, wgt.flux.graphs = NULL, analysis.info.obj, model.stats.obj, Rao.Scott.adj.chi.sq.obj, destination.file, warns.list, open.exported.file) {
   if(missing(destination.file)) {
     destination.file <- file.path(getwd(), "Analysis.xlsx")
   }
@@ -4231,94 +4450,268 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     addStyle(wb = export.workbook, sheet = "Simple Descriptives", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Simple_Descriptives"]])), rows = 2:(nrow(output.object[["Simple_Descriptives"]]) + 1), gridExpand = TRUE)
     addStyle(wb = export.workbook, sheet = "Simple Descriptives", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Simple_Descriptives"]])), rows = 2:(nrow(output.object[["Simple_Descriptives"]]) + 1), gridExpand = TRUE)
     writeData(wb = export.workbook, x = output.object[["Simple_Descriptives"]], sheet = "Simple Descriptives")
-    addWorksheet(wb = export.workbook, sheetName = "Unweighted Missing Patterns")
-    setColWidths(wb = export.workbook, sheet = "Unweighted Missing Patterns", cols = 1:ncol(output.object[["Unweighted_Missing_Patterns"]][[1]]), widths = "auto")
-    row.numbers <- get.row.numbers(list.object = output.object[["Unweighted_Missing_Patterns"]])
-    apply.header.row.style(list.object = output.object, estimate.name = "Unweighted_Missing_Patterns", sheet.name = "Unweighted Missing Patterns", first.row.positions = row.numbers)
-    write.multiple.tables(list.object = output.object, estimate.name = "Unweighted_Missing_Patterns", sheet.name = "Unweighted Missing Patterns", first.row.positions = row.numbers)
-    addWorksheet(wb = export.workbook, sheetName = "Weighted Missing Patterns")
-    setColWidths(wb = export.workbook, sheet = "Weighted Missing Patterns", cols = 1:ncol(output.object[["Weighted_Missing_Patterns"]][[1]]), widths = "auto")
-    row.numbers <- get.row.numbers(list.object = output.object[["Weighted_Missing_Patterns"]])
-    apply.header.row.style(list.object = output.object, estimate.name = "Weighted_Missing_Patterns", sheet.name = "Weighted Missing Patterns", first.row.positions = row.numbers)
-    write.multiple.tables(list.object = output.object, estimate.name = "Weighted_Missing_Patterns", sheet.name = "Weighted Missing Patterns", first.row.positions = row.numbers)
-    addWorksheet(wb = export.workbook, sheetName = "Unweighted Missing Pairs")
-    setColWidths(wb = export.workbook, sheet = "Unweighted Missing Pairs", cols = 1:ncol(output.object[["Unweighted_Missing_Pairs"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_Missing_Pairs"]]))
-    freezePane(wb = export.workbook, sheet = "Unweighted Missing Pairs", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_Missing_Pairs"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_Missing_Pairs"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Unweighted_Missing_Pairs"]], sheet = "Unweighted Missing Pairs")
-    addWorksheet(wb = export.workbook, sheetName = "Weighted Missing Pairs")
-    setColWidths(wb = export.workbook, sheet = "Weighted Missing Pairs", cols = 1:ncol(output.object[["Weighted_Missing_Pairs"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_Missing_Pairs"]]))
-    freezePane(wb = export.workbook, sheet = "Weighted Missing Pairs", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_Missing_Pairs"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_Missing_Pairs"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Weighted_Missing_Pairs"]], sheet = "Weighted Missing Pairs")
-    addWorksheet(wb = export.workbook, sheetName = "Unwgt Prop of Usable Cases")
-    setColWidths(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", cols = 1:ncol(output.object[["Unweighted_Proportion_Usable_InOutBound"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_Proportion_Usable_InOutBound"]]))
-    freezePane(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_Proportion_Usable_InOutBound"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Unweighted_Proportion_Usable_InOutBound"]], sheet = "Unwgt Prop of Usable Cases")
-    addWorksheet(wb = export.workbook, sheetName = "Wgt Prop of Usable Cases")
-    setColWidths(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", cols = 1:ncol(output.object[["Weighted_Proportion_Usable_InOutBound"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_Proportion_Usable_InOutBound"]]))
-    freezePane(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_Proportion_Usable_InOutBound"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Weighted_Proportion_Usable_InOutBound"]], sheet = "Wgt Prop of Usable Cases")
-    addWorksheet(wb = export.workbook, sheetName = "Unweighted Influx and Outflux")
-    setColWidths(wb = export.workbook, sheet = "Unweighted Influx and Outflux", cols = 1:ncol(output.object[["Unweighted_InOutFlux"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_InOutFlux"]]))
-    freezePane(wb = export.workbook, sheet = "Unweighted Influx and Outflux", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_InOutFlux"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_InOutFlux"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Unweighted_InOutFlux"]], sheet = "Unweighted Influx and Outflux")
-    addWorksheet(wb = export.workbook, sheetName = "Weighted Influx and Outflux")
-    setColWidths(wb = export.workbook, sheet = "Weighted Influx and Outflux", cols = 1:ncol(output.object[["Weighted_InOutFlux"]]), widths = "auto")
-    addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_InOutFlux"]]))
-    freezePane(wb = export.workbook, sheet = "Weighted Influx and Outflux", firstRow = TRUE)
-    cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_InOutFlux"]]))
-    cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_InOutFlux"]]), ignore.case = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
-    writeData(wb = export.workbook, x = output.object[["Weighted_InOutFlux"]], sheet = "Weighted Influx and Outflux")
+    if("Unweighted_Missing_Patterns" %in% names(output.object)) {
+      addWorksheet(wb = export.workbook, sheetName = "Unweighted Missing Patterns")
+      setColWidths(wb = export.workbook, sheet = "Unweighted Missing Patterns", cols = 1:ncol(output.object[["Unweighted_Missing_Patterns"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Unweighted_Missing_Patterns"]])
+      apply.header.row.style(list.object = output.object, estimate.name = "Unweighted_Missing_Patterns", sheet.name = "Unweighted Missing Patterns", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Unweighted_Missing_Patterns", sheet.name = "Unweighted Missing Patterns", first.row.positions = row.numbers)
+      addWorksheet(wb = export.workbook, sheetName = "Unwgt Miss Patterns N Miss")
+      setColWidths(wb = export.workbook, sheet = "Unwgt Miss Patterns N Miss", cols = 1:ncol(output.object[["Unwgt_Miss_Patterns_N_Miss"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Unwgt_Miss_Patterns_N_Miss"]])
+      apply.header.row.style(list.object = output.object, estimate.name = "Unwgt_Miss_Patterns_N_Miss", sheet.name = "Unwgt Miss Patterns N Miss", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Unwgt_Miss_Patterns_N_Miss", sheet.name = "Unwgt Miss Patterns N Miss", first.row.positions = row.numbers)
+      addWorksheet(wb = export.workbook, sheetName = "Unwgt Miss Patterns N Valid")
+      setColWidths(wb = export.workbook, sheet = "Unwgt Miss Patterns N Valid", cols = 1:ncol(output.object[["Unwgt_Miss_Patterns_N_Valid"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Unwgt_Miss_Patterns_N_Valid"]])
+      apply.header.row.style(list.object = output.object, estimate.name = "Unwgt_Miss_Patterns_N_Valid", sheet.name = "Unwgt Miss Patterns N Valid", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Unwgt_Miss_Patterns_N_Valid", sheet.name = "Unwgt Miss Patterns N Valid", first.row.positions = row.numbers)
+      addWorksheet(wb = export.workbook, sheetName = "Weighted Missing Patterns")
+      setColWidths(wb = export.workbook, sheet = "Weighted Missing Patterns", cols = 1:ncol(output.object[["Weighted_Missing_Patterns"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Weighted_Missing_Patterns"]])
+      row.sequences <- row.numbers + sapply(X = output.object[["Weighted_Missing_Patterns"]], FUN = nrow)
+      row.sequences <- lapply(X = 1:length(row.sequences), FUN = function(i) {
+        tmp <- row.numbers[i] + 1
+        tmp:row.sequences[i]
+      })
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Patterns", style = two.decimals.style, rows = unlist(row.sequences), cols = grep(pattern = paste(c("Pattern_Counts", "Pattern_Counts_SE", "Total_Missings_per_Pattern", "Total_Missings_per_Pattern_SE"), collapse = "|"), x = colnames(output.object[["Weighted_Missing_Patterns"]][[1]])), gridExpand = TRUE)
+      row.sequences <- lapply(X = row.sequences, FUN = function(i) {i[length(i)]})
+      col.sequences <- unlist(unique(lapply(X = output.object[["Weighted_Missing_Patterns"]], FUN = function(i) {
+        names(Filter(f = isTRUE, x = lapply(X = tail(i, 1), FUN = function(j) {
+          !is.na(j) & is.numeric(j)
+        })))
+      })))
+      col.sequences <- which(colnames(output.object[["Weighted_Missing_Patterns"]][[1]]) %in% col.sequences)
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Patterns", style = two.decimals.style, rows = unlist(row.sequences), cols = col.sequences, gridExpand = TRUE)
+      apply.header.row.style(list.object = output.object, estimate.name = "Weighted_Missing_Patterns", sheet.name = "Weighted Missing Patterns", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Weighted_Missing_Patterns", sheet.name = "Weighted Missing Patterns", first.row.positions = row.numbers)
+      addWorksheet(wb = export.workbook, sheetName = "Wgt Miss Patterns N Miss")
+      setColWidths(wb = export.workbook, sheet = "Wgt Miss Patterns N Miss", cols = 1:ncol(output.object[["Wgt_Miss_Patterns_N_Miss"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Wgt_Miss_Patterns_N_Miss"]])
+      row.sequences <- row.numbers + sapply(X = output.object[["Wgt_Miss_Patterns_N_Miss"]], FUN = nrow)
+      row.sequences <- lapply(X = 1:length(row.sequences), FUN = function(i) {
+        tmp <- row.numbers[i] + 1
+        tmp:row.sequences[i]
+      })
+      addStyle(wb = export.workbook, sheet = "Wgt Miss Patterns N Miss", style = two.decimals.style, rows = unlist(row.sequences), cols = grep(pattern = "M_Counts", x = colnames(output.object[["Wgt_Miss_Patterns_N_Miss"]][[1]])), gridExpand = TRUE)
+      apply.header.row.style(list.object = output.object, estimate.name = "Wgt_Miss_Patterns_N_Miss", sheet.name = "Wgt Miss Patterns N Miss", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Wgt_Miss_Patterns_N_Miss", sheet.name = "Wgt Miss Patterns N Miss", first.row.positions = row.numbers)
+      addWorksheet(wb = export.workbook, sheetName = "Wgt Miss Patterns N Valid")
+      setColWidths(wb = export.workbook, sheet = "Wgt Miss Patterns N Valid", cols = 1:ncol(output.object[["Wgt_Miss_Patterns_N_Valid"]][[1]]), widths = "auto")
+      row.numbers <- get.row.numbers(list.object = output.object[["Wgt_Miss_Patterns_N_Valid"]])
+      row.sequences <- row.numbers + sapply(X = output.object[["Wgt_Miss_Patterns_N_Valid"]], FUN = nrow)
+      row.sequences <- lapply(X = 1:length(row.sequences), FUN = function(i) {
+        tmp <- row.numbers[i] + 1
+        tmp:row.sequences[i]
+      })
+      addStyle(wb = export.workbook, sheet = "Wgt Miss Patterns N Valid", style = two.decimals.style, rows = unlist(row.sequences), cols = grep(pattern = "V_Counts", x = colnames(output.object[["Wgt_Miss_Patterns_N_Valid"]][[1]])), gridExpand = TRUE)
+      apply.header.row.style(list.object = output.object, estimate.name = "Wgt_Miss_Patterns_N_Valid", sheet.name = "Wgt Miss Patterns N Valid", first.row.positions = row.numbers)
+      write.multiple.tables(list.object = output.object, estimate.name = "Wgt_Miss_Patterns_N_Valid", sheet.name = "Wgt Miss Patterns N Valid", first.row.positions = row.numbers)
+    }
+    if("Unweighted_Missing_Pairs" %in% names(output.object)) {
+      addWorksheet(wb = export.workbook, sheetName = "Unweighted Missing Pairs")
+      setColWidths(wb = export.workbook, sheet = "Unweighted Missing Pairs", cols = 1:ncol(output.object[["Unweighted_Missing_Pairs"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_Missing_Pairs"]]))
+      freezePane(wb = export.workbook, sheet = "Unweighted Missing Pairs", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_Missing_Pairs"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_Missing_Pairs"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Missing Pairs", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Unweighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Unweighted_Missing_Pairs"]], sheet = "Unweighted Missing Pairs")
+      addWorksheet(wb = export.workbook, sheetName = "Weighted Missing Pairs")
+      setColWidths(wb = export.workbook, sheet = "Weighted Missing Pairs", cols = 1:ncol(output.object[["Weighted_Missing_Pairs"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_Missing_Pairs"]]))
+      freezePane(wb = export.workbook, sheet = "Weighted Missing Pairs", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_Missing_Pairs"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_Missing_Pairs"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Missing Pairs", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_Missing_Pairs"]])), rows = 2:(nrow(output.object[["Weighted_Missing_Pairs"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Weighted_Missing_Pairs"]], sheet = "Weighted Missing Pairs")
+      addWorksheet(wb = export.workbook, sheetName = "Unwgt Prop of Usable Cases")
+      setColWidths(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", cols = 1:ncol(output.object[["Unweighted_Proportion_Usable_InOutBound"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_Proportion_Usable_InOutBound"]]))
+      freezePane(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_Proportion_Usable_InOutBound"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unwgt Prop of Usable Cases", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Unweighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Unweighted_Proportion_Usable_InOutBound"]], sheet = "Unwgt Prop of Usable Cases")
+      addWorksheet(wb = export.workbook, sheetName = "Wgt Prop of Usable Cases")
+      setColWidths(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", cols = 1:ncol(output.object[["Weighted_Proportion_Usable_InOutBound"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_Proportion_Usable_InOutBound"]]))
+      freezePane(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_Proportion_Usable_InOutBound"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Wgt Prop of Usable Cases", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_Proportion_Usable_InOutBound"]])), rows = 2:(nrow(output.object[["Weighted_Proportion_Usable_InOutBound"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Weighted_Proportion_Usable_InOutBound"]], sheet = "Wgt Prop of Usable Cases")
+      addWorksheet(wb = export.workbook, sheetName = "Unweighted Influx and Outflux")
+      setColWidths(wb = export.workbook, sheet = "Unweighted Influx and Outflux", cols = 1:ncol(output.object[["Unweighted_InOutFlux"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Unweighted_InOutFlux"]]))
+      freezePane(wb = export.workbook, sheet = "Unweighted Influx and Outflux", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Unweighted_InOutFlux"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Unweighted_InOutFlux"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Unweighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Unweighted Influx and Outflux", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Unweighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Unweighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Unweighted_InOutFlux"]], sheet = "Unweighted Influx and Outflux")
+      addWorksheet(wb = export.workbook, sheetName = "Weighted Influx and Outflux")
+      setColWidths(wb = export.workbook, sheet = "Weighted Influx and Outflux", cols = 1:ncol(output.object[["Weighted_InOutFlux"]]), widths = "auto")
+      addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Weighted_InOutFlux"]]))
+      freezePane(wb = export.workbook, sheet = "Weighted Influx and Outflux", firstRow = TRUE)
+      cols.with.decimals <- names(Filter(is.numeric, output.object[["Weighted_InOutFlux"]]))
+      cols.with.decimals <- grep(pattern = paste(cols.with.decimals, collapse = "|"), x = colnames(output.object[["Weighted_InOutFlux"]]), ignore.case = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = two.decimals.style, cols = cols.with.decimals, rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Weighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Influx and Outflux", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Weighted_InOutFlux"]])), rows = 2:(nrow(output.object[["Weighted_InOutFlux"]]) + 1), gridExpand = TRUE)
+      writeData(wb = export.workbook, x = output.object[["Weighted_InOutFlux"]], sheet = "Weighted Influx and Outflux")
+    }
+  } else if(analysis.type %in% "lsa.quick.pred") {
+    addWorksheet(wb = export.workbook, sheetName = "Simple Descriptives", tabColour = "#FF0000")
+    setColWidths(wb = export.workbook, sheet = "Simple Descriptives", cols = 1:ncol(output.object[["Simple_Descriptives"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Simple Descriptives", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Simple_Descriptives"]]))
+    freezePane(wb = export.workbook, sheet = "Simple Descriptives", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Simple Descriptives", style = two.decimals.style, cols = grep(pattern = "^Sum_|^Percentages", x = colnames(output.object[["Simple_Descriptives"]])), rows = 2:(nrow(output.object[["Simple_Descriptives"]]) + 1), gridExpand = TRUE)
+    addStyle(wb = export.workbook, sheet = "Simple Descriptives", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Simple_Descriptives"]])), rows = 2:(nrow(output.object[["Simple_Descriptives"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["Simple_Descriptives"]], sheet = "Simple Descriptives")
+    addWorksheet(wb = export.workbook, sheetName = "Paired Descriptives")
+    setColWidths(wb = export.workbook, sheet = "Paired Descriptives", cols = 1:ncol(output.object[["Paired_Descriptives"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Paired Descriptives", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Paired_Descriptives"]]))
+    freezePane(wb = export.workbook, sheet = "Paired Descriptives", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Paired Descriptives", style = two.decimals.style, cols = grep(pattern = "^Sum_|^Percentages", x = colnames(output.object[["Paired_Descriptives"]])), rows = 2:(nrow(output.object[["Paired_Descriptives"]]) + 1), gridExpand = TRUE)
+    addStyle(wb = export.workbook, sheet = "Paired Descriptives", style = no.decimals.style, cols = grep(pattern = "n_cases", x = colnames(output.object[["Paired_Descriptives"]])), rows = 2:(nrow(output.object[["Paired_Descriptives"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["Paired_Descriptives"]], sheet = "Paired Descriptives")
+    addWorksheet(wb = export.workbook, sheetName = "Unweighted V-correlations")
+    setColWidths(wb = export.workbook, sheet = "Unweighted V-correlations", cols = 1:ncol(output.object[["V_Correlations_Unwgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Unweighted V-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["V_Correlations_Unwgt"]]))
+    freezePane(wb = export.workbook, sheet = "Unweighted V-correlations", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Unweighted V-correlations", style = two.decimals.style, cols = grep(pattern = "^Correlation_", x = colnames(output.object[["V_Correlations_Unwgt"]])), rows = 2:(nrow(output.object[["V_Correlations_Unwgt"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["V_Correlations_Unwgt"]], sheet = "Unweighted V-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Weighted V-correlations")
+    setColWidths(wb = export.workbook, sheet = "Weighted V-correlations", cols = 1:ncol(output.object[["V_Correlations_Wgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Weighted V-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["V_Correlations_Wgt"]]))
+    freezePane(wb = export.workbook, sheet = "Weighted V-correlations", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted V-correlations", style = two.decimals.style, cols = grep(pattern = "^Correlation_|^t_", x = colnames(output.object[["V_Correlations_Wgt"]])), rows = 2:(nrow(output.object[["V_Correlations_Wgt"]]) + 1), gridExpand = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted V-correlations", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["V_Correlations_Wgt"]])), rows = 2:(nrow(output.object[["V_Correlations_Wgt"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["V_Correlations_Wgt"]], sheet = "Weighted V-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Unweighted U-correlations")
+    setColWidths(wb = export.workbook, sheet = "Unweighted U-correlations", cols = 1:ncol(output.object[["U_Correlations_Unwgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Unweighted U-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["U_Correlations_Unwgt"]]))
+    freezePane(wb = export.workbook, sheet = "Unweighted U-correlations", firstRow = TRUE)
+    cols <- names(sapply(X = output.object[["U_Correlations_Unwgt"]], FUN = class)[sapply(X = output.object[["U_Correlations_Unwgt"]], FUN = class) == "numeric"])
+    cols <- grep(pattern = paste(cols, collapse = "|"), x = colnames(output.object[["U_Correlations_Unwgt"]]))
+    addStyle(wb = export.workbook, sheet = "Unweighted U-correlations", style = two.decimals.style, cols = cols, rows = 2:(nrow(output.object[["U_Correlations_Unwgt"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["U_Correlations_Unwgt"]], sheet = "Unweighted U-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Weighted U-correlations")
+    setColWidths(wb = export.workbook, sheet = "Weighted U-correlations", cols = 1:ncol(output.object[["U_Correlations_Wgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Weighted U-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["U_Correlations_Wgt"]]))
+    freezePane(wb = export.workbook, sheet = "Weighted U-correlations", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted U-correlations", style = two.decimals.style, cols = grep(pattern = "^Correlation_|^t_", x = colnames(output.object[["U_Correlations_Wgt"]])), rows = 2:(nrow(output.object[["U_Correlations_Wgt"]]) + 1), gridExpand = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted U-correlations", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["U_Correlations_Wgt"]])), rows = 2:(nrow(output.object[["U_Correlations_Wgt"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["U_Correlations_Wgt"]], sheet = "Weighted U-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Unweighted VU-correlations")
+    setColWidths(wb = export.workbook, sheet = "Unweighted VU-correlations", cols = 1:ncol(output.object[["VU_Max_Unweighted"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Unweighted VU-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["VU_Max_Unweighted"]]))
+    freezePane(wb = export.workbook, sheet = "Unweighted VU-correlations", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Unweighted VU-correlations", style = two.decimals.style, cols = grep(pattern = "^Correlation_", x = colnames(output.object[["VU_Max_Unweighted"]])), rows = 2:(nrow(output.object[["VU_Max_Unweighted"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["VU_Max_Unweighted"]], sheet = "Unweighted VU-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Weighted VU-correlations")
+    setColWidths(wb = export.workbook, sheet = "Weighted VU-correlations", cols = 1:ncol(output.object[["VU_Max_Weighted"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Weighted VU-correlations", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["VU_Max_Weighted"]]))
+    freezePane(wb = export.workbook, sheet = "Weighted VU-correlations", firstRow = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted VU-correlations", style = two.decimals.style, cols = grep(pattern = "^Correlation_|^t_", x = colnames(output.object[["VU_Max_Weighted"]])), rows = 2:(nrow(output.object[["VU_Max_Weighted"]]) + 1), gridExpand = TRUE)
+    addStyle(wb = export.workbook, sheet = "Weighted VU-correlations", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["VU_Max_Weighted"]])), rows = 2:(nrow(output.object[["VU_Max_Weighted"]]) + 1), gridExpand = TRUE)
+    writeData(wb = export.workbook, x = output.object[["VU_Max_Weighted"]], sheet = "Weighted VU-correlations")
+    addWorksheet(wb = export.workbook, sheetName = "Unweighted Predictor Matrix")
+    setColWidths(wb = export.workbook, sheet = "Unweighted Predictor Matrix", cols = 1:ncol(output.object[["Predictor_Matrix_Unwgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Unweighted Predictor Matrix", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Predictor_Matrix_Unwgt"]]))
+    freezePane(wb = export.workbook, sheet = "Unweighted Predictor Matrix", firstRow = TRUE)
+    writeData(wb = export.workbook, x = output.object[["Predictor_Matrix_Unwgt"]], sheet = "Unweighted Predictor Matrix")
+    addWorksheet(wb = export.workbook, sheetName = "Weighted Predictor Matrix")
+    setColWidths(wb = export.workbook, sheet = "Weighted Predictor Matrix", cols = 1:ncol(output.object[["Predictor_Matrix_Wgt"]]), widths = "auto")
+    addStyle(wb = export.workbook, sheet = "Weighted Predictor Matrix", style = header.row.style, rows = 1, cols = 1:ncol(output.object[["Predictor_Matrix_Wgt"]]))
+    freezePane(wb = export.workbook, sheet = "Weighted Predictor Matrix", firstRow = TRUE)
+    if(length(grep(pattern = "^t_", x = colnames(output.object[["Predictor_Matrix_Wgt"]]))) > 0) {
+      addStyle(wb = export.workbook, sheet = "Weighted Predictor Matrix", style = two.decimals.style, cols = grep(pattern = "^t_", x = colnames(output.object[["Predictor_Matrix_Wgt"]])), rows = 2:(nrow(output.object[["Predictor_Matrix_Wgt"]]) + 1), gridExpand = TRUE)
+      addStyle(wb = export.workbook, sheet = "Weighted Predictor Matrix", style = three.decimals.style, cols = grep(pattern = "^p_", x = colnames(output.object[["Predictor_Matrix_Wgt"]])), rows = 2:(nrow(output.object[["Predictor_Matrix_Wgt"]]) + 1), gridExpand = TRUE)
+    }
+    writeData(wb = export.workbook, x = output.object[["Predictor_Matrix_Wgt"]], sheet = "Weighted Predictor Matrix")
   }
   if(!missing(add.graphs) && add.graphs == TRUE) {
-    addWorksheet(wb = export.workbook, sheetName = "Graphs")
-    files.to.import <- file.path(dirname(destination.file), perc.graphs)
-    if(length(files.to.import) > 0) {
-      lapply(X = 1:length(files.to.import), FUN = function(i) {
-        insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
-      })
-    }
-    if(!is.null(non.perc.graphs)) {
-      files.to.import <- file.path(dirname(destination.file), unlist(non.perc.graphs))
-      lapply(X = 1:length(files.to.import), FUN = function(i) {
-        if(length(grep(pattern = "_Crosstab", x = files.to.import[i])) == 0) {
-          insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 13)
-        } else {
-          insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 1)
-        }
-      })
+    if(analysis.type %in% c("lsa.pcts.means", "lsa.prctls", "lsa.bench", "lsa.crosstabs")) {
+      addWorksheet(wb = export.workbook, sheetName = "Graphs")
+      files.to.import <- file.path(dirname(destination.file), perc.graphs)
+      if(length(files.to.import) > 0) {
+        lapply(X = 1:length(files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
+        })
+      }
+      if(!is.null(non.perc.graphs)) {
+        files.to.import <- file.path(dirname(destination.file), unlist(non.perc.graphs))
+        lapply(X = 1:length(files.to.import), FUN = function(i) {
+          if(length(grep(pattern = "_Crosstab", x = files.to.import[i])) == 0) {
+            insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 13)
+          } else {
+            insertImage(wb = export.workbook, sheet = "Graphs", file = files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19, startCol = 1)
+          }
+        })
+      }
+    } else if(analysis.type == "lsa.explore.missings") {
+      unwgt.miss.pattern.graphs.files.to.import <- grep(pattern = "_Unweighted_Missing_Patterns", x = file.path(dirname(destination.file), unwgt.miss.pattern.graphs), value = TRUE)
+      wgt.miss.pattern.graphs.files.to.import <- grep(pattern = "_Weighted_Missing_Patterns", x = file.path(dirname(destination.file), unwgt.miss.pattern.graphs), value = TRUE)
+      unwgt.flux.graphs.files.to.import <- file.path(dirname(destination.file), unwgt.flux.graphs)
+      wgt.flux.graphs.files.to.import <- file.path(dirname(destination.file), wgt.flux.graphs)
+      addWorksheet(wb = export.workbook, sheetName = "Simple Descr Graphs")
+      if(length(unwgt.miss.pattern.graphs.files.to.import) > 0) {
+        addWorksheet(wb = export.workbook, sheetName = "Unwgt Miss Patterns Graphs")
+      }
+      if(length(wgt.miss.pattern.graphs.files.to.import) > 0) {
+        addWorksheet(wb = export.workbook, sheetName = "Wgt Miss Patterns Graphs")
+      }
+      if(length(unwgt.flux.graphs.files.to.import) > 0) {
+        addWorksheet(wb = export.workbook, sheetName = "Unwgt Flux Stats Graphs")
+      }
+      if(length(wgt.flux.graphs.files.to.import) > 0) {
+        addWorksheet(wb = export.workbook, sheetName = "Wgt Flux Stats Graphs")
+      }
+      simple.desc.graphs.files.to.import <- file.path(dirname(destination.file), simple.desc.graphs)
+      if(length(simple.desc.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(simple.desc.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Simple Descr Graphs", file = simple.desc.graphs.files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
+        })
+      }
+      if(length(unwgt.miss.pattern.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(unwgt.miss.pattern.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Unwgt Miss Patterns Graphs", file = unwgt.miss.pattern.graphs.files.to.import[i], width = 8, height = 8, dpi = 600, startRow = (i * 39) - 38)
+        })
+      }
+      if(length(wgt.miss.pattern.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(wgt.miss.pattern.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Wgt Miss Patterns Graphs", file = wgt.miss.pattern.graphs.files.to.import[i], width = 8, height = 8, dpi = 600, startRow = (i * 39) - 38)
+        })
+      }
+      if(length(unwgt.flux.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(unwgt.flux.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Unwgt Flux Stats Graphs", file = unwgt.flux.graphs.files.to.import[i], width = 8, height = 8, dpi = 600, startRow = (i * 39) - 38)
+        })
+      }
+      if(length(wgt.flux.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(wgt.flux.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Wgt Flux Stats Graphs", file = wgt.flux.graphs.files.to.import[i], width = 8, height = 8, dpi = 600, startRow = (i * 39) - 38)
+        })
+      }
+    } else if(analysis.type == "lsa.quick.pred") {
+      addWorksheet(wb = export.workbook, sheetName = "Simple Descr Graphs")
+      simple.desc.graphs.files.to.import <- file.path(dirname(destination.file), simple.desc.graphs)
+      if(length(simple.desc.graphs.files.to.import) > 0) {
+        lapply(X = 1:length(simple.desc.graphs.files.to.import), FUN = function(i) {
+          insertImage(wb = export.workbook, sheet = "Simple Descr Graphs", file = simple.desc.graphs.files.to.import[i], width = 8, height = 4, dpi = 600, startRow = (i * 20) - 19)
+        })
+      }
     }
   }
   addWorksheet(wb = export.workbook, sheetName = "Analysis information")

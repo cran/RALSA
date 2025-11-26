@@ -11,9 +11,9 @@ install.packages("RALSA", dependencies = TRUE)
 ```
 
 ### Websites
-[The main INERI website](http://www.ineri.org)
+[The main INERI website](https://www.ineri.org)
 
-[RALSA's dedicated website](http://ralsa.ineri.org)
+[RALSA's dedicated website](https://ralsa.ineri.org)
 
 ### Contact
 For questions, feature requests, training requests and bug reports, please write to <a href="mailto:ralsa@ineri.org">ralsa@ineri.org</a>

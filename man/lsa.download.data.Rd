@@ -42,13 +42,13 @@ when converting the downloaded data  (default is \code{FALSE})?
 See \code{lsa.convert.data}.}
 }
 \value{
-If \code{convert = FALSE}, the function will return the originally downloaded data files (SPSS or ASCII textt with \code{.sps} control files) for the study, cycle, countries and population defined in the respective arguments, stored in the directory specified in \code{out.folder}. If \code{convert = TRUE} (default), converted \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class, will be saved in the directory defined by \code{out.folder} and the original downloaded SPSS data files will be removed.
+If \code{convert = FALSE}, the function will return the originally downloaded SPSS data files for the study, cycle, countries and population defined in the respective arguments, stored in the directory specified in \code{out.folder}. If \code{convert = TRUE} (default), converted \code{.RData} data files, containing an object with class \code{lsa.data}, an extension of the \code{data.table} class, will be saved in the directory defined by \code{out.folder} and the original downloaded SPSS data files will be removed.
 }
 \description{
 Downloads data files from large-scale assessments' and surveys' data repositories on the web and, if desired, converts them to \code{lsa.data} format and stores them in .RData files.
 }
 \details{
-The \code{lsa.download.data} function downloads large-scale assessments' and surveys' data files from data repositories on the web. This is a convenience function that saves time and efforts for the user. IEA studies, as well as OECD TALIS and TALIS 3S, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS and TALIS 3S use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be downloaded. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To download the files from all countries for an IEA study and OECD TALIS and TALIS 3S, simply omit the \code{ISO} argument, this will download files for all countries for the population in \code{POP} in the \code{study} and \code{cycle}. The \code{ISO} argument will not work for PISA files, as all data for all countries is provided within a single file per respondent type. If \code{ISO} is provided anyway, it will be ignored. Note that as of now, the function downloads PISA databases only from its latest cycles - 2015, 2018 and 2022.
+The \code{lsa.download.data} function downloads large-scale assessments' and surveys' data files from data repositories on the web. This is a convenience function that saves time and efforts for the user. IEA studies, as well as OECD TALIS and TALIS 3S, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS and TALIS 3S use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be downloaded. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To download the files from all countries for an IEA study and OECD TALIS and TALIS 3S, simply omit the \code{ISO} argument, this will download files for all countries for the population in \code{POP} in the \code{study} and \code{cycle}. The \code{ISO} argument will be ignored for PISA files, as well as for TALIS 2024 files, as all data for all countries is provided within a single file per respondent type. If \code{ISO} is provided anyway, it will be ignored. Note that as of now, the function downloads PISA databases only from its latest cycles - 2015, 2018 and 2022.
 
 When all desired SPSS data files are downloaded, the function converts them to \code{lsa.data} objects and stores them as .RData files on the disk, removing the data files downloaded in their original (SPSS) format. This is the default behavior which can be overridden by setting \code{convert = FALSE}.
 
@@ -93,7 +93,7 @@ The \code{cycle} argument provides information about the year of administration 
 \item For \code{TiPi} - \code{2011}
 \item For \code{PISA} - \code{2015}, \code{2018} or \code{2022}
 \item For \code{PISA D} - \code{2019}
-\item For \code{TALIS} - \code{2008}, \code{2013}, or \code{2018}
+\item For \code{TALIS} - \code{2008}, \code{2013}, \code{2018} or \code{2024}
 \item For \code{TALIS 3S} - \code{2018}
 }
 
@@ -193,9 +193,9 @@ For the exact meaning of the population names, see the respective study document
 The \code{out.folder} argument controls where the files shall be stored. Note that the files will \strong{not} download the files directly in the folder path provided to the argument. Instead, it will create a folder named as the study name, cycle and population and place the downloaded files there. Note that for IEA studies, OECD TALIS and TALIS 3S, if the download folder already exists and it contains data files for a given study, cycle and population for some of the countries, the function will only append the new files in it, keeping the ones that already exist there, if the \code{append} argument equals \code{TRUE} (default). This can save a lot of time if the user needs to download just the additional files instead of download everything again. If \code{append} argument equals \code{TRUE}, the existing files will be overwritten. For OECD PISA and PISA for Development the \code{append} argument will be ignored and, if the study folder in \code{out.folder} exists and contains any SPSS \code{.sav} or \code{.RData} files, the function will stop its execution and ask for moving the existing files.
 }
 \note{
-\strong{It is not recommended to work further in the folder where the downloaded files reside, it is meant to be only for the downloaded (an possibly converted) files.}
+\strong{It is not recommended to work further in the folder where the downloaded files reside. This folder is meant only to store the downloaded (an possibly converted) files.}
 
-In some study cycles (e.g. TIMSS 2019 and PIRLS 2021), there are the so-called "bridge studies". These aim to test the differences between electronic and paper testing modes. When a study cycle contains data files from a bridge study, these will be downloaded too for the countries that conducted the study electronically.
+In some study cycles (e.g. TIMSS 2019 and PIRLS 2021), there are the so-called "bridge studies". These aim to test the differences between electronic and paper testing modes. When a study cycle contains data files from a bridge study, these will be downloaded for the countries that conducted the study electronically as well.
 
 As of now, PISA data can be downloaded only for the 2015, 2018 and 2022 cycles.
 }
@@ -212,7 +212,7 @@ lsa.download.data(study = "PIRLS", cycle = 2016, out.folder = "C:/Data")
 
 # Download TIMSS 2019 data for grade 8 for South Africa and convert them
 \dontrun{
-lsa.download.data(study = "TIMSS", cycle = 2019, ISO = c("aus", "zaf"), POP = "Grade 8",
+lsa.download.data(study = "TIMSS", cycle = 2019, ISO = c("aus", "zaf"), POP = "G8",
 out.folder = "C:/Data")
 }
 

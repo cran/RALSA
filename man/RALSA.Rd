@@ -5,7 +5,7 @@
 \alias{RALSA-package}
 \title{R Analyzer for Large-Scale Assessments (RALSA)}
 \description{
-The RALSA package provides functionality for analyzing data from large-scale assessments and surveys which use complex sampling and assessment design. Such (international) assessments and surveys are TIMSS, PIRLS and PISA, for example.
+The RALSA package provides functionality for preparing and analyzing data from large-scale assessments and surveys which use complex sampling and assessment design. Such (international) assessments and surveys are TIMSS, PIRLS and PISA, for example.
 
 The sampling (complex sampling design) in large-scale assessments and surveys is multistage with probability proportional to the size of the (primary) sampling units (usually schools), i.e. with unequal probabilities of selection. Thus, all weights assigned to the individual respondents reflect these unequal probabilities. This is quite different from the usual simple or systematic random sampling. Different modifications of Jackknife Repeated Replication (JRR, with full or half replication) or Balanced Repeated Replication (BRR) are used in different studies to compute the standard errors of the population estimates. The proficiency test scores (complex assessment design) is applied to cope with practical issues. No respondent takes all test items, but the items are distributed across multiple test item blocks and the blocks are rotated across multiple assessment booklets, each respondent taking one booklet only. As a consequence, no respondent receives a single test score, but five (or even 10) separate test scores (called "plausible values" or PVs) resulting from multiple imputation technique where the missing by design responses are imputed. As a consequence of the complex sampling and assessment designs, each estimate has to be computed with each JRR or BRR weight and each PV (this can take up to 781 computations per estimate per group per country, depending on the study), then summarized to compute the final estimate, its sampling and imputation variance, and the final standard error.
 
@@ -48,6 +48,8 @@ Currently, RALSA provides the following functionality:
 \item \code{lsa.vars.dict} Prints and/or saves variable dictionaries in a file. Convenient when need to know the structure of the variables of interest.
 \item \code{lsa.data.diag} Helper function for quick frequency (for categorical variables) and descriptive (continuous variables) tables (weighted or unweighted). These can serve for initial exploration of the data and elaborating hypotheses. Not intended for actual analysis.
 \item \code{lsa.recode.vars} Recodes variables from large-scale assessments taking care of the user-defined missing values. Convenient for collapsing categories or changing their order.
+\item \code{lsa.cut.vars} Cut continuous variables into discrete categorical ones based on user-defined thresholds.
+\item \code{lsa.aggregate.vars} Aggregate variables in LSA datasets by groups.
 }
 \item Analysis functions - estimates are on population level, taking into account the complex sampling and assessment design
 \itemize{

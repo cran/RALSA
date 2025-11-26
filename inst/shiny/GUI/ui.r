@@ -3,7 +3,6 @@ suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(archive
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(openxlsx, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(Hmisc, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(stringr, warn.conflicts = FALSE, quietly = TRUE))))
-suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(foreign, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(readr, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(stringi, warn.conflicts = FALSE, quietly = TRUE))))
 suppressWarnings(suppressMessages(suppressPackageStartupMessages(library(shiny, warn.conflicts = FALSE, quietly = TRUE))))
@@ -23,6 +22,8 @@ import::from(RALSA,
              lsa.merge.data, lsa.vars.dict,
              lsa.data.diag, lsa.recode.vars,
              lsa.download.data,
+             lsa.aggregate.vars,
+             lsa.cut.vars,
              lsa.pcts.means,
              lsa.prctls,
              lsa.bench,
@@ -34,7 +35,6 @@ import::from(RALSA,
 
 
 ui <- tagList(
-  
   
   load.app.CSS.screen <- "
 #loading-content {
@@ -52,7 +52,6 @@ ui <- tagList(
 jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
 
 jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
-  
   
   useShinyjs(),
   rclipboardSetup(),
@@ -101,6 +100,8 @@ background-color: #000000;"),
                                               menuSubItem(text = "Variable dictionaries", icon = icon("clipboard-list"), tabName = "varProperties"),
                                               menuSubItem(text = "Data diagnostics", icon = icon("table"), tabName = "dataDiag"),
                                               menuSubItem(text = "Recode variables", icon = icon("sort-numeric-down"), tabName = "recodeVars"),
+                                              menuSubItem(text = "Cut variables", icon = icon("chart-gantt"), tabName = "cutVars"),
+                                              menuSubItem(text = "Aggregate variables", icon = icon("people-roof"), tabName = "aggrVars"),
                                               menuSubItem(text = "Select PISA countries", icon = icon("filter"), tabName = "selectPISACountries")
                                      )
                          ),
@@ -207,7 +208,10 @@ Shiny.unbindAll($table.DataTable().table().node());
                       div(checkboxInput(inputId = "partCountriesFilterParticipating", label = "Filter only the participating countries", value = FALSE), style = " padding-top: 30px;")
                     ),
                     DTOutput(outputId = "selectStudyCycleTable"),
-                    br()
+                    fluidRow(column(width = 12, align = "right",
+                                    downloadButton(outputId = "downloadHelpCntList", label = "Download Excel", icon = icon("cloud-arrow-down")),
+                                    tags$head(tags$style(HTML("#downloadHelpCntList {background-color: black; color: white; border-radius: 10px; margin-top: 15px;}")))
+                    ))
             ),
             tabItem(tabName = "exitUI", class = "active",
                     h1(textOutput(outputId = "exitHeading")),
@@ -898,6 +902,278 @@ objDiv.scrollTop = objDiv.scrollHeight;
 Shiny.addCustomMessageHandler("scrollCallback",
 function(color) {
 var objDiv = document.getElementById("consoleRecode"); /* Here we point to "console" output, adapt in other cases */
+objDiv.scrollTop = objDiv.scrollHeight;
+}
+);'
+                                     )
+                    )
+            ),
+            tabItem(tabName = "cutVars", class = "active",
+                    h1(textOutput(outputId = "h1cutVars")),
+                    htmlOutput(outputId = "cutVarsIntro"),
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "cutVarsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.cutVarsChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "cutVarsSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#cutVarsSrcPathDisplay {background-color: white;}"))
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "cutVarsStudyName"),
+                            htmlOutput(outputId = "cutVarsStudyCycle"),
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "cutVarsRespHead"),
+                            htmlOutput(outputId = "cutVarsRespAvailable")
+                        )
+                      )
+                    ),
+                    div(style = "display: inline-block; padding-bottom:15px;",
+                        htmlOutput(outputId = "cutVarsVariablesExplText")
+                    ),
+                    fluidRow(
+                      column(width = 6,
+                             DTOutput(outputId = "cutVarsAllAvailableVars"),
+                             tags$head(tags$style("#cutVarsAllAvailableVars {white-space: nowrap;}"))
+                      ),
+                      column(width = 1, align = "center",
+                             br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(),
+                             uiOutput(outputId = "cutVarsArrowSelVarsRight"),
+                             br(), br(),
+                             uiOutput(outputId = "cutVarsArrowSelVarsLeft"),
+                      ),
+                      column(width = 5,
+                             DTOutput(outputId = "cutVarsSelection"),
+                             tags$head(tags$style("#cutVarsSelection {white-space: nowrap;}"))
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px;",
+                               htmlOutput(outputId = "cutVarsNonNumericWarn"),
+                               tags$head(tags$style("#cutVarsNonNumericWarn {color: red; font-weight: bold;}"))
+                             ),
+                             div(
+                               htmlOutput(outputId = "cutVarsPVsWarn"),
+                               tags$head(tags$style("#cutVarsPVsWarn {color: red; font-weight: bold;}"))
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "cutVarsInstructionVarNames"),
+                             tags$head(tags$style("#cutVarsInstructionVarNames {text-align: left; font-weight: bold; padding-top: 25px}")),
+                             htmlOutput(outputId = "cutVarsWarnIncompleteVarLabs"),
+                             tags$head(tags$style("#cutVarsWarnIncompleteVarLabs {color: red; font-weight: bold;}")),
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; padding-top:15px; padding-bottom:15px",
+                               DTOutput(outputId = "cutVarsNewVarNames")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            uiOutput(outputId = "cutVarsCutPoints"),
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "margin-top: 55px",
+                            uiOutput(outputId = "cutVarsCutPointsReset")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "padding-top: 15px;",
+                            htmlOutput(outputId = "cutVarsCutPointsNotNum"),
+                            tags$head(tags$style("#cutVarsCutPointsNotNum {color: red; font-weight: bold;}"))
+                        )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12, align = "center",
+                             htmlOutput(outputId = "cutVarsInstructionLabels"),
+                             tags$head(tags$style("#cutVarsInstructionLabels {text-align: left; font-weight: bold;}")),
+                             htmlOutput(outputId = "cutVarsWarnIncompleteLabels"),
+                             tags$head(tags$style("#cutVarsWarnIncompleteLabels {text-align: left; color: red; font-weight: bold;}")),
+                             DTOutput(outputId = "cutVarsNewValLables"),
+                             tags$head(tags$style("#cutVarsNewValLables {white-space: nowrap;}"))
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                               div(style="display:inline-block; margin-top: 35px; margin-bottom: 35px;",
+                                   shinySaveButton(id = "cutVarsChooseOutFile", label = "Define the new output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               )
+                             ))),
+                    fluidRow(
+                      column(width = 12,
+                             div(style="display:inline-block", htmlOutput(outputId = "cutVarsSyntaxHead")),
+                             div(style="display:inline-block", shinySaveButton(id = "saveCutVarsSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
+                             div(style="display:inline-block", uiOutput(outputId = "copyCutVarsSyntax")),
+                             verbatimTextOutput(outputId = "cutVarsSyntax"),
+                             tags$head(tags$style(HTML("#cutVarsSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
+                    ),
+                    conditionalPanel(condition = "output.cutVarsSyntax",
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "cutVarsExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execCutVars")
+                                     )
+                    ),
+                    conditionalPanel(condition = "output.cutVarsSyntax",
+                                     verbatimTextOutput(outputId = "consoleCutVars"),
+                                     tags$head(tags$style("#consoleCutVars {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$script(
+                                       '
+Shiny.addCustomMessageHandler("scrollCallback",
+function(color) {
+var objDiv = document.getElementById("consoleCutVars"); /* Here we point to "console" output, adapt in other cases */
+objDiv.scrollTop = objDiv.scrollHeight;
+}
+);'
+                                     )
+                    )
+            ),
+            tabItem(tabName = "aggrVars", class = "active",
+                    h1(textOutput(outputId = "h1AggrVars")),
+                    htmlOutput(outputId = "aggrVarsIntro"),
+                    div(
+                      style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                      shinyFilesButton(id = "aggrVarsChooseSrcFile", label = "Choose data file", title = "Navigate and select a file", multiple = FALSE, icon = icon("file-import"), style = "color: #ffffff; background-color: #000000; border-radius: 10px; height: 33px;"),
+                      div(style = "width: 30px;"),
+                      conditionalPanel(condition = "input.aggrVarsChooseSrcFile",
+                                       div(verbatimTextOutput(outputId = "aggrVarsSrcPathDisplay"), style = "min-width: 750px;"),
+                                       tags$head(tags$style("#aggrVarsSrcPathDisplay {background-color: white;}"))
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom:30px",
+                        div(style = "display: inline-block; padding-top:30px;",
+                            htmlOutput(outputId = "aggrVarsStudyName"),
+                            htmlOutput(outputId = "aggrVarsStudyCycle")
+                        ),
+                        div(style = "width: 135px;"),
+                        div(style = "display: inline-block; padding-top:17px;",
+                            htmlOutput(outputId = "aggrVarsRespHead"),
+                            htmlOutput(outputId = "aggrVarsRespAvailable"),
+                        )
+                      )
+                    ),
+                    div(style = "display: inline-block; padding-bottom:10px;",
+                        htmlOutput(outputId = "aggrVarsVariablesExplText")
+                    ),
+                    fluidRow(
+                      column(width = 6, align = "center",
+                             DTOutput(outputId = "aggrVarsAllAvailableVars"),
+                             tags$head(tags$style("#aggrVarsAllAvailableVars {white-space: nowrap;}"))
+                      ),
+                      column(width = 6,
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "aggrVarsArrowSelGroupVarsRight"),
+                                      uiOutput(outputId = "aggrVarsArrowSelGroupVarsLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "aggrVarsGroupVars"),
+                                      tags$head(tags$style("#aggrVarsGroupVars {white-space: nowrap;}")),
+                               )
+                             ),
+                             br(),
+                             fluidRow(
+                               column(width = 2, align = "center",
+                                      br(), br(),  br(), br(),
+                                      uiOutput(outputId = "aggrVarsArrowSelSrcVarsRight"),
+                                      uiOutput(outputId = "aggrVarsArrowSelSrcVarsLeft"),
+                               ),
+                               column(width = 10,
+                                      DTOutput(outputId = "aggrVarsSrcVars"),
+                                      tags$head(tags$style("#aggrVarsSrcVars {white-space: nowrap;}"))
+                               )
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-top: 20px;",
+                               htmlOutput(outputId = "aggrVarsNonNumericWarn"),
+                               tags$head(tags$style("#aggrVarsNonNumericWarn {color: red; font-weight: bold;}"))
+                             ),
+                             div(
+                               htmlOutput(outputId = "aggrVarsDesignWarn"),
+                               tags$head(tags$style("#aggrVarsDesignWarn {color: red; font-weight: bold;}"))
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             htmlOutput(outputId = "aggrVarsInstructionVarNames"),
+                             tags$head(tags$style("#aggrVarsInstructionVarNames {text-align: left; font-weight: bold; padding-top: 25px}")),
+                             htmlOutput(outputId = "aggrVarsWarnIncompleteVarLabs"),
+                             tags$head(tags$style("#aggrVarsWarnIncompleteVarLabs {color: red; font-weight: bold;}")),
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex; padding-top:15px; padding-bottom:15px",
+                               DTOutput(outputId = "aggrVarsNewVarNames")
+                             )
+                      )
+                    ),
+                    fluidRow(
+                      div(
+                        style = "display:-webkit-flex; display:-ms-flexbox; display:flex; margin-left:15px; padding-bottom: 15px",
+                        div(style = "display: inline-block; margin-top: 30px;",
+                            uiOutput(outputId = "aggrVarsAggregationFunction")
+                        ),
+                        div(style = "width: 15px;"),
+                        div(style = "display: inline-block; padding-top:15px;",
+                            htmlOutput(outputId = "aggrVarsAggregationFunctionExpl")
+                        )
+                      )
+                    ),
+                    fluidRow(
+                      column(width = 12,
+                             div(
+                               style = "display:-webkit-flex; display:-ms-flexbox; display:flex;",
+                               div(style="display:inline-block; margin-bottom: 35px;",
+                                   shinySaveButton(id = "aggrVarsChooseOutFile", label = "Define the new output file name", title = "Define file name", icon = icon("file-export"), filetype = list(RData = "RData"), style = "color: #ffffff; background-color: #000000; border-radius: 10px")
+                               )
+                             ))),
+                    fluidRow(
+                      column(width = 12,
+                             div(style="display:inline-block", htmlOutput(outputId = "aggrVarsSyntaxHead")),
+                             div(style="display:inline-block", shinySaveButton(id = "saveAggrVarsSyntax", label = "Save syntax", "Save syntax as...", filetype = list(R = "r"), icon = icon("download"), style = "color: #ffffff; background-color: #000000; border-radius: 5px; font-size: 80%; margin-bottom: 1px; padding: 1px; width: 85px; margin-bottom: 0px; margin-left: 25px")),
+                             div(style="display:inline-block", uiOutput(outputId = "copyAggrVarsSyntax")),
+                             verbatimTextOutput(outputId = "aggrVarsSyntax"),
+                             tags$head(tags$style(HTML("#aggrVarsSyntax {background-color: white; white-space: pre-wrap;}")))
+                      )
+                    ),
+                    conditionalPanel(condition = "output.aggrVarsSyntax",
+                                     div(style = "margin-top: 30px",
+                                         textOutput(outputId = "aggrVarsExecBtnHead")
+                                     ),
+                                     div(style = "margin-bottom: 30px",
+                                         uiOutput(outputId = "execAggrVars")
+                                     )
+                    ),
+                    conditionalPanel(condition = "aggrVarsSyntax",
+                                     verbatimTextOutput(outputId = "consoleAggrVars"),
+                                     tags$head(tags$style("#consoleAggrVars {color:red; background-color: white; overflow-y:scroll; opacity: 1; max-height: 500px; margin-bottom: 30px}")),
+                                     tags$script(
+                                       '
+Shiny.addCustomMessageHandler("scrollCallback",
+function(color) {
+var objDiv = document.getElementById("consoleAggrVars"); /* Here we point to "console" output, adapt in other cases */
 objDiv.scrollTop = objDiv.scrollHeight;
 }
 );'

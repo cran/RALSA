@@ -449,7 +449,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "math.std-tch.lnk"
         } else if(inp.file.abbrev %in% c("pst", "PST")) {
           file.type.attribute <- "phys.std-tch.lnk"
-        } else if(inp.file.abbrev %in% c("atg", "bt_", "itg", "ITG", "btg", "ATG", "BTG", "CTG", "PTG")) {
+        } else if(inp.file.abbrev %in% c("atg", "btg", "ctg", "ptg", "bt_", "itg", "ITG", "ATG", "BTG", "CTG", "PTG")) {
           file.type.attribute <- "tch.bckg"
         } else if(inp.file.abbrev %in% c("btm", "BTM", "mtg", "MTG")) {
           file.type.attribute <- "math.tch.bckg"
@@ -465,7 +465,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "prim.tch.rel"
         } else if(inp.file.abbrev == "DSR") {
           file.type.attribute <- "low-sec.tch.rel"
-        } else if(inp.file.abbrev %in% c("acg", "bcg", "bc_", "icg", "ICG", "ACG", "BCG", "CCG", "PCG")) {
+        } else if(inp.file.abbrev %in% c("acg", "bcg", "ccg", "pcg", "bc_", "icg", "ICG", "ACG", "BCG", "CCG", "PCG")) {
           file.type.attribute <- "sch.bckg"
         } else if(inp.file.abbrev %in% c("mcg", "MCG")) {
           file.type.attribute <- "math.sch.bckg"

@@ -1,6 +1,6 @@
 #' @title R Analyzer for Large-Scale Assessments (RALSA)
 #'
-#' @description The RALSA package provides functionality for analyzing data from large-scale assessments and surveys which use complex sampling and assessment design. Such (international) assessments and surveys are TIMSS, PIRLS and PISA, for example.
+#' @description The RALSA package provides functionality for preparing and analyzing data from large-scale assessments and surveys which use complex sampling and assessment design. Such (international) assessments and surveys are TIMSS, PIRLS and PISA, for example.
 #'
 #' The sampling (complex sampling design) in large-scale assessments and surveys is multistage with probability proportional to the size of the (primary) sampling units (usually schools), i.e. with unequal probabilities of selection. Thus, all weights assigned to the individual respondents reflect these unequal probabilities. This is quite different from the usual simple or systematic random sampling. Different modifications of Jackknife Repeated Replication (JRR, with full or half replication) or Balanced Repeated Replication (BRR) are used in different studies to compute the standard errors of the population estimates. The proficiency test scores (complex assessment design) is applied to cope with practical issues. No respondent takes all test items, but the items are distributed across multiple test item blocks and the blocks are rotated across multiple assessment booklets, each respondent taking one booklet only. As a consequence, no respondent receives a single test score, but five (or even 10) separate test scores (called "plausible values" or PVs) resulting from multiple imputation technique where the missing by design responses are imputed. As a consequence of the complex sampling and assessment designs, each estimate has to be computed with each JRR or BRR weight and each PV (this can take up to 781 computations per estimate per group per country, depending on the study), then summarized to compute the final estimate, its sampling and imputation variance, and the final standard error.
 #'
@@ -40,6 +40,8 @@
 #'            \item \code{lsa.vars.dict} Prints and/or saves variable dictionaries in a file. Convenient when need to know the structure of the variables of interest.
 #'            \item \code{lsa.data.diag} Helper function for quick frequency (for categorical variables) and descriptive (continuous variables) tables (weighted or unweighted). These can serve for initial exploration of the data and elaborating hypotheses. Not intended for actual analysis.
 #'            \item \code{lsa.recode.vars} Recodes variables from large-scale assessments taking care of the user-defined missing values. Convenient for collapsing categories or changing their order.
+#'            \item \code{lsa.cut.vars} Cut continuous variables into discrete categorical ones based on user-defined thresholds.
+#'            \item \code{lsa.aggregate.vars} Aggregate variables in LSA datasets by groups.
 #'   }
 #'     \item Analysis functions - estimates are on population level, taking into account the complex sampling and assessment design
 #'         \itemize{
@@ -84,14 +86,14 @@
 #' @name RALSA
 #' @author Plamen V. Mirazchiyski, INERI
 #' @aliases RALSA-package
-#' @import data.table openxlsx stringr foreign readr stringi shiny shinyWidgets shinydashboard shinyFiles
+#' @import data.table openxlsx stringr readr stringi shiny shinyWidgets shinydashboard shinyFiles
 #' @importFrom DT JS renderDT DTOutput
 #' @importFrom Hmisc wtd.table wtd.mean wtd.var
 #' @importFrom shinyjs html hide reset extendShinyjs hidden inlineCSS useShinyjs show js
-#' @importFrom stats contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames model.frame model.matrix pchisq pf xtabs complete.cases
+#' @importFrom stats median contr.sum contr.treatment contrasts<- cov.wt formula as.formula qnorm setNames model.frame model.matrix pchisq pf xtabs complete.cases
 #' @importFrom utils head tail menu browseURL download.file unzip
 #' @importFrom methods is
-#' @importFrom ggplot2 ggplot ggsave geom_line geom_point geom_bar geom_vline scale_fill_manual sym aes geom_errorbar position_dodge theme element_rect element_blank element_line element_text scale_x_discrete scale_y_continuous labs scale_color_manual guides guide_legend expansion facet_wrap geom_tile scale_fill_gradient xlab ylab geom_text scale_y_discrete coord_equal ggtitle annotate .pt
+#' @importFrom ggplot2 ggplot ggsave geom_line geom_point geom_bar geom_vline scale_fill_manual sym aes geom_errorbar position_dodge theme element_rect element_blank element_line element_text scale_x_discrete scale_y_continuous labs scale_color_manual guides guide_legend expansion facet_wrap geom_tile scale_fill_gradient xlab ylab geom_text scale_y_discrete coord_equal ggtitle annotate .pt geom_hline geom_abline geom_errorbarh
 #' @importFrom rclipboard rclipButton
 #' @importFrom rstudioapi jobRunScript executeCommand
 #' @importFrom haven read_sav as_factor
@@ -100,4 +102,4 @@
 NULL
 #> NULL
 
-globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT", "perf_group", "Performance_Group", "collapsed_split", "percentage.plots.files", "means.plots.files", "percentiles.plots.files", "crosstabs.plots.files", "IDCNTRY", "Missing_Pairs", "Average_Inbound", "Average_Outbound", "Missings_in_Pattern", "Variables", "Variables_Patterns", "Index", "Total_Missings_per_Pattern", "seq_row", "wgt", "tmp", "Pattern_Counts", "sec_axis", "scale_x_continuous"))
+globalVariables(c("sampling.variance", "mean.of.PV.estimates", "sum.of.PV.diff", "measurement.variance", ".", "na.omit", "weighted.mean", "N", "key.vars", "variable", "Variable", "Statistic", "DESIGN", "COUNTRY", "Wald_Statistic", "Coefficients", "Coefficients_SE", "p_value", "Wald_L95CI", "Wald_U95CI", "Odds_L95CI", "Odds_U95CI", "DURATION", "JUSTONEVALID", "pt", "ind", "values", "Values", "MATSUBJ", "SCIWGT", "SCISUBJ", "MATWGT", "capture.output", "Estimate", "V1", "degrees.of.freedom", "pnorm", "stack", "tmp.pcts.var", "V2", "tmp.group.vars", "n_cases", "g", "removed.countries.where.any.split.var.is.all.NA", "Role", "DDD", "Estimate_SE", "avg.PVs.pct.miss", "n_Cases", "t_value", "DF", "i.t_value", "Percentiles", "END_TIME", "sum.of.squares", "PRCTLS.VARS", "weight.var", "TMPWGT", "file.merged.respondents", "Percent", "Valid_Percent", "Cumulative_Percent", "Value_Type", "Frequency", "Labels", "Names", "i", "Total", "Type", "Value", "value", "cnt.warn.insuff.RS.collector", "warnings.collector.multimodal", "CNT", "perf_group", "Performance_Group", "collapsed_split", "percentage.plots.files", "means.plots.files", "percentiles.plots.files", "crosstabs.plots.files", "IDCNTRY", "Missing_Pairs", "Average_Inbound", "Average_Outbound", "Missings_in_Pattern", "Variables", "Variables_Patterns", "Index", "Total_Missings_per_Pattern", "seq_row", "wgt", "tmp", "Pattern_Counts", "sec_axis", "scale_x_continuous", "Influx", "Outflux", "Influx_SE", "Outflux_SE", "V1.x", "V1.y"))
