@@ -40,6 +40,8 @@
 #'                             weight variable is provide, the function will automatically select
 #'                             the default weight variable for the provided data, depending on the
 #'                             respondent type.
+#' @param DF.type              The method fot the degrees of freedom shall be computed, either
+#'                             \code{"JR"} (default) or \code{"WS"}. See details.
 #' @param include.missing      Logical, shall the missing values of the splitting variables be
 #'                             included as categories to split by and all statistics produced for
 #'                             them? The default (\code{FALSE}) takes all cases on the splitting
@@ -93,6 +95,8 @@
 #' \item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
 #' }
 #'
+#' The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
+#'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
@@ -118,6 +122,7 @@
 #'   \item Coefficients_SVR - the sampling variance component for the regression coefficients if root PVs are specified either as dependent or independent variables.
 #'   \item Coefficients_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement variance component for the regression coefficients if root PVs are specified either as dependent or independent variables.
 #'   \item t_value - the \emph{t}-test value for the regression coefficients.
+#'   \item DF - the value for degrees of freedom for the regression coefficients.
 #'   \item p_value - the \emph{p}-value for the regression coefficients.
 #' }
 #'
@@ -202,17 +207,25 @@
 #' @references
 #' Bate, S. M. (2004). \emph{Generalized Linear Models for Large Dependent Data Sets} \[Doctoral Thesis\]. University of London.
 #'
+#' Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+#'
 #' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
 #'
 #' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (p. 3.1-3.34). Lynch School of Education, Boston College.
 #'
 #' Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, 12(1). https://doi.org/10.1214/aos/1176346391
 #'
+#' Qian, J. (1998). Estimation of the effective degrees of freedom in T-type tests for complex data. \emph{Proceedings of the Section on Survey Research Methods, American Statistical Association}, 704-708.
+#'
+#' Satterthwaite, F. E. (1946). An Approximate Distribution of Estimates of Variance Components. \emph{Biometrics Bulletin}, \emph{2}(6), 110–114. https://doi.org/10.2307/3002019
+#'
 #' UCLA: Statistical Consulting Group. (2020). \emph{R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES}. IDRE Stats - Statistical Consulting Web Resources. https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/
+#'
+#' Welch, B. L. (1947). The Generalization of `Student’s’ Problem when Several Different Population Variances are Involved. \emph{Biometrika}, \emph{34}(1/2), 28–35. https://doi.org/10.2307/2332510
 #'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.root.dep, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, interactions, standardize = FALSE, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.root.dep, bckg.indep.cont.vars, bckg.indep.cat.vars, bckg.cat.contrasts, bckg.ref.cats, PV.root.indep, interactions, standardize = FALSE, weight.var, DF.type, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -237,14 +250,22 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     indeps.passed <- lapply(X = indeps.passed, FUN = eval)
     indeps.passed <- unname(sort(unlist(indeps.passed[!is.na(names(indeps.passed))])))
     if(!all(sort(unlist(unique(interactions))) %in% indeps.passed)) {
-      stop('The variables passed to "interactions" must be present in "bckg.indep.cont.vars", "bckg.indep.cat.vars" and "PV.root.indep". Check your input.\n\n', call. = FALSE)
+      stop('The variables passed to "interactions" must be present in "bckg.indep.cont.vars", "bckg.indep.cat.vars" and "PV.root.indep". All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     if(!is.list(interactions)) {
-      stop('The "interactions" argument is not a list. Check your input.\n\n', call. = FALSE)
+      stop('The "interactions" argument is not a list. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
     if(!all(sapply(X = interactions, length) == 2)) {
-      stop('Two-way interactions are supported only. The individual vectors of variable names in the "interactions" argument must be pairs of variable names. Check your input.\n\n', call. = FALSE)
+      stop('Two-way interactions are supported only. The individual vectors of variable names in the "interactions" argument must be pairs of variable names. All operations stop here. Check your input.\n\n', call. = FALSE)
     }
+  }
+  if(missing(DF.type)) {
+    DF.type <- "JR"
+  } else {
+    DF.type <- DF.type
+  }
+  if(!DF.type %in% c("U", "JR", "WS")) {
+    stop('The accepted "DF.type" can be either "JR" or "WS". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
   if(!missing(bckg.indep.cat.vars) & missing(bckg.cat.contrasts)) {
     bckg.cat.contrasts <- rep(x = "dummy", times = length(bckg.indep.cat.vars))
@@ -603,7 +624,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
         lapply(X = bckg.regression, FUN = function(i) {
           setnames(x = i, old = "V1", new = "Variable")
         })
-        bckg.Wald.test.output <- copy(bckg.regression)
+        bckg.output.copy <- copy(bckg.regression)
       } else if(!is.null(vars.list[["PV.names"]])) {
         PV.regression <- list(lapply(X = seq_along(data1), FUN = function(i) {
           compute.linear.regression.all.repwgt(data.object = data1[[i]], vars.vector = grep(pattern = paste(c(vars.list[["PV.root.dep"]], vars.list[["PV.root.indep"]], vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]]), collapse = "|"), x = colnames(data1[[i]]), value = TRUE), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula[[i]])
@@ -664,7 +685,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
             setnames(x = j, old = c("V1", all.weights), new = c("Variable", paste0("V", 1:length(all.weights))))
           })
         })
-        PV.Wald.test.output <- copy(PV.regression)
+        PV.output.copy <- copy(PV.regression)
       }
       if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
         reshape.list.statistics.bckg(estimate.object = bckg.regression, estimate.name = "Coefficients", data.key.variables = key.vars, new.names.vector = "", bckg.vars.vector = vars.list[["bckg.indep.vars"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
@@ -720,9 +741,9 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
         PV.regression <- NULL
       }
       if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
-        Wald.estimates <- compute.Wald.test.all.repwgt(Wald.object = bckg.Wald.test.output, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
+        Wald.estimates <- compute.Wald.test.all.repwgt(Wald.object = bckg.output.copy, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
       } else if(!is.null(vars.list[["PV.root.dep"]]) | !is.null(vars.list[["PV.root.indep"]])) {
-        Wald.estimates <- compute.Wald.test.all.repwgt.PV(Wald.object = PV.Wald.test.output, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["PV.root.dep"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["PV.root.indep"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
+        Wald.estimates <- compute.Wald.test.all.repwgt.PV(Wald.object = PV.output.copy, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["PV.root.dep"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["PV.root.indep"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = key.vars, study.name = file.attributes[["lsa.study"]])
       }
       country.model.stats[ , Statistic := factor(x = Statistic, levels = c("r.squared", "adj.r.squared"), labels = c("R-Squared", "Adjusted R-Squared"))]
       country.model.stats <- rbindlist(l = list(country.model.stats, Wald.estimates[[1]]), fill = TRUE)
@@ -740,18 +761,30 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       merged.outputs[ , t_value := lapply(.SD, function(i) {
         ifelse(test = is.infinite(i), yes = NA, no = i)
       }), .SDcols = "t_value"]
-      merged.outputs[ , p_value := 2 * pt(q = -abs(t_value), df = n_Cases - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")])))]
+      if(DF.type == "U") {
+        merged.outputs[ , DF := get(paste0("Sum_", vars.list[["weight.var"]])) - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")]))]
+      } else if(DF.type %in% c("WS", "JR")) {
+        if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
+          DF <- compute.corrected.DF(rep.est.obj = bckg.output.copy, full.wgt = vars.list[["weight.var"]], replicates = rep.wgts.names, type = DF.type)
+        } else {
+          DF <- compute.corrected.DF(rep.est.obj = PV.output.copy, full.wgt = vars.list[["weight.var"]], replicates = rep.wgts.names, type = DF.type)
+        }
+      }
+      if(DF.type != "U") {
+        merged.outputs <- merge(x = merged.outputs, y = DF, by = c(key.vars, "Variable"))
+      }
+      merged.outputs[ , p_value := 2 * pt(q = -abs(t_value), df = DF)]
       merged.outputs[ , (c("t_value", "p_value")) := lapply(.SD, function(i) {
         ifelse(test = is.na(i), yes = NaN, no = i)
       }), .SDcols = c("t_value", "p_value")]
       counter <<- counter + 1
       message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+      if(nchar(counter) == 1) {
+        paste0("( ", counter, "/", number.of.countries, ")   ")
+      } else if(nchar(counter) == 2) {
+        paste0("(", counter, "/", number.of.countries, ")   ")
+      },
+      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
@@ -767,9 +800,25 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     }
     ptm.add.table.average <- proc.time()
     estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
-    degrees.of.freedom <- mean(estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", n_Cases])
     estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", t_value := Coefficients/Coefficients_SE]
-    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", p_value := 2 * pt(q = -abs(t_value), df = degrees.of.freedom - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")])))]
+    if(DF.type == "U") {
+      mean.n.cases <- mean(estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", get(paste0("Sum_", vars.list[["weight.var"]]))])
+      table.average.DF <- estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", mean.n.cases - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")]))]
+      estimates[ , DF := as.double(DF)]
+      estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", DF := table.average.DF]
+    } else if(DF.type %in% c("WS", "JR")) {
+      variances.and.DF <- estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", mget(c(key.vars, "Variable", "Coefficients_SE", "DF"))]
+      setnames(x = variances.and.DF, old = "Coefficients_SE", new = "Variance")
+      variances.and.DF[ , Variance := Variance^2]
+      if(length(key.vars) == 1) {
+        by.columns <- "Variable"
+      } else {
+        by.columns <- c(key.vars[2:length(key.vars)], "Variable")
+      }
+      table.average.DF <- variances.and.DF[ , sum(Variance^2) / sum((Variance^2) / DF), by = by.columns]
+      estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", DF := table.average.DF[ , V1]]
+    }
+    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", p_value := 2 * pt(q = -abs(t_value), df = DF)]
     if(standardize == TRUE) {
       if(!is.null(vars.list[["PV.names"]])) {
         estimates[Variable == "(Intercept)", (c("Coefficients", "Coefficients_SE", "Coefficients_SVR", "Coefficients_MVR", "p_value")) := NaN]

@@ -97,7 +97,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       if(length(attr(x = i, which = "variable.label")) > 0) {
         paste0("'", attr(x = i, which = "variable.label"), "'")
       } else {
-        ""
+""
       }
     })
     var.unique.values <- lapply(X = data, FUN = function(i) {
@@ -105,8 +105,8 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
         levels.number <- 1:length(levels(i))
         if(length(levels(i)) > 2) {
           c(paste0(levels.number[1], " - '", levels(i)[1], "'\n"),
-            paste0("                 ", levels.number[2:(length(levels.number) - 1)], " - '", levels(i)[2:(length(levels(i)) - 1)], "'\n"),
-            paste0("                 ", levels.number[length(levels.number)], " - '", levels(i)[length(levels(i))], "'"))
+          paste0("                 ", levels.number[2:(length(levels.number) - 1)], " - '", levels(i)[2:(length(levels(i)) - 1)], "'\n"),
+          paste0("                 ", levels.number[length(levels.number)], " - '", levels(i)[length(levels(i))], "'"))
         } else if(length(levels(i)) == 2) {
           c(paste0(levels.number[1], " - '", levels(i)[1], "'\n"), paste0("                 ", levels.number[2], " - '", levels(i)[2]), "'")
         } else if (length(levels(i)) == 1) {
@@ -124,7 +124,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
       miss.attr <- attr(x = i, which = "missings")
       if(is.factor(i)) {
         if(length(miss.attr) == 0) {
-          ""
+""
         } else if(length(miss.attr) == 1) {
           paste0("'", miss.attr, "'")
         } else if(length(miss.attr) == 2) {
@@ -134,7 +134,7 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
         }
       } else if(is.numeric(i)) {
         if(length(miss.attr) == 0) {
-          ""
+""
         } else if(length(miss.attr) == 1) {
           paste0(miss.attr, " ('", names(miss.attr), "')")
         } else if(length(miss.attr) == 2) {
@@ -146,81 +146,82 @@ lsa.vars.dict <- function(data.file, data.object, var.names, out.file, open.out.
     })
     vars.dict <- lapply(X = names(var.names), FUN = function(i) {
       list(var.names[[i]],
-           var.classes[[i]],
-           var.labels[[i]],
-           var.unique.values[[i]],
-           var.user.missings[[i]])
-    })
-    message("")
-    message("The following tables contain the dictionaries for the variables of interest.\n")
-    invisible(lapply(X = vars.dict, FUN = function(i) {
-      message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
-      message("Variable name:   '", i[[1]], "'")
-      message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
-      message("Variable class:  '", i[[2]], "'")
-      message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
-      message("Variable label:  ", i[[3]])
-      message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
-      if(i[[2]] == "factor") {
-        message("Variable levels: ", i[[4]])
-      } else {
-        message("Unique values:    ", i[[4]])
-      }
-      message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
-      message("User missing:    ", i[[5]])
-      message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
-      message("\n\n")
-    }))
-    var.word.count <- if(length(var.names) == 1) {
-      list("Dictionary", " variable")
-    } else {
-      list("Dictionaries", " variables")
-    }
-    message('\n', var.word.count[[1]], ' for ',  length(var.names), var.word.count[[2]], ' produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.dictionary}[[3]], "%H:%M:%OS3"))
-    if(!missing(out.file)) {
-      ptm.write.dictionary <- proc.time()
-      cat("", file = out.file)
-      cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-      if(!missing(data.file)) {
-        cat("\nUsed data file:", data.file, "\n", file = out.file, append = TRUE)
-      } else if(!missing(data.object)) {
-        cat("\nUsed object in memory:", used.data, "\n", file = out.file, append = TRUE)
-      }
-      cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-      cat("\n\n\n\n", file = out.file, append = TRUE)
-      invisible(sapply(X = vars.dict, FUN = function(i) {
-        cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-        cat("\nVariable name:   '", i[[1]], "'\n", sep = "", file = out.file, append = TRUE)
-        cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-        cat("\nVariable class:  '", i[[2]], "'\n", sep = "", file = out.file, append = TRUE)
-        cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-        cat("\nVariable label:  ", i[[3]], "\n", sep = "", file = out.file, append = TRUE)
-        cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+        var.classes[[i]],
+        var.labels[[i]],
+        var.unique.values[[i]],
+        var.user.missings[[i]])
+      })
+      message("")
+      message("The following tables contain the dictionaries for the variables of interest.\n")
+      invisible(lapply(X = vars.dict, FUN = function(i) {
+        message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
+        message("Variable name:   '", i[[1]], "'")
+        message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
+        message("Variable class:  '", i[[2]], "'")
+        message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
+        message("Variable label:  ", i[[3]])
+        message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
         if(i[[2]] == "factor") {
-          cat("\nVariable levels: ", i[[4]], "\n", sep = "", file = out.file, append = TRUE)
+          message("Variable levels: ", i[[4]])
         } else {
-          cat("\nUnique values:    ", i[[4]], "\n", sep = "", file = out.file, append = TRUE)
+          message("Unique values:    ", i[[4]])
         }
-        cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
-        cat("\nUser missing:    ", i[[5]], "\n", sep = "", file = out.file, append = TRUE)
-        cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), "\n", file = out.file, append = TRUE)
-        cat("\n\n\n\n", file = out.file, append = TRUE)
+        message(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""))
+        message("User missing:    ", i[[5]])
+        message(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""))
+        message("\n\n")
       }))
-      message('\nVariable dictionaries written to disk in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.write.dictionary}[[3]], "%H:%M:%OS3"), "\n\n")
-      if(open.out.file == TRUE) {
-        if(Sys.info()["sysname"] == "Windows") {
-          shell.exec(out.file)
-        } else if(Sys.info()["sysname"] == "Linux") {
-          system(paste0("xdg-open ", out.file))
-        } else if(Sys.info()["sysname"] == "Darwin") {
-          system(paste0("open ", out.file))
+      var.word.count <- if(length(var.names) == 1) {
+        list("Dictionary", " variable")
+      } else {
+        list("Dictionaries", " variables")
+      }
+      message('\n', var.word.count[[1]], ' for ',  length(var.names), var.word.count[[2]], ' produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.data.dictionary}[[3]], "%H:%M:%OS3"))
+      if(!missing(out.file)) {
+        ptm.write.dictionary <- proc.time()
+        cat("", file = out.file)
+        cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+        if(!missing(data.file)) {
+          cat("\nUsed data file:", data.file, "\n", file = out.file, append = TRUE)
+        } else if(!missing(data.object)) {
+          cat("\nUsed object in memory:", used.data, "\n", file = out.file, append = TRUE)
+        }
+        cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+        cat("\n\n\n\n", file = out.file, append = TRUE)
+        invisible(sapply(X = vars.dict, FUN = function(i) {
+          cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+          cat("\nVariable name:   '", i[[1]], "'\n", sep = "", file = out.file, append = TRUE)
+          cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+          cat("\nVariable class:  '", i[[2]], "'\n", sep = "", file = out.file, append = TRUE)
+          cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+          cat("\nVariable label:  ", i[[3]], "\n", sep = "", file = out.file, append = TRUE)
+          cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+          if(i[[2]] == "factor") {
+            cat("\nVariable levels: ", i[[4]], "\n", sep = "", file = out.file, append = TRUE)
+          } else {
+            cat("\nUnique values:    ", i[[4]], "\n", sep = "", file = out.file, append = TRUE)
+          }
+          cat(paste(rep(x = "-", times = unlist(options("width")) - 10), collapse = ""), file = out.file, append = TRUE)
+          cat("\nUser missing:    ", i[[5]], "\n", sep = "", file = out.file, append = TRUE)
+          cat(paste(rep(x = "+", times = unlist(options("width")) - 10), collapse = ""), "\n", file = out.file, append = TRUE)
+          cat("\n\n\n\n", file = out.file, append = TRUE)
+        }))
+        message('\nVariable dictionaries written to disk in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.write.dictionary}[[3]], "%H:%M:%OS3"), "\n\n")
+        if(open.out.file == TRUE) {
+          if(Sys.info()["sysname"] == "Windows") {
+            shell.exec(out.file)
+          } else if(Sys.info()["sysname"] == "Linux") {
+            system(paste0("xdg-open ", out.file))
+          } else if(Sys.info()["sysname"] == "Darwin") {
+            system(paste0("open ", out.file))
+          }
         }
       }
-    }
-  }, interrupt = function(f) {
-    message("\n\nInterrupted by the user. Not all requested dictionaries have been produced.")
-  },
-  error = function(e) {
-    message("")
-  })
-}
+    }, interrupt = function(f) {
+      message("\n\nInterrupted by the user. Not all requested dictionaries have been produced.")
+    },
+    error = function(e) {
+      message("")
+    })
+  }
+  

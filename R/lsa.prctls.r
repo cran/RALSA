@@ -448,12 +448,12 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
       }
       counter <<- counter + 1
       message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+      if(nchar(counter) == 1) {
+        paste0("( ", counter, "/", number.of.countries, ")   ")
+      } else if(nchar(counter) == 2) {
+        paste0("(", counter, "/", number.of.countries, ")   ")
+      },
+      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
@@ -553,20 +553,20 @@ lsa.prctls <- function(data.file, data.object, split.vars, bckg.prctls.vars, PV.
           int.percentiles <- lapply(X = 1:length(y.var), FUN = function(i) {
             cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!y.var[[i]], group = !!group.var, color = !!group.var))
             cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!y.var[[i]] - 1.96 * !!sym(paste0(y.var[[i]], "_SE")), ymax = !!y.var[[i]] + 1.96 * !!sym(paste0(y.var[[i]], "_SE"))),
-                                                 width = 0.5,
-                                                 linewidth = 1.3,
-                                                 position = position_dodge(0.01))
+            width = 0.5,
+            linewidth = 1.3,
+            position = position_dodge(0.01))
             cnt.plot <- cnt.plot + geom_line(linewidth = 1)
             cnt.plot <- cnt.plot + geom_point(size = 3)
             cnt.plot <- cnt.plot + scale_color_manual(values = graph.custom.colors)
             cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
-                                         panel.grid.major.x = element_blank(),
-                                         panel.grid.major = element_line(colour = "black"),
-                                         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-                                         plot.background = element_rect(fill = "#e2e2e2"),
-                                         legend.background = element_rect(fill = "#e2e2e2"),
-                                         legend.key = element_blank(),
-                                         plot.title = element_text(hjust = 0.5))
+            panel.grid.major.x = element_blank(),
+            panel.grid.major = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+            plot.background = element_rect(fill = "#e2e2e2"),
+            legend.background = element_rect(fill = "#e2e2e2"),
+            legend.key = element_blank(),
+            plot.title = element_text(hjust = 0.5))
             cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
               str_wrap(k, width = 20)
             })

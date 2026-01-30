@@ -12,6 +12,7 @@ lsa.corr(
   PV.root.corr,
   corr.type,
   weight.var,
+  DF.type,
   include.missing = FALSE,
   shortcut = FALSE,
   save.output = TRUE,
@@ -45,6 +46,9 @@ either \code{"Pearson"} (default) or \code{"Spearman"}.}
 \item{weight.var}{The name of the variable containing the weights. If no name of a weight
 variable is provide, the function will automatically select the default
 weight variable for the provided data, depending on the respondent type.}
+
+\item{DF.type}{The method fot the degrees of freedom shall be computed, either
+\code{"JR"} (default) or \code{"WS"}. See details.}
 
 \item{include.missing}{Logical, shall the missing values of the splitting variables be included
 as categories to split by and all statistics produced for them? The
@@ -91,6 +95,8 @@ If \code{save.output = FALSE}, a list containing the estimates and analysis info
 \item Correlation_\verb{<}Background variable\verb{>}\verb{_}MVR - the measurement variance component for the correlation of the particular background variable PVs with a set of PVs specified in \code{PV.root.corr}. There will be one column with the measurement variance component for the correlation coefficient estimate for each background/contextual variable correlated with a set of PVs specified in \code{PV.root.corr}.
 \item t_\verb{<}root PV\verb{>} - the \emph{t}-test value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 \item t_\verb{<}Background variable\verb{>} - the \emph{t}-test value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
+\item DF_\verb{<}root PV\verb{>} - the degrees of freedom value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
+\item DF_\verb{<}Background variable\verb{>} - the degrees of freedom value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 \item p_\verb{<}root PV\verb{>} - the \emph{p}-value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 \item p_\verb{<}Background variable\verb{>} - the \emph{p}-value value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 }
@@ -124,6 +130,8 @@ Multiple continuous background variables and/or sets of plausible values can be 
 Computation of correlation coefficients involving plausible values requires providing a root of the plausible values names in \code{PV.root.corr}. All studies (except CivED, TEDS-M, SITES, TALIS and TALIS Starting Strong Survey) have a set of PVs per construct (e.g. in TIMSS five for overall mathematics, five for algebra, five for geometry, etc.). In some studies (say TIMSS and PIRLS) the names of the PVs in a set always start with character string and end with sequential number of the PV. For example, the names of the set of PVs for overall mathematics in TIMSS are BSMMAT01, BSMMAT02, BSMMAT03, BSMMAT04 and BSMMAT05. The root of the PVs for this set to be added to \code{PV.root.corr} will be "BSMMAT". The function will automatically find all the variables in this set of PVs and include them in the analysis. In other studies like OECD PISA and IEA ICCS and ICILS the sequential number of each PV is included in the middle of the name. For example, in ICCS the names of the set of PVs are PV1CIV, PV2CIV, PV3CIV, PV4CIV and PV5CIV. The root PV name has to be specified in \code{PV.root.corr} as "PV#CIV". More than one set of PVs can be added. Note, however, that providing multiple continuous variables for the \code{bckg.avg.corr} argument and multiple PV roots for the \code{PV.root.corr} argument will affect the results for the correlation coefficients for the PVs because the cases with missing on \code{bckg.corr.vars} will be removed and this will also affect the results from the PVs (i.e. listwise deletion). On the other hand, using only sets of PVs to correlate should not affect the results on any PV estimates because PVs shall not have any missing values.
 
 A sufficient number of variable names (background/contextual) or PV roots have to be provided - either two background variables, or two PV roots, or mixture of them with total length of two (i.e. one background/contextual variable and one PV root).
+
+The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{"JR"} and it is recommended to use it.
 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
@@ -168,9 +176,17 @@ output.file = "C:/temp/test.xlsx", open.output = FALSE)
 
 }
 \references{
+Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+
 LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
 
 LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
+
+Qian, J. (1998). Estimation of the effective degrees of freedom in T-type tests for complex data. \emph{Proceedings of the Section on Survey Research Methods, American Statistical Association}, 704-708.
+
+Satterthwaite, F. E. (1946). An Approximate Distribution of Estimates of Variance Components. \emph{Biometrics Bulletin}, \emph{2}(6), 110–114. https://doi.org/10.2307/3002019
+
+Welch, B. L. (1947). The Generalization of `Student’s’ Problem when Several Different Population Variances are Involved. \emph{Biometrika}, \emph{34}(1/2), 28–35. https://doi.org/10.2307/2332510
 }
 \seealso{
 \code{\link{lsa.convert.data}}

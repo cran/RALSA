@@ -526,14 +526,14 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         save(list = tolower(new.file), file = out.file, compress = FALSE)
         counter <<- counter + 1
         message("     ",
-                if(nchar(counter) == 1) {
-                  paste0("(  ", counter, "/", length(ISO), ")   ")
-                } else if(nchar(counter) == 2) {
-                  paste0("( ", counter, "/", length(ISO), ")   ")
-                } else if(nchar(counter) > 2) {
-                  paste0("(", counter, "/", length(ISO), ")   ")
-                },
-                basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
+        if(nchar(counter) == 1) {
+          paste0("(  ", counter, "/", length(ISO), ")   ")
+        } else if(nchar(counter) == 2) {
+          paste0("( ", counter, "/", length(ISO), ")   ")
+        } else if(nchar(counter) > 2) {
+          paste0("(", counter, "/", length(ISO), ")   ")
+        },
+        basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
       }
       ptm <- proc.time()
       suppressWarnings(
@@ -735,33 +735,33 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           tmp.value.labels <- gsub(pattern = "\\s*/*\\.$", replacement = "", x = tmp.value.labels)
           mixed.labels <- grep(pattern = "^[[:digit:]]+\\s([[:alpha:]]+/*)+\\s[[:digit:]]+\\s[[:alpha:]]", x = tmp.value.labels)
           statements.to.escape <- c("1 pwk & 1 pmn",
-                                    "[[:digit:]]+\\s*(hours|minutes)* and [[:digit:]]+\\s*(hours|minutes)",
-                                    "times a year",
-                                    "6342 QR 50000 or more - less than QR 750000",
-                                    "6343 QR 75000 or more - less than QR 100000",
-                                    "6344 QR 100000 or more - less than QR 125000",
-                                    "6345 QR 125000 or more - less than QR 150000",
-                                    "6346 QR 150000 or more",
-                                    "2082 DKK 1 or more - less than DKK 500",
-                                    "2083 DKK 501 or more - less than DKK 1.000",
-                                    "6202 from 0 euros to 75 euros",
-                                    "6203 from 75 euros to 3 999 euros",
-                                    "6342 QR 500 or more - less than QR1000",
-                                    "6346 QR 16000 or more",
-                                    "QR 1000 or more - less than QR 6000",
-                                    "QR 6000 or more - less than QR 11000",
-                                    "QR 11000 or more - less than QR 16000",
-                                    "QR 16000 or more",
-                                    "YTL 600 or more - less than YTL 1200",
-                                    "YTL 1200 or more - less than YTL 5000",
-                                    "YTL 5000 or more - less than YTL 15000",
-                                    "YTL 15000 or more",
-                                    "QR 50000 or more - less than QR 75000",
-                                    "YTL 6000 or more - less than YTL 12000",
-                                    "YTL 12000 or more - less than YTL 24000",
-                                    "YTL 24000 or more - less than YTL 48000",
-                                    "YTL 48000 or more - less than YTL 72000",
-                                    "YTL 72000 or more")
+"[[:digit:]]+\\s*(hours|minutes)* and [[:digit:]]+\\s*(hours|minutes)",
+"times a year",
+"6342 QR 50000 or more - less than QR 750000",
+"6343 QR 75000 or more - less than QR 100000",
+"6344 QR 100000 or more - less than QR 125000",
+"6345 QR 125000 or more - less than QR 150000",
+"6346 QR 150000 or more",
+"2082 DKK 1 or more - less than DKK 500",
+"2083 DKK 501 or more - less than DKK 1.000",
+"6202 from 0 euros to 75 euros",
+"6203 from 75 euros to 3 999 euros",
+"6342 QR 500 or more - less than QR1000",
+"6346 QR 16000 or more",
+"QR 1000 or more - less than QR 6000",
+"QR 6000 or more - less than QR 11000",
+"QR 11000 or more - less than QR 16000",
+"QR 16000 or more",
+"YTL 600 or more - less than YTL 1200",
+"YTL 1200 or more - less than YTL 5000",
+"YTL 5000 or more - less than YTL 15000",
+"YTL 15000 or more",
+"QR 50000 or more - less than QR 75000",
+"YTL 6000 or more - less than YTL 12000",
+"YTL 12000 or more - less than YTL 24000",
+"YTL 24000 or more - less than YTL 48000",
+"YTL 48000 or more - less than YTL 72000",
+"YTL 72000 or more")
           unwanted.pattern <- grep(pattern = paste(statements.to.escape, collapse = "|"), x = tmp.value.labels)
           mixed.labels <- setdiff(mixed.labels, unwanted.pattern)
           if(length(mixed.labels) != 0) {
@@ -860,36 +860,36 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             paste(i, collapse = " ")
           })
           blocks.with.just.miss <- c("^7 N/A 8 Invalid 9 Missing r Not reached$",
-                                     "^7 N/A 8 Invalid r Not reached$",
-                                     "^7 N/A 8 M/R 9 Mis",
-                                     "^7 N/A 9 Missing r Not reached$",
-                                     "^7 N/A r Not reached$",
-                                     "^7+ N/A 8+ Invalid 9+ Missing$",
-                                     "^7+ N/A 8+ Invalid$",
-                                     "^8 Invalid r Not reached$",
-                                     "^9 Missing r Not reached$",
-                                     "^9*7 N/A 9*8 Invalid 9+ Miss.*$",
-                                     "^9*7 N/A 9*8 Invalid$",
-                                     "^9*7 N/A 9*8 M/R 9+ Missing$",
-                                     "^9*7 N/A 9+ Mis$",
-                                     "^9*7 N/A 9+ Missing 9*8 Invalid$",
-                                     "^9*7 N/A 9+ Missing$",
-                                     "^9*7 N/A$",
-                                     "^9*8 Invalid 9*7 N/A 9+ Missing$",
-                                     "^9*8 Invalid 9*7 N/A$",
-                                     "^9*8 Invalid 9+ Missing$",
-                                     "^9*8 Invalid$",
-                                     "^9+ Missing 9*7 N/A$",
-                                     "^9+ Missing 9*8 Invalid$",
-                                     "^9+ Missing$",
-                                     "^9+7 N/A 9+ Miss$",
-                                     "^96 Ungraded 97 N/A 98 Invalid 99 Miss$",
-                                     "^96 Ungraded 98 Invalid 99 Miss$",
-                                     "^96 Ungraded 98 Invalid 99 Missing$",
-                                     "^96 Ungraded 99 Missing$",
-                                     "^996 N/A - <ISCED level> not available in this school 9997 N/A 9998 Invalid 9999 Miss$",
-                                     "^996 N/A 9997 N/A 9998 Invalid 9999 Missing$",
-                                     "^997 Missing$")
+"^7 N/A 8 Invalid r Not reached$",
+"^7 N/A 8 M/R 9 Mis",
+"^7 N/A 9 Missing r Not reached$",
+"^7 N/A r Not reached$",
+"^7+ N/A 8+ Invalid 9+ Missing$",
+"^7+ N/A 8+ Invalid$",
+"^8 Invalid r Not reached$",
+"^9 Missing r Not reached$",
+"^9*7 N/A 9*8 Invalid 9+ Miss.*$",
+"^9*7 N/A 9*8 Invalid$",
+"^9*7 N/A 9*8 M/R 9+ Missing$",
+"^9*7 N/A 9+ Mis$",
+"^9*7 N/A 9+ Missing 9*8 Invalid$",
+"^9*7 N/A 9+ Missing$",
+"^9*7 N/A$",
+"^9*8 Invalid 9*7 N/A 9+ Missing$",
+"^9*8 Invalid 9*7 N/A$",
+"^9*8 Invalid 9+ Missing$",
+"^9*8 Invalid$",
+"^9+ Missing 9*7 N/A$",
+"^9+ Missing 9*8 Invalid$",
+"^9+ Missing$",
+"^9+7 N/A 9+ Miss$",
+"^96 Ungraded 97 N/A 98 Invalid 99 Miss$",
+"^96 Ungraded 98 Invalid 99 Miss$",
+"^96 Ungraded 98 Invalid 99 Missing$",
+"^96 Ungraded 99 Missing$",
+"^996 N/A - <ISCED level> not available in this school 9997 N/A 9998 Invalid 9999 Miss$",
+"^996 N/A 9997 N/A 9998 Invalid 9999 Missing$",
+"^997 Missing$")
           indx.numeric <- unique(grep(paste(blocks.with.just.miss, collapse = "|"), concat.value.labels.blocks))
           if(length(indx.numeric) != 0) {
             tmp[ , unlist(unique(value.labels.full.var.list[indx.numeric]))] <- lapply(X = unlist(unique(value.labels.full.var.list[indx.numeric])), FUN = function(x) {
@@ -954,8 +954,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           value.labels.statements <- paste(value.lab.statement.left, "<-", value.lab.statement.right)
           if(txt.file.name == "INT_stui_2003_v2") {
             val.lab.statements.to.remove <- c("\\'ST17Q14\\'], levels = c\\(\\'1\\', \\'20301\\', \\'27601\\',",
-                                              "\\'ST17Q15\\'], levels = c\\(\\'1', \\'20301\\', \\'2\\', \\'30001\\',",
-                                              "\\'ST17Q16\\'], levels = c\\(\\'1\\', \\'2\\', \\'30001\\', \\'30002\\',")
+"\\'ST17Q15\\'], levels = c\\(\\'1', \\'20301\\', \\'2\\', \\'30001\\',",
+"\\'ST17Q16\\'], levels = c\\(\\'1\\', \\'2\\', \\'30001\\', \\'30002\\',")
             indx.statements.to.remove <- grep(pattern = paste(val.lab.statements.to.remove, collapse = "|"), x = value.labels.statements)
             value.labels.statements <- value.labels.statements[-indx.statements.to.remove]
           }
@@ -1010,22 +1010,22 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           }
           vars.with.missings <- names(filter.factor.vars.with.missing(tmp))
           missing.patterns <- c("N/A",
-                                "Invalid",
-                                "Missing",
-                                "Miss",
-                                "Mis",
-                                "Not reached",
-                                "N/A, Yes: Not administered",
-                                "N/A, N/A: Not administered",
-                                "Not administered",
-                                "Unreached",
-                                "Ungraded",
-                                "M/R",
-                                "99999970",
-                                "99999990",
-                                "9999997",
-                                "9999998",
-                                "9999999")
+"Invalid",
+"Missing",
+"Miss",
+"Mis",
+"Not reached",
+"N/A, Yes: Not administered",
+"N/A, N/A: Not administered",
+"Not administered",
+"Unreached",
+"Ungraded",
+"M/R",
+"99999970",
+"99999990",
+"9999997",
+"9999998",
+"9999999")
           fac.missing.levels.extract <- function(data, patterns) {
             missing.values.indx <- lapply(X = data, FUN = function(i) {
               grep(pattern = paste(patterns, collapse = "|"), x = levels(i))
@@ -1105,7 +1105,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           })
           split.var.names <- str_split(string = miss.var.names, pattern = " ")
           indx.TO.statements <- which(lapply(X = split.var.names, FUN = function(i) {
-            "TO" %in% i
+"TO" %in% i
           }) == TRUE)
           split.var.names[indx.TO.statements] <- lapply(X = split.var.names[indx.TO.statements], FUN = paste, collapse = " ")
           missing.values.statements <- unlist(mapply(FUN = paste, split.var.names, as.list(miss.val.lists)))

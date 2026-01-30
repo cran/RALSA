@@ -18,6 +18,7 @@ lsa.lin.reg(
   interactions,
   standardize = FALSE,
   weight.var,
+  DF.type,
   include.missing = FALSE,
   shortcut = FALSE,
   save.output = TRUE,
@@ -77,6 +78,9 @@ weight variable is provide, the function will automatically select
 the default weight variable for the provided data, depending on the
 respondent type.}
 
+\item{DF.type}{The method fot the degrees of freedom shall be computed, either
+\code{"JR"} (default) or \code{"WS"}. See details.}
+
 \item{include.missing}{Logical, shall the missing values of the splitting variables be
 included as categories to split by and all statistics produced for
 them? The default (\code{FALSE}) takes all cases on the splitting
@@ -119,6 +123,7 @@ If \code{save.output = FALSE}, a list containing the estimates and analysis info
 \item Coefficients_SVR - the sampling variance component for the regression coefficients if root PVs are specified either as dependent or independent variables.
 \item Coefficients_\verb{<}root PV\verb{>}\verb{_}MVR - the measurement variance component for the regression coefficients if root PVs are specified either as dependent or independent variables.
 \item t_value - the \emph{t}-test value for the regression coefficients.
+\item DF - the value for degrees of freedom for the regression coefficients.
 \item p_value - the \emph{p}-value for the regression coefficients.
 }
 
@@ -188,6 +193,8 @@ The function can also compute two-way interaction effects between independent va
 \item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
 }
 
+The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
+
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
 The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TIMSS Numeracy, eTIMSS PSI, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
@@ -247,13 +254,21 @@ interactions = list(c("ASBG01", "ASBGSSB"), c("ASBGHRL", "ASBGSSB")))
 \references{
 Bate, S. M. (2004). \emph{Generalized Linear Models for Large Dependent Data Sets} [Doctoral Thesis]. University of London.
 
+Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+
 LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
 
 LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (p. 3.1-3.34). Lynch School of Education, Boston College.
 
 Rao, J. N. K., & Scott, A. J. (1984). On Chi-Squared Tests for Multiway Contingency Tables with Cell Proportions Estimated from Survey Data. \emph{The Annals of Statistics}, 12(1). https://doi.org/10.1214/aos/1176346391
 
+Qian, J. (1998). Estimation of the effective degrees of freedom in T-type tests for complex data. \emph{Proceedings of the Section on Survey Research Methods, American Statistical Association}, 704-708.
+
+Satterthwaite, F. E. (1946). An Approximate Distribution of Estimates of Variance Components. \emph{Biometrics Bulletin}, \emph{2}(6), 110–114. https://doi.org/10.2307/3002019
+
 UCLA: Statistical Consulting Group. (2020). \emph{R LIBRARY CONTRAST CODING SYSTEMS FOR CATEGORICAL VARIABLES}. IDRE Stats - Statistical Consulting Web Resources. https://stats.idre.ucla.edu/r/library/r-library-contrast-coding-systems-for-categorical-variables/
+
+Welch, B. L. (1947). The Generalization of `Student’s’ Problem when Several Different Population Variances are Involved. \emph{Biometrika}, \emph{34}(1/2), 28–35. https://doi.org/10.2307/2332510
 }
 \seealso{
 \code{\link{lsa.convert.data}}

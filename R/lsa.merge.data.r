@@ -476,231 +476,231 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         assign(x = "all.data.imported", value = data.obj, pos = parent.frame())
       }
       existing.merge.types <- names(which(sapply(X = c("student.level.data",
-                                                       "school.level.data",
-                                                       "teacher.level.data",
-                                                       "inst.program.level.data",
-                                                       "educator.level.data",
-                                                       "future.prim.teacher.level.data",
-                                                       "future.sec.teacher.level.data",
-                                                       "leader.level.data",
-                                                       "staff.level.data"), FUN = function(i) {
-                                                         exists(i)
-                                                       }) == TRUE))
-      if(identical("student.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- student.level.data
-        student.level.data <- NULL
-      } else if(identical("school.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- school.level.data
-        school.level.data <- NULL
-      } else if(identical(c("student.level.data", "school.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(school.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
-        student.level.data[ , (all.common.columns) := NULL]
-        school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
-        if(identical(names(file.types.01), c("ash", "acg")) || identical(names(file.types.01), c("acg", "ash"))) {
-          NULL
-        } else {
-          suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
-        }
-        setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
-        setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
-        if(study.name %in% c("CivED", "ICCS", "ICILS", "REDS") || study.name == "TIMSS" && study.cycle == "1999" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
-          final.merged.data <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
-        } else {
-          final.merged.data <- merge(x = school.level.data, y = student.level.data, all.x = TRUE)
-        }
-        student.level.data <- NULL
-        school.level.data <- NULL
-      } else if(identical("teacher.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- teacher.level.data
-        teacher.level.data <- NULL
-      } else if(identical(c("school.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(school.level.data), y = colnames(teacher.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
-        if(study.name == "TALIS") {
-          all.common.columns <- all.common.columns[!all.common.columns == "SCHWGT"]
-        }
-        teacher.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
-        setkeyv(x = teacher.level.data, cols = c(key.var, add.key.3))
-        school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
-        if(!study.name %in% c("CivED", "SITES")) {
-          suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
-        }
-        if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS") || study.name == "TALIS" & study.cycle == "2018" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
-          final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.y = TRUE)
-        } else {
-          final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.x = TRUE)
-        }
-        school.level.data <- NULL
-        teacher.level.data <- NULL
-      } else if(identical(c("student.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(teacher.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.1)]
-        student.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = student.level.data, cols = c(key.var, add.key.1))
-        setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
-        last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
-        if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
-          suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
-        }
-        final.merged.data <- merge(x = student.level.data, y = teacher.level.data, all.y = TRUE)
-        student.level.data <- NULL
-        teacher.level.data <- NULL
-      } else if(identical(c("student.level.data", "school.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(school.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
-        school.level.data[ , (all.common.columns) := NULL]
-        school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
-        if(study.name != "CivED") {
-          suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
-        }
-        last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
-        if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
-          suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
-        }
-        setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
-        setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
-        if(study.name == "TIMSS" && study.cycle == "1999") {
-          tmp <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
-        } else {
-          tmp <- merge(x = school.level.data, y = student.level.data, all.x = TRUE)
-        }
-        student.level.data <- NULL
-        school.level.data <- NULL
-        all.common.columns <- intersect(x = colnames(tmp), y = colnames(teacher.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.1)]
-        teacher.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = tmp, cols = c(key.var, add.key.1))
-        setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
-        if(study.name == "CivED" || study.name == "TIMSS" & study.cycle %in% c("2007", "2011", "2019") & "bts" %in% names(file.types) || study.name == "TIMSS" & study.cycle %in% "2019" & "btm" %in% names(file.types) || study.name == "TIMSS Advanced" & study.cycle == "2008" & all(c("pcg", "ptg") %in% names(file.types) == TRUE)) {
-          final.merged.data <- merge(x = tmp, y = teacher.level.data, all.y = TRUE)
-        } else {
-          final.merged.data <- merge(x = tmp, y = teacher.level.data, all.x = TRUE)
-        }
-        tmp <- NULL
-        teacher.level.data <- NULL
-      } else if(identical("inst.program.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- inst.program.level.data
-        inst.program.level.data <- NULL
-      } else if(identical("educator.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- educator.level.data
-        educator.level.data <- NULL
-      } else if(identical("future.prim.teacher.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- future.prim.teacher.level.data
-        future.prim.teacher.level.data <- NULL
-      } else if(identical("future.sec.teacher.level.data", existing.merge.types) == TRUE) {
-        final.merged.data <- future.sec.teacher.level.data
-        future.sec.teacher.level.data <- NULL
-      } else if(identical(c("inst.program.level.data", "future.prim.teacher.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(inst.program.level.data), y = colnames(future.prim.teacher.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.4)]
-        inst.program.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = future.prim.teacher.level.data, cols = c(key.var, add.key.4))
-        setkeyv(x = inst.program.level.data, cols = c(key.var, add.key.4))
-        inst.program.file.name <- intersect(all.file.types[["inst.program.file.type"]], imported.files)
-        suppressWarnings(inst.program.level.data[ , (studies.all.design.variables[["sampling.vars"]][[inst.program.file.name]]) := NULL])
-        final.merged.data <- merge(x = inst.program.level.data, y = future.prim.teacher.level.data, all.y = TRUE)
-        inst.program.level.data <- NULL
-        future.prim.teacher.file.name <- NULL
-      } else if(identical(c("inst.program.level.data", "future.sec.teacher.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(inst.program.level.data), y = colnames(future.sec.teacher.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.4)]
-        inst.program.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = future.sec.teacher.level.data, cols = c(key.var, add.key.4))
-        setkeyv(x = inst.program.level.data, cols = c(key.var, add.key.4))
-        inst.program.file.name <- intersect(all.file.types[["inst.program.file.type"]], imported.files)
-        suppressWarnings(inst.program.level.data[ , (studies.all.design.variables[["sampling.vars"]][[inst.program.file.name]]) := NULL])
-        final.merged.data <- merge(x = inst.program.level.data, y = future.sec.teacher.level.data, all.y = TRUE)
-        inst.program.level.data <- NULL
-        future.sec.teacher.file.name <- NULL
-      } else if(identical(c("staff.level.data"), existing.merge.types) == TRUE) {
-        final.merged.data <- staff.level.data
-        staff.level.data <- NULL
-      } else if(identical(c("leader.level.data"), existing.merge.types) == TRUE) {
-        final.merged.data <- leader.level.data
-        leader.level.data <- NULL
-      } else if(identical(c("leader.level.data", "staff.level.data"), existing.merge.types) == TRUE) {
-        all.common.columns <- intersect(x = colnames(leader.level.data), y = colnames(staff.level.data))
-        all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.5)]
-        leader.level.data[ , (all.common.columns) := NULL]
-        setkeyv(x = leader.level.data, cols = c(key.var, add.key.5))
-        setkeyv(x = staff.level.data, cols = c(key.var, add.key.5))
-        leader.file.name <- intersect(all.file.types[["leader.file.types"]], imported.files)
-        suppressWarnings(leader.level.data[ , (studies.all.design.variables[["sampling.vars"]][[leader.file.name]]) := NULL])
-        final.merged.data <- merge(x = leader.level.data, y = staff.level.data, all.y = TRUE)
-        leader.level.data <- NULL
-        staff.file.name <- NULL
+"school.level.data",
+"teacher.level.data",
+"inst.program.level.data",
+"educator.level.data",
+"future.prim.teacher.level.data",
+"future.sec.teacher.level.data",
+"leader.level.data",
+"staff.level.data"), FUN = function(i) {
+      exists(i)
+    }) == TRUE))
+    if(identical("student.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- student.level.data
+      student.level.data <- NULL
+    } else if(identical("school.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- school.level.data
+      school.level.data <- NULL
+    } else if(identical(c("student.level.data", "school.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(school.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
+      student.level.data[ , (all.common.columns) := NULL]
+      school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
+      if(identical(names(file.types.01), c("ash", "acg")) || identical(names(file.types.01), c("acg", "ash"))) {
+        NULL
+      } else {
+        suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
       }
-      final.merged.data[ , (key.var) := droplevels(get(key.var))]
-      setkeyv(x = final.merged.data, cols = key.var)
-      return(final.merged.data)
-    }
-    ptm.merge <- proc.time()
-    final.merged.data <- merge.respondents(data.obj = all.data.imported, imported.files = names(all.data.imported), design.obj = studies.all.design.variables, key.var = key.attribute, add.key.1 = "IDSTUD", add.key.2 = c("IDTEACH", "IDLINK"), add.key.3 = "IDSCHOOL", add.key.4 = "IDTPU", add.key.5 = "IDCENTRE")
-    message('\n   Files from all respondents merged in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.merge}[[3]], "%H:%M:%OS3"), "\n")
-    if(exists("all.miss.statements") == TRUE) {
-      all.miss.statements <- unique(unname(unlist(sapply(X = colnames(final.merged.data), FUN = function(i) {
-        grep(pattern = paste0("\\<", i, "\\>"), x = all.miss.statements, value = TRUE)
-      }))))
-      eval(parse(text = all.miss.statements))
-      duplicated.num.miss.codes.names <- names(Filter(isTRUE, Filter(length, lapply(X = final.merged.data, FUN = function(i) {
-        any(duplicated(names(attr(i, "missings"))) == TRUE)
-      }))))
-      if(length(duplicated.num.miss.codes.names) > 0) {
-        duplicated.num.miss.codes <- lapply(final.merged.data[ , mget(duplicated.num.miss.codes.names)], function(i) {
-          attr(i, "missings")
-        })
-        fixed.miss.duplicates <- lapply(X = names(duplicated.num.miss.codes), FUN = function(i) {
-          duplicated.num.miss.codes[[i]][duplicated.num.miss.codes[[i]] %in% final.merged.data[ , get(i)]]
-        })
-        names(fixed.miss.duplicates) <- duplicated.num.miss.codes.names
-        miss.attr.statements <- sapply(X = names(fixed.miss.duplicates), FUN = function(i) {
-          if(length(i) == 1) {
-            right <- paste0("']], name = 'missings',", paste0(" value = ", fixed.miss.duplicates[i], ")"))
-          } else if(length(i) > 1) {
-            right <- paste0("']], name = 'missings', value = c('", paste(paste0(names(i), "' = ", fixed.miss.duplicates[i]), collapse = ", '"), "))")
-          }
-          return(paste0("setattr(x = final.merged.data[['", i, right))
-        })
-        eval(parse(text = miss.attr.statements))
+      setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
+      setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
+      if(study.name %in% c("CivED", "ICCS", "ICILS", "REDS") || study.name == "TIMSS" && study.cycle == "1999" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
+        final.merged.data <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
+      } else {
+        final.merged.data <- merge(x = school.level.data, y = student.level.data, all.x = TRUE)
       }
+      student.level.data <- NULL
+      school.level.data <- NULL
+    } else if(identical("teacher.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- teacher.level.data
+      teacher.level.data <- NULL
+    } else if(identical(c("school.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(school.level.data), y = colnames(teacher.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
+      if(study.name == "TALIS") {
+        all.common.columns <- all.common.columns[!all.common.columns == "SCHWGT"]
+      }
+      teacher.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
+      setkeyv(x = teacher.level.data, cols = c(key.var, add.key.3))
+      school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
+      if(!study.name %in% c("CivED", "SITES")) {
+        suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
+      }
+      if(study.name %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS") || study.name == "TALIS" & study.cycle == "2018" || study.name == "TIMSS Advanced" && study.cycle == "2008") {
+        final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.y = TRUE)
+      } else {
+        final.merged.data <- merge(x = school.level.data, y = teacher.level.data, all.x = TRUE)
+      }
+      school.level.data <- NULL
+      teacher.level.data <- NULL
+    } else if(identical(c("student.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(teacher.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.1)]
+      student.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = student.level.data, cols = c(key.var, add.key.1))
+      setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
+      last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
+      student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
+      if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
+        suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
+      }
+      final.merged.data <- merge(x = student.level.data, y = teacher.level.data, all.y = TRUE)
+      student.level.data <- NULL
+      teacher.level.data <- NULL
+    } else if(identical(c("student.level.data", "school.level.data", "teacher.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(student.level.data), y = colnames(school.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.3)]
+      school.level.data[ , (all.common.columns) := NULL]
+      school.file.name <- intersect(all.file.types[["school.file.types"]], imported.files)
+      if(study.name != "CivED") {
+        suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
+      }
+      last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
+      student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
+      if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
+        suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
+      }
+      setkeyv(x = student.level.data, cols = c(key.var, add.key.3))
+      setkeyv(x = school.level.data, cols = c(key.var, add.key.3))
+      if(study.name == "TIMSS" && study.cycle == "1999") {
+        tmp <- merge(x = school.level.data, y = student.level.data, all.y = TRUE)
+      } else {
+        tmp <- merge(x = school.level.data, y = student.level.data, all.x = TRUE)
+      }
+      student.level.data <- NULL
+      school.level.data <- NULL
+      all.common.columns <- intersect(x = colnames(tmp), y = colnames(teacher.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.1)]
+      teacher.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = tmp, cols = c(key.var, add.key.1))
+      setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
+      if(study.name == "CivED" || study.name == "TIMSS" & study.cycle %in% c("2007", "2011", "2019") & "bts" %in% names(file.types) || study.name == "TIMSS" & study.cycle %in% "2019" & "btm" %in% names(file.types) || study.name == "TIMSS Advanced" & study.cycle == "2008" & all(c("pcg", "ptg") %in% names(file.types) == TRUE)) {
+        final.merged.data <- merge(x = tmp, y = teacher.level.data, all.y = TRUE)
+      } else {
+        final.merged.data <- merge(x = tmp, y = teacher.level.data, all.x = TRUE)
+      }
+      tmp <- NULL
+      teacher.level.data <- NULL
+    } else if(identical("inst.program.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- inst.program.level.data
+      inst.program.level.data <- NULL
+    } else if(identical("educator.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- educator.level.data
+      educator.level.data <- NULL
+    } else if(identical("future.prim.teacher.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- future.prim.teacher.level.data
+      future.prim.teacher.level.data <- NULL
+    } else if(identical("future.sec.teacher.level.data", existing.merge.types) == TRUE) {
+      final.merged.data <- future.sec.teacher.level.data
+      future.sec.teacher.level.data <- NULL
+    } else if(identical(c("inst.program.level.data", "future.prim.teacher.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(inst.program.level.data), y = colnames(future.prim.teacher.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.4)]
+      inst.program.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = future.prim.teacher.level.data, cols = c(key.var, add.key.4))
+      setkeyv(x = inst.program.level.data, cols = c(key.var, add.key.4))
+      inst.program.file.name <- intersect(all.file.types[["inst.program.file.type"]], imported.files)
+      suppressWarnings(inst.program.level.data[ , (studies.all.design.variables[["sampling.vars"]][[inst.program.file.name]]) := NULL])
+      final.merged.data <- merge(x = inst.program.level.data, y = future.prim.teacher.level.data, all.y = TRUE)
+      inst.program.level.data <- NULL
+      future.prim.teacher.file.name <- NULL
+    } else if(identical(c("inst.program.level.data", "future.sec.teacher.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(inst.program.level.data), y = colnames(future.sec.teacher.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.4)]
+      inst.program.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = future.sec.teacher.level.data, cols = c(key.var, add.key.4))
+      setkeyv(x = inst.program.level.data, cols = c(key.var, add.key.4))
+      inst.program.file.name <- intersect(all.file.types[["inst.program.file.type"]], imported.files)
+      suppressWarnings(inst.program.level.data[ , (studies.all.design.variables[["sampling.vars"]][[inst.program.file.name]]) := NULL])
+      final.merged.data <- merge(x = inst.program.level.data, y = future.sec.teacher.level.data, all.y = TRUE)
+      inst.program.level.data <- NULL
+      future.sec.teacher.file.name <- NULL
+    } else if(identical(c("staff.level.data"), existing.merge.types) == TRUE) {
+      final.merged.data <- staff.level.data
+      staff.level.data <- NULL
+    } else if(identical(c("leader.level.data"), existing.merge.types) == TRUE) {
+      final.merged.data <- leader.level.data
+      leader.level.data <- NULL
+    } else if(identical(c("leader.level.data", "staff.level.data"), existing.merge.types) == TRUE) {
+      all.common.columns <- intersect(x = colnames(leader.level.data), y = colnames(staff.level.data))
+      all.common.columns <- all.common.columns[!all.common.columns %in% c(key.var, add.key.5)]
+      leader.level.data[ , (all.common.columns) := NULL]
+      setkeyv(x = leader.level.data, cols = c(key.var, add.key.5))
+      setkeyv(x = staff.level.data, cols = c(key.var, add.key.5))
+      leader.file.name <- intersect(all.file.types[["leader.file.types"]], imported.files)
+      suppressWarnings(leader.level.data[ , (studies.all.design.variables[["sampling.vars"]][[leader.file.name]]) := NULL])
+      final.merged.data <- merge(x = leader.level.data, y = staff.level.data, all.y = TRUE)
+      leader.level.data <- NULL
+      staff.file.name <- NULL
     }
-    existing.variable.labels.columns <- intersect(x = colnames(final.merged.data), y = variable.labels[ , V1])
-    variable.labels <- variable.labels[V1 %in% existing.variable.labels.columns]
-    variable.labels[ , V2 := gsub(pattern = "'", replacement = "\\\\'", x = V2)]
-    variable.labels.statements <- paste0("setattr(x = final.merged.data[['", variable.labels[ , V1], "']], name = 'variable.label', value = '", variable.labels[ , V2], "')")
-    sapply(X = variable.labels.statements, FUN = function(i) {
-      eval(parse(text = i))
-    })
-    ptm.save <- proc.time()
-    setattr(x = final.merged.data, name = "class", value = c("lsa.data", attr(x = final.merged.data, which = "class")))
-    setattr(x = final.merged.data, name = "study", value = study.name)
-    setattr(x = final.merged.data, name = "cycle", value = study.cycle)
-    setattr(x = final.merged.data, name = "file.type", value = which.combination.exists[length(which.combination.exists)])
-    if(missing(out.file)) {
-      out.file <- file.path(getwd(), "merged_data.RData")
-    }
-    if(grepl(pattern = ".RData$", x = out.file) == FALSE) {
-      out.file <- paste0(out.file, ".RData")
-    }
-    assign(x = gsub(pattern = "\\.RData", replacement = "", x = basename(out.file)), value = final.merged.data)
-    final.merged.data <- NULL
-    save(list = gsub(pattern = "\\.RData", replacement = "", x = basename(out.file)), file = out.file, compress = FALSE)
-    message('   The merged data file "', basename(out.file), '" is saved under "', dirname(out.file), '" in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.save}[[3]], "%H:%M:%OS3"))
-    message('\n All operations finished in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"), "\n")
-  }, interrupt = function(f) {
-    message("\nInterrupted by the user. The files for the specified countries and respondents are not merged and merged file is not produced.\n")
-  })
-  if(length(warnings.collector) > 0) {
-    if(!is.null(warnings.collector[["nonexisting.ISOs"]])) {
-      warning(paste0('Non-existing country codes passed to "ISO" (ignored, check your input): "', paste(warnings.collector[["nonexisting.ISOs"]], collapse = '", "'), '".'), call. = FALSE)
-      message("\n\n")
-    }
-    if(!is.null(warnings.collector[["missing.files"]])) {
-      warning("File types missing for ISO codes:\n", paste0('   "', paste(warnings.collector[["missing.files"]], collapse = '\n   "')), call. = FALSE)
+    final.merged.data[ , (key.var) := droplevels(get(key.var))]
+    setkeyv(x = final.merged.data, cols = key.var)
+    return(final.merged.data)
+  }
+  ptm.merge <- proc.time()
+  final.merged.data <- merge.respondents(data.obj = all.data.imported, imported.files = names(all.data.imported), design.obj = studies.all.design.variables, key.var = key.attribute, add.key.1 = "IDSTUD", add.key.2 = c("IDTEACH", "IDLINK"), add.key.3 = "IDSCHOOL", add.key.4 = "IDTPU", add.key.5 = "IDCENTRE")
+  message('\n   Files from all respondents merged in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.merge}[[3]], "%H:%M:%OS3"), "\n")
+  if(exists("all.miss.statements") == TRUE) {
+    all.miss.statements <- unique(unname(unlist(sapply(X = colnames(final.merged.data), FUN = function(i) {
+      grep(pattern = paste0("\\<", i, "\\>"), x = all.miss.statements, value = TRUE)
+    }))))
+    eval(parse(text = all.miss.statements))
+    duplicated.num.miss.codes.names <- names(Filter(isTRUE, Filter(length, lapply(X = final.merged.data, FUN = function(i) {
+      any(duplicated(names(attr(i, "missings"))) == TRUE)
+    }))))
+    if(length(duplicated.num.miss.codes.names) > 0) {
+      duplicated.num.miss.codes <- lapply(final.merged.data[ , mget(duplicated.num.miss.codes.names)], function(i) {
+        attr(i, "missings")
+      })
+      fixed.miss.duplicates <- lapply(X = names(duplicated.num.miss.codes), FUN = function(i) {
+        duplicated.num.miss.codes[[i]][duplicated.num.miss.codes[[i]] %in% final.merged.data[ , get(i)]]
+      })
+      names(fixed.miss.duplicates) <- duplicated.num.miss.codes.names
+      miss.attr.statements <- sapply(X = names(fixed.miss.duplicates), FUN = function(i) {
+        if(length(i) == 1) {
+          right <- paste0("']], name = 'missings',", paste0(" value = ", fixed.miss.duplicates[i], ")"))
+        } else if(length(i) > 1) {
+          right <- paste0("']], name = 'missings', value = c('", paste(paste0(names(i), "' = ", fixed.miss.duplicates[i]), collapse = ", '"), "))")
+        }
+        return(paste0("setattr(x = final.merged.data[['", i, right))
+      })
+      eval(parse(text = miss.attr.statements))
     }
   }
+  existing.variable.labels.columns <- intersect(x = colnames(final.merged.data), y = variable.labels[ , V1])
+  variable.labels <- variable.labels[V1 %in% existing.variable.labels.columns]
+  variable.labels[ , V2 := gsub(pattern = "'", replacement = "\\\\'", x = V2)]
+  variable.labels.statements <- paste0("setattr(x = final.merged.data[['", variable.labels[ , V1], "']], name = 'variable.label', value = '", variable.labels[ , V2], "')")
+  sapply(X = variable.labels.statements, FUN = function(i) {
+    eval(parse(text = i))
+  })
+  ptm.save <- proc.time()
+  setattr(x = final.merged.data, name = "class", value = c("lsa.data", attr(x = final.merged.data, which = "class")))
+  setattr(x = final.merged.data, name = "study", value = study.name)
+  setattr(x = final.merged.data, name = "cycle", value = study.cycle)
+  setattr(x = final.merged.data, name = "file.type", value = which.combination.exists[length(which.combination.exists)])
+  if(missing(out.file)) {
+    out.file <- file.path(getwd(), "merged_data.RData")
+  }
+  if(grepl(pattern = ".RData$", x = out.file) == FALSE) {
+    out.file <- paste0(out.file, ".RData")
+  }
+  assign(x = gsub(pattern = "\\.RData", replacement = "", x = basename(out.file)), value = final.merged.data)
+  final.merged.data <- NULL
+  save(list = gsub(pattern = "\\.RData", replacement = "", x = basename(out.file)), file = out.file, compress = FALSE)
+  message('   The merged data file "', basename(out.file), '" is saved under "', dirname(out.file), '" in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.save}[[3]], "%H:%M:%OS3"))
+  message('\n All operations finished in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"), "\n")
+}, interrupt = function(f) {
+  message("\nInterrupted by the user. The files for the specified countries and respondents are not merged and merged file is not produced.\n")
+})
+if(length(warnings.collector) > 0) {
+  if(!is.null(warnings.collector[["nonexisting.ISOs"]])) {
+    warning(paste0('Non-existing country codes passed to "ISO" (ignored, check your input): "', paste(warnings.collector[["nonexisting.ISOs"]], collapse = '", "'), '".'), call. = FALSE)
+    message("\n\n")
+  }
+  if(!is.null(warnings.collector[["missing.files"]])) {
+    warning("File types missing for ISO codes:\n", paste0('   "', paste(warnings.collector[["missing.files"]], collapse = '\n   "')), call. = FALSE)
+  }
+}
 }

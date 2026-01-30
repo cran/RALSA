@@ -285,7 +285,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       if(length(jk.zone.col) > 0) {
         all(is.na(i[ , get(jk.zone.col)]))
       } else {
-        ""
+""
       }
     })
     if(length(names(Filter(isTRUE, missing.JKZONES))) > 0) {
@@ -689,12 +689,12 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       }
       counter <<- counter + 1
       message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+      if(nchar(counter) == 1) {
+        paste0("( ", counter, "/", number.of.countries, ")   ")
+      } else if(nchar(counter) == 2) {
+        paste0("(", counter, "/", number.of.countries, ")   ")
+      },
+      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
@@ -772,17 +772,17 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           int.means <- lapply(X = y.var, FUN = function(i) {
             cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i))
             cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
-                                                 width = 0.3,
-                                                 linewidth = 1.3,
-                                                 position = position_dodge(.9))
+            width = 0.3,
+            linewidth = 1.3,
+            position = position_dodge(.9))
             cnt.plot <- cnt.plot + geom_point(size = 3)
             cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
-                                         panel.grid.major.x = element_blank(),
-                                         panel.grid.major = element_line(colour = "black"),
-                                         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-                                         plot.background = element_rect(fill = "#e2e2e2"),
-                                         legend.background = element_rect(fill = "#e2e2e2"),
-                                         plot.title = element_text(hjust = 0.5))
+            panel.grid.major.x = element_blank(),
+            panel.grid.major = element_line(colour = "black"),
+            panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+            plot.background = element_rect(fill = "#e2e2e2"),
+            legend.background = element_rect(fill = "#e2e2e2"),
+            plot.title = element_text(hjust = 0.5))
             cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
               str_wrap(k, width = 20)
             })

@@ -206,9 +206,9 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
     }
     bckg.crosstabs.vars.all.NA <- names(Filter(length,
-                                               lapply(X = data, FUN = function(i) {
-                                                 names(Filter(function(j) {all(is.na(j))}, i[ , mget(unlist(vars.list[c("bckg.row.var", "bckg.col.var")]))]))
-                                               })
+      lapply(X = data, FUN = function(i) {
+        names(Filter(function(j) {all(is.na(j))}, i[ , mget(unlist(vars.list[c("bckg.row.var", "bckg.col.var")]))]))
+      })
     ))
     if(length(bckg.crosstabs.vars.all.NA)) {
       data <- data[!names(data) %in% bckg.crosstabs.vars.all.NA]
@@ -237,7 +237,7 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
       if(length(jk.zone.col) > 0) {
         all(is.na(i[ , get(jk.zone.col)]))
       } else {
-        ""
+""
       }
     })
     if(length(names(Filter(isTRUE, missing.JKZONES))) > 0) {
@@ -253,400 +253,401 @@ lsa.crosstabs <- function(data.file, data.object, split.vars, bckg.row.var, bckg
         length(unique(i[ , get(bckg.row.var)]))  > 1 && length(unique(i[ , get(bckg.col.var)])) == 1 ||
         length(unique(i[ , get(bckg.row.var)])) == 1 && length(unique(i[ , get(bckg.col.var)])) == 1 ||
         nrow(i) ==0) {
-        return(TRUE)
-      }
-    })
-    insufficient.split <- names(Filter(isTRUE, insufficient.split))
-    data[which(names(data) %in% insufficient.split)] <- NULL
-    if(length(insufficient.split) > 0) {
-      warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics: ', paste(insufficient.split, collapse = ", "), '.\n These data were removed and statistics for them are not to be found in the output.')
-      if(length(data) == 0) {
-        stop('\nNone of the countries in the data file contains sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics. All operations stop here.\n\n', call. = FALSE)
-      }
-    }
-    vars.list[["pcts.var"]] <- tmp.pcts.var
-    vars.list[["group.vars"]] <- tmp.group.vars
-    analysis.info <- list()
-    Rao.Scott.adj.chi.sq <- list()
-    Rao.Scott.adj.chi.sq <- list()
-    number.of.countries <- length(names(data))
-    if(number.of.countries == 1) {
-      message("\nValid data from one country have been found. Some computations can be rather intensive. Please be patient.\n")
-    } else if(number.of.countries > 1) {
-      message("\nValid data from ", number.of.countries, " countries have been found. Some computations can be rather intensive. Please be patient.\n")
-    }
-    counter <- 0
-    compute.all.stats <- function(data) {
-      if(!is.null(bckg.vars.levels[["row.levels"]])) {
-        data[ , vars.list[["bckg.row.var"]] := factor(get(vars.list[["bckg.row.var"]]))]
-        data[ , setattr(x = get(vars.list[["bckg.row.var"]]), name = "levels", value = bckg.vars.levels[["row.levels"]])]
-      }
-      if(!is.null(bckg.vars.levels[["col.levels"]])) {
-        data[ , vars.list[["bckg.col.var"]] := factor(get(vars.list[["bckg.col.var"]]))]
-        data[ , setattr(x = get(vars.list[["bckg.col.var"]]), name = "levels", value = bckg.vars.levels[["col.levels"]])]
-      }
-      rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
-        unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
-      }))), collapse = "|^")
-      rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
-      all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
-      cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
-      if(!is.null(vars.list[["pcts.var"]])) {
-        percentages.bckg.row.var <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(key.vars[1])), weight = mget(all.weights)), keyby = c(eval(vars.list[["split.vars"]]), vars.list[["bckg.row.var"]])])
-        percentages.bckg.row.var <- percentages.bckg.row.var[ , mget(vars.list[["bckg.row.var"]])]
-        percentages <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(vars.list[["bckg.row.var"]])), weight = mget(all.weights)), keyby = eval(key.vars)])
-        percentages <- cbind(percentages[ , mget(key.vars)], percentages.bckg.row.var, percentages[ , mget(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages), value = TRUE))])
-        setnames(x = percentages, old = c(vars.list[["bckg.row.var"]], grep(pattern = "^V[[:digit:]]", x = colnames(percentages), value = TRUE)), new = paste0("V", 1:length(c(vars.list[["bckg.row.var"]], grep(pattern = "^V[[:digit:]]", x = colnames(percentages), value = TRUE)))))
-        if(length(vars.list[["group.vars"]]) == 1) {
-          percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]])), weight = mget(all.weights))), keyby = eval(vars.list[["split.vars"]])])
-        } else {
-          percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = c(eval(vars.list[["group.vars"]][2:(length(vars.list[["group.vars"]]))]), eval(vars.list[["pcts.var"]]))])
+          return(TRUE)
         }
-        percentages.total <- cbind(unique(percentages[ , vars.list[["group.vars"]][[1]], with = FALSE]), data.table("Total"), percentages.total)
-        setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
-        setcolorder(x = percentages.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total), value = TRUE)))
-        percentages.total[ , V1 := factor(V1)]
-        percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
-        percentages.total <- NULL
-        if(length(key.vars) > 2) {
-          keys.to.compute.on <- c(key.vars[2:length(key.vars)])
-          keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
-          keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
-            keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
-          })
-          keys.to.compute.on <- Filter(length, keys.to.compute.on)
-          percentages.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
-            na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = i])
-          })
-          percentages.total <- rbindlist(l = percentages.total, use.names = TRUE, fill = TRUE)
-          percentages.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
-            i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
-            droplevels(i)
-          }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
-          percentages.lead.cols <- unique(percentages[ , mget(c(vars.list[["group.vars"]][1], "V1"))])
-          percentages.lead.cols <- percentages.lead.cols[V1 != "Total", ]
-          percentages.total <- cbind(percentages.lead.cols, unique(percentages[ , mget(vars.list[["pcts.var"]])]), percentages.total)
+      })
+      insufficient.split <- names(Filter(isTRUE, insufficient.split))
+      data[which(names(data) %in% insufficient.split)] <- NULL
+      if(length(insufficient.split) > 0) {
+        warnings.collector[["insufficient.cases"]] <- paste0('In one or more countries in the data some split combinations did not contain sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics: ', paste(insufficient.split, collapse = ", "), '.\n These data were removed and statistics for them are not to be found in the output.')
+        if(length(data) == 0) {
+          stop('\nNone of the countries in the data file contains sufficient combinations between the "bckg.row.var" and "bckg.col.var" to compute the statistics. All operations stop here.\n\n', call. = FALSE)
+        }
+      }
+      vars.list[["pcts.var"]] <- tmp.pcts.var
+      vars.list[["group.vars"]] <- tmp.group.vars
+      analysis.info <- list()
+      Rao.Scott.adj.chi.sq <- list()
+      Rao.Scott.adj.chi.sq <- list()
+      number.of.countries <- length(names(data))
+      if(number.of.countries == 1) {
+        message("\nValid data from one country have been found. Some computations can be rather intensive. Please be patient.\n")
+      } else if(number.of.countries > 1) {
+        message("\nValid data from ", number.of.countries, " countries have been found. Some computations can be rather intensive. Please be patient.\n")
+      }
+      counter <- 0
+      compute.all.stats <- function(data) {
+        if(!is.null(bckg.vars.levels[["row.levels"]])) {
+          data[ , vars.list[["bckg.row.var"]] := factor(get(vars.list[["bckg.row.var"]]))]
+          data[ , setattr(x = get(vars.list[["bckg.row.var"]]), name = "levels", value = bckg.vars.levels[["row.levels"]])]
+        }
+        if(!is.null(bckg.vars.levels[["col.levels"]])) {
+          data[ , vars.list[["bckg.col.var"]] := factor(get(vars.list[["bckg.col.var"]]))]
+          data[ , setattr(x = get(vars.list[["bckg.col.var"]]), name = "levels", value = bckg.vars.levels[["col.levels"]])]
+        }
+        rep.wgts.names <- paste(c("REPWGT", unlist(lapply(X = design.weight.variables[grep("rep.wgts", names(design.weight.variables), value = TRUE)], FUN = function(i) {
+          unique(gsub(pattern = "[[:digit:]]*$", replacement = "", x = i))
+        }))), collapse = "|^")
+        rep.wgts.names <- grep(pattern = rep.wgts.names, x = names(data), value = TRUE)
+        all.weights <- c(vars.list[["weight.var"]], rep.wgts.names)
+        cnt.start.time <- format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
+        if(!is.null(vars.list[["pcts.var"]])) {
+          percentages.bckg.row.var <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(key.vars[1])), weight = mget(all.weights)), keyby = c(eval(vars.list[["split.vars"]]), vars.list[["bckg.row.var"]])])
+          percentages.bckg.row.var <- percentages.bckg.row.var[ , mget(vars.list[["bckg.row.var"]])]
+          percentages <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(vars.list[["bckg.row.var"]])), weight = mget(all.weights)), keyby = eval(key.vars)])
+          percentages <- cbind(percentages[ , mget(key.vars)], percentages.bckg.row.var, percentages[ , mget(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages), value = TRUE))])
+          setnames(x = percentages, old = c(vars.list[["bckg.row.var"]], grep(pattern = "^V[[:digit:]]", x = colnames(percentages), value = TRUE)), new = paste0("V", 1:length(c(vars.list[["bckg.row.var"]], grep(pattern = "^V[[:digit:]]", x = colnames(percentages), value = TRUE)))))
+          if(length(vars.list[["group.vars"]]) == 1) {
+            percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]])), weight = mget(all.weights))), keyby = eval(vars.list[["split.vars"]])])
+          } else {
+            percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = c(eval(vars.list[["group.vars"]][2:(length(vars.list[["group.vars"]]))]), eval(vars.list[["pcts.var"]]))])
+          }
+          percentages.total <- cbind(unique(percentages[ , vars.list[["group.vars"]][[1]], with = FALSE]), data.table("Total"), percentages.total)
           setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
           setcolorder(x = percentages.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total), value = TRUE)))
-          percentages.total[ , (c(vars.list[["pcts.var"]], "V1")) := factor("Total")]
+          percentages.total[ , V1 := factor(V1)]
+          percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
+          percentages.total <- NULL
+          if(length(key.vars) > 2) {
+            keys.to.compute.on <- c(key.vars[2:length(key.vars)])
+            keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
+            keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
+              keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
+            })
+            keys.to.compute.on <- Filter(length, keys.to.compute.on)
+            percentages.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
+              na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = i])
+            })
+            percentages.total <- rbindlist(l = percentages.total, use.names = TRUE, fill = TRUE)
+            percentages.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
+              i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
+              droplevels(i)
+            }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
+            percentages.lead.cols <- unique(percentages[ , mget(c(vars.list[["group.vars"]][1], "V1"))])
+            percentages.lead.cols <- percentages.lead.cols[V1 != "Total", ]
+            percentages.total <- cbind(percentages.lead.cols, unique(percentages[ , mget(vars.list[["pcts.var"]])]), percentages.total)
+            setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
+            setcolorder(x = percentages.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total), value = TRUE)))
+            percentages.total[ , (c(vars.list[["pcts.var"]], "V1")) := factor("Total")]
+            percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
+            tmp.lead.cols <- NULL
+            percentages.total <- NULL
+          }
+          percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights)))])
+          tmp.lead.cols <- percentages[ , mget(key.vars)]
+          tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
+            i <- factor("Total")
+          }), .SDcols = key.vars[2:length(key.vars)]]
+          tmp.lead.cols <- unique(tmp.lead.cols)
+          percentages.total <- cbind(tmp.lead.cols, factor("Total"), percentages.total)
+          setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
           percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
           tmp.lead.cols <- NULL
           percentages.total <- NULL
-        }
-        percentages.total <- na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights)))])
-        tmp.lead.cols <- percentages[ , mget(key.vars)]
-        tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
-          i <- factor("Total")
-        }), .SDcols = key.vars[2:length(key.vars)]]
-        tmp.lead.cols <- unique(tmp.lead.cols)
-        percentages.total <- cbind(tmp.lead.cols, factor("Total"), percentages.total)
-        setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
-        percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
-        tmp.lead.cols <- NULL
-        percentages.total <- NULL
-        number.of.cases <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = c(key.vars, vars.list[["bckg.row.var"]])])
-        number.of.cases.total <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = key.vars])
-        number.of.cases.total[ , (vars.list[["bckg.row.var"]]) := factor("Total")]
-        setcolorder(x = number.of.cases.total, neworder = c(key.vars, vars.list[["bckg.row.var"]], "n_Cases"))
-        number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total), use.names = TRUE, fill = TRUE)
-        number.of.cases.total <- NULL
-        if(length(key.vars) > 2) {
-          keys.to.compute.on <- c(key.vars[2:length(key.vars)])
-          keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
-          keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
-            keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
-          })
-          keys.to.compute.on <- Filter(length, keys.to.compute.on)
-          percentages.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
-            na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = i])
-          })
-          number.of.cases.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
-            na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = i])
-          })
-          number.of.cases.total <- rbindlist(l = number.of.cases.total, use.names = TRUE, fill = TRUE)
-          number.of.cases.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
-            i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
-            droplevels(i)
-          }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
-          number.of.cases.lead.cols <- unique(number.of.cases[ , mget(c(vars.list[["group.vars"]][1], vars.list[["bckg.row.var"]]))])
-          number.of.cases.lead.cols <- number.of.cases.lead.cols[get(vars.list[["bckg.row.var"]]) != "Total", ]
-          tmp.lead.cols <- number.of.cases[ , mget(c(key.vars[c(1, length(key.vars))], vars.list[["bckg.row.var"]]))]
-          tmp.lead.cols[ , (c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])) := lapply(.SD, function(i) {
+          number.of.cases <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = c(key.vars, vars.list[["bckg.row.var"]])])
+          number.of.cases.total <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = key.vars])
+          number.of.cases.total[ , (vars.list[["bckg.row.var"]]) := factor("Total")]
+          setcolorder(x = number.of.cases.total, neworder = c(key.vars, vars.list[["bckg.row.var"]], "n_Cases"))
+          number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total), use.names = TRUE, fill = TRUE)
+          number.of.cases.total <- NULL
+          if(length(key.vars) > 2) {
+            keys.to.compute.on <- c(key.vars[2:length(key.vars)])
+            keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
+            keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
+              keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
+            })
+            keys.to.compute.on <- Filter(length, keys.to.compute.on)
+            percentages.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
+              na.omit(data[ , c(Map(f = wgt.pct, variable = .(get(vars.list[["group.vars"]][1])), weight = mget(all.weights))), keyby = i])
+            })
+            number.of.cases.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
+              na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N), keyby = i])
+            })
+            number.of.cases.total <- rbindlist(l = number.of.cases.total, use.names = TRUE, fill = TRUE)
+            number.of.cases.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
+              i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
+              droplevels(i)
+            }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
+            number.of.cases.lead.cols <- unique(number.of.cases[ , mget(c(vars.list[["group.vars"]][1], vars.list[["bckg.row.var"]]))])
+            number.of.cases.lead.cols <- number.of.cases.lead.cols[get(vars.list[["bckg.row.var"]]) != "Total", ]
+            tmp.lead.cols <- number.of.cases[ , mget(c(key.vars[c(1, length(key.vars))], vars.list[["bckg.row.var"]]))]
+            tmp.lead.cols[ , (c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])) := lapply(.SD, function(i) {
+              i <- factor("Total")
+            }), .SDcols = c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])]
+            tmp.lead.cols <- unique(tmp.lead.cols)
+            number.of.cases.total <- cbind(tmp.lead.cols, number.of.cases.total)
+            setcolorder(x = number.of.cases.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(number.of.cases.total), value = TRUE)))
+            number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total), use.names = TRUE, fill = TRUE)
+            tmp.lead.cols <- NULL
+            number.of.cases.total <- NULL
+          }
+          number.of.cases.total <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N)])
+          tmp.lead.cols <- number.of.cases[ , mget(key.vars)]
+          tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
             i <- factor("Total")
-          }), .SDcols = c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])]
+          }), .SDcols = key.vars[2:length(key.vars)]]
           tmp.lead.cols <- unique(tmp.lead.cols)
-          number.of.cases.total <- cbind(tmp.lead.cols, number.of.cases.total)
-          setcolorder(x = number.of.cases.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(number.of.cases.total), value = TRUE)))
+          number.of.cases.total <- cbind(tmp.lead.cols, factor("Total"), number.of.cases.total)
+          setnames(x = number.of.cases.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(number.of.cases.total)), new = vars.list[["bckg.row.var"]])
           number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total), use.names = TRUE, fill = TRUE)
           tmp.lead.cols <- NULL
           number.of.cases.total <- NULL
-        }
-        number.of.cases.total <- na.omit(data[eval(parse(text = vars.list[["weight.var"]])) > 0, .(n_Cases = .N)])
-        tmp.lead.cols <- number.of.cases[ , mget(key.vars)]
-        tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
-          i <- factor("Total")
-        }), .SDcols = key.vars[2:length(key.vars)]]
-        tmp.lead.cols <- unique(tmp.lead.cols)
-        number.of.cases.total <- cbind(tmp.lead.cols, factor("Total"), number.of.cases.total)
-        setnames(x = number.of.cases.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(number.of.cases.total)), new = vars.list[["bckg.row.var"]])
-        number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total), use.names = TRUE, fill = TRUE)
-        tmp.lead.cols <- NULL
-        number.of.cases.total <- NULL
-        sum.of.weights <- na.omit(data[ , lapply(.SD, sum), keyby = c(key.vars, vars.list[["bckg.row.var"]]), .SDcols = all.weights])
-        sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), keyby = key.vars, .SDcols = all.weights])
-        sum.of.weights.total[ , (vars.list[["bckg.row.var"]]) := factor("Total")]
-        setcolorder(x = sum.of.weights.total, neworder = c(key.vars, vars.list[["bckg.row.var"]], grep(pattern = paste(c(key.vars, vars.list[["bckg.row.var"]]), collapse = "|"), x = colnames(sum.of.weights.total), value = TRUE, invert = TRUE)))
-        sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total), use.names = TRUE, fill = TRUE)
-        sum.of.weights.total <- NULL
-        if(length(key.vars) > 2) {
-          keys.to.compute.on <- c(key.vars[2:length(key.vars)])
-          keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
-          keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
-            keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
-          })
-          keys.to.compute.on <- Filter(length, keys.to.compute.on)
-          sum.of.weights.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
-            na.omit(data[ , lapply(.SD, sum), keyby = i, .SDcols = all.weights])
-          })
-          sum.of.weights.total <- rbindlist(l = sum.of.weights.total, use.names = TRUE, fill = TRUE)
-          sum.of.weights.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
-            i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
-            droplevels(i)
-          }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
-          sum.of.weights.lead.cols <- unique(sum.of.weights[ , mget(c(vars.list[["group.vars"]][1], vars.list[["bckg.row.var"]]))])
-          sum.of.weights.lead.cols <- sum.of.weights.lead.cols[get(vars.list[["bckg.row.var"]]) != "Total", ]
-          tmp.lead.cols <- sum.of.weights[ , mget(c(key.vars[c(1, length(key.vars))], vars.list[["bckg.row.var"]]))]
-          tmp.lead.cols[ , (c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])) := lapply(.SD, function(i) {
+          sum.of.weights <- na.omit(data[ , lapply(.SD, sum), keyby = c(key.vars, vars.list[["bckg.row.var"]]), .SDcols = all.weights])
+          sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), keyby = key.vars, .SDcols = all.weights])
+          sum.of.weights.total[ , (vars.list[["bckg.row.var"]]) := factor("Total")]
+          setcolorder(x = sum.of.weights.total, neworder = c(key.vars, vars.list[["bckg.row.var"]], grep(pattern = paste(c(key.vars, vars.list[["bckg.row.var"]]), collapse = "|"), x = colnames(sum.of.weights.total), value = TRUE, invert = TRUE)))
+          sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total), use.names = TRUE, fill = TRUE)
+          sum.of.weights.total <- NULL
+          if(length(key.vars) > 2) {
+            keys.to.compute.on <- c(key.vars[2:length(key.vars)])
+            keys.to.compute.on <- rep(x = list(keys.to.compute.on), times = length(keys.to.compute.on))
+            keys.to.compute.on <- lapply(X = 1:length(keys.to.compute.on), FUN = function(i) {
+              keys.to.compute.on[[i]][0:(length(keys.to.compute.on[[i]]) - i)]
+            })
+            keys.to.compute.on <- Filter(length, keys.to.compute.on)
+            sum.of.weights.total <- lapply(X = keys.to.compute.on, FUN = function(i) {
+              na.omit(data[ , lapply(.SD, sum), keyby = i, .SDcols = all.weights])
+            })
+            sum.of.weights.total <- rbindlist(l = sum.of.weights.total, use.names = TRUE, fill = TRUE)
+            sum.of.weights.total[ , (key.vars[2:(length(key.vars) - 1)]) := lapply(.SD, function(i) {
+              i <- factor(ifelse(test = is.na(i), yes = "Total", no = paste(i)), levels = c(levels(i), "Total"))
+              droplevels(i)
+            }), .SDcols = (key.vars[2:(length(key.vars) - 1)])]
+            sum.of.weights.lead.cols <- unique(sum.of.weights[ , mget(c(vars.list[["group.vars"]][1], vars.list[["bckg.row.var"]]))])
+            sum.of.weights.lead.cols <- sum.of.weights.lead.cols[get(vars.list[["bckg.row.var"]]) != "Total", ]
+            tmp.lead.cols <- sum.of.weights[ , mget(c(key.vars[c(1, length(key.vars))], vars.list[["bckg.row.var"]]))]
+            tmp.lead.cols[ , (c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])) := lapply(.SD, function(i) {
+              i <- factor("Total")
+            }), .SDcols = c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])]
+            tmp.lead.cols <- unique(tmp.lead.cols)
+            sum.of.weights.total <- cbind(tmp.lead.cols, sum.of.weights.total)
+            setcolorder(x = sum.of.weights.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(sum.of.weights.total), value = TRUE)))
+            sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total), use.names = TRUE, fill = TRUE)
+            tmp.lead.cols <- NULL
+            sum.of.weights.total <- NULL
+          }
+          sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), .SDcols = all.weights])
+          tmp.lead.cols <- number.of.cases[ , mget(key.vars)]
+          tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
             i <- factor("Total")
-          }), .SDcols = c(key.vars[length(key.vars)], vars.list[["bckg.row.var"]])]
+          }), .SDcols = key.vars[2:length(key.vars)]]
           tmp.lead.cols <- unique(tmp.lead.cols)
-          sum.of.weights.total <- cbind(tmp.lead.cols, sum.of.weights.total)
-          setcolorder(x = sum.of.weights.total, neworder = c(key.vars, grep(pattern = "^V[[:digit:]]+$", x = colnames(sum.of.weights.total), value = TRUE)))
+          sum.of.weights.total <- cbind(tmp.lead.cols, factor("Total"), sum.of.weights.total)
+          setnames(x = sum.of.weights.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(sum.of.weights.total)), new = vars.list[["bckg.row.var"]])
           sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total), use.names = TRUE, fill = TRUE)
           tmp.lead.cols <- NULL
           sum.of.weights.total <- NULL
+        } else {
+          percentages <- na.omit(data[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(vars.list[["bckg.row.var"]])), weight = mget(all.weights))), by = eval(key.vars)])
+          tmp.levels <- levels(droplevels(data[ , get(vars.list[["bckg.row.var"]])]))
+          percentages[ , V1 := factor(x = tmp.levels, levels = tmp.levels)]
+          percentages.total <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights))])
+          percentages.total <- cbind(unique(percentages[ , mget(key.vars)]), data.table("Total"), percentages.total)
+          setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
+          percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
+          number.of.cases <- na.omit(data[ , .(n_Cases = .N), keyby = c(key.vars, vars.list[["bckg.row.var"]])])
+          number.of.cases.total <- na.omit(data[ , .(n_Cases = .N)])
+          number.of.cases.total <- cbind(unique(number.of.cases[ , mget(key.vars)]), data.table("Total"), number.of.cases.total)
+          setnames(x = number.of.cases.total, old = "V1", new = vars.list[["bckg.row.var"]])
+          number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total))
+          sum.of.weights <- na.omit(data[ , lapply(.SD, sum), keyby = c(key.vars, vars.list[["bckg.row.var"]]), .SDcols = all.weights])
+          sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), .SDcols = all.weights])
+          sum.of.weights.total <- cbind(unique(sum.of.weights[ , mget(key.vars)]), data.table("Total"), sum.of.weights.total)
+          setnames(x = sum.of.weights.total, old = "V1", new = vars.list[["bckg.row.var"]])
+          sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total))
         }
-        sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), .SDcols = all.weights])
-        tmp.lead.cols <- number.of.cases[ , mget(key.vars)]
-        tmp.lead.cols[ , (key.vars[2:length(key.vars)]) := lapply(.SD, function(i) {
-          i <- factor("Total")
-        }), .SDcols = key.vars[2:length(key.vars)]]
-        tmp.lead.cols <- unique(tmp.lead.cols)
-        sum.of.weights.total <- cbind(tmp.lead.cols, factor("Total"), sum.of.weights.total)
-        setnames(x = sum.of.weights.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(sum.of.weights.total)), new = vars.list[["bckg.row.var"]])
-        sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total), use.names = TRUE, fill = TRUE)
-        tmp.lead.cols <- NULL
-        sum.of.weights.total <- NULL
-      } else {
-        percentages <- na.omit(data[ , c(.(na.omit(unique(get(key.vars)))), Map(f = wgt.pct, variable = .(get(vars.list[["bckg.row.var"]])), weight = mget(all.weights))), by = eval(key.vars)])
-        tmp.levels <- levels(droplevels(data[ , get(vars.list[["bckg.row.var"]])]))
-        percentages[ , V1 := factor(x = tmp.levels, levels = tmp.levels)]
-        percentages.total <- na.omit(data[ , Map(f = wgt.pct, variable = .(get(key.vars)), weight = mget(all.weights))])
-        percentages.total <- cbind(unique(percentages[ , mget(key.vars)]), data.table("Total"), percentages.total)
-        setnames(x = percentages.total, old = grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)), new = paste0("V", 1:length(grep(pattern = "^V[[:digit:]]+$", x = colnames(percentages.total)))))
-        percentages <- rbindlist(l = list(percentages, percentages.total), use.names = TRUE, fill = TRUE)
-        number.of.cases <- na.omit(data[ , .(n_Cases = .N), keyby = c(key.vars, vars.list[["bckg.row.var"]])])
-        number.of.cases.total <- na.omit(data[ , .(n_Cases = .N)])
-        number.of.cases.total <- cbind(unique(number.of.cases[ , mget(key.vars)]), data.table("Total"), number.of.cases.total)
-        setnames(x = number.of.cases.total, old = "V1", new = vars.list[["bckg.row.var"]])
-        number.of.cases <- rbindlist(l = list(number.of.cases, number.of.cases.total))
-        sum.of.weights <- na.omit(data[ , lapply(.SD, sum), keyby = c(key.vars, vars.list[["bckg.row.var"]]), .SDcols = all.weights])
-        sum.of.weights.total <- na.omit(data[ , lapply(.SD, sum), .SDcols = all.weights])
-        sum.of.weights.total <- cbind(unique(sum.of.weights[ , mget(key.vars)]), data.table("Total"), sum.of.weights.total)
-        setnames(x = sum.of.weights.total, old = "V1", new = vars.list[["bckg.row.var"]])
-        sum.of.weights <- rbindlist(l = list(sum.of.weights, sum.of.weights.total))
-      }
-      bckg.crosstabs <- list(compute.crosstabs.all.repwgt(data.object = data, var1 = vars.list[["bckg.row.var"]], var2 = vars.list[["bckg.col.var"]], exp.cnts = expected.cnts, pcts.in.rows = row.pcts, pcts.in.cols = column.pcts, pcts.total = total.pcts, keys = key.vars, weight = all.weights))
-      percentages <- list(percentages)
-      sum.of.weights <- list(sum.of.weights)
-      if(!is.null(vars.list[["pcts.var"]])) {
-        reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = vars.list[["bckg.row.var"]], weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["bckg.row.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-      } else {
-        reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = vars.list[["bckg.row.var"]], weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = c(vars.list[["bckg.row.var"]]), replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-      }
-      percentages <- rbindlist(percentages)
-      if(nrow(number.of.cases) > nrow(percentages)) {
-        percentages <- merge(number.of.cases[ , mget(c(key.vars, vars.list[["bckg.row.var"]]))], percentages, by = c(key.vars, vars.list[["bckg.row.var"]]), all.x = TRUE)
-        percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 100; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)]
-        percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 0; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)]
-      }
-      reshape.list.statistics.bckg(estimate.object = sum.of.weights, estimate.name = "Sum_", weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-      reshape.list.statistics.bckg(estimate.object = bckg.crosstabs, estimate.name = "Crosstab", data.key.variables = key.vars, new.names.vector = "", bckg.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
-      bckg.crosstabs <- lapply(X = bckg.crosstabs, FUN = function(i) {
-        i <- dcast(data = i, formula = as.formula(paste0(paste(key.vars, collapse = " + "), " + ", vars.list[["bckg.row.var"]], " + ", "Type", " ~ ", vars.list[["bckg.col.var"]])), value.var = c("Crosstab", "Crosstab_SE"))
-        setnames(x = i, old = colnames(i), new = gsub(pattern = "[[:space:]]+", replacement = "_", x = colnames(i)))
-      })
-      if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi", "CivED", "ICCS", "ICILS", "SITES", "REDS")) {
-        Rao.Scott.design.var.scale.fac <- 1
-        if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && shortcut == FALSE) {
-          Rao.Scott.deg.freedom <- (length(all.weights) - 1) / 2
-        } else if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && shortcut == TRUE) {
-          Rao.Scott.deg.freedom <- (length(all.weights) - 2)
-        } else if(file.attributes[["lsa.study"]] %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
-          Rao.Scott.deg.freedom <- (length(all.weights) - 2)
+        bckg.crosstabs <- list(compute.crosstabs.all.repwgt(data.object = data, var1 = vars.list[["bckg.row.var"]], var2 = vars.list[["bckg.col.var"]], exp.cnts = expected.cnts, pcts.in.rows = row.pcts, pcts.in.cols = column.pcts, pcts.total = total.pcts, keys = key.vars, weight = all.weights))
+        percentages <- list(percentages)
+        sum.of.weights <- list(sum.of.weights)
+        if(!is.null(vars.list[["pcts.var"]])) {
+          reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = vars.list[["bckg.row.var"]], weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["bckg.row.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
+        } else {
+          reshape.list.statistics.bckg(estimate.object = percentages, estimate.name = "Percentages_", bckg.vars.vector = vars.list[["bckg.row.var"]], weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = c(vars.list[["bckg.row.var"]]), replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         }
-      } else if(file.attributes[["lsa.study"]] %in% c("TEDS-M", "PISA", "PISA for Development", "TALIS", "TALIS 3S")) {
-        Rao.Scott.design.var.scale.fac <- 0.05
-        Rao.Scott.deg.freedom <- length(all.weights) - 2
+        percentages <- rbindlist(percentages)
+        if(nrow(number.of.cases) > nrow(percentages)) {
+          percentages <- merge(number.of.cases[ , mget(c(key.vars, vars.list[["bckg.row.var"]]))], percentages, by = c(key.vars, vars.list[["bckg.row.var"]]), all.x = TRUE)
+          percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 100; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+$", x = colnames(percentages), value = TRUE)]
+          percentages[ , (grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)) := lapply(.SD, function(i){i[is.na(i)] <- 0; i}), .SDcols = grep(pattern = "Percentages_[[:alnum:]]+_SE$", x = colnames(percentages), value = TRUE)]
+        }
+        reshape.list.statistics.bckg(estimate.object = sum.of.weights, estimate.name = "Sum_", weighting.variable = vars.list[["weight.var"]], data.key.variables = key.vars, new.names.vector = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
+        reshape.list.statistics.bckg(estimate.object = bckg.crosstabs, estimate.name = "Crosstab", data.key.variables = key.vars, new.names.vector = "", bckg.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
+        bckg.crosstabs <- lapply(X = bckg.crosstabs, FUN = function(i) {
+          i <- dcast(data = i, formula = as.formula(paste0(paste(key.vars, collapse = " + "), " + ", vars.list[["bckg.row.var"]], " + ", "Type", " ~ ", vars.list[["bckg.col.var"]])), value.var = c("Crosstab", "Crosstab_SE"))
+          setnames(x = i, old = colnames(i), new = gsub(pattern = "[[:space:]]+", replacement = "_", x = colnames(i)))
+        })
+        if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi", "CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+          Rao.Scott.design.var.scale.fac <- 1
+          if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && shortcut == FALSE) {
+            Rao.Scott.deg.freedom <- (length(all.weights) - 1) / 2
+          } else if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") && shortcut == TRUE) {
+            Rao.Scott.deg.freedom <- (length(all.weights) - 2)
+          } else if(file.attributes[["lsa.study"]] %in% c("CivED", "ICCS", "ICILS", "SITES", "REDS")) {
+            Rao.Scott.deg.freedom <- (length(all.weights) - 2)
+          }
+        } else if(file.attributes[["lsa.study"]] %in% c("TEDS-M", "PISA", "PISA for Development", "TALIS", "TALIS 3S")) {
+          Rao.Scott.design.var.scale.fac <- 0.05
+          Rao.Scott.deg.freedom <- length(all.weights) - 2
+        }
+        country.Rao.Scott.adj.chi.sq <- compute.Rao.Scott.adj.chi.sq(data.obj = data, var1 = vars.list[["bckg.row.var"]], var2 = vars.list[["bckg.col.var"]], weights = all.weights, des.scale.fac = Rao.Scott.design.var.scale.fac, deg.freedom = Rao.Scott.deg.freedom, miss.to.include = include.missing, keys = key.vars)
+        cnt.RS.chi.sq.name <- unique(as.character(country.Rao.Scott.adj.chi.sq[ , get(key.vars[1])]))
+        Rao.Scott.adj.chi.sq[[cnt.RS.chi.sq.name]] <<- country.Rao.Scott.adj.chi.sq
+        country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[[1]])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
+        analysis.info[[country.analysis.info[ , as.character(COUNTRY)]]] <<- country.analysis.info
+        setkeyv(x = number.of.cases, cols = c(key.vars, vars.list[["bckg.row.var"]]))
+        setkeyv(x = sum.of.weights[[1]], cols = c(key.vars, vars.list[["bckg.row.var"]]))
+        setkeyv(x = percentages, cols = c(key.vars, vars.list[["bckg.row.var"]]))
+        setkeyv(x = bckg.crosstabs[[1]], cols = c(key.vars, vars.list[["bckg.row.var"]]))
+        merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.crosstabs))
+        counter <<- counter + 1
+        message("     ",
+        if(nchar(counter) == 1) {
+          paste0("( ", counter, "/", number.of.countries, ")   ")
+        } else if(nchar(counter) == 2) {
+          paste0("(", counter, "/", number.of.countries, ")   ")
+        },
+        paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+        return(merged.outputs)
       }
-      country.Rao.Scott.adj.chi.sq <- compute.Rao.Scott.adj.chi.sq(data.obj = data, var1 = vars.list[["bckg.row.var"]], var2 = vars.list[["bckg.col.var"]], weights = all.weights, des.scale.fac = Rao.Scott.design.var.scale.fac, deg.freedom = Rao.Scott.deg.freedom, miss.to.include = include.missing, keys = key.vars)
-      cnt.RS.chi.sq.name <- unique(as.character(country.Rao.Scott.adj.chi.sq[ , get(key.vars[1])]))
-      Rao.Scott.adj.chi.sq[[cnt.RS.chi.sq.name]] <<- country.Rao.Scott.adj.chi.sq
-      country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[[1]])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
-      analysis.info[[country.analysis.info[ , as.character(COUNTRY)]]] <<- country.analysis.info
-      setkeyv(x = number.of.cases, cols = c(key.vars, vars.list[["bckg.row.var"]]))
-      setkeyv(x = sum.of.weights[[1]], cols = c(key.vars, vars.list[["bckg.row.var"]]))
-      setkeyv(x = percentages, cols = c(key.vars, vars.list[["bckg.row.var"]]))
-      setkeyv(x = bckg.crosstabs[[1]], cols = c(key.vars, vars.list[["bckg.row.var"]]))
-      merged.outputs <- Reduce(function(...) merge(..., all = TRUE), list(number.of.cases, sum.of.weights, percentages, bckg.crosstabs))
-      counter <<- counter + 1
-      message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
-      return(merged.outputs)
-    }
-    estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats), use.names = TRUE, fill = TRUE)
-    estimates.bckg.col.var.underscored <- gsub(pattern = "[[:space:]]+", replacement = "_", x = bckg.vars.levels[["col.levels"]])
-    estimates.NOT.bckg.col <- grep(pattern = paste(estimates.bckg.col.var.underscored, collapse = "|"), x = colnames(estimates), value = TRUE, invert = TRUE)
-    estimates.NOT.bckg.col.lead <- grep(pattern = "_Total$|_SE_Total$", x = estimates.NOT.bckg.col, value = TRUE, invert = TRUE)
-    estimates.NOT.bckg.col.end <- grep(pattern = "_Total$|_SE_Total$", x = estimates.NOT.bckg.col, value = TRUE)
-    setcolorder(x = estimates, neworder = c(
-      grep(pattern = paste(estimates.NOT.bckg.col.lead, collapse = "|"), x = colnames(estimates), value = TRUE),
-      grep(pattern = paste(estimates.bckg.col.var.underscored, collapse = "|"), x = colnames(estimates), value = TRUE),
-      grep(pattern = paste(estimates.NOT.bckg.col.end, collapse = "|"), x = colnames(estimates), value = TRUE)
-    ))
-    estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
-    setkeyv(x = estimates, cols = key.vars)
-    total.exec.time <- rbindlist(analysis.info)[ , DURATION]
-    total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
-    total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
-    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
-    } else {
-      message("")
-    }
-    ptm.add.table.average <- proc.time()
-    estimates <- estimates[!is.na(Type), ]
-    estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, vars.list[["bckg.row.var"]], "Type"), data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
-    SE.cols.num.pos <- grep(pattern = "Crosstab_SE_", x = colnames(estimates))
-    SE.cols <- grep(pattern = "Crosstab_SE_", x = colnames(estimates), value = TRUE)
-    setnames(x = estimates, old = SE.cols, new = paste0(SE.cols, "_SE"))
-    SE.cols <- grep(pattern = "Crosstab_SE_", x = colnames(estimates), value = TRUE)
-    setnames(x = estimates, old = SE.cols, new = gsub(pattern = "Crosstab_SE_", replacement = paste0(vars.list[["bckg.col.var"]], "_"), x = SE.cols))
-    estimate.cols.num.pos <- grep(pattern = "Crosstab_", x = colnames(estimates))
-    estimate.cols <- grep(pattern = "Crosstab_", x = colnames(estimates), value = TRUE)
-    setnames(x = estimates, old = estimate.cols, new = gsub(pattern = "Crosstab_", replacement = paste0(vars.list[["bckg.col.var"]], "_"), x = estimate.cols))
-    new.order <- colnames(estimates)[c(rbind(estimate.cols.num.pos, SE.cols.num.pos))]
-    setcolorder(x = estimates, neworder = c(key.vars, grep(pattern = "n_Cases|Sum_|Percentages_", x = colnames(estimates), value = TRUE), vars.list[["bckg.row.var"]], "Type", new.order))
-    Total.cols <- paste0(vars.list[["bckg.col.var"]], c("_Total", "_Total_SE"))
-    setnames(x = estimates, old = Total.cols, new = c("Total", "Total_SE"))
-    ptm.add.RS.chi.square <- proc.time()
-    Rao.Scott.adj.chi.sq <- rbindlist(l = Rao.Scott.adj.chi.sq)
-    message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"))
-    warnings.collector[["insufficient.cases"]] <- Filter(Negate(is.null), warnings.collector[["insufficient.cases"]])
-    if(isFALSE(graphs)) {
-      message("")
-    }
-    if(isTRUE(graphs)) {
-      ptm.add.graphs <- proc.time()
-      graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average" & get(vars.list[["bckg.row.var"]]) != "Total" & Type == "Observed count", mget(grep(pattern = paste0("^n_Cases$|^Sum_|^Percentages_|^Total$|^", paste0("^", vars.list[["bckg.col.var"]], ".+_SE"), "|^Total_SE$"), x = colnames(estimates), value = TRUE, invert = TRUE))])
-      graphs.object[ , Type := NULL]
-      old.graph.colnames <- grep(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), x = colnames(graphs.object), value = TRUE)
-      new.graph.colnames <- gsub(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), replacement = "", x = old.graph.colnames)
-      new.graph.colnames <- gsub(pattern = "\\_", replacement = " ", x = new.graph.colnames)
-      setnames(x = graphs.object, old = old.graph.colnames, new = new.graph.colnames)
-      graphs.object <- melt(data = graphs.object, id.vars = c(key.vars, vars.list[["bckg.row.var"]]))
-      setkeyv(x = graphs.object, cols = c(key.vars, vars.list[["bckg.row.var"]]))
-      if(length(key.vars) > 1) {
-        graphs.object[ , key.vars[2:length(key.vars)] := lapply(names(.SD), function(i) {
-          factor(x = get(i), labels = str_wrap(paste0("(", i, ") ", levels(droplevels(get(i)))), width = 30))
-        }), .SDcols = key.vars[2:length(key.vars)]]
+      estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats), use.names = TRUE, fill = TRUE)
+      estimates.bckg.col.var.underscored <- gsub(pattern = "[[:space:]]+", replacement = "_", x = bckg.vars.levels[["col.levels"]])
+      estimates.NOT.bckg.col <- grep(pattern = paste(estimates.bckg.col.var.underscored, collapse = "|"), x = colnames(estimates), value = TRUE, invert = TRUE)
+      estimates.NOT.bckg.col.lead <- grep(pattern = "_Total$|_SE_Total$", x = estimates.NOT.bckg.col, value = TRUE, invert = TRUE)
+      estimates.NOT.bckg.col.end <- grep(pattern = "_Total$|_SE_Total$", x = estimates.NOT.bckg.col, value = TRUE)
+      setcolorder(x = estimates, neworder = c(
+        grep(pattern = paste(estimates.NOT.bckg.col.lead, collapse = "|"), x = colnames(estimates), value = TRUE),
+        grep(pattern = paste(estimates.bckg.col.var.underscored, collapse = "|"), x = colnames(estimates), value = TRUE),
+        grep(pattern = paste(estimates.NOT.bckg.col.end, collapse = "|"), x = colnames(estimates), value = TRUE)
+      ))
+      estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
+      setkeyv(x = estimates, cols = key.vars)
+      total.exec.time <- rbindlist(analysis.info)[ , DURATION]
+      total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
+      total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
+      if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+        message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
+      } else {
+        message("")
       }
-      graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
-      if(is.null(graph.row.label)) {
-        graph.row.label <- vars.list[["bckg.row.var"]]
-      }
-      if(is.null(graph.col.label)) {
-        graph.col.label <- vars.list[["bckg.col.var"]]
-      }
-      crosstabs.graphs.list <- produce.crosstabs.plots(data.obj = graphs.object, row.var = vars.list[["bckg.row.var"]], split.vars.vector = key.vars, col.var = "variable", name.col.var = graph.col.label, name.row.var = graph.row.label)
-      if(length(key.vars) == 1) {
-        graphs.object <- rbindlist(l = graphs.object)
-        x.var <- sym("variable")
-        y.var <- sym(vars.list[["bckg.row.var"]])
-        color.var <- sym("value")
-        facet.var <- key.vars
-        int.crosstabs <- ggplot(data = graphs.object, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var))
-        int.crosstabs <- int.crosstabs + facet_wrap(graphs.object[ , get(facet.var)] ~ .)
-        int.crosstabs <- int.crosstabs + geom_tile(color = "grey")
-        int.crosstabs <- int.crosstabs + scale_fill_gradient(low = "white", high = "red")
-        int.crosstabs <- int.crosstabs + xlab(label = graph.col.label)
-        int.crosstabs <- int.crosstabs + ylab(label = graph.row.label)
-        int.crosstabs <- int.crosstabs + geom_text(aes(label = round(x = value, digits = 0)))
-        int.crosstabs <- int.crosstabs + scale_x_discrete(expand = c(0,0), position = "top", labels = str_wrap(string = graphs.object[ , get(as.character(x.var))], width = 10))
-        int.crosstabs <- int.crosstabs + scale_y_discrete(expand = c(0,0), labels = str_wrap(string = rev(levels(droplevels(graphs.object[ , get(as.character(y.var))]))), width = 10))
-        int.crosstabs <- int.crosstabs + coord_equal()
-        int.crosstabs <- int.crosstabs + theme(panel.background = element_rect(fill = "white"),
-                                               panel.grid.major.x = element_blank(),
-                                               panel.grid.major = element_line(colour = "black"),
-                                               panel.border = element_rect(colour = "black", fill = NA, linewidth =  1),
-                                               plot.background = element_rect(fill = "#e2e2e2"),
-                                               strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth =  1, linetype = "solid"),
-                                               legend.background = element_rect(fill = "#e2e2e2"),
-                                               legend.key = element_blank(),
-                                               plot.title = element_text(hjust = 0.5))
-        int.crosstabs <- int.crosstabs + labs(fill="Observed\ncounts")
-        int.crosstabs <- list(int.crosstabs)
-        crosstabs.graphs.list["International_Crosstabs"] <- int.crosstabs
-      }
-    }
-    if(isTRUE(save.output)) {
-      save.graphs(out.path = action.args.list[["output.file"]])
+      ptm.add.table.average <- proc.time()
+      estimates <- estimates[!is.na(Type), ]
+      estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, vars.list[["bckg.row.var"]], "Type"), data.properties = file.attributes)
+      message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"))
+      SE.cols.num.pos <- grep(pattern = "Crosstab_SE_", x = colnames(estimates))
+      SE.cols <- grep(pattern = "Crosstab_SE_", x = colnames(estimates), value = TRUE)
+      setnames(x = estimates, old = SE.cols, new = paste0(SE.cols, "_SE"))
+      SE.cols <- grep(pattern = "Crosstab_SE_", x = colnames(estimates), value = TRUE)
+      setnames(x = estimates, old = SE.cols, new = gsub(pattern = "Crosstab_SE_", replacement = paste0(vars.list[["bckg.col.var"]], "_"), x = SE.cols))
+      estimate.cols.num.pos <- grep(pattern = "Crosstab_", x = colnames(estimates))
+      estimate.cols <- grep(pattern = "Crosstab_", x = colnames(estimates), value = TRUE)
+      setnames(x = estimates, old = estimate.cols, new = gsub(pattern = "Crosstab_", replacement = paste0(vars.list[["bckg.col.var"]], "_"), x = estimate.cols))
+      new.order <- colnames(estimates)[c(rbind(estimate.cols.num.pos, SE.cols.num.pos))]
+      setcolorder(x = estimates, neworder = c(key.vars, grep(pattern = "n_Cases|Sum_|Percentages_", x = colnames(estimates), value = TRUE), vars.list[["bckg.row.var"]], "Type", new.order))
+      Total.cols <- paste0(vars.list[["bckg.col.var"]], c("_Total", "_Total_SE"))
+      setnames(x = estimates, old = Total.cols, new = c("Total", "Total_SE"))
+      ptm.add.RS.chi.square <- proc.time()
+      Rao.Scott.adj.chi.sq <- rbindlist(l = Rao.Scott.adj.chi.sq)
+      message('Rao-Scott adjusted chi-square statistics table assembled in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.RS.chi.square}[[3]], "%H:%M:%OS3"))
+      warnings.collector[["insufficient.cases"]] <- Filter(Negate(is.null), warnings.collector[["insufficient.cases"]])
       if(isFALSE(graphs)) {
-        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
-      } else {
-        export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, non.perc.graphs = crosstabs.plots.files, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
-        delete.graphs(out.path = action.args.list[["output.file"]])
+        message("")
       }
-    } else if(isFALSE(save.output)) {
-      if(missing(graphs) || graphs == FALSE) {
-        if(length(warnings.collector) == 0) {
-          return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
-        } else {
-          return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+      if(isTRUE(graphs)) {
+        ptm.add.graphs <- proc.time()
+        graphs.object <- copy(x = estimates[get(key.vars[1]) != "Table Average" & get(vars.list[["bckg.row.var"]]) != "Total" & Type == "Observed count", mget(grep(pattern = paste0("^n_Cases$|^Sum_|^Percentages_|^Total$|^", paste0("^", vars.list[["bckg.col.var"]], ".+_SE"), "|^Total_SE$"), x = colnames(estimates), value = TRUE, invert = TRUE))])
+        graphs.object[ , Type := NULL]
+        old.graph.colnames <- grep(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), x = colnames(graphs.object), value = TRUE)
+        new.graph.colnames <- gsub(pattern = paste0("^", vars.list[["bckg.col.var"]], "\\_"), replacement = "", x = old.graph.colnames)
+        new.graph.colnames <- gsub(pattern = "\\_", replacement = " ", x = new.graph.colnames)
+        setnames(x = graphs.object, old = old.graph.colnames, new = new.graph.colnames)
+        graphs.object <- melt(data = graphs.object, id.vars = c(key.vars, vars.list[["bckg.row.var"]]))
+        setkeyv(x = graphs.object, cols = c(key.vars, vars.list[["bckg.row.var"]]))
+        if(length(key.vars) > 1) {
+          graphs.object[ , key.vars[2:length(key.vars)] := lapply(names(.SD), function(i) {
+            factor(x = get(i), labels = str_wrap(paste0("(", i, ") ", levels(droplevels(get(i)))), width = 30))
+          }), .SDcols = key.vars[2:length(key.vars)]]
         }
-      } else if(graphs == TRUE) {
-        message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
-        if(length(warnings.collector) == 0) {
-          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list))
-        } else {
-          return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list, Warnings = unlist(unname(warnings.collector))))
+        graphs.object <- split(x = graphs.object, by = key.vars[1], drop = TRUE)
+        if(is.null(graph.row.label)) {
+          graph.row.label <- vars.list[["bckg.row.var"]]
+        }
+        if(is.null(graph.col.label)) {
+          graph.col.label <- vars.list[["bckg.col.var"]]
+        }
+        crosstabs.graphs.list <- produce.crosstabs.plots(data.obj = graphs.object, row.var = vars.list[["bckg.row.var"]], split.vars.vector = key.vars, col.var = "variable", name.col.var = graph.col.label, name.row.var = graph.row.label)
+        if(length(key.vars) == 1) {
+          graphs.object <- rbindlist(l = graphs.object)
+          x.var <- sym("variable")
+          y.var <- sym(vars.list[["bckg.row.var"]])
+          color.var <- sym("value")
+          facet.var <- key.vars
+          int.crosstabs <- ggplot(data = graphs.object, aes(x = !!x.var, y = ordered(!!y.var, levels = rev(levels(!!y.var))), fill = !!color.var))
+          int.crosstabs <- int.crosstabs + facet_wrap(graphs.object[ , get(facet.var)] ~ .)
+          int.crosstabs <- int.crosstabs + geom_tile(color = "grey")
+          int.crosstabs <- int.crosstabs + scale_fill_gradient(low = "white", high = "red")
+          int.crosstabs <- int.crosstabs + xlab(label = graph.col.label)
+          int.crosstabs <- int.crosstabs + ylab(label = graph.row.label)
+          int.crosstabs <- int.crosstabs + geom_text(aes(label = round(x = value, digits = 0)))
+          int.crosstabs <- int.crosstabs + scale_x_discrete(expand = c(0,0), position = "top", labels = str_wrap(string = graphs.object[ , get(as.character(x.var))], width = 10))
+          int.crosstabs <- int.crosstabs + scale_y_discrete(expand = c(0,0), labels = str_wrap(string = rev(levels(droplevels(graphs.object[ , get(as.character(y.var))]))), width = 10))
+          int.crosstabs <- int.crosstabs + coord_equal()
+          int.crosstabs <- int.crosstabs + theme(panel.background = element_rect(fill = "white"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.major = element_line(colour = "black"),
+          panel.border = element_rect(colour = "black", fill = NA, linewidth =  1),
+          plot.background = element_rect(fill = "#e2e2e2"),
+          strip.background = element_rect(color = "black", fill = "#9E9E9E", linewidth =  1, linetype = "solid"),
+          legend.background = element_rect(fill = "#e2e2e2"),
+          legend.key = element_blank(),
+          plot.title = element_text(hjust = 0.5))
+          int.crosstabs <- int.crosstabs + labs(fill="Observed\ncounts")
+          int.crosstabs <- list(int.crosstabs)
+          crosstabs.graphs.list["International_Crosstabs"] <- int.crosstabs
         }
       }
-    }
-  }, interrupt = function(f) {
-    message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
-  })
-  if(length(warnings.collector) > 0) {
-    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
-      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
-    }
-    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
-      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
-    }
-    if(!is.null(warnings.collector[["data.no.JKZONE.JKREP"]])) {
-      warning(warnings.collector[["data.no.JKZONE.JKREP"]], call. = FALSE)
-    }
-    if(!is.null(warnings.collector[["removed.countries.row.col.vars"]])) {
-      warning(warnings.collector[["removed.countries.row.col.vars"]], call. = FALSE)
-    }
-    if(!is.null(warnings.collector[["insufficient.cases"]])) {
-      warning(warnings.collector[["insufficient.cases"]], call. = FALSE)
+      if(isTRUE(save.output)) {
+        save.graphs(out.path = action.args.list[["output.file"]])
+        if(isFALSE(graphs)) {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = FALSE, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+        } else {
+          export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], add.graphs = TRUE, non.perc.graphs = crosstabs.plots.files, Rao.Scott.adj.chi.sq.obj = Rao.Scott.adj.chi.sq, analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+          delete.graphs(out.path = action.args.list[["output.file"]])
+        }
+      } else if(isFALSE(save.output)) {
+        if(missing(graphs) || graphs == FALSE) {
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info)))
+          } else {
+            return(list(Estimates = estimates, `Rao-Scott` = Rao.Scott.adj.chi.sq, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
+          }
+        } else if(graphs == TRUE) {
+          message('Graphs for the estimates produced in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.graphs}[[3]], "%H:%M:%OS3"), "\n")
+          if(length(warnings.collector) == 0) {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list))
+          } else {
+            return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), `Crosstabs graphs` = crosstabs.graphs.list, Warnings = unlist(unname(warnings.collector))))
+          }
+        }
+      }
+    }, interrupt = function(f) {
+      message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
+    })
+    if(length(warnings.collector) > 0) {
+      if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+        warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+      }
+      if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+        warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+      }
+      if(!is.null(warnings.collector[["data.no.JKZONE.JKREP"]])) {
+        warning(warnings.collector[["data.no.JKZONE.JKREP"]], call. = FALSE)
+      }
+      if(!is.null(warnings.collector[["removed.countries.row.col.vars"]])) {
+        warning(warnings.collector[["removed.countries.row.col.vars"]], call. = FALSE)
+      }
+      if(!is.null(warnings.collector[["insufficient.cases"]])) {
+        warning(warnings.collector[["insufficient.cases"]], call. = FALSE)
+      }
     }
   }
-}
+  

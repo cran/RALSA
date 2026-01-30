@@ -756,12 +756,12 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       odds.ratios.estimates <- NULL
       counter <<- counter + 1
       message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+      if(nchar(counter) == 1) {
+        paste0("( ", counter, "/", number.of.countries, ")   ")
+      } else if(nchar(counter) == 2) {
+        paste0("(", counter, "/", number.of.countries, ")   ")
+      },
+      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))

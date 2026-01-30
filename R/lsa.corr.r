@@ -21,6 +21,8 @@
 #' @param weight.var      The name of the variable containing the weights. If no name of a weight
 #'                        variable is provide, the function will automatically select the default
 #'                        weight variable for the provided data, depending on the respondent type.
+#' @param DF.type         The method fot the degrees of freedom shall be computed, either
+#'                        \code{"JR"} (default) or \code{"WS"}. See details.
 #' @param include.missing Logical, shall the missing values of the splitting variables be included
 #'                        as categories to split by and all statistics produced for them? The
 #'                        default (\code{FALSE}) takes all cases on the splitting variables without
@@ -51,6 +53,8 @@
 #'
 #' A sufficient number of variable names (background/contextual) or PV roots have to be provided - either two background variables, or two PV roots, or mixture of them with total length of two (i.e. one background/contextual variable and one PV root).
 #'
+#' The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{"JR"} and it is recommended to use it.
+#'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
 #' The \code{shortcut} argument is valid only for TIMSS, eTIMSS PSI, TIMSS Advanced, TIMSS Numeracy, PIRLS, ePIRLS, PIRLS Literacy and RLII. Previously, in computing the standard errors, these studies were using 75 replicates because one of the schools in the 75 JK zones had its weights doubled and the other one has been taken out. Since TIMSS 2015 and PIRLS 2016 the studies use 150 replicates and in each JK zone once a school has its weights doubled and once taken out, i.e. the computations are done twice for each zone. For more details see Foy & LaRoche (2016) and Foy & LaRoche (2017). If replication of the tables and figures is needed, the \code{shortcut} argument has to be changed to \code{TRUE}.
@@ -78,6 +82,8 @@
 #'   \item Correlation_\verb{<}Background variable\verb{>}\verb{_}MVR - the measurement variance component for the correlation of the particular background variable PVs with a set of PVs specified in \code{PV.root.corr}. There will be one column with the measurement variance component for the correlation coefficient estimate for each background/contextual variable correlated with a set of PVs specified in \code{PV.root.corr}.
 #'   \item t_\verb{<}root PV\verb{>} - the \emph{t}-test value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 #'   \item t_\verb{<}Background variable\verb{>} - the \emph{t}-test value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
+#'   \item DF_\verb{<}root PV\verb{>} - the degrees of freedom value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
+#'   \item DF_\verb{<}Background variable\verb{>} - the degrees of freedom value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 #'   \item p_\verb{<}root PV\verb{>} - the \emph{p}-value for the correlation coefficients of a set of PVs when correlating them with other variables (background/contextual or other sets of PVs).
 #'   \item p_\verb{<}Background variable\verb{>} - the \emph{p}-value value for the correlation coefficients of background variables when correlating them with other variables (background/contextual or other sets of PVs).
 #' }
@@ -135,13 +141,21 @@
 #' }
 #'
 #' @references
+#' Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+#'
 #' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015} (pp. 3.1-3.37). Chestnut Hill, MA: TIMSS & PIRLS International Study Center.
 #'
 #' LaRoche, S., Joncas, M., & Foy, P. (2017). Sample Design in PIRLS 2016. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in PIRLS 2016} (pp. 3.1-3.34). Chestnut Hill, MA: Lynch School of Education, Boston College.
 #'
+#' Qian, J. (1998). Estimation of the effective degrees of freedom in T-type tests for complex data. \emph{Proceedings of the Section on Survey Research Methods, American Statistical Association}, 704-708.
+#'
+#' Satterthwaite, F. E. (1946). An Approximate Distribution of Estimates of Variance Components. \emph{Biometrics Bulletin}, \emph{2}(6), 110–114. https://doi.org/10.2307/3002019
+#'
+#' Welch, B. L. (1947). The Generalization of `Student’s’ Problem when Several Different Population Variances are Involved. \emph{Biometrika}, \emph{34}(1/2), 28–35. https://doi.org/10.2307/2332510
+#'
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
-lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
+lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root.corr, corr.type, weight.var, DF.type, include.missing = FALSE, shortcut = FALSE, save.output = TRUE, output.file, open.output = TRUE) {
   tmp.options <- options(scipen = 999, digits = 22)
   on.exit(expr = options(tmp.options), add = TRUE)
   warnings.collector <- list()
@@ -153,6 +167,14 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
     corr.type <- "Pearson"
   } else {
     stop('\n\nUnknown method for computting correlations specified in "corr.type" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
+  }
+  if(missing(DF.type)) {
+    DF.type <- "JR"
+  } else {
+    DF.type <- DF.type
+  }
+  if(!DF.type %in% c("U", "JR", "WS")) {
+    stop('The accepted "DF.type" can be either "JR" or "WS". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
   if(!missing(data.file) == TRUE && !missing(data.object) == TRUE) {
     stop('Either "data.file" or "data.object" has to be provided, but not both. All operations stop here. Check your input.\n\n', call. = FALSE)
@@ -338,6 +360,14 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       }
       if(!is.null(vars.list[["bckg.corr.vars"]]) & is.null(vars.list[["PV.root.corr"]])) {
         bckg.correlations <- list(compute.correlations.all.repwgt(data.object = data1, vars.vector = vars.list[["bckg.corr.vars"]], weight.var = all.weights, keys = key.vars, method = corr.type))
+        bckg.output.copy <- copy(bckg.correlations)
+        bckg.output.copy <- lapply(X = bckg.output.copy, FUN = function(i) {
+          i <- i[V1 != V2, ]
+          i[ , V1 := paste(V1, V2, sep = " |-| ")]
+          i[ , V2 := NULL]
+          setnames(x = i,old = "V1", new = "Variable")
+          setkeyv(x = i, cols = c(key.vars, "Variable"))
+        })
       } else if(is.null(vars.list[["bckg.corr.vars"]]) & !is.null(vars.list[["PV.root.corr"]])) {
         PV.correlations <- list(lapply(X = data1, FUN = function(i) {
           compute.correlations.all.repwgt(data.object = i, vars.vector = grep(pattern = paste(vars.list[["PV.root.corr"]], collapse = "|"), x = colnames(i), value = TRUE), weight.var = all.weights, keys = key.vars, method = corr.type)
@@ -381,6 +411,33 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
           bckg.correlations[ , (grep(pattern = "Correlation_", x = colnames(bckg.correlations), value = TRUE)) := NaN]
         }
       } else if(!is.null(vars.list[["PV.root.corr"]])) {
+        PV.output.copy <- copy(PV.correlations)
+        PV.output.copy <- lapply(X = PV.output.copy, FUN = function(i) {
+          lapply(X = i, FUN = function(j) {
+            j[ , c("V1", "V2") := lapply(.SD, function(k) {
+              levels.k <- levels(k)
+              ind.levels.k <- grep(pattern = paste(vars.list[["PV.root.corr"]], collapse = "|"), x = levels.k)
+              if(isFALSE(unique(grepl(pattern = "[[:digit:]]+", x = vars.list[["PV.root.corr"]], fixed = TRUE)))) {
+                levels.k[ind.levels.k] <- gsub(pattern = "[[:digit:]]{2}$", replacement = "", x = levels.k[ind.levels.k])
+              } else if(isTRUE(unique(grepl(pattern = "[[:digit:]]+", x = vars.list[["PV.root.corr"]], fixed = TRUE)))) {
+                levels.k[ind.levels.k] <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = levels.k[ind.levels.k])
+              }
+              k <- as.character(k)
+              ind.k <- grep(pattern = paste(vars.list[["PV.root.corr"]], collapse = "|"), x = k)
+              if(isFALSE(unique(grepl(pattern = "[[:digit:]]+", x = vars.list[["PV.root.corr"]], fixed = TRUE)))) {
+                k[ind.k] <- gsub(pattern = "[[:digit:]]{2}$", replacement = "", x = k[ind.k])
+              } else if(isTRUE(unique(grepl(pattern = "[[:digit:]]+", x = vars.list[["PV.root.corr"]], fixed = TRUE)))) {
+                k[ind.k] <- gsub(pattern = "[[:digit:]]+", replacement = "N", x = k[ind.k])
+              }
+              k <- factor(x = k, levels = levels.k)
+            }), .SDcols = c("V1", "V2")]
+            j <- j[V1 != V2, ]
+            j[ , V1 := paste(V1, V2, sep = " |-| ")]
+            j[ , V2 := NULL]
+            setnames(x = j,old = "V1", new = "Variable")
+            setkeyv(x = j, cols = c(key.vars, "Variable"))
+          })
+        })
         reshape.list.statistics.PV(estimate.object = PV.correlations, estimate.name = "Correlation", PV.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         PV.correlations <- lapply(X = PV.correlations, FUN = function(i) {
           i <- lapply(X = seq_along(i), FUN = function(j) {
@@ -487,64 +544,127 @@ lsa.corr <- function(data.file, data.object, split.vars, bckg.corr.vars, PV.root
       } else {
         p.value.columns <- paste0("p_", c(vars.list[["PV.root.corr"]], vars.list[["bckg.corr.vars"]]))
       }
-      merged.outputs[ , degrees.of.freedom := get(paste0("Sum_", vars.list[["weight.var"]])) - 2L]
-      merged.outputs[ , (p.value.columns) := lapply(.SD, function(i) {
-        2 * pt(q = -abs(i), df = degrees.of.freedom)
-      }), .SDcols = t.value.columns]
-      merged.outputs[ , degrees.of.freedom := NULL]
-      merged.outputs[ , (c(t.value.columns, p.value.columns)) := lapply(.SD, function(i) {
-        ifelse(test = is.na(i), yes = NaN, no = i)
-      }), .SDcols = c(t.value.columns, p.value.columns)]
+      length(c(vars.list[["bckg.corr.vars"]], vars.list[["PV.root.corr"]]))
+      if(DF.type == "U") {
+        merged.outputs[ , DF := get(paste0("Sum_", vars.list[["weight.var"]])) - 2L]
+        merged.outputs[ , (p.value.columns) := lapply(.SD, function(i) {
+          2 * pt(q = -abs(i), df = DF)
+        }), .SDcols = t.value.columns]
+      } else if(DF.type %in% c("WS", "JR")) {
+        if(is.null(vars.list[["PV.root.corr"]])) {
+          DF <- compute.corrected.DF(rep.est.obj = bckg.output.copy, full.wgt = vars.list[["weight.var"]], replicates = rep.wgts.names, type = DF.type)
+        } else {
+          DF <- compute.corrected.DF(rep.est.obj = PV.output.copy, full.wgt = vars.list[["weight.var"]], replicates = rep.wgts.names, type = DF.type)
+        }
+        DF[ , V1 := gsub(pattern = "[[:space:]]+\\|\\-\\|[[:space:]].+", replacement = "", x = Variable)]
+        DF[ , V2 := gsub(pattern = ".+[[:space:]]\\|\\-\\|[[:space:]]", replacement = "", x = Variable)]
+        DF[ , Variable := NULL]
+        DF.dcast.formula <- as.formula(paste0(paste(key.vars, collapse = " + "), " + V1 ~ V2"))
+        DF <- dcast(data = DF, formula = DF.dcast.formula, value.var = c("DF"))
+        setnames(x = DF, old = "V1", new = "Variable")
+        DF[ , Variable := factor(x = Variable, levels = levels(merged.outputs[ , Variable]))]
+        setcolorder(x = DF, neworder = c(key.vars, "Variable", levels(DF[ , Variable])))
+        setnames(x = DF, old = levels(DF[ , Variable]), new = paste0("DF_", levels(DF[ , Variable])))
+        setkeyv(x = DF, cols = key.vars)
+        merged.outputs <- merge(x = merged.outputs, y = DF, by = c(key.vars, "Variable"))
+        setkeyv(x = merged.outputs, cols = c(key.vars, "Variable"))
+        merged.outputs[ , (p.value.columns) := lapply(names(.SD), function(i) {
+          2 * pt(q = -abs(get(i)), df = get(gsub(pattern = "^t_", replacement = "DF_", x = i)))
+        }), .SDcols = t.value.columns]
+      }
       counter <<- counter + 1
       message("     ",
-              if(nchar(counter) == 1) {
-                paste0("( ", counter, "/", number.of.countries, ")   ")
-              } else if(nchar(counter) == 2) {
-                paste0("(", counter, "/", number.of.countries, ")   ")
-              },
-              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), "processed in ", country.analysis.info[ , DURATION]))
-      return(merged.outputs)
-    }
-    estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
-    estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
-    setkeyv(x = estimates, cols = key.vars)
-    total.exec.time <- rbindlist(analysis.info)[ , DURATION]
-    total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
-    total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
-    if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
-      message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
-    } else {
-      message("\n")
-    }
-    ptm.add.table.average <- proc.time()
-    if(!is.null(vars.list[["bckg.corr.vars"]]) && anyNA(estimates[ , Variable])) {
-      estimates[ , Variable := `levels<-` (addNA(Variable), c(levels(Variable), "<NA>"))]
-      estimates[ , n_Cases := as.numeric(n_Cases)]
-      estimates[Variable == "<NA>" , (grep(pattern = paste(c("n_Cases", "Sum_", "Percentages_", "Correlation_"), collapse = "|"), x = colnames(estimates), value = TRUE)) := NaN]
-    }
-    estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
-    message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
-    if(isTRUE(save.output)) {
-      export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
-    } else if(isFALSE(save.output)) {
-      if(length(warnings.collector) == 0) {
-        return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
-      } else {
-        return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
-      }
-    }
-  }, interrupt = function(f) {
-    message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
+      if(nchar(counter) == 1) {
+        paste0("( ", counter, "/", number.of.countries, ")   ")
+      } else if(nchar(counter) == 2) {
+        paste0("(", counter, "/", number.of.countries, ")   ")
+      },
+      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), "processed in ", country.analysis.info[ , DURATION])
+    )
+    return(merged.outputs)
+  }
+  estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
+  estimates[ , colnames(estimates)[1] := as.character(estimates[ , get(colnames(estimates)[1])])]
+  setkeyv(x = estimates, cols = key.vars)
+  total.exec.time <- rbindlist(analysis.info)[ , DURATION]
+  total.exec.time.millisec <- sum(as.numeric(str_extract(string = total.exec.time, pattern = "[[:digit:]]{3}$")))/1000
+  total.exec.time <- sum(as.ITime(total.exec.time), total.exec.time.millisec)
+  if(length(unique(estimates[ , get(key.vars[1])])) > 1) {
+    message("\nAll ", length(unique(estimates[ , get(key.vars[1])])), " countries with valid data processed in ", format(as.POSIXct("0001-01-01 00:00:00") + total.exec.time, "%H:%M:%OS3"))
+  } else {
+    message("\n")
+  }
+  ptm.add.table.average <- proc.time()
+  if(!is.null(vars.list[["bckg.corr.vars"]]) && anyNA(estimates[ , Variable])) {
+    estimates[ , Variable := `levels<-` (addNA(Variable), c(levels(Variable), "<NA>"))]
+    estimates[ , n_Cases := as.numeric(n_Cases)]
+    estimates[Variable == "<NA>" , (grep(pattern = paste(c("n_Cases", "Sum_", "Percentages_", "Correlation_"), collapse = "|"), x = colnames(estimates), value = TRUE)) := NaN]
+  }
+  estimates <- compute.table.average(output.obj = estimates, object.variables = vars.list, data.key.variables = c(key.vars, "Variable"), data.properties = file.attributes)
+  lapply(X = levels(estimates[ , Variable]), FUN = function(i) {
+    estimates[ , (paste0("t_", i)) := get(paste0("Correlation_", i)) / get(paste0("Correlation_", i, "_SE"))]
   })
-  if(length(warnings.collector) > 0) {
-    if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
-      warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+  estimates[ , c(grep(pattern = "^t_|^p_", x = colnames(estimates), value = TRUE)) := lapply(.SD, function(i) {
+    ifelse(test = is.infinite(i) | is.na(i), yes = NaN, no = i)
+  }), .SDcols = grep(pattern = "^t_|^p_", x = colnames(estimates), value = TRUE)]
+  if(DF.type == "U") {
+    mean.n.cases <- mean(estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", get(paste0("Sum_", vars.list[["weight.var"]]))] - 2L)
+    table.average.DF <- estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", mean.n.cases - length(unlist(vars.list[c("bckg.dep.var", "PV.root.dep", "bckg.indep.cont.vars", "bckg.indep.cat.vars", "PV.root.indep")]))]
+    estimates[ , DF := as.double(DF)]
+    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", DF := table.average.DF]
+  } else if(DF.type %in% c("WS", "JR")) {
+    variances.and.DF <- estimates[eval(parse(text = colnames(estimates)[1])) != "Table Average", mget(c(key.vars, "Variable", grep(pattern = "Correlation_.+_SE", x = colnames(estimates), value = TRUE), grep(pattern = "^DF_", x = colnames(estimates), value = TRUE)))]
+    variances.and.DF <- split(x = variances.and.DF, by = "Variable")
+    variances.and.DF <- lapply(X = variances.and.DF, FUN = function(i) {
+      ind <- grep(pattern = paste(i[ , Variable], collapse = "|"), x = colnames(i), value = TRUE)
+      i[ , (ind) := NA]
+    })
+    variances.and.DF <- rbindlist(l = variances.and.DF)
+    setkeyv(x = variances.and.DF, cols = c(key.vars, "Variable"))
+    setnames(x = variances.and.DF, old = grep(pattern = "_SE$", x = colnames(variances.and.DF), value = TRUE), new = paste0("Variance_", paste(levels(variances.and.DF[ , Variable]))))
+    variances.and.DF[ , (grep(pattern = "^Variance_", x = colnames(variances.and.DF), value = TRUE)) := lapply(.SD, function(i) {
+      i^2
+    }), .SDcols = grep(pattern = "^Variance_", x = colnames(variances.and.DF), value = TRUE)]
+    if(length(key.vars) == 1) {
+      by.columns <- "Variable"
+    } else {
+      by.columns <- c(key.vars[2:length(key.vars)], "Variable")
     }
-    if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
-      warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
-    }
-    if(!is.null(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]])) {
-      warning(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]], call. = FALSE)
+    table.average.DF <- variances.and.DF[ , lapply(names(.SD), function(i) {
+      variance.col <- gsub(pattern = "^DF_", replacement = "Variance_", x = i)
+      i <- sum(get(variance.col)^2, na.rm = TRUE) / sum((get(variance.col)^2) / get(i), na.rm = TRUE)
+    }), .SDcols = grep(pattern = "^DF_", x = colnames(variances.and.DF), value = TRUE), by = by.columns]
+    setnames(x = table.average.DF, old = grep(pattern = "^V[[:digit:]]+", x = colnames(table.average.DF), value = TRUE), new = grep(pattern = "^DF_", x = colnames(variances.and.DF), value = TRUE))
+    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", (grep(pattern = "^DF_", x = colnames(estimates), value = TRUE)) := table.average.DF[ , mget(grep(pattern = "^DF_", x = colnames(table.average.DF), value = TRUE))]]
+    estimates[eval(parse(text = colnames(estimates)[1])) == "Table Average", (grep(pattern = "^p_", x = colnames(estimates), value = TRUE)) := lapply(names(.SD), function(i) {
+      2 * pt(q = -abs(get(i)), df = get(gsub(pattern = "^t_", replacement = "DF_", x = i)))
+    }), .SDcols = grep(pattern = "^t_", x = colnames(estimates), value = TRUE)]
+  }
+  estimates[ , (grep(pattern = "^DF_", x = colnames(estimates), value = TRUE)) := lapply(.SD, function(i) {
+    ifelse(test = is.na(i), yes = NaN, no = i)
+  }), .SDcols = grep(pattern = "^DF_", x = colnames(estimates), value = TRUE)]
+  message('"Table Average" added to the estimates in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.add.table.average}[[3]], "%H:%M:%OS3"), "\n")
+  if(isTRUE(save.output)) {
+    export.results(output.object = estimates, analysis.type = action.args.list[["executed.analysis.function"]], analysis.info.obj = rbindlist(l = analysis.info), destination.file = output.file, open.exported.file = open.output, warns.list = unlist(warnings.collector))
+  } else if(isFALSE(save.output)) {
+    if(length(warnings.collector) == 0) {
+      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info)))
+    } else {
+      return(list(Estimates = estimates, `Analysis information` = rbindlist(l = analysis.info), Warnings = unlist(unname(warnings.collector))))
     }
   }
+}, interrupt = function(f) {
+  message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
+})
+if(length(warnings.collector) > 0) {
+  if(!is.null(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]])) {
+    warning(warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]], call. = FALSE)
+  }
+  if(!is.null(warnings.collector[["vars.list.analysis.vars"]])) {
+    warning(warnings.collector[["vars.list.analysis.vars"]], call. = FALSE)
+  }
+  if(!is.null(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]])) {
+    warning(warnings.collector[["removed.countries.with.missing.bckg.cor.vars"]], call. = FALSE)
+  }
+}
 }
