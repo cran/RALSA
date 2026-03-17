@@ -139,6 +139,9 @@
 #'
 #' If any warnings resulting from the computations are issued, these will be included in an additional "Warnings" sheet in the workbook as well.
 #'
+#' @note
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#'
 #' @examples
 #' # Compute percentages of female and male students in TIMSS 2015 grade 8 using data file, omit
 #' # missing from the splitting variable (female and male as answered by the students), without
@@ -273,10 +276,13 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
         stop('\nThe number of list components in the "mean.y.labels" argument is not equal to the number of variable names supplied in "bckg.avg.vars" and/or "PV.root.avg". Check your input.', call. = FALSE)
       }
     }
-    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
+    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TIMSS Longitudinal", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list, action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(file.attributes[["lsa.study"]] == "TIMSS Longitudinal" & isTRUE(grepl(pattern = "tch", x = file.attributes[["lsa.file.type"]], ignore.case = TRUE)) & length(data) == 0) {
+      stop("\nThere are no valid cases for analysis in the data. As this is TIMSS Longitudinal, the proper teacher weight and the matching set of background variable names need to be selected for the corresponding year. All operations stop here. Check your input.", call. = FALSE)
+    }
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
     }
@@ -285,7 +291,7 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       if(length(jk.zone.col) > 0) {
         all(is.na(i[ , get(jk.zone.col)]))
       } else {
-""
+        ""
       }
     })
     if(length(names(Filter(isTRUE, missing.JKZONES))) > 0) {
@@ -689,12 +695,12 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
       }
       counter <<- counter + 1
       message("     ",
-      if(nchar(counter) == 1) {
-        paste0("( ", counter, "/", number.of.countries, ")   ")
-      } else if(nchar(counter) == 2) {
-        paste0("(", counter, "/", number.of.countries, ")   ")
-      },
-      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
+                paste0("(", counter, "/", number.of.countries, ")   ")
+              },
+              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))
@@ -772,17 +778,17 @@ lsa.pcts.means <- function(data.file, data.object, split.vars, bckg.avg.vars, PV
           int.means <- lapply(X = y.var, FUN = function(i) {
             cnt.plot <- ggplot(data = graphs.object, aes(x = !!x.var, y = !!i))
             cnt.plot <- cnt.plot + geom_errorbar(aes(ymin = !!i - 1.96 * !!sym(paste0(i, "_SE")), ymax = !!i + 1.96 * !!sym(paste0(i, "_SE"))),
-            width = 0.3,
-            linewidth = 1.3,
-            position = position_dodge(.9))
+                                                 width = 0.3,
+                                                 linewidth = 1.3,
+                                                 position = position_dodge(.9))
             cnt.plot <- cnt.plot + geom_point(size = 3)
             cnt.plot <- cnt.plot + theme(panel.background = element_rect(fill = "white"),
-            panel.grid.major.x = element_blank(),
-            panel.grid.major = element_line(colour = "black"),
-            panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
-            plot.background = element_rect(fill = "#e2e2e2"),
-            legend.background = element_rect(fill = "#e2e2e2"),
-            plot.title = element_text(hjust = 0.5))
+                                         panel.grid.major.x = element_blank(),
+                                         panel.grid.major = element_line(colour = "black"),
+                                         panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),
+                                         plot.background = element_rect(fill = "#e2e2e2"),
+                                         legend.background = element_rect(fill = "#e2e2e2"),
+                                         plot.title = element_text(hjust = 0.5))
             cnt.plot <- cnt.plot + scale_x_discrete(labels = function(k) {
               str_wrap(k, width = 20)
             })

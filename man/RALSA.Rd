@@ -20,7 +20,7 @@ Currently, RALSA works with data from \strong{all cycles} of the the following s
 \item IEA ICILS;
 \item IEA RLII;
 \item IEA PIRLS (including PIRLS Literacy and ePIRLS);
-\item IEA TIMSS (including TIMSS Numeracy, eTIMSS);
+\item IEA TIMSS (including TIMSS Numeracy, eTIMSS, TIMSS Longitudinal);
 \item IEA TiPi (TIMSS and PIRLS joint study);
 \item IEA TIMSS Advanced;
 \item IEA SITES;

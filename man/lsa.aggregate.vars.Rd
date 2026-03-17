@@ -36,11 +36,11 @@ See details.}
 \item{new.var.labels}{Optional, vector of strings to add as variable labels for the
 \code{new.variables}. See details.}
 
-\item{aggr.fun}{Function to apply when aggregating the \code{variable}. Accepts
+\item{aggr.fun}{Function to apply when aggregating the variables. Accepts
 \code{mean} (default), \code{median}, or \code{mode}. See details.}
 
 \item{out.file}{Full path to the \code{.RData} file to be written. If missing, the
-original object will be overwritten in the memory. See examples.}
+original object will be written in the memory. See examples.}
 }
 \value{
 A \code{lsa.data} object in memory (if \code{out.file} is missing) or \code{.RData} file containing \code{lsa.data} object with the new aggregated variables.

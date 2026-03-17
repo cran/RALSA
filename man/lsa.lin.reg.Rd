@@ -78,8 +78,8 @@ weight variable is provide, the function will automatically select
 the default weight variable for the provided data, depending on the
 respondent type.}
 
-\item{DF.type}{The method fot the degrees of freedom shall be computed, either
-\code{"JR"} (default) or \code{"WS"}. See details.}
+\item{DF.type}{The method for the degrees of freedom shall be computed, either
+\code{JR} (default) or \code{WS}. See details.}
 
 \item{include.missing}{Logical, shall the missing values of the splitting variables be
 included as categories to split by and all statistics produced for
@@ -193,7 +193,7 @@ The function can also compute two-way interaction effects between independent va
 \item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
 }
 
-The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
+The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic when computing the \emph{p}-values. As of now, the function accepts \code{WS} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{JR} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
 
 If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 
@@ -202,6 +202,9 @@ The \code{shortcut} argument is valid only for TIMSS, eTIMSS, TIMSS Advanced, TI
 The \code{lsa.lin.reg} also provides model Wald F-Statistic, as this is the appropriate statistic with complex sampling designs. See Bate (2004) and Rao & Scott (1984). The Wald F-Statistic is computed using Chi-square distribution and tests only the null hypothesis.
 
 The function provides two-tailed \emph{t}-test and \emph{p}-values for the regression coefficients.
+}
+\note{
+TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
 }
 \examples{
 # Compute linear regression coefficients with the complex student background scale "Student

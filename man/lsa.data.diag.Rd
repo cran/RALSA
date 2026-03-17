@@ -78,6 +78,8 @@ If the data set is of class \code{lsa.data} and no weight variable is provided, 
 }
 \note{
 This function is intended only as utility function for diagnostic purposes, to inspect the variables prior to performing an actual analysis. It is \strong{not} intended for actual analysis of large-scale assessments' data. Reporting statistics from it can and will lead to biased and erroneous conclusions.
+
+TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
 }
 \examples{
 # Merge PIRLS 2016 school principal data for all countries

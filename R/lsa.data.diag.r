@@ -52,6 +52,8 @@
 #' @note
 #' This function is intended only as utility function for diagnostic purposes, to inspect the variables prior to performing an actual analysis. It is **not** intended for actual analysis of large-scale assessments' data. Reporting statistics from it can and will lead to biased and erroneous conclusions.
 #'
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#'
 #' @examples
 #' # Merge PIRLS 2016 school principal data for all countries
 #' \dontrun{
@@ -300,6 +302,9 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         }
       }), .SDcols = c(variables, split.vars)]
     }
+    if(study.name == "TIMSS Longitudinal" & isTRUE(grepl(pattern = "tch", x = attr(x = data.object, which = "file.type"), ignore.case = TRUE))) {
+      data.object <- na.omit(object = data.object, cols = weight.var)
+    }
     if(!missing(split.vars)) {
       data.object <- lapply(X = data.object[ , variables, with = FALSE], FUN = function(i) {
         i <- data.table(data.object[ , c(split.vars, weight.var), with = FALSE], i)
@@ -312,7 +317,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       desc.tables <- lapply(X = data.object[ , mget(colnames(data.object)[colnames(data.object) != weight.var])], FUN = function(i) {
         x <- cbind(as.data.table(i), data.object[ , get(weight.var)])
         if(is.factor(i) | is.character(i)) {
-          x[ , N := .(N = sum(V2)), by = i]
+          x[ , N := .(N = sum(V2)), by = i] # Where V2 is the weight.
           x[ , V2 := NULL]
           return(unique(x))
         } else if(is.numeric(i)) {
@@ -732,44 +737,63 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       x = data.table(names.and.labels[ , Labels]), startCol = 2,
       startRow = 2,
       colNames = FALSE)
-      writeData(wb = export.workbook, sheet = "Index", x = data.table("Variable names", "Variable labels"), startCol = 1, startRow = 1, colNames = FALSE)
-      addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 1:2, style = table.header.style, stack = TRUE)
-      addStyle(wb = export.workbook, sheet = "Index", rows = 2:(length(variables) + 1), cols = 1:2, style = border.style, gridExpand = TRUE, stack = TRUE)
-      if(!is.null(study.name)) {
-        if(weight.var != "TMPWGT") {
-          export.weight.var <- weight.var
-        } else {
-          export.weight.var <- "none"
-        }
-        writeData(wb = export.workbook, sheet = "Index", x = data.table(list("Study", "Cycle", "Respondent type", "Weight")), startCol = 4, startRow = 1, colNames = FALSE)
-        writeData(wb = export.workbook, sheet = "Index", x = data.table(list(study.name, study.cycle, resp.type, export.weight.var)), startCol = 5, startRow = 1, colNames = FALSE)
-        addStyle(wb = export.workbook, sheet = "Index", rows = 1:4, cols = 4, style = table.header.style, stack = TRUE)
-        addStyle(wb = export.workbook, sheet = "Index", rows = 1:4, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
-      } else if(is.null(study.name)) {
-        if(weight.var != "TMPWGT") {
-          export.weight.var <- weight.var
-        } else {
-          export.weight.var <- "none"
-        }
-        writeData(wb = export.workbook, sheet = "Index", x = data.table(list("Weight")), startCol = 4, startRow = 1, colNames = FALSE)
-        writeData(wb = export.workbook, sheet = "Index", x = data.table(list(export.weight.var)), startCol = 5, startRow = 1, colNames = FALSE)
-        addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 4, style = table.header.style, stack = TRUE)
-        addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
+    writeData(wb = export.workbook, sheet = "Index", x = data.table("Variable names", "Variable labels"), startCol = 1, startRow = 1, colNames = FALSE)
+    addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 1:2, style = table.header.style, stack = TRUE)
+    addStyle(wb = export.workbook, sheet = "Index", rows = 2:(length(variables) + 1), cols = 1:2, style = border.style, gridExpand = TRUE, stack = TRUE)
+    if(!is.null(study.name)) {
+      if(weight.var != "TMPWGT") {
+        export.weight.var <- weight.var
+      } else {
+        export.weight.var <- "none"
       }
-      lapply(X = variables, FUN = function(i) {
-        writeFormula(wb = export.workbook, sheet = i, startCol = 1, startRow = 1, x = makeHyperlinkString(sheet = "Index", text = "<<Return to the 'Index' sheet"))
+      writeData(wb = export.workbook, sheet = "Index", x = data.table(list("Study", "Cycle", "Respondent type", "Weight")), startCol = 4, startRow = 1, colNames = FALSE)
+      writeData(wb = export.workbook, sheet = "Index", x = data.table(list(study.name, study.cycle, resp.type, export.weight.var)), startCol = 5, startRow = 1, colNames = FALSE)
+      addStyle(wb = export.workbook, sheet = "Index", rows = 1:4, cols = 4, style = table.header.style, stack = TRUE)
+      addStyle(wb = export.workbook, sheet = "Index", rows = 1:4, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
+    } else if(is.null(study.name)) {
+      if(weight.var != "TMPWGT") {
+        export.weight.var <- weight.var
+      } else {
+        export.weight.var <- "none"
+      }
+      writeData(wb = export.workbook, sheet = "Index", x = data.table(list("Weight")), startCol = 4, startRow = 1, colNames = FALSE)
+      writeData(wb = export.workbook, sheet = "Index", x = data.table(list(export.weight.var)), startCol = 5, startRow = 1, colNames = FALSE)
+      addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 4, style = table.header.style, stack = TRUE)
+      addStyle(wb = export.workbook, sheet = "Index", rows = 1, cols = 5, style = border.style, gridExpand = TRUE, stack = TRUE)
+    }
+    lapply(X = variables, FUN = function(i) {
+      writeFormula(wb = export.workbook, sheet = i, startCol = 1, startRow = 1, x = makeHyperlinkString(sheet = "Index", text = "<<Return to the 'Index' sheet"))
+    })
+    lapply(X = variables, FUN = function(i) {
+      mergeCells(wb = export.workbook, sheet = i, cols = 1:6, rows = 1)
+    })
+    if(missing(split.vars)) {
+      cells.with.valid <- lapply(X = desc.tables, FUN = function(i) {
+        grep(pattern = "^Valid$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
       })
-      lapply(X = variables, FUN = function(i) {
-        mergeCells(wb = export.workbook, sheet = i, cols = 1:6, rows = 1)
+      valid.cells.ranges <- lapply(X = cells.with.valid, FUN = function(i) {
+        split(x = i, f = cumsum(c(TRUE, diff(i) != 1)))
       })
-      if(missing(split.vars)) {
-        cells.with.valid <- lapply(X = desc.tables, FUN = function(i) {
-          grep(pattern = "^Valid$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
+      merging.statements <- lapply(X = valid.cells.ranges, FUN = function(i) {
+        sapply(X = i, function(j) {
+          paste0("mergeCells(wb = export.workbook, cols = 1, rows = ", list(j))
         })
-        valid.cells.ranges <- lapply(X = cells.with.valid, FUN = function(i) {
+      })
+      merging.statements <- lapply(X = merging.statements, FUN = function(i) {
+        unlist(x = i[!sapply(X = i, FUN = is.null)])
+      })
+      merging.statements <- merging.statements[!sapply(X = merging.statements, FUN = is.null)]
+      merging.statements <- Map(f = paste0, merging.statements, ", sheet = '", as.list(names(merging.statements)), "')")
+      eval(parse(text = unlist(merging.statements)))
+      cells.with.missings <- lapply(X = desc.tables, FUN = function(i) {
+        grep(pattern = "^Missing$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
+      })
+      cells.with.missings <- Filter(length, cells.with.missings)
+      if(length(cells.with.missings)) {
+        missings.cells.ranges <- lapply(X = cells.with.missings, FUN = function(i) {
           split(x = i, f = cumsum(c(TRUE, diff(i) != 1)))
         })
-        merging.statements <- lapply(X = valid.cells.ranges, FUN = function(i) {
+        merging.statements <- lapply(X = missings.cells.ranges, FUN = function(i) {
           sapply(X = i, function(j) {
             paste0("mergeCells(wb = export.workbook, cols = 1, rows = ", list(j))
           })
@@ -780,187 +804,167 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
         merging.statements <- merging.statements[!sapply(X = merging.statements, FUN = is.null)]
         merging.statements <- Map(f = paste0, merging.statements, ", sheet = '", as.list(names(merging.statements)), "')")
         eval(parse(text = unlist(merging.statements)))
-        cells.with.missings <- lapply(X = desc.tables, FUN = function(i) {
-          grep(pattern = "^Missing$", x = i[ , eval(parse(text = "Value_Type"))]) + 6
-        })
-        cells.with.missings <- Filter(length, cells.with.missings)
-        if(length(cells.with.missings)) {
-          missings.cells.ranges <- lapply(X = cells.with.missings, FUN = function(i) {
-            split(x = i, f = cumsum(c(TRUE, diff(i) != 1)))
+      }
+    } else {
+      unique.split.cats.cells <- lapply(X = desc.tables, FUN = function(i) {
+        unique.ranges.split.vars <- lapply(X = i[ , mget(split.vars)], FUN = function(j) {
+          tmp.vals <- unique(as.character(j))
+          tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
+            which(k == j)
           })
-          merging.statements <- lapply(X = missings.cells.ranges, FUN = function(i) {
-            sapply(X = i, function(j) {
-              paste0("mergeCells(wb = export.workbook, cols = 1, rows = ", list(j))
+          tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
+            tmp.ranges <- split(k, cumsum(c(1, diff(k) != 1)))
+            lapply(X = tmp.ranges, FUN = function(l) {
+              l <- l + 6
+              paste(c(l[1], l[length(l)]), collapse = ":")
             })
           })
-          merging.statements <- lapply(X = merging.statements, FUN = function(i) {
-            unlist(x = i[!sapply(X = i, FUN = is.null)])
-          })
-          merging.statements <- merging.statements[!sapply(X = merging.statements, FUN = is.null)]
-          merging.statements <- Map(f = paste0, merging.statements, ", sheet = '", as.list(names(merging.statements)), "')")
-          eval(parse(text = unlist(merging.statements)))
-        }
-      } else {
-        unique.split.cats.cells <- lapply(X = desc.tables, FUN = function(i) {
-          unique.ranges.split.vars <- lapply(X = i[ , mget(split.vars)], FUN = function(j) {
-            tmp.vals <- unique(as.character(j))
-            tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
-              which(k == j)
-            })
-            tmp.vals <- lapply(X = tmp.vals, FUN = function(k) {
-              tmp.ranges <- split(k, cumsum(c(1, diff(k) != 1)))
-              lapply(X = tmp.ranges, FUN = function(l) {
-                l <- l + 6
-                paste(c(l[1], l[length(l)]), collapse = ":")
-              })
-            })
-            unlist(tmp.vals)
+          unlist(tmp.vals)
+        })
+      })
+      unique.split.cats.cells <- lapply(X = unique.split.cats.cells, FUN = function(i) {
+        lapply(X = i, FUN = function(j) {
+          j[!j == "NA"]
+        })
+      })
+      merging.statements.split.vars <- lapply(X = names(unique.split.cats.cells), FUN = function(i) {
+        lapply(X = names(unique.split.cats.cells[[i]]), FUN = function(j) {
+          lapply(X = unique.split.cats.cells[[i]][[j]], FUN = function(k) {
+            j <- paste0("mergeCells(wb = export.workbook, cols = ", grep(pattern = j, x = c(split.vars, "Value_Type")), ", rows = ", k, ", sheet = '", i, "')")
           })
         })
-        unique.split.cats.cells <- lapply(X = unique.split.cats.cells, FUN = function(i) {
-          lapply(X = i, FUN = function(j) {
-            j[!j == "NA"]
+      })
+      eval(parse(text = unlist(merging.statements.split.vars)))
+      unique.split.cats.value.types <- lapply(X = unique.split.cats.cells, FUN = function(i) {
+        i[length(i)]
+      })
+      unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
+        lapply(X = i, FUN = function(j) {
+          lapply(X = j, FUN = function(k) {
+            eval(parse(text = k))
           })
         })
-        merging.statements.split.vars <- lapply(X = names(unique.split.cats.cells), FUN = function(i) {
-          lapply(X = names(unique.split.cats.cells[[i]]), FUN = function(j) {
-            lapply(X = unique.split.cats.cells[[i]][[j]], FUN = function(k) {
-              j <- paste0("mergeCells(wb = export.workbook, cols = ", grep(pattern = j, x = c(split.vars, "Value_Type")), ", rows = ", k, ", sheet = '", i, "')")
-            })
-          })
-        })
-        eval(parse(text = unlist(merging.statements.split.vars)))
-        unique.split.cats.value.types <- lapply(X = unique.split.cats.cells, FUN = function(i) {
-          i[length(i)]
-        })
-        unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
-          lapply(X = i, FUN = function(j) {
-            lapply(X = j, FUN = function(k) {
-              eval(parse(text = k))
-            })
-          })
-        })
-        unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
-          lapply(X = i, FUN = function(j) {
-            Filter(length, lapply(X = j, FUN = function(k) {
-              k[length(k) > 1]
-            }))
-          })
-        })
-        not.valid.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
-          unlist(lapply(X = i, FUN = function(j) {
-            grep(pattern = "^Valid$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
+      })
+      unique.split.cats.value.types <- lapply(X = unique.split.cats.value.types, FUN = function(i) {
+        lapply(X = i, FUN = function(j) {
+          Filter(length, lapply(X = j, FUN = function(k) {
+            k[length(k) > 1]
           }))
-        }, USE.NAMES = TRUE, simplify = FALSE)
-        if(length(unlist(not.valid.positions)) != 0) {
-          not.valid.positions <- Map(f = function(list1, list2) {
-            lapply(X = list1, FUN = function(i) {
-              lapply(X = i, FUN = function(j) {
-                j[!j %in% list2]
-              })
-            })
-          }, list1 = unique.split.cats.value.types, list2 = not.valid.positions)
-          merging.statements.value.type <- lapply(X = names(not.valid.positions), FUN = function(i) {
-            lapply(X = not.valid.positions[[i]], FUN = function(j) {
-              lapply(X = j, FUN = function(k) {
-                paste0("mergeCells(wb = export.workbook, cols = ", (length(split.vars) + 1), ", rows = ", paste(c(k[1], k[length(k)]), collapse = ":"), ", sheet = '", i, "')")
-              })
-            })
-          })
-          eval(parse(text = unlist(merging.statements.value.type)))
-        }
-        not.missing.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
-          unlist(lapply(X = i, FUN = function(j) {
-            grep(pattern = "^Missing$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
-          }))
-        }, USE.NAMES = TRUE, simplify = FALSE)
-        if(length(unlist(not.missing.positions)) != 0) {
-          not.missing.positions <- Map(f = function(list1, list2) {
-            lapply(X = list1, FUN = function(i) {
-              lapply(X = i, FUN = function(j) {
-                j[!j %in% list2]
-              })
-            })
-          }, list1 = unique.split.cats.value.types, list2 = not.missing.positions)
-          not.missing.positions <- Filter(length, not.missing.positions)
-          not.missing.positions <- lapply(X = not.missing.positions, FUN = function(i) {
+        })
+      })
+      not.valid.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
+        unlist(lapply(X = i, FUN = function(j) {
+          grep(pattern = "^Valid$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
+        }))
+      }, USE.NAMES = TRUE, simplify = FALSE)
+      if(length(unlist(not.valid.positions)) != 0) {
+        not.valid.positions <- Map(f = function(list1, list2) {
+          lapply(X = list1, FUN = function(i) {
             lapply(X = i, FUN = function(j) {
-              Filter(length, j)
+              j[!j %in% list2]
             })
           })
-          merging.statements.value.type <- lapply(X = names(not.missing.positions), FUN = function(i) {
-            lapply(X = not.missing.positions[[i]], FUN = function(j) {
-              lapply(X = j, FUN = function(k) {
-                paste0("mergeCells(wb = export.workbook, cols = ", (length(split.vars) + 1), ", rows = ", paste(c(k[1], k[length(k)]), collapse = ":"), ", sheet = '", i, "')")
-              })
+        }, list1 = unique.split.cats.value.types, list2 = not.valid.positions)
+        merging.statements.value.type <- lapply(X = names(not.valid.positions), FUN = function(i) {
+          lapply(X = not.valid.positions[[i]], FUN = function(j) {
+            lapply(X = j, FUN = function(k) {
+              paste0("mergeCells(wb = export.workbook, cols = ", (length(split.vars) + 1), ", rows = ", paste(c(k[1], k[length(k)]), collapse = ":"), ", sheet = '", i, "')")
             })
           })
-          merging.statements.value.type <- unlist(merging.statements.value.type)
-          if(!is.null(merging.statements.value.type)) {
-            eval(parse(text = merging.statements.value.type))
-          }
-        }
-      }
-      if(missing(split.vars)) {
-        rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
-          if("Total" %in% desc.tables[[i]][ , Value_Type]) {
-            which(desc.tables[[i]][ , Value_Type] == "Total" & desc.tables[[i]][ , get(i)] == "Total") + 6
-          }
-        }, USE.NAMES = TRUE, simplify = FALSE)
-        if(!is.null(unlist(rows.grand.total))) {
-          rows.grand.total <- Filter(Negate(is.null), rows.grand.total)
-          merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
-            paste0("mergeCells(wb = export.workbook, cols = 1:2, rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
-          })
-          eval(parse(text = unlist(merge.statements.grand.total)))
-        }
-      } else if(!missing(split.vars)) {
-        rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
-          grep(pattern = "^Total", x = unlist(desc.tables[[i]][ , mget(colnames(desc.tables[[i]])[[1]])])) + 6
-        }, USE.NAMES = TRUE, simplify = FALSE)
-        if(length(unlist(rows.grand.total)) != 0) {
-          rows.grand.total <- Filter(length, rows.grand.total)
-          remove.merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
-            paste0("removeCellMerge(wb = export.workbook, cols = ", 1, ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
-          })
-          eval(parse(text = unlist(remove.merge.statements.grand.total)))
-          merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
-            paste0("mergeCells(wb = export.workbook, cols = ", paste0("1:", (length(split.vars) + 2)), ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
-          })
-          eval(parse(text = unlist(merge.statements.grand.total)))
-        }
-      }
-      lapply(X = variables, FUN = function(i) {
-        mergeCells(wb = export.workbook, cols = 2:6, rows = 3, sheet = i)
-        mergeCells(wb = export.workbook, cols = 2:6, rows = 4, sheet = i)
-      })
-      freezePane(wb = export.workbook, sheet = "Index", firstRow = TRUE)
-      freeze.statements <- sapply(X = variables, FUN = function(i) {
-        paste0("freezePane(wb = export.workbook, sheet = '", i, "', firstActiveRow = 7)")
-      })
-      eval(parse(text = freeze.statements))
-      message('Statistics for all ', length(variables), ' variables computed in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.computations}[[3]], "%H:%M:%OS3"), "\n")
-      if(missing(output.file)) {
-        output.file <- file.path(getwd(), "Analysis.xlsx")
-      }
-      does.file.exist <- file.exists(output.file)
-      withCallingHandlers(
-        saveWorkbook(wb = export.workbook, file = output.file, overwrite = TRUE),
-        warning = function(w){
-          if(grepl("reason 'Permission denied'", w$message)){
-            stop('The file in "output.file" (', output.file, ') exists and is open, it cannot be overwritten. Please close the file and try again.', call. = FALSE)
-          } else {
-            message(w$message)
-          }
         })
-        if(does.file.exist == TRUE) {
-          warning('The destination file in "output.file" already existed. It was overwritten.', call. = FALSE)
+        eval(parse(text = unlist(merging.statements.value.type)))
+      }
+      not.missing.positions <- sapply(X = names(unique.split.cats.value.types), FUN = function(i) {
+        unlist(lapply(X = i, FUN = function(j) {
+          grep(pattern = "^Missing$", x = desc.tables[[j]][ , Value_Type], invert = TRUE) + 6
+        }))
+      }, USE.NAMES = TRUE, simplify = FALSE)
+      if(length(unlist(not.missing.positions)) != 0) {
+        not.missing.positions <- Map(f = function(list1, list2) {
+          lapply(X = list1, FUN = function(i) {
+            lapply(X = i, FUN = function(j) {
+              j[!j %in% list2]
+            })
+          })
+        }, list1 = unique.split.cats.value.types, list2 = not.missing.positions)
+        not.missing.positions <- Filter(length, not.missing.positions)
+        not.missing.positions <- lapply(X = not.missing.positions, FUN = function(i) {
+          lapply(X = i, FUN = function(j) {
+            Filter(length, j)
+          })
+        })
+        merging.statements.value.type <- lapply(X = names(not.missing.positions), FUN = function(i) {
+          lapply(X = not.missing.positions[[i]], FUN = function(j) {
+            lapply(X = j, FUN = function(k) {
+              paste0("mergeCells(wb = export.workbook, cols = ", (length(split.vars) + 1), ", rows = ", paste(c(k[1], k[length(k)]), collapse = ":"), ", sheet = '", i, "')")
+            })
+          })
+        })
+        merging.statements.value.type <- unlist(merging.statements.value.type)
+        if(!is.null(merging.statements.value.type)) {
+          eval(parse(text = merging.statements.value.type))
         }
-        if(open.output == TRUE && file.exists(output.file)) {
-          openXL(file = output.file)
-        }
-      }, interrupt = function(f) {
-        message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
-      })
+      }
     }
-    
+    if(missing(split.vars)) {
+      rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
+        if("Total" %in% desc.tables[[i]][ , Value_Type]) {
+          which(desc.tables[[i]][ , Value_Type] == "Total" & desc.tables[[i]][ , get(i)] == "Total") + 6
+        }
+      }, USE.NAMES = TRUE, simplify = FALSE)
+      if(!is.null(unlist(rows.grand.total))) {
+        rows.grand.total <- Filter(Negate(is.null), rows.grand.total)
+        merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
+          paste0("mergeCells(wb = export.workbook, cols = 1:2, rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
+        })
+        eval(parse(text = unlist(merge.statements.grand.total)))
+      }
+    } else if(!missing(split.vars)) {
+      rows.grand.total <- sapply(X = names(desc.tables), FUN = function(i) {
+        grep(pattern = "^Total", x = unlist(desc.tables[[i]][ , mget(colnames(desc.tables[[i]])[[1]])])) + 6
+      }, USE.NAMES = TRUE, simplify = FALSE)
+      if(length(unlist(rows.grand.total)) != 0) {
+        rows.grand.total <- Filter(length, rows.grand.total)
+        remove.merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
+          paste0("removeCellMerge(wb = export.workbook, cols = ", 1, ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
+        })
+        eval(parse(text = unlist(remove.merge.statements.grand.total)))
+        merge.statements.grand.total <- lapply(X = names(rows.grand.total), FUN = function(i) {
+          paste0("mergeCells(wb = export.workbook, cols = ", paste0("1:", (length(split.vars) + 2)), ", rows = ", rows.grand.total[[i]], ", sheet = '", i, "')")
+        })
+        eval(parse(text = unlist(merge.statements.grand.total)))
+      }
+    }
+    lapply(X = variables, FUN = function(i) {
+      mergeCells(wb = export.workbook, cols = 2:6, rows = 3, sheet = i)
+      mergeCells(wb = export.workbook, cols = 2:6, rows = 4, sheet = i)
+    })
+    freezePane(wb = export.workbook, sheet = "Index", firstRow = TRUE)
+    freeze.statements <- sapply(X = variables, FUN = function(i) {
+      paste0("freezePane(wb = export.workbook, sheet = '", i, "', firstActiveRow = 7)")
+    })
+    eval(parse(text = freeze.statements))
+    message('Statistics for all ', length(variables), ' variables computed in ', format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.computations}[[3]], "%H:%M:%OS3"), "\n")
+    if(missing(output.file)) {
+      output.file <- file.path(getwd(), "Analysis.xlsx")
+    }
+    does.file.exist <- file.exists(output.file)
+    withCallingHandlers(
+      saveWorkbook(wb = export.workbook, file = output.file, overwrite = TRUE),
+      warning = function(w){
+        if(grepl("reason 'Permission denied'", w$message)){
+          stop('The file in "output.file" (', output.file, ') exists and is open, it cannot be overwritten. Please close the file and try again.', call. = FALSE)
+        } else {
+          message(w$message)
+        }
+      })
+    if(does.file.exist == TRUE) {
+      warning('The destination file in "output.file" already existed. It was overwritten.', call. = FALSE)
+    }
+    if(open.output == TRUE && file.exists(output.file)) {
+      openXL(file = output.file)
+    }
+  }, interrupt = function(f) {
+    message("\nInterrupted by the user. Computations are not finished and output file is not produced.\n")
+  })
+}

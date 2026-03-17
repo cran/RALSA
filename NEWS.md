@@ -1,3 +1,17 @@
+# RALSA v1.6.5 (2026-03-17)
+
+This version brings support for TIMSS 2023 Longitudinal and two bug fixes.
+
+## Bug fixes
+
+-   `lsa.aggregate.vars` creates a very large and out of range numbers when aggregating the variables if the data is converted with `missing.to.NA = FALSE`.
+
+-   The syntax in the “Variable dictionaries” section in the GUI contains `open.out.file = TRUE` when output to a file is not chosen.
+
+## New functionality
+
+-   Added support for TIMSS 2023 Longitudinal.
+
 # RALSA v1.6.2 (2026-01-30)
 
 This version upgrades the computation of the *t*-test statistics degrees of freedom in the linear regression and correlations, and fixes a bug.

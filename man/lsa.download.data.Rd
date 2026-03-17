@@ -67,6 +67,7 @@ The \code{study} argument defines the study for which data shall be downloaded. 
 \item \code{preTIMSS} - IEA TIMSS Numeracy (TIMSS)
 \item \code{eTIMSS PSI} - IEA TIMSS with PSI items (TIMSS)
 \item \code{TIMSS Advanced Mathematics}/\code{TIMSS Advanced Physics} - IEA Trends in International Mathematics and Science Study in Mathematics and Physics (TIMSS Advanced)
+\item \code{TIMSS Longitudinal} - IEA TIMSS Longitudinal Study
 \item \code{TiPi} - IEA joint TIMSS and PIRLS 2011 study
 \item \code{PISA} - OECD Programme for International Student Assessment (PISA)
 \item \code{PISA D} - OECD Programme for International Student Assessment for low- and middle-income countries (PISA for Development)
@@ -90,6 +91,7 @@ The \code{cycle} argument provides information about the year of administration 
 \item For \code{preTIMSS} - \code{2015}
 \item For \code{eTIMSS PSI} - \code{2019}
 \item For \code{TIMSS Advanced Mathematics}/\code{TIMSS Advanced Physics} - \code{1995}, \code{2008}, or \code{2015}
+\item For \code{TIMSS Longitudinal} - \code{2023}
 \item For \code{TiPi} - \code{2011}
 \item For \code{PISA} - \code{2015}, \code{2018} or \code{2022}
 \item For \code{PISA D} - \code{2019}
@@ -160,6 +162,11 @@ Some studies (e.g. TIMSS and TALIS) have more than one population (i.e. students
 \item \strong{TIMSS Advanced Mathematics} / \strong{TIMSS Advanced Physics}:
 \itemize{
 \item \code{G12} (grade 12)
+}
+\item \strong{TIMSS Longitudinal}:
+\itemize{
+\item \code{G4-5} (grades 4 to 5)
+\item \code{G8-9} (grades 8 to 9)
 }
 \item \strong{TiPi}:
 \itemize{

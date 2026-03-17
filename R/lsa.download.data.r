@@ -40,6 +40,7 @@
 #'          \item \code{preTIMSS} - IEA TIMSS Numeracy (TIMSS)
 #'          \item \code{eTIMSS PSI} - IEA TIMSS with PSI items (TIMSS)
 #'          \item \code{TIMSS Advanced Mathematics}/\code{TIMSS Advanced Physics} - IEA Trends in International Mathematics and Science Study in Mathematics and Physics (TIMSS Advanced)
+#'          \item \code{TIMSS Longitudinal} - IEA TIMSS Longitudinal Study
 #'          \item \code{TiPi} - IEA joint TIMSS and PIRLS 2011 study
 #'          \item \code{PISA} - OECD Programme for International Student Assessment (PISA)
 #'          \item \code{PISA D} - OECD Programme for International Student Assessment for low- and middle-income countries (PISA for Development)
@@ -63,6 +64,7 @@
 #'          \item For \code{preTIMSS} - \code{2015}
 #'          \item For \code{eTIMSS PSI} - \code{2019}
 #'          \item For \code{TIMSS Advanced Mathematics}/\code{TIMSS Advanced Physics} - \code{1995}, \code{2008}, or \code{2015}
+#'          \item For \code{TIMSS Longitudinal} - \code{2023}
 #'          \item For \code{TiPi} - \code{2011}
 #'          \item For \code{PISA} - \code{2015}, \code{2018} or \code{2022}
 #'          \item For \code{PISA D} - \code{2019}
@@ -133,6 +135,11 @@
 #' \item \strong{TIMSS Advanced Mathematics} / \strong{TIMSS Advanced Physics}:
 #'       \itemize{
 #'                \item \code{G12} (grade 12)
+#'     }
+#' \item \strong{TIMSS Longitudinal}:
+#'       \itemize{
+#'                \item \code{G4-5} (grades 4 to 5)
+#'                \item \code{G8-9} (grades 8 to 9)
 #'     }
 #' \item \strong{TiPi}:
 #'       \itemize{
@@ -205,239 +212,240 @@
 #' @seealso \code{\link{lsa.convert.data}}
 #' @export
 lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE, convert = TRUE, missing.to.NA = FALSE) {
-tmp.options <- options(timeout = 18000)
-on.exit(expr = options(tmp.options), add = TRUE)
-warnings.collector <- list()
-if(missing(out.folder)) {
-stop('No path is provided to the "out.folder" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
-}
-if(!missing(out.folder) & isFALSE(dir.exists(out.folder))) {
-dir.create(path = out.folder, recursive = TRUE)
-}
-cycle <- as.character(cycle)
-study.cycle.pop.strings <- as.list(grep(pattern = paste0("^", gsub(pattern = " ", replacement = "_", x = study)), x = names(study.dataset.files[["ZIP.data.folders.and.files"]]), ignore.case = TRUE, value = TRUE))
-study.cycle.pop.strings <- sapply(X = study.cycle.pop.strings, FUN = function(i) {
-i <- gsub(pattern = "eTIMSS_PSI", replacement = "eTIMSS PSI", x = i)
-i <- gsub(pattern = "TIMSS_Advanced_Mathematics", replacement = "TIMSS Advanced Mathematics", x = i)
-i <- gsub(pattern = "TIMSS_Advanced_Physics", replacement = "TIMSS Advanced Physics", x = i)
-i <- gsub(pattern = "TALIS_3S", replacement = "TALIS 3S", x = i)
-i <- gsub(pattern = "PISA_D", replacement = "PISA D", x = i)
-i <- strsplit(x = i, split = "_")
-})
-study.cycle.pop.strings <- Filter(f = length, x = lapply(X = study.cycle.pop.strings, FUN = function(i) {
-i[study %in% i]
-}))
-study.cycle.pop.strings <- unlist(Filter(f = length, x = sapply(X = study.cycle.pop.strings, FUN = function(i) {
-i[cycle %in% i]
-})))
-study.cycle.pop.strings <- paste(gsub(pattern = " ", replacement = "_", x = study.cycle.pop.strings), collapse = "_")
-if(missing(POP) & !study %in% c("PISA", "PISA D")) {
-POP <- str_extract(string = names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]]), pattern = "G[[:digit:]]+$|I[[:digit:]]+$|M[[:digit:]]+$|Y[[:digit:]]+$|IS$|I0.2$")[1]
-} else if(missing(POP) & study == "PISA") {
-POP <- "Y15"
-} else if(missing(POP) & study == "PISA D") {
-POP <- "IS"
-}
-study.cycle.pop.strings.full <- paste(study.cycle.pop.strings, POP, sep = "_")
-if(!study %in% c("PISA", "PISA D")) {
-if(!study.cycle.pop.strings.full %in% names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]])) {
-stop('A value passed to "study", "cycle" or "POP" is incorrect. Please refer to the ducumentation for acceptable values of these arguments. All operations stop here. Check your input.\n\n', call. = FALSE)
-} else {
-study.and.cycle.files.full <- grep(pattern = study.cycle.pop.strings.full, x = names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]]), value = TRUE)
-study.and.cycle.files.full <- study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]][study.and.cycle.files.full]
-study.and.cycle.files.to.download <- lapply(X = study.and.cycle.files.full, FUN = function(i) {
-i[[2:length(i)]]
-})
-ZIP.folder.paths <- lapply(X = study.and.cycle.files.full, FUN = function(i) {
-i[[1]]
-})
-}
-if(!missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
-study.and.cycle.files.to.download <- lapply(X = study.and.cycle.files.to.download, FUN = function(i) {
-grep(pattern = paste0("^.{3}", ISO, collapse = "|"), x = i, ignore.case = TRUE, value = TRUE)
-})
-} else {
-study.and.cycle.files.to.download <- study.and.cycle.files.to.download
-}
-} else if(study %in% c("PISA", "PISA D")) {
-study.and.cycle.files.to.download <- study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]][[study.cycle.pop.strings.full]][2]
-names(study.and.cycle.files.to.download) <- study.cycle.pop.strings.full
-}
-if(study %in% c("CivED", "ICCS", "ICILS", "PIRLS", "ePIRLS", "prePIRLS", "REDS", "RLII", "SITES", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced Mathematics", "TIMSS Advanced Physics", "TiPi")) {
-link.root <- "https://www.iea.nl/sites/default/files/data-repository/"
-} else if(study %in% c("TALIS", "TALIS 3S")) {
-if(study == "TALIS" & cycle == 2024) {
-link.root <- "https://webfs.oecd.org/talis/2024/core/"
-} else {
-link.root <- "https://webfs.oecd.org/talis/"
-}
-} else if(study == "PISA" & cycle == "2015") {
-link.root <- "https://webfs.oecd.org/pisa/"
-} else if(study == "PISA" & cycle == "2018") {
-link.root <- "https://webfs.oecd.org/pisa2018/"
-} else if(study == "PISA" & cycle == "2022") {
-link.root <- "https://webfs.oecd.org/pisa2022/"
-} else if(study == "PISA D" & cycle == "2019" & POP == "IS") {
-link.root <- "https://web-archive.oecd.org/site/pisa-for-development/database/"
-} else if(study == "PISA D" & cycle == "2019" & POP == "OS") {
-link.root <- "https://webfs.oecd.org/pisad/"
-}
-download.URL <- paste0(link.root, study.dataset.files[["ZIP.roots"]][[study]][[cycle]][[POP]])
-message(paste0("\nConnecting to the ", study, " ", cycle, " database...\nDepending on the selection of files, the proces can take some time.\n"))
-tryCatch({
-if(!study %in% c("PISA", "PISA D")) {
-if(!missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
-countries.found <- unique(gsub(pattern = "^[[:alpha:]]{2}\\_|^[[:alpha:]]{3}|[[:alnum:]]{2}\\.sav$", replacement = "", x = unlist(study.and.cycle.files.to.download), ignore.case = TRUE))
-countries.NOT.found <- setdiff(x = tolower(ISO), y = tolower(countries.found))
-message(paste0("     Files for ", length(countries.found), " of the requested ", length(ISO), " countries have been found."))
-if(length(countries.NOT.found) > 0) {
-warnings.collector[["ISOs.not.in.files"]] <- paste0("Files for the following requested countries haven't been found in the ", paste(study, cycle, POP, collapse = " "), ": ", paste(countries.NOT.found, collapse = ", "), ".\nCheck your input.")
-}
-} else if(missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
-countries.found <- "int"
-message(paste0("     Files for downloading have been found."))
-} else {
-countries.NOT.found <- NULL
-}
-if(length(grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE)) > 0) {
-message("     Main study files for ", length(unique(tolower(gsub(pattern = "^[[:alnum:]]{3}|\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE, invert = TRUE)]], ignore.case = TRUE)))), " countries are found.")
-message("     Bridge study files for ", length(unique(tolower(gsub(pattern = "^[[:alnum:]]{3}|\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE)]], ignore.case = TRUE)))), " countries are found.")
-}
-message("     A total of ", length(unlist(study.and.cycle.files.to.download)), " requested files found.\n\n     Please be patient.\n")
-files.to.download.zero.length <- names(Filter(f = length, study.and.cycle.files.to.download))
-study.and.cycle.files.to.download <- study.and.cycle.files.to.download[files.to.download.zero.length]
-ZIP.folder.paths <- ZIP.folder.paths[files.to.download.zero.length]
-ptm.download <- proc.time()
-lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
-full.file.paths <- paste0(ZIP.folder.paths[[i]], "/", study.and.cycle.files.to.download[[i]])
-if(isFALSE(dir.exists(paths = file.path(out.folder, i)))) {
-dir.create(path = file.path(out.folder, i))
-} else if(isTRUE(dir.exists(paths = file.path(out.folder, i))) & isTRUE(append)) {
-files.existing.in.out.dir <- gsub(pattern = "\\.sav$|\\.RData$", replacement = "", x = list.files(path = file.path(out.folder, i), pattern = "\\.sav$|\\.RData$", ignore.case = TRUE), ignore.case = TRUE)
-files.passed.for.download <- gsub(pattern = "\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[i]], ignore.case = TRUE)
-full.file.paths <- grep(pattern = paste(files.existing.in.out.dir, collapse = "|"), x = full.file.paths, ignore.case = TRUE, value = TRUE, invert = TRUE)
-}
-if(study == "TALIS") {
-full.file.paths <- gsub(pattern = "^\\.\\/", replacement = "", x = full.file.paths)
-}
-if(length(full.file.paths) > 0) {
-if(grepl(pattern = "Bridge$", x = i, ignore.case = TRUE)) {
-message("Downloading bridge study data files.\n")
-} else {
-message("Downloading study data files.\n")
-}
-}
-if(length(full.file.paths) > 0) {
-lapply(X = download.URL, FUN = function(j) {
-archive_extract(archive = j, dir = file.path(out.folder, i), files = full.file.paths)
-})
-number.of.countries <- length(unique(gsub(pattern = "^[[:alnum:]]{3}|.{6}$", replacement = "", x = study.and.cycle.files.to.download[[i]])))
-if(number.of.countries > 1) {
-countries.num.string <- " countries "
-} else {
-countries.num.string <- " country "
-}
-if(study == "TALIS" & cycle == 2024) {
-message("     All ", length(study.and.cycle.files.to.download[[i]]), " main study data files have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
-} else {
-if(length(grep(pattern = "Bridge", x = i)) == 0) {
-message("     All ", length(study.and.cycle.files.to.download[[i]]), " main study data files for ", number.of.countries, countries.num.string, "have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
-} else {
-message("     All ", length(study.and.cycle.files.to.download[[i]]), " bridge data files for ", number.of.countries, countries.num.string, "have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
-}
-}
-if(study != "TALIS") {
-file.copy(from = file.path(out.folder, i, full.file.paths), to = file.path(out.folder, i))
-folder.to.remove <- unlist(strsplit(x = ZIP.folder.paths[[i]], split = "/")[1])
-unlink(x = file.path(out.folder, i, folder.to.remove), recursive = TRUE, force = TRUE)
-}
-} else {
-message('No new files to download for "', i, '", all requested files already exist in the download folder. Skipping.\n')
-}
-})
-} else {
-ptm.download <- proc.time()
-if(!dir.exists(file.path(out.folder, study.cycle.pop.strings.full))) {
-dir.create(file.path(out.folder, study.cycle.pop.strings.full))
-}
-if(length(list.files(path = file.path(out.folder, study.cycle.pop.strings.full), pattern = "\\.sav$|\\.RData$", ignore.case = TRUE)) > 0) {
-stop('The study download folder ("', study.cycle.pop.strings.full, '") in "out.folder" already contains data files. To prevent overwriting them, inspect their content and remove them manually or choose a different "out.folder". All operations stop here.\n', call. = FALSE)
-}
-ZIP.files.to.remove <- file.path(out.folder, study.cycle.pop.strings.full, basename(path = download.URL))
-if(study == "PISA") {
-message(paste0("     A total of ", length(download.URL), " requested files will be downloaded.\n\n     PISA files are rather large. Please be patient.\n"))
-} else if(study == "PISA D") {
-message(paste0("     A total of ", length(download.URL), " requested files will be downloaded.\n\n     Please be patient.\n"))
-}
-sapply(X = 1:length(download.URL), FUN = function(i) {
-ptm.download.per.file <- proc.time()
-file.extension <- substring(text = download.URL[i], first = nchar(download.URL[i]) - 3, last = nchar(download.URL[i]))
-if(file.extension %in% c(".zip", ".ZIP")) {
-download.file(url = download.URL[i], destfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), quiet = TRUE)
-} else if(file.extension %in% c(".sav", ".SAV")) {
-download.file(url = download.URL[i], destfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), quiet = FALSE, method = "curl")
-}
-spaces.to.append <- max(nchar(download.URL))
-spaces.to.append <- rep(x = " ", times = spaces.to.append - nchar(download.URL[i]))
-message("     (", i, "/", length(download.URL), ") ", basename(download.URL[i]), " has been downloaded in ", spaces.to.append, format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download.per.file}[[3]] - 1, "%H:%M:%OS3"))
-})
-message("\nAll requested ", length(download.URL), " files have been downloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
-if(study %in% c("PISA", "PISA D") & POP %in% c("Y15", "IS")) {
-sapply(X = 1:length(download.URL), FUN = function(i) {
-unzip(zipfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), exdir = file.path(out.folder, study.cycle.pop.strings.full))
-message("     (", i, "/", length(download.URL), ") SPSS data from ", basename(download.URL[i]), " has been extracted.")
-})
-message("\nAll requested ", length(download.URL), " files have been extracted.\n")
-unlink(x = ZIP.files.to.remove, force = TRUE)
-}
-}
-if(isTRUE(convert)) {
-message("Converting files as requested.")
-if(!study %in% c("PISA", "PISA D")) {
-convert.statement <- lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
-if(length(list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)) > 0) {
-paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, i), '", missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, i), '")')
-}
-})
-} else {
-if(study == "PISA") {
-convert.statement <- paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '", PISApre15 = FALSE, missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '")')
-} else if(study == "PISA D") {
-convert.statement <- paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '", missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '")')
-}
-}
-src.files.to.remove <- file.path(unlist(lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
-if(length(list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)) > 0) {
-intersect(x = file.path(out.folder, i, study.and.cycle.files.to.download[[i]]), y = list.files(file.path(out.folder, i), full.names = TRUE))
-} else {
-NULL
-}
-})))
-if(length(src.files.to.remove) > 0) {
-file.remove.statement <- paste0('file.remove("', paste(src.files.to.remove, collapse = '", "'), '")')
-}
-} else if(isFALSE(convert)) {
-sav.files.exist <- file.path(unlist(lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
-list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)
-})))
-if(length(sav.files.exist) > 0) {
-message('Use the "lsa.convert.data" function later to convert the existing SPSS data files in .RData format.\n')
-}
-}
-}, interrupt = function(f) {
-message("\nInterrupted by the user. No files were downloaded.\n")
-})
-if(length(warnings.collector) > 0) {
-if(!is.null(warnings.collector[["ISOs.not.in.files"]])) {
-warning(warnings.collector[["ISOs.not.in.files"]], call. = FALSE)
-}
-}
-if(isTRUE(convert)) {
-if(exists("convert.statement")) {
-on.exit(expr = eval(parse(text = convert.statement)))
-}
-if(exists("file.remove.statement")) {
-on.exit(expr = eval(parse(text = file.remove.statement)), add = TRUE)
-}
-}
+  tmp.options <- options(timeout = 18000)
+  on.exit(expr = options(tmp.options), add = TRUE)
+  warnings.collector <- list()
+  if(missing(out.folder)) {
+    stop('No path is provided to the "out.folder" argument. All operations stop here. Check your input.\n\n', call. = FALSE)
+  }
+  if(!missing(out.folder) & isFALSE(dir.exists(out.folder))) {
+    dir.create(path = out.folder, recursive = TRUE)
+  }
+  cycle <- as.character(cycle)
+  study.cycle.pop.strings <- as.list(grep(pattern = paste0("^", gsub(pattern = " ", replacement = "_", x = study)), x = names(study.dataset.files[["ZIP.data.folders.and.files"]]), ignore.case = TRUE, value = TRUE))
+  study.cycle.pop.strings <- sapply(X = study.cycle.pop.strings, FUN = function(i) {
+    i <- gsub(pattern = "eTIMSS_PSI", replacement = "eTIMSS PSI", x = i)
+    i <- gsub(pattern = "TIMSS_Advanced_Mathematics", replacement = "TIMSS Advanced Mathematics", x = i)
+    i <- gsub(pattern = "TIMSS_Advanced_Physics", replacement = "TIMSS Advanced Physics", x = i)
+    i <- gsub(pattern = "TIMSS_Longitudinal", replacement = "TIMSS Longitudinal", x = i)
+    i <- gsub(pattern = "TALIS_3S", replacement = "TALIS 3S", x = i)
+    i <- gsub(pattern = "PISA_D", replacement = "PISA D", x = i)
+    i <- strsplit(x = i, split = "_")
+  })
+  study.cycle.pop.strings <- Filter(f = length, x = lapply(X = study.cycle.pop.strings, FUN = function(i) {
+    i[study %in% i]
+  }))
+  study.cycle.pop.strings <- unlist(Filter(f = length, x = sapply(X = study.cycle.pop.strings, FUN = function(i) {
+    i[cycle %in% i]
+  })))
+  study.cycle.pop.strings <- paste(gsub(pattern = " ", replacement = "_", x = study.cycle.pop.strings), collapse = "_")
+  if(missing(POP) & !study %in% c("PISA", "PISA D")) {
+    POP <- str_extract(string = names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]]), pattern = "G[[:digit:]]+$|I[[:digit:]]+$|M[[:digit:]]+$|Y[[:digit:]]+$|IS$|I0.2$")[1]
+  } else if(missing(POP) & study == "PISA") {
+    POP <- "Y15"
+  } else if(missing(POP) & study == "PISA D") {
+    POP <- "IS"
+  }
+  study.cycle.pop.strings.full <- paste(study.cycle.pop.strings, POP, sep = "_")
+  if(!study %in% c("PISA", "PISA D")) {
+    if(!study.cycle.pop.strings.full %in% names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]])) {
+      stop('A value passed to "study", "cycle" or "POP" is incorrect. Please refer to the ducumentation for acceptable values of these arguments. All operations stop here. Check your input.\n\n', call. = FALSE)
+    } else {
+      study.and.cycle.files.full <- grep(pattern = study.cycle.pop.strings.full, x = names(study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]]), value = TRUE)
+      study.and.cycle.files.full <- study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]][study.and.cycle.files.full]
+      study.and.cycle.files.to.download <- lapply(X = study.and.cycle.files.full, FUN = function(i) {
+        i[[2:length(i)]]
+      })
+      ZIP.folder.paths <- lapply(X = study.and.cycle.files.full, FUN = function(i) {
+        i[[1]]
+      })
+    }
+    if(!missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
+      study.and.cycle.files.to.download <- lapply(X = study.and.cycle.files.to.download, FUN = function(i) {
+        grep(pattern = paste0("^.{3}", ISO, collapse = "|"), x = i, ignore.case = TRUE, value = TRUE)
+      })
+    } else {
+      study.and.cycle.files.to.download <- study.and.cycle.files.to.download
+    }
+  } else if(study %in% c("PISA", "PISA D")) {
+    study.and.cycle.files.to.download <- study.dataset.files[["ZIP.data.folders.and.files"]][[study.cycle.pop.strings]][[study.cycle.pop.strings.full]][2]
+    names(study.and.cycle.files.to.download) <- study.cycle.pop.strings.full
+  }
+  if(study %in% c("CivED", "ICCS", "ICILS", "PIRLS", "ePIRLS", "prePIRLS", "REDS", "RLII", "SITES", "TIMSS", "eTIMSS PSI", "preTIMSS", "TIMSS Advanced Mathematics", "TIMSS Advanced Physics", "TIMSS Longitudinal", "TiPi")) {
+    link.root <- "https://www.iea.nl/sites/default/files/data-repository/"
+  } else if(study %in% c("TALIS", "TALIS 3S")) {
+    if(study == "TALIS" & cycle == 2024) {
+      link.root <- "https://webfs.oecd.org/talis/2024/core/"
+    } else {
+      link.root <- "https://webfs.oecd.org/talis/"
+    }
+  } else if(study == "PISA" & cycle == "2015") {
+    link.root <- "https://webfs.oecd.org/pisa/"
+  } else if(study == "PISA" & cycle == "2018") {
+    link.root <- "https://webfs.oecd.org/pisa2018/"
+  } else if(study == "PISA" & cycle == "2022") {
+    link.root <- "https://webfs.oecd.org/pisa2022/"
+  } else if(study == "PISA D" & cycle == "2019" & POP == "IS") {
+    link.root <- "https://web-archive.oecd.org/site/pisa-for-development/database/"
+  } else if(study == "PISA D" & cycle == "2019" & POP == "OS") {
+    link.root <- "https://webfs.oecd.org/pisad/"
+  }
+  download.URL <- paste0(link.root, study.dataset.files[["ZIP.roots"]][[study]][[cycle]][[POP]])
+  message(paste0("\nConnecting to the ", study, " ", cycle, " database...\nDepending on the selection of files, the proces can take some time.\n"))
+  tryCatch({
+    if(!study %in% c("PISA", "PISA D")) {
+      if(!missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
+        countries.found <- unique(gsub(pattern = "^[[:alpha:]]{2}\\_|^[[:alpha:]]{3}|[[:alnum:]]{2}\\.sav$", replacement = "", x = unlist(study.and.cycle.files.to.download), ignore.case = TRUE))
+        countries.NOT.found <- setdiff(x = tolower(ISO), y = tolower(countries.found))
+        message(paste0("     Files for ", length(countries.found), " of the requested ", length(ISO), " countries have been found."))
+        if(length(countries.NOT.found) > 0) {
+          warnings.collector[["ISOs.not.in.files"]] <- paste0("Files for the following requested countries haven't been found in the ", paste(study, cycle, POP, collapse = " "), ": ", paste(countries.NOT.found, collapse = ", "), ".\nCheck your input.")
+        }
+      } else if(missing(ISO) & paste(c(study, cycle), collapse = "_") != "TALIS_2024") {
+        countries.found <- "int"
+        message(paste0("     Files for downloading have been found."))
+      } else {
+        countries.NOT.found <- NULL
+      }
+      if(length(grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE)) > 0) {
+        message("     Main study files for ", length(unique(tolower(gsub(pattern = "^[[:alnum:]]{3}|\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE, invert = TRUE)]], ignore.case = TRUE)))), " countries are found.")
+        message("     Bridge study files for ", length(unique(tolower(gsub(pattern = "^[[:alnum:]]{3}|\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[grep(pattern = "Bridge$", x = names(study.and.cycle.files.to.download), ignore.case = TRUE)]], ignore.case = TRUE)))), " countries are found.")
+      }
+      message("     A total of ", length(unlist(study.and.cycle.files.to.download)), " requested files found.\n\n     Please be patient.\n")
+      files.to.download.zero.length <- names(Filter(f = length, study.and.cycle.files.to.download))
+      study.and.cycle.files.to.download <- study.and.cycle.files.to.download[files.to.download.zero.length]
+      ZIP.folder.paths <- ZIP.folder.paths[files.to.download.zero.length]
+      ptm.download <- proc.time()
+      lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
+        full.file.paths <- paste0(ZIP.folder.paths[[i]], "/", study.and.cycle.files.to.download[[i]])
+        if(isFALSE(dir.exists(paths = file.path(out.folder, i)))) {
+          dir.create(path = file.path(out.folder, i))
+        } else if(isTRUE(dir.exists(paths = file.path(out.folder, i))) & isTRUE(append)) {
+          files.existing.in.out.dir <- gsub(pattern = "\\.sav$|\\.RData$", replacement = "", x = list.files(path = file.path(out.folder, i), pattern = "\\.sav$|\\.RData$", ignore.case = TRUE), ignore.case = TRUE)
+          files.passed.for.download <- gsub(pattern = "\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[i]], ignore.case = TRUE)
+          full.file.paths <- grep(pattern = paste(files.existing.in.out.dir, collapse = "|"), x = full.file.paths, ignore.case = TRUE, value = TRUE, invert = TRUE)
+        }
+        if(study == "TALIS") {
+          full.file.paths <- gsub(pattern = "^\\.\\/", replacement = "", x = full.file.paths)
+        }
+        if(length(full.file.paths) > 0) {
+          if(grepl(pattern = "Bridge$", x = i, ignore.case = TRUE)) {
+            message("Downloading bridge study data files.\n")
+          } else {
+            message("Downloading study data files.\n")
+          }
+        }
+        if(length(full.file.paths) > 0) {
+          lapply(X = download.URL, FUN = function(j) {
+            archive_extract(archive = j, dir = file.path(out.folder, i), files = full.file.paths)
+          })
+          number.of.countries <- length(unique(gsub(pattern = "^[[:alnum:]]{3}|.{6}$", replacement = "", x = study.and.cycle.files.to.download[[i]])))
+          if(number.of.countries > 1) {
+            countries.num.string <- " countries "
+          } else {
+            countries.num.string <- " country "
+          }
+          if(study == "TALIS" & cycle == 2024) {
+            message("     All ", length(study.and.cycle.files.to.download[[i]]), " main study data files have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
+          } else {
+            if(length(grep(pattern = "Bridge", x = i)) == 0) {
+              message("     All ", length(study.and.cycle.files.to.download[[i]]), " main study data files for ", number.of.countries, countries.num.string, "have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
+            } else {
+              message("     All ", length(study.and.cycle.files.to.download[[i]]), " bridge data files for ", number.of.countries, countries.num.string, "have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
+            }
+          }
+          if(study != "TALIS") {
+            file.copy(from = file.path(out.folder, i, full.file.paths), to = file.path(out.folder, i))
+            folder.to.remove <- unlist(strsplit(x = ZIP.folder.paths[[i]], split = "/")[1])
+            unlink(x = file.path(out.folder, i, folder.to.remove), recursive = TRUE, force = TRUE)
+          }
+        } else {
+          message('No new files to download for "', i, '", all requested files already exist in the download folder. Skipping.\n')
+        }
+      })
+    } else {
+      ptm.download <- proc.time()
+      if(!dir.exists(file.path(out.folder, study.cycle.pop.strings.full))) {
+        dir.create(file.path(out.folder, study.cycle.pop.strings.full))
+      }
+      if(length(list.files(path = file.path(out.folder, study.cycle.pop.strings.full), pattern = "\\.sav$|\\.RData$", ignore.case = TRUE)) > 0) {
+        stop('The study download folder ("', study.cycle.pop.strings.full, '") in "out.folder" already contains data files. To prevent overwriting them, inspect their content and remove them manually or choose a different "out.folder". All operations stop here.\n', call. = FALSE)
+      }
+      ZIP.files.to.remove <- file.path(out.folder, study.cycle.pop.strings.full, basename(path = download.URL))
+      if(study == "PISA") {
+        message(paste0("     A total of ", length(download.URL), " requested files will be downloaded.\n\n     PISA files are rather large. Please be patient.\n"))
+      } else if(study == "PISA D") {
+        message(paste0("     A total of ", length(download.URL), " requested files will be downloaded.\n\n     Please be patient.\n"))
+      }
+      sapply(X = 1:length(download.URL), FUN = function(i) {
+        ptm.download.per.file <- proc.time()
+        file.extension <- substring(text = download.URL[i], first = nchar(download.URL[i]) - 3, last = nchar(download.URL[i]))
+        if(file.extension %in% c(".zip", ".ZIP")) {
+          download.file(url = download.URL[i], destfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), quiet = TRUE)
+        } else if(file.extension %in% c(".sav", ".SAV")) {
+          download.file(url = download.URL[i], destfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), quiet = FALSE, method = "curl")
+        }
+        spaces.to.append <- max(nchar(download.URL))
+        spaces.to.append <- rep(x = " ", times = spaces.to.append - nchar(download.URL[i]))
+        message("     (", i, "/", length(download.URL), ") ", basename(download.URL[i]), " has been downloaded in ", spaces.to.append, format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download.per.file}[[3]] - 1, "%H:%M:%OS3"))
+      })
+      message("\nAll requested ", length(download.URL), " files have been downloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
+      if(study %in% c("PISA", "PISA D") & POP %in% c("Y15", "IS")) {
+        sapply(X = 1:length(download.URL), FUN = function(i) {
+          unzip(zipfile = file.path(out.folder, study.cycle.pop.strings.full, basename(download.URL[i])), exdir = file.path(out.folder, study.cycle.pop.strings.full))
+          message("     (", i, "/", length(download.URL), ") SPSS data from ", basename(download.URL[i]), " has been extracted.")
+        })
+        message("\nAll requested ", length(download.URL), " files have been extracted.\n")
+        unlink(x = ZIP.files.to.remove, force = TRUE)
+      }
+    }
+    if(isTRUE(convert)) {
+      message("Converting files as requested.")
+      if(!study %in% c("PISA", "PISA D")) {
+        convert.statement <- lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
+          if(length(list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)) > 0) {
+            paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, i), '", missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, i), '")')
+          }
+        })
+      } else {
+        if(study == "PISA") {
+          convert.statement <- paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '", PISApre15 = FALSE, missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '")')
+        } else if(study == "PISA D") {
+          convert.statement <- paste0('lsa.convert.data(inp.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '", missing.to.NA = ', missing.to.NA, ', out.folder = "', file.path(out.folder, study.cycle.pop.strings.full), '")')
+        }
+      }
+      src.files.to.remove <- file.path(unlist(lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
+        if(length(list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)) > 0) {
+          intersect(x = file.path(out.folder, i, study.and.cycle.files.to.download[[i]]), y = list.files(file.path(out.folder, i), full.names = TRUE))
+        } else {
+          NULL
+        }
+      })))
+      if(length(src.files.to.remove) > 0) {
+        file.remove.statement <- paste0('file.remove("', paste(src.files.to.remove, collapse = '", "'), '")')
+      }
+    } else if(isFALSE(convert)) {
+      sav.files.exist <- file.path(unlist(lapply(X = names(study.and.cycle.files.to.download), FUN = function(i) {
+        list.files(path = file.path(out.folder, i), pattern = "\\.sav$", ignore.case = TRUE)
+      })))
+      if(length(sav.files.exist) > 0) {
+        message('Use the "lsa.convert.data" function later to convert the existing SPSS data files in .RData format.\n')
+      }
+    }
+  }, interrupt = function(f) {
+    message("\nInterrupted by the user. No files were downloaded.\n")
+  })
+  if(length(warnings.collector) > 0) {
+    if(!is.null(warnings.collector[["ISOs.not.in.files"]])) {
+      warning(warnings.collector[["ISOs.not.in.files"]], call. = FALSE)
+    }
+  }
+  if(isTRUE(convert)) {
+    if(exists("convert.statement")) {
+      on.exit(expr = eval(parse(text = convert.statement)))
+    }
+    if(exists("file.remove.statement")) {
+      on.exit(expr = eval(parse(text = file.remove.statement)), add = TRUE)
+    }
+  }
 }

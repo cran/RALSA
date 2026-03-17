@@ -40,8 +40,8 @@
 #'                             weight variable is provide, the function will automatically select
 #'                             the default weight variable for the provided data, depending on the
 #'                             respondent type.
-#' @param DF.type              The method fot the degrees of freedom shall be computed, either
-#'                             \code{"JR"} (default) or \code{"WS"}. See details.
+#' @param DF.type              The method for the degrees of freedom shall be computed, either
+#'                             \code{JR} (default) or \code{WS}. See details.
 #' @param include.missing      Logical, shall the missing values of the splitting variables be
 #'                             included as categories to split by and all statistics produced for
 #'                             them? The default (\code{FALSE}) takes all cases on the splitting
@@ -95,7 +95,7 @@
 #' \item When the interaction is between two sets of PVs (i.e. passed to \code{PV.root.indep}), the interaction effect is computed between the first PV in the first set and the first PV in the second set, the second PV in the first set and the second PV in the second set, and so on. The results are then aggregated.
 #' }
 #'
-#' The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic. As of now, the function accepts \code{"WS"} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{"JR"} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
+#' The \code{DF.type} controls which method shall be used to compute the degrees of freedom (DF) for the \emph{t}-test statistic when computing the \emph{p}-values. As of now, the function accepts \code{WS} (Welch-Satterthwaite approximation, see Satterthwaite, 1946; Welch, 1947) and \code{JR} (Johnson-Rust correction, see see Johnson & Rust, 1992) as values of the \code{DF.type} argument to estimate the effective DF. The default is \code{JR} and it is recommended to use it.
 #'
 #' If \code{include.missing = FALSE} (default), all cases with missing values on the splitting variables will be removed and only cases with valid values will be retained in the statistics. Note that the data from the studies can be exported in two different ways: (1) setting all user-defined missing values to \code{NA}; and (2) importing all user-defined missing values as valid ones and adding their codes in an additional attribute to each variable. If the \code{include.missing} is set to \code{FALSE} (default) and the data used is exported using option (2), the output will remove all values from the variable matching the values in its \code{missings} attribute. Otherwise, it will include them as valid values and compute statistics for them.
 #'
@@ -156,6 +156,9 @@
 #' }
 #'
 #' The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+#'
+#' @note
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
 #'
 #' @examples
 #' # Compute linear regression coefficients with the complex student background scale "Student
@@ -323,10 +326,13 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
     warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or background variables - dependent or independent) are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
   }
   tryCatch({
-    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
+    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TIMSS Longitudinal", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list[names(vars.list) != "interactions"], action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(file.attributes[["lsa.study"]] == "TIMSS Longitudinal" & isTRUE(grepl(pattern = "tch", x = file.attributes[["lsa.file.type"]], ignore.case = TRUE)) & length(data) == 0) {
+      stop("\nThere are no valid cases for analysis in the data. As this is TIMSS Longitudinal, the proper teacher weight and the matching set of background variable names need to be selected for the corresponding year. All operations stop here. Check your input.", call. = FALSE)
+    }
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
     }
@@ -493,7 +499,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
           }
           if(exists("independent.variables.PV")) {
             PV.interaction.vars <- lapply(X = independent.variables.PV, FUN = function(j) {
-              if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
+              if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TIMSS Longitudinal", "TiPi")) {
                 grep(pattern = paste(i, collapse = "|"), x = unlist(j), value = TRUE)
               } else if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
                 grep(pattern = paste(gsub(pattern = "#", replacement = "[[:digit:]]+", x = i), collapse = "|"), x = unlist(j), value = TRUE)
@@ -639,7 +645,13 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
                   k <- unlist(strsplit(x = k, split = ":", fixed = TRUE))
                   k <- sapply(X = k, FUN = function(l) {
                     if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:digit:]]+$", x = l) == TRUE) {
-                      gsub(pattern = "[[:digit:]]+", replacement = "", x = l)
+                      sapply(X = l, FUN = function(m) {
+                        if(isTRUE(grepl(pattern = "0", x = m))) {
+                          gsub(pattern = "[[:digit:]]+$", replacement = "", x = m)
+                        } else {
+                          gsub(pattern = "[[:digit:]]$", replacement = "", x = m)
+                        }
+                      })
                     } else if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:alpha:]]+[[:digit:]]+[[:alpha:]]+", x = l) == TRUE) {
                       gsub(pattern = "[[:digit:]]+", replacement = "N", x = l)
                     } else if(!l %in% unlist(vars.list[["PV.names"]])) {
@@ -647,7 +659,13 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
                     }
                   })
                 } else {
-                  ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = k), no = k)
+                  sapply(X = k, FUN = function(l) {
+                    if(grepl(pattern = "0", x = l)) {
+                      ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = l), no = l)
+                    } else {
+                      ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]$", replacement = "", x = l), no = l)
+                    }
+                  })
                 }
               }))
               new.V1.values <- lapply(X = new.V1.values, FUN = function(k) {
@@ -779,12 +797,12 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       }), .SDcols = c("t_value", "p_value")]
       counter <<- counter + 1
       message("     ",
-      if(nchar(counter) == 1) {
-        paste0("( ", counter, "/", number.of.countries, ")   ")
-      } else if(nchar(counter) == 2) {
-        paste0("(", counter, "/", number.of.countries, ")   ")
-      },
-      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
+                paste0("(", counter, "/", number.of.countries, ")   ")
+              },
+              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))

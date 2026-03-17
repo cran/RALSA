@@ -155,6 +155,9 @@
 #'
 #' The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
 #'
+#' @note
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#'
 #' @examples
 #' # Compute logistic regression predicting the log of the odds the students will respond
 #' # "Agree a lot" when asked if teachers are fair (dependent variable, categorical), as a function
@@ -290,10 +293,13 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
     warnings.collector[["vars.list.analysis.vars"]] <- 'Some of the variables specified as analysis variables (in "split.vars" and/or background variables - dependent or independent) are design variables (sampling variables or PVs). This kind of variables shall not be used for analysis. Check your input.'
   }
   tryCatch({
-    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi") & missing(shortcut)) {
+    if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TIMSS Longitudinal", "TiPi") & missing(shortcut)) {
       action.args.list[["shortcut"]] <- FALSE
     }
     data <- produce.analysis.data.table(data.object = data, object.variables = vars.list[names(vars.list) != "interactions"], action.arguments = action.args.list, imported.file.attributes = file.attributes)
+    if(file.attributes[["lsa.study"]] == "TIMSS Longitudinal" & isTRUE(grepl(pattern = "tch", x = file.attributes[["lsa.file.type"]], ignore.case = TRUE)) & length(data) == 0) {
+      stop("\nThere are no valid cases for analysis in the data. As this is TIMSS Longitudinal, the proper teacher weight and the matching set of background variable names need to be selected for the corresponding year. All operations stop here. Check your input.", call. = FALSE)
+    }
     if(exists("removed.countries.where.any.split.var.is.all.NA") && length(removed.countries.where.any.split.var.is.all.NA) > 0) {
       warnings.collector[["removed.countries.where.any.split.var.is.all.NA"]] <- paste0('Some of the countries had one or more splitting variables which contains only missing values. These countries are: ', paste(removed.countries.where.any.split.var.is.all.NA, collapse = ', '), '.')
     }
@@ -458,7 +464,7 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
           }
           if(exists("independent.variables.PV")) {
             PV.interaction.vars <- lapply(X = independent.variables.PV, FUN = function(j) {
-              if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TiPi")) {
+              if(file.attributes[["lsa.study"]] %in% c("PIRLS", "prePIRLS", "ePIRLS", "RLII", "TIMSS", "preTIMSS", "eTIMSS PSI", "TIMSS Advanced", "TIMSS Longitudinal", "TiPi")) {
                 grep(pattern = paste(i, collapse = "|"), x = unlist(j), value = TRUE)
               } else if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
                 grep(pattern = paste(gsub(pattern = "#", replacement = "[[:digit:]]+", x = i), collapse = "|"), x = unlist(j), value = TRUE)
@@ -618,7 +624,13 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
                 k <- unlist(strsplit(x = k, split = ":", fixed = TRUE))
                 k <- sapply(X = k, FUN = function(l) {
                   if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:digit:]]+$", x = l) == TRUE) {
-                    gsub(pattern = "[[:digit:]]+", replacement = "", x = l)
+                    sapply(X = l, FUN = function(m) {
+                      if(isTRUE(grepl(pattern = "0", x = m))) {
+                        gsub(pattern = "[[:digit:]]+$", replacement = "", x = m)
+                      } else {
+                        gsub(pattern = "[[:digit:]]$", replacement = "", x = m)
+                      }
+                    })
                   } else if(l %in% unlist(vars.list[["PV.names"]]) && grepl(pattern = "[[:alpha:]]+[[:digit:]]+[[:alpha:]]+", x = l) == TRUE) {
                     gsub(pattern = "[[:digit:]]+", replacement = "N", x = l)
                   } else if(!l %in% unlist(vars.list[["PV.names"]])) {
@@ -626,7 +638,13 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
                   }
                 })
               } else {
-                ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = k), no = k)
+                sapply(X = k, FUN = function(l) {
+                  if(grepl(pattern = "0", x = l)) {
+                    ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]+$", replacement = "", x = l), no = l)
+                  } else {
+                    ifelse(test = k %in% PV.values.names, yes = gsub(pattern = "[[:digit:]]$", replacement = "", x = l), no = l)
+                  }
+                })
               }
             }))
             new.V1.values <- lapply(X = new.V1.values, FUN = function(k) {
@@ -756,12 +774,12 @@ lsa.bin.log.reg <- function(data.file, data.object, split.vars, bin.dep.var, bck
       odds.ratios.estimates <- NULL
       counter <<- counter + 1
       message("     ",
-      if(nchar(counter) == 1) {
-        paste0("( ", counter, "/", number.of.countries, ")   ")
-      } else if(nchar(counter) == 2) {
-        paste0("(", counter, "/", number.of.countries, ")   ")
-      },
-      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
+                paste0("(", counter, "/", number.of.countries, ")   ")
+              },
+              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))

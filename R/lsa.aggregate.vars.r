@@ -16,10 +16,10 @@
 #'                        See details.
 #' @param new.var.labels  Optional, vector of strings to add as variable labels for the
 #'                        \code{new.variables}. See details.
-#' @param aggr.fun        Function to apply when aggregating the \code{variable}. Accepts
+#' @param aggr.fun        Function to apply when aggregating the variables. Accepts
 #'                        \code{mean} (default), \code{median}, or \code{mode}. See details.
 #' @param out.file        Full path to the \code{.RData} file to be written. If missing, the
-#'                        original object will be overwritten in the memory. See examples.
+#'                        original object will be written in the memory. See examples.
 #'
 #' @details
 #' The function aggregates continuous variables in large-scale assessments' data. The aggregation can be done by groups defined by the \code{group.vars}. Multiple grouping variables can be specified. All aggregations are done within each country separately.
@@ -137,15 +137,28 @@ lsa.aggregate.vars <- function(data.file, data.object, group.vars, src.variables
   if(!aggr.fun %in% c("mean", "median", "mode")) {
     stop('\nUnknown aggregation function is passed to "aggr.fun". The accepted functions are "mean", "median" or "mode". All operations stop here. Check your input.\n\n', call. = FALSE)
   }
-  data[ , (new.variables) := lapply(.SD, function(i) {
-    if(aggr.fun == "mean") {
-      mean(x = i, na.rm = TRUE)
-    } else if(aggr.fun == "median") {
-      median(x = i, na.rm = TRUE)
-    } else if(aggr.fun == "mode") {
-      compute.unweighted.mode(x = i, na.rm = TRUE)
-    }
-  }), .SDcols = src.variables, by = c(key(data), vars.list[["group.vars"]])]
+  if(is.null(unlist(lapply(X = data[ , mget(src.variables)], FUN = attr, "missings")))) {
+    data[ , (new.variables) := lapply(.SD, function(i) {
+      if(aggr.fun == "mean") {
+        mean(x = i, na.rm = TRUE)
+      } else if(aggr.fun == "median") {
+        median(x = i, na.rm = TRUE)
+      } else if(aggr.fun == "mode") {
+        compute.unweighted.mode(x = i, na.rm = TRUE)
+      }
+    }), .SDcols = src.variables, by = c(key(data), vars.list[["group.vars"]])]
+  } else {
+    data[ , (new.variables) := lapply(.SD, function(i) {
+      i <- i[!i %in% attr(x = i, which = "missings")]
+      if(aggr.fun == "mean") {
+        mean(x = i, na.rm = TRUE)
+      } else if(aggr.fun == "median") {
+        median(x = i, na.rm = TRUE)
+      } else if(aggr.fun == "mode") {
+        compute.unweighted.mode(x = i, na.rm = TRUE)
+      }
+    }), .SDcols = src.variables, by = c(key(data), vars.list[["group.vars"]])]
+  }
   if(length(grep(pattern = "DCZJ$", x = colnames(data))) > 0) {
     orig.vars <- TRUE
   } else {
