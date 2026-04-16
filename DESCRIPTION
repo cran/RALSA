@@ -1,18 +1,14 @@
 Package: RALSA
 Type: Package
 Title: R Analyzer for Large-Scale Assessments
-Version: 1.6.5
-Date: 2026-03-17 17:00
+Version: 1.6.6
+Date: 2026-04-16 17:00
 Authors@R: c(person(given = "Plamen V.",
                     family = "Mirazchiyski",
                     role = c("aut", "cre"),
-                    email = "plamen.mirazchiyski@ineri.org"),
-             person(given = "INERI",
-                    role = "aut",
-                    email = "ralsa@ineri.org"))
-Author: Plamen V. Mirazchiyski [aut, cre],
-  INERI [aut]
-Maintainer: Plamen V. Mirazchiyski <plamen.mirazchiyski@ineri.org>
+                    email = "plamen.mirazchiyski@gmail.com"))
+Author: Plamen V. Mirazchiyski [aut, cre]
+Maintainer: Plamen V. Mirazchiyski <plamen.mirazchiyski@gmail.com>
 Description: 
     Download, prepare and analyze data from large-scale assessments and
     surveys with complex sampling and assessment design (see 'Rutkowski',
@@ -39,6 +35,6 @@ License: GPL-2
 URL: https://ralsa.ineri.org/
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2026-03-15 18:13:05 UTC; plamen
+Packaged: 2026-04-16 09:14:51 UTC; plamen
 Repository: CRAN
-Date/Publication: 2026-03-17 13:00:03 UTC
+Date/Publication: 2026-04-16 23:12:23 UTC

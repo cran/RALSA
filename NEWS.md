@@ -1,3 +1,7 @@
+# RALSA v1.6.6 (2026-04-16)
+
+This version brings minor change in the authourship and the contact of the maintainer.
+
 # RALSA v1.6.5 (2026-03-17)
 
 This version brings support for TIMSS 2023 Longitudinal and two bug fixes.

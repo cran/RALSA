@@ -917,14 +917,14 @@ server <- function(input, output, session) {
     ),
     IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
                                    "SCHWGT",
-                                   "TOTWGTT"), # Default teacher weight in ICCS when TCH and SCH data are merged
+                                   "TOTWGTT"),
     IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
                                     "JKCZONE",
                                     "JKZONE",
-                                    "JKZONET"), # Default teacher zone in ICCS when TCH and SCH data are merged
+                                    "JKZONET"),
     IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
                                       "JKCREP",
-                                      "JKREPT"), # Default teacher replicate index in ICCS when TCH and SCH data are merged
+                                      "JKREPT"),
     IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
                                     "sch.bckg.tch.bckg",
                                     "std.bckg.tch.bckg",
@@ -1225,6 +1225,7 @@ server <- function(input, output, session) {
     }
   }
 
+
   #Define global objects
   load.app.CSS.screen <- "
 #loading-content {
@@ -1417,155 +1418,155 @@ respondents.and.cycles <- list(
   "Student background" = list(
     resp.type = c("asc", "asg", "bsg", "isg", "jsg", "bs_", "cs_"),
     round = c(
-      "b1", # TiPi
-      "c2", "c3", "c4", "c5", "c6", # ICCS
-      "e1", "e2", "e3", "e4", "e5", "e6", # ePIRLS
-      "f2", # CivED
-      "i1", "i2", "i3", "i4", "i5", "i6", # ICILS
-      "v1", # REDS
-      "l1", "l2", "l3", "l4", "l5", "l6", # prePIRLS
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "n1", "n2", "n3", "n4", "n5", "n6", # preTIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "r1", "r2", "r3", "r4", "r5", "r6", "r7", # PIRLS
-      "t1", "t2" # RLII
+      "b1",
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "f2",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "t1", "t2"
     )
   ),
   "Mathematics student background" = list(
     resp.type = "msg",
-    round = c("m1", "m2", "m3", "m4") # TIMSS Advanced
+    round = c("m1", "m2", "m3", "m4")
   ),
   "Physics student background" = list(
     resp.type = "psg",
-    round = c("m1", "m2", "m3", "m4") # TIMSS Advanced
+    round = c("m1", "m2", "m3", "m4")
   ),
   "Student achievement items" = list(
     resp.type = c("asa", "bsa", "isa", "jsa"),
     round = c(
-      "c2", "c3", "c4", "c5", "c6", # ICCS
-      "e1", "e2", "e3", "e4", "e5", "e6", # ePIRLS
-      "l1", "l2", "l3", "l4", "l5", "l6", # prePIRLS
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "n1", "n2", "n3", "n4", "n5", "n6", # preTIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "r1", "r2", "r3", "r4", "r5", "r6", "r7" # PIRLS
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
   "Student home" = list(
     resp.type = "ash",
     round = c(
-      "b1", # TiPi
-      "e1", "e2", "e3", "e4", "e5", "e6",  # ePIRLS
-      "l1", "l2", "l3", "l4", "l5", "l6", # prePIRLS
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "n1", "n2", "n3", "n4", "n5", "n6", # preTIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "r1", "r2", "r3", "r4", "r5", "r6", "r7" # PIRLS
+      "b1",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7"
     )
   ),
   "European student module" = list(
     resp.type = "ise",
-    round = c("c2", "c3", "c4", "c5", "c6") # ICCS
+    round = c("c2", "c3", "c4", "c5", "c6")
   ),
   "Latin American student module" = list(
     resp.type = "isl",
-    round = c("c2", "c3", "c4", "c5", "c6") # ICCS
+    round = c("c2", "c3", "c4", "c5", "c6")
   ),
   "Asian student module" = list(
     resp.type = "iss",
-    round = c("c2", "c3", "c4", "c5", "c6") # ICCS
+    round = c("c2", "c3", "c4", "c5", "c6")
   ),
   "Teacher background" = list(
     resp.type = c("atg", "btg", "ctg", "ptg", "itg", "bt_"),
     round = c(
-      "b1", # TiPi
-      "c2", "c3", "c4", "c5", "c6", # ICCS
-      "e1", "e2", "e3", "e4", "e5", "e6", # ePIRLS
-      "f2", # CivED
-      "i1", "i2", "i3", "i4", "i5", "i6", # ICILS
-      "v1", # REDS
-      "l1", "l2", "l3", "l4", "l5", "l6", # prePIRLS
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "n1", "n2", "n3", "n4", "n5", "n6", # preTIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "r1", "r2", "r3", "r4", "r5", "r6", "r7", # PIRLS
-      "t1", "t2", "t3", "t4", "t5", "t6" # TALIS
+      "b1",
+      "c2", "c3", "c4", "c5", "c6",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "f2",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "n1", "n2", "n3", "n4", "n5", "n6",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
   "Mathematics teacher background" = list(
     resp.type = c("btm", "mtg"),
     round = c(
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS and TIMSS Advanced
-      "z7", "z8", "z9", # eTIMSS PSI
-      "s1" # SITES
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "s1"
     )
   ),
   "Physics teacher background" = list(
     resp.type = "ptg",
-    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9") # TIMSS Advanced
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
   "Science teacher background" = list(
     resp.type = "bts",
     round = c(
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "s1" # SITES
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "s1"
     )
   ),
   "School background" = list(
     resp.type = c("acg", "bcg", "ccg", "pcg", "icg", "bc_"),
     round = c(
-      "f2", # CivED
-      "c2", "c3", "c4", "c5", "c6", # ICCS
-      "i1", "i2", "i3", "i4", "i5", "i6", # ICILS
-      "v1", # REDS
-      "e1", "e2", "e3", "e4", "e5", "e6", # ePIRLS
-      "l1", "l2", "l3", "l4", "l5", "l6", # prePIRLS
-      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", # TIMSS
-      "z7", "z8", "z9", # eTIMSS PSI
-      "r1", "r2", "r3", "r4", "r5", "r6", "r7", # PIRLS
-      "s1", # SITES
-      "t1", "t2", "t3", "t4", "t5", "t6" # TALIS
+      "f2",
+      "c2", "c3", "c4", "c5", "c6",
+      "i1", "i2", "i3", "i4", "i5", "i6",
+      "v1",
+      "e1", "e2", "e3", "e4", "e5", "e6",
+      "l1", "l2", "l3", "l4", "l5", "l6",
+      "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9",
+      "z7", "z8", "z9",
+      "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+      "s1",
+      "t1", "t2", "t3", "t4", "t5", "t6"
     )
   ),
   "Mathematics school background" = list(
     resp.type = "mcg",
-    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9") # TIMSS Advanced
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
   "Physics school background" = list(
     resp.type = "pcg",
-    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9") # TIMSS Advanced
+    round = c("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9")
   ),
   "Leader background data" = list(
     resp.type = c("alg", "blg"),
-    round = c("s1", "s2", "s3", "s4") # TALIS 3S
+    round = c("s1", "s2", "s3", "s4")
   ),
   "Staff background data" = list(
     resp.type = c("asg", "bsg"),
-    round = c("s1", "s2", "s3", "s4") # TALIS 3S
+    round = c("s1", "s2", "s3", "s4")
   ),
   "Institutional program background" = list(
     resp.type = "dig",
-    round = "t1" # TEDS-M
+    round = "t1"
   ),
   "Educator background" = list(
     resp.type = "deg",
-    round = "t1" # TEDS-M
+    round = "t1"
   ),
   "Future primary teacher background" = list(
     resp.type = "dpg",
-    round = "t1" # TEDS-M
+    round = "t1"
   ),
   "Future lower-secondary teacher background" = list(
     resp.type = "dsg",
-    round = "t1" # TEDS-M
+    round = "t1"
   ),
   "Student process data" = list(
     resp.type = c("isp", "asp", "bsp"),
     round = c(
-      "c4", # ICCS
-      "r5", # PIRLS
-      "m8" # TIMSS
+      "c4",
+      "r5",
+      "m8"
     )
   )
 )
@@ -2798,7 +2799,6 @@ countries.studies.cycles.table <- data.table(
   ),
   key = "Alpha 3 ISO"
 )
-
 
   #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   output$welcomeToRALSA <- renderText("Welcome to RALSA")

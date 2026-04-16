@@ -32,24 +32,26 @@ import::from(RALSA,
              lsa.lin.reg,
              lsa.bin.log.reg)
 
+
+
 ui <- tagList(
 
   load.app.CSS.screen <- "
-#loading-content {
-  position: absolute;
-  background: #000000;
-  opacity: 1;
-  z-index: 100;
-  left: 0;
-  right: 0;
-  height: 100%;
-  text-align: center;
-  color: #FFFFFF;
-}
-",
-jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
-
-jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
+  #loading-content {
+    position: absolute;
+    background: #000000;
+    opacity: 1;
+    z-index: 100;
+    left: 0;
+    right: 0;
+    height: 100%;
+    text-align: center;
+    color: #FFFFFF;
+  }
+  ",
+  jscode.close.RALSA.GUI <- "shinyjs.closeWindow = function() { window.close(); }",
+  
+  jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 0);}',
 
   useShinyjs(),
   rclipboardSetup(),
@@ -58,7 +60,7 @@ jscode.scroll.tab.to.top <- 'shinyjs.scrolltop = function() {window.scrollTo(0, 
     id = "loading-content", class = "center",
     h1(HTML("<br/><br/><blink>Loading...</blink><br/><br/>")),
     img(src = 'RALSA_Logo.png', style = "width: 452px; height: 170px;"),
-    h1(HTML("<br/>Brought to you by the<br/><br/><strong>International Educational Research and Evaluation Institute</strong><br/><br/>"), tags$a(href="https://www.ralsa.ineri.org/", "(https://www.ineri.org/)", target = "_blank"))
+    h1(HTML("<br/><br/><br/><strong>R Analyzer for Large-Scale Assessments</strong><br/><br/>"))
   ),
   hidden(
     div(
@@ -2771,7 +2773,7 @@ objDiv.scrollTop = objDiv.scrollHeight;
                     )
             )
           ),
-          tags$footer(HTML("R Analyzer for Large-Scale Assessments by INERI.org - &#127279; 2021"), align = "center", style = "
+          tags$footer(HTML("R Analyzer for Large-Scale Assessments - &#127279; 2021-2026"), align = "center", style = "
 position: fixed;
 left: 0px;
 bottom: 0px;

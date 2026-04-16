@@ -52,7 +52,7 @@
 #' @note
 #' This function is intended only as utility function for diagnostic purposes, to inspect the variables prior to performing an actual analysis. It is **not** intended for actual analysis of large-scale assessments' data. Reporting statistics from it can and will lead to biased and erroneous conclusions.
 #'
-#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to student data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
 #'
 #' @examples
 #' # Merge PIRLS 2016 school principal data for all countries
@@ -317,7 +317,7 @@ lsa.data.diag <- function(data.file, data.object, split.vars, variables, weight.
       desc.tables <- lapply(X = data.object[ , mget(colnames(data.object)[colnames(data.object) != weight.var])], FUN = function(i) {
         x <- cbind(as.data.table(i), data.object[ , get(weight.var)])
         if(is.factor(i) | is.character(i)) {
-          x[ , N := .(N = sum(V2)), by = i] # Where V2 is the weight.
+          x[ , N := .(N = sum(V2)), by = i]
           x[ , V2 := NULL]
           return(unique(x))
         } else if(is.numeric(i)) {

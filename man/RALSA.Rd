@@ -92,5 +92,5 @@ Rutkowski, L., Gonzalez, E., Joncas, M., & von Davier, M. (2010). International 
 Rutkowski, L., Rutkowski, D., & von Davier, M. (2014). A Brief Introduction to Modern International Large-Scale Assessment. In L. Rutkowski, M. von Davier, & D. Rutkowski (Eds.), \emph{Handbook of International Large-Scale Assessments: Background, Technical Issues, and Methods of Data Analysis} (pp. 3-10). CRC Press.
 }
 \author{
-Plamen V. Mirazchiyski, INERI
+Plamen V. Mirazchiyski
 }

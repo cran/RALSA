@@ -5,7 +5,9 @@
 
     path.to.start.GUI <- system.file("shiny", "GUI", "startGUI.r", package = "RALSA")
 
-    packageStartupMessage("\nWelcome to RALSA!\n\nFor news, help, and requests, please visit https://ralsa.ineri.org/\n")
+    packageStartupMessage("\nWelcome to RALSA!")
+    # After you make the new website, replace the line from above with the new website link:
+    # packageStartupMessage("\nWelcome to RALSA!\n\nFor news, help, and requests, please visit https://ralsa.ineri.org/\n")
 
     switch(
       menu(choices = c("Yes, start now", "No, not at this time"),

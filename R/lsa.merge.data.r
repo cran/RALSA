@@ -25,7 +25,7 @@
 #' \code{.RData} data file containing an object with class \code{lsa.data}, an extension of the \code{data.table} class. The \code{data.table} object has the same name as the \code{.RData} file it is saved in. The object contains the data from different respondents and/or countries merged and has additional attributes: study name (\code{study}), study cycle (\code{cycle}), and respondent file type (\code{file.type}). Each variable has its own additional attributes: its own label attached to it, if it existed in the source SPSS file. If the \code{missing.to.NA} in the source file was set to \code{TRUE}, each variable has an attribute \code{missings}, containing the user-defined missing values.
 #'
 #' @note
-#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to srudent data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to student data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
 #'
 #' @examples
 #'
@@ -544,7 +544,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         setkeyv(x = student.level.data, cols = c(key.var, add.key.1))
         setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
         last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file] # Note we are taking just the last one, otherwise, if "ASA" and "ASG" (for example) files are both in the merge, two elements are returned and this causes a crash.
+        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
         if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
           suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
         }
@@ -560,7 +560,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
           suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
         }
         last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file] # Note we are taking just the last one, otherwise, if "ASA" and "ASG" (for example) files are both in the merge, two elements are returned and this causes a crash.
+        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
         if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
           suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
         }

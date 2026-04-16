@@ -2482,14 +2482,14 @@ design.weight.variables <- list(
   ),
   IEA.JK2.dflt.sch.bckg.wgts = c("TOTWGTC",
                                  "SCHWGT",
-                                 "TOTWGTT"), # Default teacher weight in ICCS when TCH and SCH data are merged
+                                 "TOTWGTT"),
   IEA.JK2.dflt.sch.bckg.zones = c("JKZONEC",
                                   "JKCZONE",
                                   "JKZONE",
-                                  "JKZONET"), # Default teacher zone in ICCS when TCH and SCH data are merged
+                                  "JKZONET"),
   IEA.JK2.dflt.sch.bckg.rep.ind = c("JKREPC",
                                     "JKCREP",
-                                    "JKREPT"), # Default teacher replicate index in ICCS when TCH and SCH data are merged
+                                    "JKREPT"),
   IEA.JK2.dflt.tch.bckg.types = c("tch.bckg",
                                   "sch.bckg.tch.bckg",
                                   "std.bckg.tch.bckg",
@@ -4944,7 +4944,6 @@ export.results <- function(output.object, analysis.type, add.graphs = FALSE, per
     openXL(file = destination.file)
   }
 }
-
 file.merged.respondents <- list(
   "educ.bckg"                                     = "Educator background",
   "inst.bckg"                                     = "Institutional background",
