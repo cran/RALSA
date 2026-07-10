@@ -111,15 +111,16 @@ If \code{save.output = TRUE} (default), an MS Excel (\code{.xlsx}) file (which c
 \item Total - the grand totals for each of the estimated value types ("Observed count", "Expected count", "Row percent", "Column percent", and "Percent of total") depending on the logical values (\code{TRUE}, \code{FALSE}) passed to the \code{expected.cnts}, \code{row.pcts}, \code{column.pcts}, and \code{total.pcts} arguments.
 \item Total\verb{_}SE - the standard errors of the estimated values from the above.
 }
-The second sheet contains some additional information related to the analysis per country in the following columns:
+The second sheet ("Rao-Scott Adjusted Chi-Square") contains some additional information related to the analysis per country in the following columns:
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
-\item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
-\item Statistics - contains the names of the different statistics types: chi-squares, degrees of freedom (sample and design), and p-values.
+\item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by, if \code{split.vars} are provided. The exact names will depend on the variables in \code{split.vars}.
+\item Chi-Square - contains the names of First- and Second-Order Rao-Scott chi-square test against the combinations of country IDs and \code{split.vars}' categories in the previous columns.
+\item Statistics - contains the names of the different statistics types: chi-squares (first- and second-order Rao-Scott adjustments), degrees of freedom (sample and design), and \emph{p}-values.
 \item Value - the estimated values for the statistics from above.
 }
 
-The third sheet contains some additional information related to the analysis per country in the following columns:
+The third sheet ("Analysis information") contains some additional information related to the analysis per country in the following columns:
 \itemize{
 \item DATA - used \code{data.file} or \code{data.object}.
 \item STUDY - which study the data comes from.
@@ -134,7 +135,7 @@ The third sheet contains some additional information related to the analysis per
 \item DURATION - how long the analysis took in hours, minutes, seconds and milliseconds.
 }
 
-The fourth sheet contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
+The fourth sheet ("Calling syntax") contains the call to the function with values for all parameters as it was executed. This is useful if the analysis needs to be replicated later.
 
 If \code{graphs = TRUE} there will be an additional "Graphs" sheet containing all plots.
 

@@ -1,8 +1,8 @@
 Package: RALSA
 Type: Package
 Title: R Analyzer for Large-Scale Assessments
-Version: 1.6.6
-Date: 2026-04-16 17:00
+Version: 1.7.0
+Date: 2026-07-10 17:00
 Authors@R: c(person(given = "Plamen V.",
                     family = "Mirazchiyski",
                     role = c("aut", "cre"),
@@ -21,8 +21,8 @@ Description:
     data, produce descriptive statistics (percentages, means, percentiles,
     benchmarks) and multivariate statistics (correlations, linear
     regression, binary logistic regression). The number of supported
-    studies and analysis types will increase in future. For a general
-    presentation of the package, see 'Mirazchiyski', 2021a
+    studies and analysis types increases with every next release.
+    For a general presentation of the package, see 'Mirazchiyski', 2021a
     (<doi:10.1186/s40536-021-00114-4>). For detailed technical aspects of
     the package, see 'Mirazchiyski', 2021b (<doi:10.3390/psych3020018>).
 Depends: R (>= 4.0.0)
@@ -30,11 +30,11 @@ Encoding: UTF-8
 Imports: archive, DT, haven, Hmisc, data.table, ggplot2, import,
         methods, openxlsx, rclipboard, readr, rstudioapi, shiny,
         shinyFiles, shinydashboard, shinyjs, shinyWidgets, stringi,
-        stringr
+        stringr, quantreg
 License: GPL-2
-URL: https://ralsa.ineri.org/
-RoxygenNote: 7.3.3
+URL: https://statr.dev/menu/ralsa/
+RoxygenNote: 8.0.0
 NeedsCompilation: no
-Packaged: 2026-04-16 09:14:51 UTC; plamen
+Packaged: 2026-07-09 16:51:09 UTC; plamen
 Repository: CRAN
-Date/Publication: 2026-04-16 23:12:23 UTC
+Date/Publication: 2026-07-10 09:20:02 UTC

@@ -51,6 +51,7 @@
 #'             \item \code{lsa.crosstabs} Crosstabulations with Rao-Scott first- and second-order chi-square adjustments
 #'             \item \code{lsa.corr} Computes correlations between variables (Pearson or Spearman)
 #'             \item \code{lsa.lin.reg} Computes linear regression with or without contrast coding of categorical variables
+#'             \item \code{lsa.quant.reg} Computes quantile regression with or without contrast coding of categorical variables
 #'             \item \code{lsa.bin.log.reg} Computes binary logistic regression with or without contrast coding of categorical variables
 #'   }
 #' }
@@ -98,6 +99,7 @@
 #' @importFrom rstudioapi jobRunScript executeCommand
 #' @importFrom haven read_sav as_factor
 #' @importFrom archive archive_extract
+#' @importFrom quantreg rq
 #' @importFrom import from
 NULL
 #> NULL

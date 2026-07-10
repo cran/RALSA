@@ -1,3 +1,15 @@
+# RALSA v1.7.0 (2026-07-10)
+
+This version brings quantile regression as analysis type and introduces change of the support website domain.
+
+## New functionality
+- Quantile regression is added as analysis type for large-scale assessments and surveys data.
+
+## Miscellaneous
+- The RALSA support website now has a new location. It is part of the [statr.dev](https://statr.dev/menu/ralsa/) domain.
+- Improved documentation.
+- Various improvements in the GUI workflow.
+
 # RALSA v1.6.6 (2026-04-16)
 
 This version brings minor change in the authourship and the contact of the maintainer.

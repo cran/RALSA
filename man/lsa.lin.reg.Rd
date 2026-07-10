@@ -2,7 +2,7 @@
 % Please edit documentation in R/lsa.lin.reg.r
 \name{lsa.lin.reg}
 \alias{lsa.lin.reg}
-\title{Compute linear regression coefficients specified groups}
+\title{Compute linear regression coefficients within specified groups}
 \usage{
 lsa.lin.reg(
   data.file,
@@ -112,12 +112,12 @@ If \code{save.output = FALSE}, a list containing the estimates and analysis info
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
 \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
+\item Variable - the variable names (background/contextual or PV root names, or contrast coded variable names).
 \item n_Cases - the number of cases in the sample used to compute the statistics.
 \item Sum_\verb{<}Weight variable\verb{>} - the estimated population number of elements per group after applying the weights. The actual name of the weight variable will depend on the weight variable used in the analysis.
 \item Sum_\verb{<}Weight variable\verb{>}\verb{_}SE - the standard error of the the estimated population number of elements per group. The actual name of the weight variable will depend on the weight variable used in the analysis.
 \item Percentages_\verb{<}Last split variable\verb{>} - the percentages of respondents (population estimates) per groups defined by the splitting variables in \code{split.vars}. The percentages will be for the last splitting variable which defines the final groups.
 \item Percentages_\verb{<}Last split variable\verb{>}\verb{_}SE - the standard errors of the percentages from above.
-\item Variable - the variable names (background/contextual or PV root names, or contrast coded variable names).
 \item Coefficients - the regression coefficients (intercept and slopes).
 \item Coefficients_SE - the standard error of the regression coefficients (intercepts and slopes) for each independent variable (background/contextual or PV root names, or contrast coded variable names) in the model.
 \item Coefficients_SVR - the sampling variance component for the regression coefficients if root PVs are specified either as dependent or independent variables.
