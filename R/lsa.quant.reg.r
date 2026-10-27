@@ -33,7 +33,7 @@
 #' @param PV.root.indep        The root names for a set of plausible values used as a independent
 #'                             variables in the model. See details.
 #' @param quantiles            Values for the quantiles (tau) to be estimated, numbers between
-#'                             \code{0} and \code{1}. The default is 0.5 (median). See detailes.
+#'                             \code{0} and \code{1}. The default is 0.5 (median). See details.
 #' @param interactions         Interaction terms - a list containing vectors of length of two. See
 #'                             details.
 #' @param standardize          Shall the dependent and independent variables be standardized to
@@ -70,7 +70,7 @@
 #'
 #' The function computes quantile regression coefficients by the categories of the splitting variables. The percentages of respondents in each group are computed within the groups specified by the last splitting variable. If no splitting variables are added, the results will be computed only by country.
 #'
-#' The \code{quantiles} (tau) argument passes the quantiles of the distribution to estimate the predictive effect of the independent variables on the dependent one. The default value of the \code{quantiles} argument is 0.5 (i.e. the 50th percentile, the median). Multiple values for this argument can be passed as a vector of values between \code{0} and \code{1}. When a research question targets perfomrance at different quantiles, it is recommended to build a model with multiple quantiles instead (a.k.a. "joint" or "composite" quantile regression) than building one model per quantile. This avoids problems like minimizing the check-loss function without charing information or constraints with other quantiles, "quantile crossing" issues, inability to calculate the covariances between different quantile coefficients, and inability to perform Wald tests to evaluate differences across quantiles (e.g. inability to test whether a variable impacts top learners significantly more than bottom learners). For more details, see Cunningham et al. (2020), for example.
+#' The \code{quantiles} (tau) argument passes the quantiles of the distribution to estimate the predictive effect of the independent variables on the dependent one. The default value of the \code{quantiles} argument is 0.5 (i.e. the 50th percentile, the median). Multiple values for this argument can be passed as a vector of values between \code{0} and \code{1}. When a research question targets perfomrance at different quantiles, it is recommended to build a model with multiple quantiles instead (a.k.a. "joint" or "composite" quantile regression) than building one model per quantile. This avoids problems like minimizing the check-loss function without charing information or constraints with other quantiles, "quantile crossing" issues, inability to calculate the covariances between different quantile coefficients, and inability to perform Wald tests to evaluate differences across quantiles (e.g. inability to test whether a variable impacts top learners significantly more than bottom learners). For more details, see Cunningham et al. (2020), for example. However, note that some joint models may fail, depending of how much valid cases of data are available for that quantile, and how many \code{split.vars} are added.
 #'
 #' If \code{standardize = TRUE}, the variables will be standardized before computing any statistics to provide beta regression coefficients.
 #'
@@ -137,12 +137,10 @@
 #' \itemize{
 #'   \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
 #'   \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
-#'   \item Statistic - a column containing the Chi-square, Wald F-Statistic and degrees of freedom estimates.
+#'   \item Quantiles - lists the quantile(s) passed to the function. If more than one quantile is passed to the quantiles argument, the regression coefficients will be grouped by them.
+#'   \item Statistic - a column containing the pseudo R-Squared, Chi-square, Wald F-Statistic and degrees of freedom estimates.
 #'   \item Estimate - the numerical estimates for each of the above.
 #'   \item Estimate_SE - the standard errors of the estimates from above.
-#'   \item Estimate_SVR - the sampling variance component if PVs were included in the model.
-#'   \item Estimate_MVR - the measurement variance component if PVs were included in the model.
-#'   \item t_value - the \emph{t}-test value for the regression coefficients, value only for the Wald F-Statistic is provided.
 #'   \item p_value - the \emph{p}-value for the regression coefficients, values only for the Chi-Square and the Wald F-Statistic are provided.
 #' }
 #' The third sheet contains some additional information related to the analysis per country in columns:
@@ -164,6 +162,8 @@
 #'
 #' @note
 #' TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to student data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+#'
+#' The R-Squared (\eqn{R^2}) statistics in ordinary least square (OLS) regresison does not apply to quantile regresison. Koenker and Machado (1999) propose the the pseudo R-Squared (or \eqn{R^1}) goodness of fit measure, analogous to the \eqn{R2} in OLS regression. \eqn{R^2} in OLS measures the relative success of two models for the conditional mean in terms of residual variance. In contrast, \eqn{R^1} provides a measure for the relative success of the quantile regresison models for a specific quantile. This measure applies to a specific quantile in the distribution in terms of weighted sum of absolute residuals. That is, \eqn{R^1} represents a local measure of goodness of fit for the particular quantile in the model. In contrast to \eqn{R^1}, \eqn{R^2} represents a global meansure of goodness of fit over the entire conditional distribution. For more details, see Koenker and Machado (1999).
 #'
 #' @examples
 #' # Compute quantile regression coefficients with the complex student background scale "Student
@@ -201,6 +201,8 @@
 #' Cunningham, E., Tokdar, S. T., & Clark, J. S. (2020). A vignette on model-based quantile regression: Analysing excess zero response. In \emph{Flexible Bayesian Regression Modelling} (pp. 27–64). Elsevier. https://doi.org/10.1016/B978-0-12-815862-3.00008-1
 #'
 #' Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+#'
+#' Koenker, R., & Machado, J. A. F. (1999). Goodness of Fit and Related Inference Processes for Quantile Regression. \emph{Journal of the American Statistical Association}, \emph{94}(448), 1296–1310. https://doi.org/10.1080/01621459.1999.10473882
 #'
 #' LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
 #'
@@ -475,14 +477,19 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
       }
       if(is.character(dependent.variable) && is.character(independent.variables)) {
         regression.formula <- paste(c(dependent.variable, independent.variables), collapse = " ~ ")
+        null.regression.formula <- paste(c(dependent.variable, 1), collapse = " ~ ")
       } else if(is.list(dependent.variable) && is.character(independent.variables)) {
         regression.formula <- Map(f = paste, dependent.variable, list(independent.variables), sep = " ~ ")
+        null.regression.formula <- Map(f = paste, dependent.variable, 1, sep = " ~ ")
       } else if(is.list(dependent.variable) && is.list(independent.variables)) {
         regression.formula <- Map(f = paste, dependent.variable, independent.variables, sep = " ~ ")
+        null.regression.formula <- Map(f = paste, dependent.variable, 1, sep = " ~ ")
       } else if(is.character(dependent.variable) && is.list(independent.variables)) {
         regression.formula <- Map(f = paste, list(dependent.variable), independent.variables, sep = " ~ ")
+        null.regression.formula <- Map(f = paste, list(dependent.variable), as.list(rep(1, times = length(independent.variables))), sep = " ~ ")
       } else if(is.character(dependent.variable) && is.list(independent.variables)) {
         regression.formula <- Map(f = paste, dependent.variable, list(independent.variables), sep = " ~ ")
+        null.regression.formula <- Map(f = paste, dependent.variable, 1, sep = " ~ ")
       }
       if("interactions" %in% names(vars.list)) {
         interaction.terms <- lapply(X = vars.list[["interactions"]], FUN = function(i) {
@@ -618,9 +625,9 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
       }
       if(is.null(vars.list[["PV.names"]])) {
         if(exists("bckg.cat.vars.new.names")) {
-          bckg.regression <- list(compute.quantile.regression.all.repwgt(data.object = data1, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], bckg.cat.vars.new.names), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula, quantile.values = quantiles))
+          bckg.regression <- list(compute.quantile.regression.all.repwgt(data.object = data1, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], bckg.cat.vars.new.names), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula, null.formula = null.regression.formula, quantile.values = quantiles))
         } else {
-          bckg.regression <- list(compute.quantile.regression.all.repwgt(data.object = data1, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]]), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula, quantile.values = quantiles))
+          bckg.regression <- list(compute.quantile.regression.all.repwgt(data.object = data1, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]]), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula, null.formula = null.regression.formula, quantile.values = quantiles))
         }
         lapply(X = bckg.regression, FUN = function(i) {
           setnames(x = i, old = "V1", new = "Variable")
@@ -628,7 +635,7 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
         bckg.output.copy <- copy(bckg.regression)
       } else if(!is.null(vars.list[["PV.names"]])) {
         PV.regression <- list(lapply(X = seq_along(data1), FUN = function(i) {
-          compute.quantile.regression.all.repwgt(data.object = data1[[i]], vars.vector = grep(pattern = paste(c(vars.list[["PV.root.dep"]], vars.list[["PV.root.indep"]], vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]]), collapse = "|"), x = colnames(data1[[i]]), value = TRUE), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula[[i]], quantile.values = quantiles)
+          compute.quantile.regression.all.repwgt(data.object = data1[[i]], vars.vector = grep(pattern = paste(c(vars.list[["PV.root.dep"]], vars.list[["PV.root.indep"]], vars.list[["bckg.dep.var"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["bckg.indep.cat.vars"]]), collapse = "|"), x = colnames(data1[[i]]), value = TRUE), weight.var = all.weights, keys = key.vars, reg.formula = regression.formula[[i]], null.formula = null.regression.formula[[i]], quantile.values = quantiles)
         }))
         if(!is.null(vars.list[["PV.root.indep"]])) {
           PV.regression <- lapply(X = PV.regression, FUN = function(i) {
@@ -674,9 +681,9 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
                   j[ , V1 := sapply(.SD, FUN = function(k) {
                     ifelse(test = grepl(pattern = paste(vars.list[["PV.root.indep"]], collapse = "|"), x = k), yes = gsub(pattern = "[[:digit:]]+", replacement = "N", x = k), no = k)
                   }), .SDcols = "V1"]
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"))]
                 } else {
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], new.cat.indep.vars.vals, grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"))]
                 }
               } else {
                 if(file.attributes[["lsa.study"]] %in% c("PISA", "PISA for Development", "ICCS", "ICILS")) {
@@ -684,9 +691,9 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
                   j[ , V1 := sapply(.SD, FUN = function(k) {
                     ifelse(test = grepl(pattern = paste(vars.list[["PV.root.indep"]], collapse = "|"), x = k), yes = gsub(pattern = "[[:digit:]]+", replacement = "N", x = k), no = k)
                   }), .SDcols = "V1"]
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"), labels = c("(Intercept)", PV.root.indep.names, vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"))]
                 } else {
-                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "df", "fstatistic"))]
+                  j[ , V1 := factor(x = V1, levels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"), labels = c("(Intercept)", vars.list[["PV.root.indep"]], vars.list[["bckg.indep.cont.vars"]], grep(pattern = "\\:", x = j[ , V1], value = TRUE), "pseudo.r.squared", "df", "fstatistic"))]
                 }
               }
               setkeyv(x = j, cols = c(key.vars, "Quantiles", "V1"))
@@ -703,6 +710,9 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
       if(is.null(vars.list[["PV.root.dep"]]) & is.null(vars.list[["PV.root.indep"]])) {
         reshape.list.statistics.bckg(estimate.object = bckg.regression, estimate.name = "Coefficients", data.key.variables = key.vars, new.names.vector = "", bckg.vars.vector = vars.list[["bckg.indep.vars"]], weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         bckg.regression <- bckg.regression[[1]]
+        country.model.stats <- bckg.regression[Variable %in% c("pseudo.r.squared"), ]
+        setnames(x = country.model.stats, old = c("Variable", "Coefficients", "Coefficients_SE"), new = c("Statistic", "Estimate", "Estimate_SE"))
+        bckg.regression <- bckg.regression[!Variable %in% c("pseudo.r.squared"), ]
       } else if(!is.null(vars.list[["PV.root.dep"]]) | !is.null(vars.list[["PV.root.indep"]])) {
         reshape.list.statistics.PV(estimate.object = PV.regression, estimate.name = "Coefficients", PV.vars.vector = "", weighting.variable = vars.list[["weight.var"]], replication.weights = rep.wgts.names, study.name = file.attributes[["lsa.study"]], SE.design = shortcut)
         reset.coefficients.colnames <- function(input1, input2) {
@@ -744,6 +754,9 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
             PV.regression
           }
         }
+        country.model.stats <- PV.regression[Variable %in% c("pseudo.r.squared"), ]
+        setnames(x = country.model.stats, old = c("Variable", "Coefficients", grep(pattern = "Coefficients_", x = colnames(country.model.stats), value = TRUE)), new = c("Statistic", "Estimate", gsub(pattern = "Coefficients_", replacement = "Estimate_", x = grep(pattern = "Coefficients_", x = colnames(country.model.stats), value = TRUE))))
+        PV.regression <- PV.regression[!Variable %in% c("pseudo.r.squared"), ]
         merged.PV.estimates <- PV.regression
         PV.regression <- NULL
       }
@@ -752,9 +765,18 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
       } else if(!is.null(vars.list[["PV.root.dep"]]) | !is.null(vars.list[["PV.root.indep"]])) {
         Wald.estimates <- compute.Wald.test.all.repwgt.PV(Wald.object = PV.output.copy, vars.vector = c(vars.list[["bckg.dep.var"]], vars.list[["PV.root.dep"]], vars.list[["bckg.indep.cont.vars"]], vars.list[["PV.root.indep"]]), weight.var = vars.list[["weight.var"]], reps.names = rep.wgts.names, keys = c(key.vars, "Quantiles"), study.name = file.attributes[["lsa.study"]])
       }
-      country.model.stats <- Wald.estimates[[1]]
-      setkeyv(x = country.model.stats, cols = c("Quantiles", key.vars, "Statistic"))
-      cnt.model.name <- unique(country.model.stats[ , get(key.vars[1])])
+      country.model.stats[ , Statistic := factor(x = Statistic, levels = c("pseudo.r.squared"), labels = "Pseudo R-Squared")]
+      country.model.stats[Statistic == "Pseudo R-Squared", Estimate := ifelse(test = abs(Estimate) < 0.00000000000001, yes = 0, no = Estimate)]
+      country.model.stats[Statistic == "Pseudo R-Squared", Estimate_SE := ifelse(test = abs(Estimate) == 0 | abs(Estimate_SE) < 0.00000000000001, yes = 0, no = Estimate_SE)]
+      if("Estimate_SVR" %in% colnames(country.model.stats)) {
+        country.model.stats[Statistic == "Pseudo R-Squared", Estimate_SVR := ifelse(test = abs(Estimate) == 0 | abs(Estimate_SVR) < 0.00000000000001, yes = 0, no = Estimate_SVR)]
+      }
+      if("Estimate_MVR" %in% colnames(country.model.stats)) {
+        country.model.stats[Statistic == "Pseudo R-Squared", Estimate_MVR := ifelse(test = abs(Estimate) == 0 | abs(Estimate_MVR) < 0.00000000000001, yes = 0, no = Estimate_MVR)]
+      }
+      country.model.stats <- rbindlist(l = list(country.model.stats, Wald.estimates[[1]]), fill = TRUE)
+      setkeyv(x = country.model.stats, cols = c(key.vars, "Statistic"))
+      cnt.model.name <- unique(as.character(country.model.stats[ , get(key.vars[1])]))
       model.stats[[cnt.model.name]] <<- country.model.stats
       country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
@@ -787,12 +809,12 @@ lsa.quant.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.r
       setkey(x = merged.outputs, NULL)
       counter <<- counter + 1
       message("     ",
-      if(nchar(counter) == 1) {
-        paste0("( ", counter, "/", number.of.countries, ")   ")
-      } else if(nchar(counter) == 2) {
-        paste0("(", counter, "/", number.of.countries, ")   ")
-      },
-      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
+                paste0("(", counter, "/", number.of.countries, ")   ")
+              },
+              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))

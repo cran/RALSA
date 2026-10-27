@@ -766,7 +766,7 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       country.model.stats[ , Statistic := factor(x = Statistic, levels = c("r.squared", "adj.r.squared"), labels = c("R-Squared", "Adjusted R-Squared"))]
       country.model.stats <- rbindlist(l = list(country.model.stats, Wald.estimates[[1]]), fill = TRUE)
       setkeyv(x = country.model.stats, cols = c(key.vars, "Statistic"))
-      cnt.model.name <- unique(country.model.stats[ , get(key.vars[1])])
+      cnt.model.name <- unique(as.character(country.model.stats[ , get(key.vars[1])]))
       model.stats[[cnt.model.name]] <<- country.model.stats
       country.analysis.info <- produce.analysis.info(cnt.ID = unique(data[ , get(key.vars[1])]), data = used.data, study = file.attributes[["lsa.study"]], cycle = file.attributes[["lsa.cycle"]], weight.variable = vars.list[["weight.var"]], rep.design = DESIGN, used.shortcut = shortcut, number.of.reps = rep.wgts.names, in.time = cnt.start.time)
       analysis.info[[country.analysis.info[ , COUNTRY]]] <<- country.analysis.info
@@ -797,12 +797,12 @@ lsa.lin.reg <- function(data.file, data.object, split.vars, bckg.dep.var, PV.roo
       }), .SDcols = c("t_value", "p_value")]
       counter <<- counter + 1
       message("     ",
-      if(nchar(counter) == 1) {
-        paste0("( ", counter, "/", number.of.countries, ")   ")
-      } else if(nchar(counter) == 2) {
-        paste0("(", counter, "/", number.of.countries, ")   ")
-      },
-      paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
+              if(nchar(counter) == 1) {
+                paste0("( ", counter, "/", number.of.countries, ")   ")
+              } else if(nchar(counter) == 2) {
+                paste0("(", counter, "/", number.of.countries, ")   ")
+              },
+              paste0(str_pad(string = unique(merged.outputs[[1]]), width = 40, side = "right"), " processed in ", country.analysis.info[ , DURATION]))
       return(merged.outputs)
     }
     estimates <- rbindlist(lapply(X = data, FUN = compute.all.stats))

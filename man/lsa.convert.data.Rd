@@ -118,6 +118,8 @@ RALSA uses its own method for printing objects of class \code{lsa.data} on scree
 \note{
 When downloading the \code{.sps} files (ASCII text and control \code{.sps}) for OECD PISA files prior to the 2015 cycle (say http://www.oecd.org/pisa/pisaproducts/pisa2009database-downloadabledata.htm), save them \strong{without changing their names and without modifying the file contents}. The function will look for the files as they were named originally.
 
+Some of the PISA 2025 files can be larger than 10GB after downloading and decompressing. This would require 64GB or more RAM at the local machine, but even in these cases it wil still take very long time to convert. If these files are not strictly necessary for using in analyses, they can be skipped from conversion by moving them away from the \code{inp.folder}.
+
 Different studies and cycles define the "I don't know" (or similar) category of discrete variables in different ways - either as a valid or missing value. The \code{lsa.convert.data} function sets all such or similar codes to missing value. If this has to be changed, the \code{lsa.recode.vars} can be used as well (also see \code{lsa.vars.dict}).
 }
 \examples{
@@ -160,5 +162,5 @@ output.file = "C:/PISA/Reduced/cy07_msu_stu_qqq.RData")
 Foy, P. (Ed.). (2018). \emph{PIRLS 2016 User Guide for the International Database}. TIMSS & PIRLS International Study Center.
 }
 \seealso{
-\code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
+\code{\link{lsa.download.data}}, \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
 }

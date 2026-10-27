@@ -72,7 +72,7 @@ RALSA also has a Graphical User Interface (GUI) for the less technical users. Th
 }
 
 \references{
-Here are the two articles presenting the package and it's technical details:
+The references to the two articles presenting the RALSA package and it's technical details can be found below. Please have in mind that since these publications the package has undergone many additional developments:
 
 Mirazchiyski, P.V. (2021). RALSA: The R analyzer for large-scale assessments. \emph{Large-scale Assess Educ 9}(21), 1-24. https://doi.org/10.1186/s40536-021-00114-4
 

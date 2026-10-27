@@ -69,7 +69,7 @@ the reference categories for the contrasts to compute in case
 variables in the model. See details.}
 
 \item{quantiles}{Values for the quantiles (tau) to be estimated, numbers between
-\code{0} and \code{1}. The default is 0.5 (median). See detailes.}
+\code{0} and \code{1}. The default is 0.5 (median). See details.}
 
 \item{interactions}{Interaction terms - a list containing vectors of length of two. See
 details.}
@@ -138,12 +138,10 @@ The second sheet contains the model statistics:
 \itemize{
 \item \verb{<}Country ID\verb{>} - a column containing the names of the countries in the file for which statistics are computed. The exact column header will depend on the country identifier used in the particular study.
 \item \verb{<}Split variable 1\verb{>}, \verb{<}Split variable 2\verb{>}... - columns containing the categories by which the statistics were split by. The exact names will depend on the variables in \code{split.vars}.
-\item Statistic - a column containing the Chi-square, Wald F-Statistic and degrees of freedom estimates.
+\item Quantiles - lists the quantile(s) passed to the function. If more than one quantile is passed to the quantiles argument, the regression coefficients will be grouped by them.
+\item Statistic - a column containing the pseudo R-Squared, Chi-square, Wald F-Statistic and degrees of freedom estimates.
 \item Estimate - the numerical estimates for each of the above.
 \item Estimate_SE - the standard errors of the estimates from above.
-\item Estimate_SVR - the sampling variance component if PVs were included in the model.
-\item Estimate_MVR - the measurement variance component if PVs were included in the model.
-\item t_value - the \emph{t}-test value for the regression coefficients, value only for the Wald F-Statistic is provided.
 \item p_value - the \emph{p}-value for the regression coefficients, values only for the Chi-Square and the Wald F-Statistic are provided.
 }
 The third sheet contains some additional information related to the analysis per country in columns:
@@ -171,7 +169,7 @@ Either \code{data.file} or \code{data.object} shall be provided as source of dat
 
 The function computes quantile regression coefficients by the categories of the splitting variables. The percentages of respondents in each group are computed within the groups specified by the last splitting variable. If no splitting variables are added, the results will be computed only by country.
 
-The \code{quantiles} (tau) argument passes the quantiles of the distribution to estimate the predictive effect of the independent variables on the dependent one. The default value of the \code{quantiles} argument is 0.5 (i.e. the 50th percentile, the median). Multiple values for this argument can be passed as a vector of values between \code{0} and \code{1}. When a research question targets perfomrance at different quantiles, it is recommended to build a model with multiple quantiles instead (a.k.a. "joint" or "composite" quantile regression) than building one model per quantile. This avoids problems like minimizing the check-loss function without charing information or constraints with other quantiles, "quantile crossing" issues, inability to calculate the covariances between different quantile coefficients, and inability to perform Wald tests to evaluate differences across quantiles (e.g. inability to test whether a variable impacts top learners significantly more than bottom learners). For more details, see Cunningham et al. (2020), for example.
+The \code{quantiles} (tau) argument passes the quantiles of the distribution to estimate the predictive effect of the independent variables on the dependent one. The default value of the \code{quantiles} argument is 0.5 (i.e. the 50th percentile, the median). Multiple values for this argument can be passed as a vector of values between \code{0} and \code{1}. When a research question targets perfomrance at different quantiles, it is recommended to build a model with multiple quantiles instead (a.k.a. "joint" or "composite" quantile regression) than building one model per quantile. This avoids problems like minimizing the check-loss function without charing information or constraints with other quantiles, "quantile crossing" issues, inability to calculate the covariances between different quantile coefficients, and inability to perform Wald tests to evaluate differences across quantiles (e.g. inability to test whether a variable impacts top learners significantly more than bottom learners). For more details, see Cunningham et al. (2020), for example. However, note that some joint models may fail, depending of how much valid cases of data are available for that quantile, and how many \code{split.vars} are added.
 
 If \code{standardize = TRUE}, the variables will be standardized before computing any statistics to provide beta regression coefficients.
 
@@ -212,6 +210,8 @@ The function provides two-tailed \emph{t}-test and \emph{p}-values for the regre
 }
 \note{
 TIMSS Longitudinal has two points of administration with the same sample of schools and, respectively, students. The teachers however, are not necessarily the same teachers in both administrations. When grade 4 teacher data is merged to student data, there are two sets of mathematics and science weights - one for the first year and one for the second year of administration. For grade 8, mathematics and science teachers have to be merged separately to student data, each having their own weights for the first and second year of administration. When analyses are performed, the first available weight is chosen as default. Student questionnaire items are available as two separate sets, one per year of administration. It is up to the analyst to choose the proper combination of items and weights for a particular analysis. For more details on the structure of the TIMSS Longitudinal database, see the TIMSS 2023 Longitudinal User Guide for the International Databse.
+
+The R-Squared (\eqn{R^2}) statistics in ordinary least square (OLS) regresison does not apply to quantile regresison. Koenker and Machado (1999) propose the the pseudo R-Squared (or \eqn{R^1}) goodness of fit measure, analogous to the \eqn{R2} in OLS regression. \eqn{R^2} in OLS measures the relative success of two models for the conditional mean in terms of residual variance. In contrast, \eqn{R^1} provides a measure for the relative success of the quantile regresison models for a specific quantile. This measure applies to a specific quantile in the distribution in terms of weighted sum of absolute residuals. That is, \eqn{R^1} represents a local measure of goodness of fit for the particular quantile in the model. In contrast to \eqn{R^1}, \eqn{R^2} represents a global meansure of goodness of fit over the entire conditional distribution. For more details, see Koenker and Machado (1999).
 }
 \examples{
 # Compute quantile regression coefficients with the complex student background scale "Student
@@ -250,6 +250,8 @@ Bate, S. M. (2004). \emph{Generalized Linear Models for Large Dependent Data Set
 Cunningham, E., Tokdar, S. T., & Clark, J. S. (2020). A vignette on model-based quantile regression: Analysing excess zero response. In \emph{Flexible Bayesian Regression Modelling} (pp. 27–64). Elsevier. https://doi.org/10.1016/B978-0-12-815862-3.00008-1
 
 Johnson, E. G., & Rust, K. F. (1992). Chapter 5: Population Inferences and Variance Estimation for NAEP Data. \emph{Journal of Educational Statistics}, \emph{17}(2), 175–190. https://doi.org/10.3102/10769986017002175
+
+Koenker, R., & Machado, J. A. F. (1999). Goodness of Fit and Related Inference Processes for Quantile Regression. \emph{Journal of the American Statistical Association}, \emph{94}(448), 1296–1310. https://doi.org/10.1080/01621459.1999.10473882
 
 LaRoche, S., Joncas, M., & Foy, P. (2016). Sample Design in TIMSS 2015. In M. O. Martin, I. V. S. Mullis, & M. Hooper (Eds.), \emph{Methods and Procedures in TIMSS 2015}. TIMSS & PIRLS International Study Center.
 

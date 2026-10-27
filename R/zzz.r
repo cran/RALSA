@@ -5,7 +5,6 @@
 
     path.to.start.GUI <- system.file("shiny", "GUI", "startGUI.r", package = "RALSA")
 
-    packageStartupMessage("\nWelcome to RALSA!")
     packageStartupMessage("\nWelcome to RALSA!\n\nFor news, help, and requests, please visit https://statr.dev/menu/ralsa/\n")
 
     switch(

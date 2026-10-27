@@ -93,6 +93,8 @@
 #' @note
 #' When downloading the \code{.sps} files (ASCII text and control \code{.sps}) for OECD PISA files prior to the 2015 cycle (say http://www.oecd.org/pisa/pisaproducts/pisa2009database-downloadabledata.htm), save them **without changing their names and without modifying the file contents**. The function will look for the files as they were named originally.
 #'
+#' Some of the PISA 2025 files can be larger than 10GB after downloading and decompressing. This would require 64GB or more RAM at the local machine, but even in these cases it wil still take very long time to convert. If these files are not strictly necessary for using in analyses, they can be skipped from conversion by moving them away from the \code{inp.folder}.
+#'
 #' Different studies and cycles define the "I don't know" (or similar) category of discrete variables in different ways - either as a valid or missing value. The \code{lsa.convert.data} function sets all such or similar codes to missing value. If this has to be changed, the \code{lsa.recode.vars} can be used as well (also see \code{lsa.vars.dict}).
 #'
 #' @examples
@@ -133,8 +135,10 @@
 #' @references
 #' Foy, P. (Ed.). (2018). \emph{PIRLS 2016 User Guide for the International Database}. TIMSS & PIRLS International Study Center.
 #'
-#' @seealso \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
+#' @seealso \code{\link{lsa.download.data}}, \code{\link{lsa.merge.data}}, \code{\link{lsa.vars.dict}}, \code{\link{lsa.recode.vars}}
+#'
 #' @export
+#'
 #' @rdname lsa.convert.data
 lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA = FALSE, out.folder) {
   tmp.options <- options(scipen = 999, digits = 22)
@@ -382,7 +386,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s1" && "IEADATE" %in% colnames(tmp) && unique(tmp[ , "IEADATE"]) > 20191102) {
           study.attribute <- "TALIS 3S"
           cycle.attribute <- "2018"
-        } else if(inp.file.first.char %in% c("a", "b")  && study.and.cycle == "s2" && "IEADATE" %in% colnames(tmp) && unique(tmp[ , "IEADATE"]) > 20191102) {
+        } else if(inp.file.first.char == "s" && study.and.cycle == "s2" && "IEADATE" %in% colnames(tmp) && as.numeric(unique(gsub(pattern = "\\-", replacement = "", x = tmp[["IEADATE"]]))) >= 20251117) {
           study.attribute <- "TALIS 3S"
           cycle.attribute <- "2024"
         } else if(inp.file.first.char == "d"  && study.and.cycle == "t1") {
@@ -400,6 +404,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if(inp.file.first.char == "cy08") {
           study.attribute <- "PISA"
           cycle.attribute <- "2022"
+        } else if(inp.file.first.char == "cy09") {
+          study.attribute <- "PISA"
+          cycle.attribute <- "2025"
         } else if(inp.file.first.char == "cy1") {
           study.attribute <- "PISA for Development"
           cycle.attribute <- "2019"
@@ -410,6 +417,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         } else if (any(sapply(X = ISO, FUN = nchar) > 13 )) {
           if(study.and.cycle %in% c("cy6", "cy07", "cy08")) {
             inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 6, stop = nchar(base.ISO))
+          } else if(study.and.cycle %in% c("cy09")) {
+            inp.file.abbrev <- gsub(pattern = paste0("^", study.and.cycle, "\\_|", "\\_[[:digit:]]+$|\\_PUF$"), replacement = "", x = base.ISO, ignore.case = TRUE)
           } else if(study.and.cycle == "cy1") {
             if(nchar(basename(inp.file)) == 19) {
               inp.file.abbrev <- substr(x = base.ISO, start = nchar(base.ISO) - 6, stop = nchar(base.ISO))
@@ -418,11 +427,11 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             }
           }
         }
-        if(inp.file.abbrev %in% c("alg", "ALG", "blg", "BLG")) {
+        if(inp.file.abbrev %in% c("alg", "ALG", "blg", "BLG", "slg", "SLG")) {
           file.type.attribute <- "leader.bckg"
         } else if(study.attribute != "TALIS 3S" && inp.file.abbrev %in% c("asg", "bsg", "ASG", "BSG", "asc", "bs_", "cs_", "isg", "ISG", "jsg", "JSG")) {
           file.type.attribute <- "std.bckg"
-        } else if(study.attribute == "TALIS 3S" && inp.file.abbrev %in% c("asg", "bsg", "ASG", "BSG")) {
+        } else if(study.attribute == "TALIS 3S" && inp.file.abbrev %in% c("asg", "bsg", "ASG", "BSG", "ssg", "SSG")) {
           file.type.attribute <- "staff.bckg"
         } else if(inp.file.abbrev %in% c("msg", "MSG")) {
           file.type.attribute <- "math.std.bckg"
@@ -488,15 +497,19 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "educ.bckg"
         } else if(inp.file.abbrev %in% c("isp", "ISP", "asp", "ASP", "bsp", "BSP")) {
           file.type.attribute <- "std.proc"
-        } else if(inp.file.abbrev %in% c("SCH_QQQ", "scq_qqq")) {
+        } else if(inp.file.abbrev %in% c("SCH_QQQ", "scq_qqq", "MS_SCH", "ms_sch")) {
           file.type.attribute <- "sch.bckg"
         } else if(inp.file.abbrev %in% c("STU_QTM", "stu_qtm")) {
           file.type.attribute <- "std.qtm"
         } else if(inp.file.abbrev %in% c("STU_TTM", "stu_ttm")) {
           file.type.attribute <- "std.ttm"
-        } else if(inp.file.abbrev %in% c("STU_COG", "stu_cog")) {
+        } else if(inp.file.abbrev %in% c("STU_COG", "stu_cog", "MS_COG", "ms_cog")) {
           file.type.attribute <- "std.ach"
-        } else if(inp.file.abbrev %in% c("STU_QQQ", "stu_qqq")) {
+        } else if(inp.file.abbrev %in% c("MS_LDW", "ms_ldw")) {
+          file.type.attribute <- "std.ach"
+        } else if(inp.file.abbrev %in% c("STU_COG", "stu_cog", "MS_COG_PROCESS", "ms_cog_process")) {
+          file.type.attribute <- "std.ach.process"
+        } else if(inp.file.abbrev %in% c("STU_QQQ", "stu_qqq", "MS_STU", "ms_stu")) {
           file.type.attribute <- "std.bckg"
         } else if(inp.file.abbrev %in% c("STU_QQ2", "stu_qq2")) {
           file.type.attribute <- "std.bckg"
@@ -512,9 +525,9 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           file.type.attribute <- "std.fin.lit.tim"
         } else if(inp.file.abbrev %in% c("STU_CPS", "stu_cps")) {
           file.type.attribute <- "std.col.prob.slv"
-        } else if(inp.file.abbrev %in% c("TCH_QQQ", "tch_qqq")) {
+        } else if(inp.file.abbrev %in% c("TCH_QQQ", "tch_qqq", "MS_TCH", "ms_tch")) {
           file.type.attribute <- "tch.bckg"
-        } else if(inp.file.abbrev %in% c("STU_TIM", "stu_tim")) {
+        } else if(inp.file.abbrev %in% c("STU_TIM", "stu_tim", "MS_STU_TT", "ms_stu_tt")) {
           file.type.attribute <- "std.qtm"
         } else if(inp.file.abbrev %in% c("STU_PVS", "stu_pvs")) {
           file.type.attribute <- "std.bckg"
@@ -531,14 +544,14 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
         save(list = tolower(new.file), file = out.file, compress = FALSE)
         counter <<- counter + 1
         message("     ",
-        if(nchar(counter) == 1) {
-          paste0("(  ", counter, "/", length(ISO), ")   ")
-        } else if(nchar(counter) == 2) {
-          paste0("( ", counter, "/", length(ISO), ")   ")
-        } else if(nchar(counter) > 2) {
-          paste0("(", counter, "/", length(ISO), ")   ")
-        },
-        basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
+                if(nchar(counter) == 1) {
+                  paste0("(  ", counter, "/", length(ISO), ")   ")
+                } else if(nchar(counter) == 2) {
+                  paste0("( ", counter, "/", length(ISO), ")   ")
+                } else if(nchar(counter) > 2) {
+                  paste0("(", counter, "/", length(ISO), ")   ")
+                },
+                basename(inp.file), " converted in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm}[[3]], "%H:%M:%OS3"))
       }
       ptm <- proc.time()
       suppressWarnings(
@@ -740,33 +753,33 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           tmp.value.labels <- gsub(pattern = "\\s*/*\\.$", replacement = "", x = tmp.value.labels)
           mixed.labels <- grep(pattern = "^[[:digit:]]+\\s([[:alpha:]]+/*)+\\s[[:digit:]]+\\s[[:alpha:]]", x = tmp.value.labels)
           statements.to.escape <- c("1 pwk & 1 pmn",
-"[[:digit:]]+\\s*(hours|minutes)* and [[:digit:]]+\\s*(hours|minutes)",
-"times a year",
-"6342 QR 50000 or more - less than QR 750000",
-"6343 QR 75000 or more - less than QR 100000",
-"6344 QR 100000 or more - less than QR 125000",
-"6345 QR 125000 or more - less than QR 150000",
-"6346 QR 150000 or more",
-"2082 DKK 1 or more - less than DKK 500",
-"2083 DKK 501 or more - less than DKK 1.000",
-"6202 from 0 euros to 75 euros",
-"6203 from 75 euros to 3 999 euros",
-"6342 QR 500 or more - less than QR1000",
-"6346 QR 16000 or more",
-"QR 1000 or more - less than QR 6000",
-"QR 6000 or more - less than QR 11000",
-"QR 11000 or more - less than QR 16000",
-"QR 16000 or more",
-"YTL 600 or more - less than YTL 1200",
-"YTL 1200 or more - less than YTL 5000",
-"YTL 5000 or more - less than YTL 15000",
-"YTL 15000 or more",
-"QR 50000 or more - less than QR 75000",
-"YTL 6000 or more - less than YTL 12000",
-"YTL 12000 or more - less than YTL 24000",
-"YTL 24000 or more - less than YTL 48000",
-"YTL 48000 or more - less than YTL 72000",
-"YTL 72000 or more")
+                                    "[[:digit:]]+\\s*(hours|minutes)* and [[:digit:]]+\\s*(hours|minutes)",
+                                    "times a year",
+                                    "6342 QR 50000 or more - less than QR 750000",
+                                    "6343 QR 75000 or more - less than QR 100000",
+                                    "6344 QR 100000 or more - less than QR 125000",
+                                    "6345 QR 125000 or more - less than QR 150000",
+                                    "6346 QR 150000 or more",
+                                    "2082 DKK 1 or more - less than DKK 500",
+                                    "2083 DKK 501 or more - less than DKK 1.000",
+                                    "6202 from 0 euros to 75 euros",
+                                    "6203 from 75 euros to 3 999 euros",
+                                    "6342 QR 500 or more - less than QR1000",
+                                    "6346 QR 16000 or more",
+                                    "QR 1000 or more - less than QR 6000",
+                                    "QR 6000 or more - less than QR 11000",
+                                    "QR 11000 or more - less than QR 16000",
+                                    "QR 16000 or more",
+                                    "YTL 600 or more - less than YTL 1200",
+                                    "YTL 1200 or more - less than YTL 5000",
+                                    "YTL 5000 or more - less than YTL 15000",
+                                    "YTL 15000 or more",
+                                    "QR 50000 or more - less than QR 75000",
+                                    "YTL 6000 or more - less than YTL 12000",
+                                    "YTL 12000 or more - less than YTL 24000",
+                                    "YTL 24000 or more - less than YTL 48000",
+                                    "YTL 48000 or more - less than YTL 72000",
+                                    "YTL 72000 or more")
           unwanted.pattern <- grep(pattern = paste(statements.to.escape, collapse = "|"), x = tmp.value.labels)
           mixed.labels <- setdiff(mixed.labels, unwanted.pattern)
           if(length(mixed.labels) != 0) {
@@ -865,36 +878,36 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
             paste(i, collapse = " ")
           })
           blocks.with.just.miss <- c("^7 N/A 8 Invalid 9 Missing r Not reached$",
-"^7 N/A 8 Invalid r Not reached$",
-"^7 N/A 8 M/R 9 Mis",
-"^7 N/A 9 Missing r Not reached$",
-"^7 N/A r Not reached$",
-"^7+ N/A 8+ Invalid 9+ Missing$",
-"^7+ N/A 8+ Invalid$",
-"^8 Invalid r Not reached$",
-"^9 Missing r Not reached$",
-"^9*7 N/A 9*8 Invalid 9+ Miss.*$",
-"^9*7 N/A 9*8 Invalid$",
-"^9*7 N/A 9*8 M/R 9+ Missing$",
-"^9*7 N/A 9+ Mis$",
-"^9*7 N/A 9+ Missing 9*8 Invalid$",
-"^9*7 N/A 9+ Missing$",
-"^9*7 N/A$",
-"^9*8 Invalid 9*7 N/A 9+ Missing$",
-"^9*8 Invalid 9*7 N/A$",
-"^9*8 Invalid 9+ Missing$",
-"^9*8 Invalid$",
-"^9+ Missing 9*7 N/A$",
-"^9+ Missing 9*8 Invalid$",
-"^9+ Missing$",
-"^9+7 N/A 9+ Miss$",
-"^96 Ungraded 97 N/A 98 Invalid 99 Miss$",
-"^96 Ungraded 98 Invalid 99 Miss$",
-"^96 Ungraded 98 Invalid 99 Missing$",
-"^96 Ungraded 99 Missing$",
-"^996 N/A - <ISCED level> not available in this school 9997 N/A 9998 Invalid 9999 Miss$",
-"^996 N/A 9997 N/A 9998 Invalid 9999 Missing$",
-"^997 Missing$")
+                                     "^7 N/A 8 Invalid r Not reached$",
+                                     "^7 N/A 8 M/R 9 Mis",
+                                     "^7 N/A 9 Missing r Not reached$",
+                                     "^7 N/A r Not reached$",
+                                     "^7+ N/A 8+ Invalid 9+ Missing$",
+                                     "^7+ N/A 8+ Invalid$",
+                                     "^8 Invalid r Not reached$",
+                                     "^9 Missing r Not reached$",
+                                     "^9*7 N/A 9*8 Invalid 9+ Miss.*$",
+                                     "^9*7 N/A 9*8 Invalid$",
+                                     "^9*7 N/A 9*8 M/R 9+ Missing$",
+                                     "^9*7 N/A 9+ Mis$",
+                                     "^9*7 N/A 9+ Missing 9*8 Invalid$",
+                                     "^9*7 N/A 9+ Missing$",
+                                     "^9*7 N/A$",
+                                     "^9*8 Invalid 9*7 N/A 9+ Missing$",
+                                     "^9*8 Invalid 9*7 N/A$",
+                                     "^9*8 Invalid 9+ Missing$",
+                                     "^9*8 Invalid$",
+                                     "^9+ Missing 9*7 N/A$",
+                                     "^9+ Missing 9*8 Invalid$",
+                                     "^9+ Missing$",
+                                     "^9+7 N/A 9+ Miss$",
+                                     "^96 Ungraded 97 N/A 98 Invalid 99 Miss$",
+                                     "^96 Ungraded 98 Invalid 99 Miss$",
+                                     "^96 Ungraded 98 Invalid 99 Missing$",
+                                     "^96 Ungraded 99 Missing$",
+                                     "^996 N/A - <ISCED level> not available in this school 9997 N/A 9998 Invalid 9999 Miss$",
+                                     "^996 N/A 9997 N/A 9998 Invalid 9999 Missing$",
+                                     "^997 Missing$")
           indx.numeric <- unique(grep(paste(blocks.with.just.miss, collapse = "|"), concat.value.labels.blocks))
           if(length(indx.numeric) != 0) {
             tmp[ , unlist(unique(value.labels.full.var.list[indx.numeric]))] <- lapply(X = unlist(unique(value.labels.full.var.list[indx.numeric])), FUN = function(x) {
@@ -959,8 +972,8 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           value.labels.statements <- paste(value.lab.statement.left, "<-", value.lab.statement.right)
           if(txt.file.name == "INT_stui_2003_v2") {
             val.lab.statements.to.remove <- c("\\'ST17Q14\\'], levels = c\\(\\'1\\', \\'20301\\', \\'27601\\',",
-"\\'ST17Q15\\'], levels = c\\(\\'1', \\'20301\\', \\'2\\', \\'30001\\',",
-"\\'ST17Q16\\'], levels = c\\(\\'1\\', \\'2\\', \\'30001\\', \\'30002\\',")
+                                              "\\'ST17Q15\\'], levels = c\\(\\'1', \\'20301\\', \\'2\\', \\'30001\\',",
+                                              "\\'ST17Q16\\'], levels = c\\(\\'1\\', \\'2\\', \\'30001\\', \\'30002\\',")
             indx.statements.to.remove <- grep(pattern = paste(val.lab.statements.to.remove, collapse = "|"), x = value.labels.statements)
             value.labels.statements <- value.labels.statements[-indx.statements.to.remove]
           }
@@ -1015,22 +1028,22 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           }
           vars.with.missings <- names(filter.factor.vars.with.missing(tmp))
           missing.patterns <- c("N/A",
-"Invalid",
-"Missing",
-"Miss",
-"Mis",
-"Not reached",
-"N/A, Yes: Not administered",
-"N/A, N/A: Not administered",
-"Not administered",
-"Unreached",
-"Ungraded",
-"M/R",
-"99999970",
-"99999990",
-"9999997",
-"9999998",
-"9999999")
+                                "Invalid",
+                                "Missing",
+                                "Miss",
+                                "Mis",
+                                "Not reached",
+                                "N/A, Yes: Not administered",
+                                "N/A, N/A: Not administered",
+                                "Not administered",
+                                "Unreached",
+                                "Ungraded",
+                                "M/R",
+                                "99999970",
+                                "99999990",
+                                "9999997",
+                                "9999998",
+                                "9999999")
           fac.missing.levels.extract <- function(data, patterns) {
             missing.values.indx <- lapply(X = data, FUN = function(i) {
               grep(pattern = paste(patterns, collapse = "|"), x = levels(i))
@@ -1110,7 +1123,7 @@ lsa.convert.data <- function(inp.folder, PISApre15 = FALSE, ISO, missing.to.NA =
           })
           split.var.names <- str_split(string = miss.var.names, pattern = " ")
           indx.TO.statements <- which(lapply(X = split.var.names, FUN = function(i) {
-"TO" %in% i
+            "TO" %in% i
           }) == TRUE)
           split.var.names[indx.TO.statements] <- lapply(X = split.var.names[indx.TO.statements], FUN = paste, collapse = " ")
           missing.values.statements <- unlist(mapply(FUN = paste, split.var.names, as.list(miss.val.lists)))

@@ -1,14 +1,42 @@
+# RALSA v1.7.2 (2026-10-27)
+
+This version fixes bugs, brings a new functionality and adds support for studies' cycles.
+
+## Bug fixes
+
+-   The "Model statistics" sheet in the output of `lsa.quant.reg` contains the estimates only for the last country.
+
+-   When variable levels are preserved in the recoding, but there are no values for them in the data, `lsa.recode.vars` stops with an error. A warning to check the resulting recodings is still produced.
+
+-   Fixed the inaccurate timestamp for overall processing time in `lsa.pcts.means` function when the operations were taking less than a second.
+
+-   The merging section of the GUI doesn't show any country names in the table of available countries when TALIS 2024 data folder is selected
+
+## New functionality
+
+-   Added pseudo R-squared (a.k.a. R1), an analog to the R-squared (R2) statistic in linear regression, to the model statistics in `lsa.quant.reg`.
+
+## Miscellaneous
+
+-   Added support for OECD PISA 2025.
+
+-   Added support for OECD TALIS Starting Strong Survey 2024.
+
+-   Improved documentation.
+
+-   Various improvements in the GUI workflow.
+
 # RALSA v1.7.0 (2026-07-10)
 
 This version brings quantile regression as analysis type and introduces change of the support website domain.
 
 ## New functionality
-- Quantile regression is added as analysis type for large-scale assessments and surveys data.
+-   Quantile regression is added as analysis type for large-scale assessments and surveys data.
 
 ## Miscellaneous
-- The RALSA support website now has a new location. It is part of the [statr.dev](https://statr.dev/menu/ralsa/) domain.
-- Improved documentation.
-- Various improvements in the GUI workflow.
+-   The RALSA support website now has a new location. It is part of the [statr.dev](https://statr.dev/) domain.
+-   Improved documentation.
+-   Various improvements in the GUI workflow.
 
 # RALSA v1.6.6 (2026-04-16)
 

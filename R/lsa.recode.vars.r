@@ -222,13 +222,15 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     warnings.collector[["less.recodings.than.avail"]] <- 'The number of values to recode supplied to the "old.new" argument is less than the number of unique values in the variable(s). The values not set for recoding are set to NA. This can have consequences for analysis. Check your input.'
   }
   eval(parse(text = unlist(recoding.statements)))
+  diff.values.labels.counts <- sapply(X = tmp.colnames, FUN = function(i) {
+    length(unique(na.omit(tmp.data[ , get(i)]))) != length(new.labels)
+  })
+  if(any(isTRUE(diff.values.labels.counts))) {
+    warnings.collector[["new.values.and.labels.counts.diff"]] <- 'The number of new labels in "new.labels" has a different number than the number of distinct values in the recoded variables. Check if all levels in the source variables have valid values for all levels, as well as the resulting counts in the recoded variables.\n'
+  }
   if(!missing(new.labels)) {
     tmp.data[ , (tmp.colnames) := lapply(.SD, function(i) {
-      if(length(unique(na.omit(i))) != length(new.labels)) {
-        stop('The number of new labels in "new.labels" has a different length than the number of distinct values in the recoded variables. All operations stop here. Check the following:\n1. Your input;\n2. If all levels in the source variables have valid values for all levels.\n\n', call. = FALSE)
-      } else {
-        i <- factor(x = i, labels = new.labels)
-      }
+      i <- factor(x = i, levels = 1:length(new.labels), labels = new.labels)
     }), .SDcols = tmp.colnames]
   }
   if(all(is.null(unlist(missings.attributes))) == FALSE & missing(missings.attr)) {
@@ -286,9 +288,9 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
     message("The following tables contain the variables' frequencies before and after recoding them. Please check them carefully.\n")
   }
   lapply(X = src.new.vars.freqs, FUN = function(i) {
-    message(paste0(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""), "\n"))
+    message(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""))
     message(paste(capture.output(i), collapse = "\n"))
-    message(paste0(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""), "\n"))
+    message(paste(rep("+", times = unlist(options("width")) - 10), collapse = ""))
   })
   message("")
   if(missing(variable.labels) & missing(new.variables)) {
@@ -352,6 +354,9 @@ lsa.recode.vars <- function(data.file, data.object, src.variables, new.variables
   if(length(warnings.collector) > 0) {
     if(!is.null(warnings.collector[["less.recodings.than.avail"]])) {
       warning(warnings.collector[["less.recodings.than.avail"]], call. = FALSE)
+    }
+    if(!is.null(warnings.collector[["new.values.and.labels.counts.diff"]])) {
+      warning(warnings.collector[["new.values.and.labels.counts.diff"]], call. = FALSE)
     }
     if(!is.null(warnings.collector[["no.missings.attribute"]])) {
       warning(warnings.collector[["no.missings.attribute"]], call. = FALSE)

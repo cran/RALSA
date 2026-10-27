@@ -21,7 +21,7 @@
 #'                      be created.
 #'
 #' @details
-#' The \code{lsa.download.data} function downloads large-scale assessments' and surveys' data files from data repositories on the web. This is a convenience function that saves time and efforts for the user. IEA studies, as well as OECD TALIS and TALIS 3S, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS and TALIS 3S use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be downloaded. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To download the files from all countries for an IEA study and OECD TALIS and TALIS 3S, simply omit the \code{ISO} argument, this will download files for all countries for the population in \code{POP} in the \code{study} and \code{cycle}. The \code{ISO} argument will be ignored for PISA files, as well as for TALIS 2024 files, as all data for all countries is provided within a single file per respondent type. If \code{ISO} is provided anyway, it will be ignored. Note that as of now, the function downloads PISA databases only from its latest cycles - 2015, 2018 and 2022.
+#' The \code{lsa.download.data} function downloads large-scale assessments' and surveys' data files from data repositories on the web. This is a convenience function that saves time and efforts for the user. IEA studies, as well as OECD TALIS and TALIS 3S, provide their data in SPSS \code{.sav} format with same or very similar structure: one file per country and type of respondent (e.g. school principal, student, teacher, etc.) per population. For IEA studies and OECD TALIS and TALIS 3S use the \code{ISO} argument to specify the countries' three-letter ISO codes whose data is to be downloaded. The three-letter ISO codes for each country can be found in the user guide for the study in scope. For example, the ISO codes of the countries participating in PIRLS 2016 can be found in its user guide on pages 52-54. To download the files from all countries for an IEA study and OECD TALIS and TALIS 3S, simply omit the \code{ISO} argument, this will download files for all countries for the population in \code{POP} in the \code{study} and \code{cycle}. The \code{ISO} argument will be ignored for PISA files, as well as for TALIS 2024 files, as all data for all countries is provided within a single file per respondent type. If \code{ISO} is provided anyway, it will be ignored. Note that as of now, the function downloads PISA databases only from its latest cycles - 2015, 2018, 2022 and 2025.
 #'
 #' When all desired SPSS data files are downloaded, the function converts them to \code{lsa.data} objects and stores them as .RData files on the disk, removing the data files downloaded in their original (SPSS) format. This is the default behavior which can be overridden by setting \code{convert = FALSE}.
 #'
@@ -66,10 +66,10 @@
 #'          \item For \code{TIMSS Advanced Mathematics}/\code{TIMSS Advanced Physics} - \code{1995}, \code{2008}, or \code{2015}
 #'          \item For \code{TIMSS Longitudinal} - \code{2023}
 #'          \item For \code{TiPi} - \code{2011}
-#'          \item For \code{PISA} - \code{2015}, \code{2018} or \code{2022}
+#'          \item For \code{PISA} - \code{2015}, \code{2018}, \code{2022} or \code{2025}
 #'          \item For \code{PISA D} - \code{2019}
 #'          \item For \code{TALIS} - \code{2008}, \code{2013}, \code{2018} or \code{2024}
-#'          \item For \code{TALIS 3S} - \code{2018}
+#'          \item For \code{TALIS 3S} - \code{2018}, \code{2024}
 #' }
 #'
 #' Note that the data from the IEA Teacher Education and Development Study in Mathematics (TEDS-M) is not freely available from the IEA website due to data confidentiality issues and is available only on [request from the IEA](https://www.iea.nl/data-tools/repository/tedsm).
@@ -163,8 +163,9 @@
 #'      }
 #' \item \strong{TALIS 3S}:
 #'       \itemize{
-#'               \item \code{I0.2} (ISCED 0.2)
-#'               \item \code{IU3} (ISCED U3)
+#'               \item \code{I0.2} (ISCED 0.2) in TALIS 3S 2018
+#'               \item \code{IU3} (ISCED U3) in TALIS 3S 2018
+#'               \item \code{U3_I0.2} (ISCED U3 and ISCED I0.2 combined) in TALIS 3S 2024
 #'      }
 #' }
 #'
@@ -181,7 +182,11 @@
 #'
 #' In some study cycles (e.g. TIMSS 2019 and PIRLS 2021), there are the so-called "bridge studies". These aim to test the differences between electronic and paper testing modes. When a study cycle contains data files from a bridge study, these will be downloaded for the countries that conducted the study electronically as well.
 #'
-#' As of now, PISA data can be downloaded only for the 2015, 2018 and 2022 cycles.
+#' As of now, PISA data can be downloaded only for the 2015, 2018, 2022 and 2025 cycles.
+#'
+#' Some of the PISA 2025 files can be larger than 10GB after downloading and decompressing. This would require 64GB or more RAM at the local machine, but even in these cases it wil still take very long time to convert. If these files are not strictly necessary for using in analyses, use the \code{lsa.download.data} function with \code{convert = FALSE}. After the download completes, these files can be skipped from conversion by moving them away from the \code{inp.folder} of the \code{lsa.convert.data} function when converting the datasets.
+#'
+#' TALIS 3S provides the files for both ISCEDs U3 and I0.2 combined together. Thus, the \code{POP} argument needs to be as \code{IU3_I0.2}.
 #'
 #' @examples
 #' # Download and convert PIRLS 2016 data for Australia and Slovenia only and convert them
@@ -276,8 +281,10 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
   } else if(study %in% c("TALIS", "TALIS 3S")) {
     if(study == "TALIS" & cycle == 2024) {
       link.root <- "https://webfs.oecd.org/talis/2024/core/"
-    } else {
+    } else if(study %in% c("TALIS", "TALIS 3S") & cycle == 2018) {
       link.root <- "https://webfs.oecd.org/talis/"
+    } else if(study == "TALIS 3S" & cycle == 2024) {
+      link.root <- "https://webfs.oecd.org/talis/2024/3S/"
     }
   } else if(study == "PISA" & cycle == "2015") {
     link.root <- "https://webfs.oecd.org/pisa/"
@@ -285,6 +292,8 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
     link.root <- "https://webfs.oecd.org/pisa2018/"
   } else if(study == "PISA" & cycle == "2022") {
     link.root <- "https://webfs.oecd.org/pisa2022/"
+  } else if(study == "PISA" & cycle == "2025") {
+    link.root <- "https://webfs.oecd.org/pisa2022/2025/"
   } else if(study == "PISA D" & cycle == "2019" & POP == "IS") {
     link.root <- "https://web-archive.oecd.org/site/pisa-for-development/database/"
   } else if(study == "PISA D" & cycle == "2019" & POP == "OS") {
@@ -325,7 +334,7 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
           files.passed.for.download <- gsub(pattern = "\\.sav$", replacement = "", x = study.and.cycle.files.to.download[[i]], ignore.case = TRUE)
           full.file.paths <- grep(pattern = paste(files.existing.in.out.dir, collapse = "|"), x = full.file.paths, ignore.case = TRUE, value = TRUE, invert = TRUE)
         }
-        if(study == "TALIS") {
+        if(study == "TALIS" || study == "TALIS 3S" & cycle == 2024) {
           full.file.paths <- gsub(pattern = "^\\.\\/", replacement = "", x = full.file.paths)
         }
         if(length(full.file.paths) > 0) {
@@ -335,6 +344,7 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
             message("Downloading study data files.\n")
           }
         }
+        print(download.URL)
         if(length(full.file.paths) > 0) {
           lapply(X = download.URL, FUN = function(j) {
             archive_extract(archive = j, dir = file.path(out.folder, i), files = full.file.paths)
@@ -354,7 +364,7 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
               message("     All ", length(study.and.cycle.files.to.download[[i]]), " bridge data files for ", number.of.countries, countries.num.string, "have been donwloaded in ", format(as.POSIXct("0001-01-01 00:00:00") + {proc.time() - ptm.download}[[3]] - 1, "%H:%M:%OS3"), ".\n")
             }
           }
-          if(study != "TALIS") {
+          if(study != "TALIS" & paste(study, cycle) != "TALIS 3S 2024") {
             file.copy(from = file.path(out.folder, i, full.file.paths), to = file.path(out.folder, i))
             folder.to.remove <- unlist(strsplit(x = ZIP.folder.paths[[i]], split = "/")[1])
             unlink(x = file.path(out.folder, i, folder.to.remove), recursive = TRUE, force = TRUE)
