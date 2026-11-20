@@ -1,3 +1,11 @@
+# RALSA v1.7.3 (2026-11-20)
+
+This minimal update fixes a bug that appeared due to updating R to version 4.6.2 and some study cycles received updates in their data.
+
+## Bug fixes
+
+- The `lsa.convert.data` converts numeric variables into factors in some studies' cycles.
+
 # RALSA v1.7.2 (2026-10-27)
 
 This version fixes bugs, brings a new functionality and adds support for studies' cycles.
@@ -10,7 +18,7 @@ This version fixes bugs, brings a new functionality and adds support for studies
 
 -   Fixed the inaccurate timestamp for overall processing time in `lsa.pcts.means` function when the operations were taking less than a second.
 
--   The merging section of the GUI doesn't show any country names in the table of available countries when TALIS 2024 data folder is selected
+-   The merging section of the GUI doesn't show any country names in the table of available countries when TALIS 2024 data folder is selected.
 
 ## New functionality
 

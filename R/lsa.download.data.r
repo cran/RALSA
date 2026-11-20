@@ -344,7 +344,6 @@ lsa.download.data <- function(study, cycle, POP, ISO, out.folder, append = TRUE,
             message("Downloading study data files.\n")
           }
         }
-        print(download.URL)
         if(length(full.file.paths) > 0) {
           lapply(X = download.URL, FUN = function(j) {
             archive_extract(archive = j, dir = file.path(out.folder, i), files = full.file.paths)

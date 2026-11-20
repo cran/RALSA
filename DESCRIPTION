@@ -1,8 +1,8 @@
 Package: RALSA
 Type: Package
 Title: R Analyzer for Large-Scale Assessments
-Version: 1.7.2
-Date: 2026-10-27 17:00
+Version: 1.7.3
+Date: 2026-11-20 17:00
 Authors@R: c(person(given = "Plamen V.",
                     family = "Mirazchiyski",
                     role = c("aut", "cre"),
@@ -34,7 +34,7 @@ Imports: archive, DT, haven, Hmisc, data.table, ggplot2, import,
 License: GPL-2
 URL: https://statr.dev/menu/ralsa/
 NeedsCompilation: no
-Packaged: 2026-10-24 19:04:47 UTC; plamen
+Packaged: 2026-11-19 21:02:16 UTC; plamen
 Repository: CRAN
-Date/Publication: 2026-10-27 08:40:02 UTC
+Date/Publication: 2026-11-20 08:40:02 UTC
 Config/roxygen2/version: 8.1.1

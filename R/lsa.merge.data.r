@@ -544,7 +544,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
         setkeyv(x = student.level.data, cols = c(key.var, add.key.1))
         setkeyv(x = teacher.level.data, cols = c(key.var, add.key.1))
         last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file] # Note we are taking just the last one, otherwise, if "ASA" and "ASG" (for example) files are both in the merge, two elements are returned and this causes a crash.
+        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
         if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
           suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
         }
@@ -560,7 +560,7 @@ lsa.merge.data <- function(inp.folder, file.types, ISO, out.file) {
           suppressWarnings(school.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[school.file.name]])) := NULL])
         }
         last.student.file <- length(intersect(all.file.types[["student.file.types"]], imported.files))
-        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file] # Note we are taking just the last one, otherwise, if "ASA" and "ASG" (for example) files are both in the merge, two elements are returned and this causes a crash.
+        student.file.name <- intersect(all.file.types[["student.file.types"]], imported.files)[last.student.file]
         if(!is.null(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) {
           suppressWarnings(student.level.data[ , (unique(studies.all.design.variables[["sampling.vars"]][[student.file.name]])) := NULL])
         }
